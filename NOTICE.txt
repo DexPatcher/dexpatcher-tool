@@ -1,14 +1,14 @@
 ********************************************************************
-dexpatcher is Copyright 2015, Rodrigo Balerdi.
+DexPatcher is Copyright 2015, Rodrigo Balerdi.
 (GNU General Public License version 3 or later)
 ********************************************************************
-dexpatcher uses dexlib2 (part of smali) by Ben Gruver (JesusFreke).
+DexPatcher uses dexlib2 (part of smali) by Ben Gruver (JesusFreke).
 Many thanks to him for repeatedly helping me in #smali on freenode.
 
-dexpatcher also uses other free software libraries. Please see the
+DexPatcher also uses other free software libraries. Please see the
 LIB-LICENSE folder for details.
 ********************************************************************
-dexpatcher is free software: you can redistribute it and/or modify
+DexPatcher is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
@@ -20,4 +20,20 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+********************************************************************
+LICENSING NOTE: Contrary to -for example- C source code, which can
+be processed by various compilers, a DexPatcher patch is explicitly
+written to be used and interact with the DexPatcher tool. According
+to the orthodox interpretation of GPL, such tightly-coupled cases
+are considered derivative works, and as such DexPatcher patches can
+only be distributed under the GPL or a GPL-compatible license. Also,
+patches link and include the DexPatcher annotation package, which is
+part of the tool and licensed under the GPL. (Please note that
+rewriting the annotation package from scratch does not give you the
+right to distribute DexPatcher patches under non-GPL compatible
+licenses; in order to do that, you need to write a complete
+DexPatcher replacement.)
+
+tl;dr: All DexPatcher *patches* are covered by the GPL; you have to
+make their source code available.
 ********************************************************************
