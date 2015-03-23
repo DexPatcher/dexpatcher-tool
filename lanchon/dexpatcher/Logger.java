@@ -1,23 +1,28 @@
 package lanchon.dexpatcher;
 
+import static lanchon.dexpatcher.Logger.Level.*;
+
 public abstract class Logger {
 
 	public enum Level {
-		DEBUG(0, "debug"),
-		INFO(1, "info"),
-		WARN(2, "warning"),
-		ERROR(3, "error"),
-		FATAL(4, "fatal"),
-		NONE(5, "none");
 
-		public final int level;
-		public final String label;
+		DEBUG("debug"),
+		INFO("info"),
+		WARN("warning"),
+		ERROR("error"),
+		FATAL("fatal"),
+		NONE("none");
 
-		Level(int level, String label)
-		{
-			this.level = level;
+		private final String label;
+
+		Level(String label) {
 			this.label = label;
 		}
+
+		public String getLabel() {
+			return label;
+		}
+
 	}
 
 	private Level logLevel;
@@ -30,20 +35,20 @@ public abstract class Logger {
 
 	public final void log(Level level, String message) {
 		if (message == null) throw new NullPointerException("message");
-		counts[level.level]++;
-		if (level.level >= logLevel.level) doLog (level, message);
+		counts[level.ordinal()]++;
+		if (level.ordinal() >= logLevel.ordinal()) doLog (level, message);
 	}
 
 	public final boolean ok() {
-		int errors = counts[Level.FATAL.level] + counts[Level.ERROR.level];
+		int errors = getCount(FATAL) + getCount(ERROR);
 		return errors == 0;
 	}
 
 	public final void close() {
-		int errors = counts[Level.FATAL.level] + counts[Level.ERROR.level];
-		int warnings = counts[Level.WARN.level];
+		int errors = getCount(FATAL) + getCount(ERROR);
+		int warnings = getCount(WARN);
 		if (errors != 0 || warnings != 0) {
-			doLog (Level.NONE, errors + " error(s), " + warnings + " warning(s)");
+			doLog (NONE, errors + " error(s), " + warnings + " warning(s)");
 		}
 	}
 
@@ -56,7 +61,7 @@ public abstract class Logger {
 	}
 
 	public final int getCount(Level level) {
-		return counts[level.level];
+		return counts[level.ordinal()];
 	}
 
 	protected abstract void doLog(Level level, String message);

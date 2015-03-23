@@ -12,12 +12,12 @@ public class BasicLogger extends Logger {
 		case DEBUG:
 		case INFO:
 		case WARN:
-			System.out.println(level.label + ": " + message);
+			System.out.println(level.getLabel() + ": " + message);
 			break;
 		case ERROR:
 		case FATAL:
 			System.out.flush();
-			System.err.println(level.label + ": " + message);
+			System.err.println(level.getLabel() + ": " + message);
 			System.err.flush();
 			break;
 		case NONE:
