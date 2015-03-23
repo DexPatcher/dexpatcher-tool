@@ -26,7 +26,7 @@ public class PatcherAnnotation {
 	public static final String AE_STATIC_CONSTRUCTOR_ACTION = "staticConstructorAction";
 	public static final String AE_DEFAULT_ACTION = "defaultAction";
 
-	private static final String CL_VOID = Util.getTypeDescriptorFromClass(Void.class);
+	private static final String CLASS_VOID = Util.getTypeDescriptorFromClass(Void.class);
 
 	// TODO:
 	// When this commit ships: https://code.google.com/p/smali/issues/detail?id=237
@@ -70,7 +70,7 @@ public class PatcherAnnotation {
 			case AE_TARGET_CLASS: {
 				if (targetClass != null) break;
 				String s = ((TypeEncodedValue) value).getValue();
-				if (!CL_VOID.equals(s)) targetClass = s;
+				if (!CLASS_VOID.equals(s)) targetClass = s;
 				continue;
 			}
 			case AE_STATIC_CONSTRUCTOR_ACTION: {
