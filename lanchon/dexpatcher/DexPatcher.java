@@ -3,6 +3,7 @@ package lanchon.dexpatcher;
 import java.util.Set;
 
 import org.jf.dexlib2.AccessFlags;
+import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.DexFile;
 import org.jf.dexlib2.immutable.ImmutableClassDef;
@@ -36,8 +37,8 @@ public class DexPatcher extends AbstractPatcher<ClassDef> {
 	}
 
 	@Override
-	protected PatcherAnnotation getPatcherAnnotation(ClassDef patch) throws ParseException {
-		return PatcherAnnotation.parse(patch.getAnnotations());
+	protected Set<? extends Annotation> getAnnotations(ClassDef patch) {
+		return patch.getAnnotations();
 	}
 
 	@Override
@@ -78,27 +79,26 @@ public class DexPatcher extends AbstractPatcher<ClassDef> {
 	// Handlers
 
 	@Override
-	protected Action onUnspecifiedAction(ClassDef patch, PatcherAnnotation annotation) {
-		return Action.ADD;
+	protected PatcherAnnotation getDefaultAnnotation(ClassDef patch) {
+		return new PatcherAnnotation(Action.ADD, patch.getAnnotations());
 	}
 
 	@Override
 	protected ClassDef onAdd(ClassDef patch, PatcherAnnotation annotation) {
-		if (annotation == null) {
-			return patch;
-		} else {
-			return new ImmutableClassDef(
-					patch.getType(),
-					patch.getAccessFlags(),
-					patch.getSuperclass(),
-					patch.getInterfaces(),
-					patch.getSourceFile(),
-					annotation.getFilteredAnnotations(),
-					patch.getStaticFields(),
-					patch.getInstanceFields(),
-					patch.getDirectMethods(),
-					patch.getVirtualMethods());
+		if (patch.getAnnotations() == annotation.getFilteredAnnotations()) {
+			return patch;	// avoid creating a new object unless necessary
 		}
+		return new ImmutableClassDef(
+				patch.getType(),
+				patch.getAccessFlags(),
+				patch.getSuperclass(),
+				patch.getInterfaces(),
+				patch.getSourceFile(),
+				annotation.getFilteredAnnotations(),
+				patch.getStaticFields(),
+				patch.getInstanceFields(),
+				patch.getDirectMethods(),
+				patch.getVirtualMethods());
 	}
 
 	@Override
@@ -115,7 +115,6 @@ public class DexPatcher extends AbstractPatcher<ClassDef> {
 			// Ignored flags: PUBLIC, PRIVATE, PROTECTED
 		}
 
-		boolean warnOnImplicitIgnore = annotation.getWarnOnImplicitIgnore();
 		return new ImmutableClassDef(
 				patch.getType(),
 				patch.getAccessFlags(),
@@ -123,15 +122,14 @@ public class DexPatcher extends AbstractPatcher<ClassDef> {
 				patch.getInterfaces(),
 				patch.getSourceFile(),
 				annotation.getFilteredAnnotations(),
-				new FieldSetPatcher(logger, getLogPrefix(), "static field", warnOnImplicitIgnore)
+				new FieldSetPatcher(logger, getLogPrefix(), "static field", annotation)
 						.run(target.getStaticFields(), patch.getStaticFields()),
-				new FieldSetPatcher(logger, getLogPrefix(), "instance field", warnOnImplicitIgnore)
+				new FieldSetPatcher(logger, getLogPrefix(), "instance field", annotation)
 						.run(target.getInstanceFields(), patch.getInstanceFields()),
-				new MethodSetPatcher(logger, getLogPrefix(), "direct method", warnOnImplicitIgnore)
+				new DirectMethodSetPatcher(logger, getLogPrefix(), "direct method", annotation)
 						.run(target.getDirectMethods(), patch.getDirectMethods()),
-				new MethodSetPatcher(logger, getLogPrefix(), "virtual method", warnOnImplicitIgnore)
+				new MethodSetPatcher(logger, getLogPrefix(), "virtual method", annotation)
 						.run(target.getVirtualMethods(), patch.getVirtualMethods()));
-
 	}
 
 	@Override

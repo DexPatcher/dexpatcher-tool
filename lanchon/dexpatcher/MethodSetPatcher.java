@@ -1,6 +1,9 @@
 package lanchon.dexpatcher;
 
+import java.util.Set;
+
 import org.jf.dexlib2.AccessFlags;
+import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.Method;
 import org.jf.dexlib2.immutable.ImmutableMethod;
 
@@ -11,8 +14,8 @@ import static org.jf.dexlib2.AccessFlags.*;
 
 public class MethodSetPatcher extends MemberSetPatcher<Method> {
 
-	public MethodSetPatcher(Logger logger, String baseLogPrefix, String logMemberType, boolean warnOnImplicitIgnore) {
-		super(logger, baseLogPrefix, logMemberType, warnOnImplicitIgnore);
+	public MethodSetPatcher(Logger logger, String baseLogPrefix, String logMemberType, PatcherAnnotation annotation) {
+		super(logger, baseLogPrefix, logMemberType, annotation);
 	}
 
 	// Adapters
@@ -23,8 +26,8 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 	}
 
 	@Override
-	protected PatcherAnnotation getPatcherAnnotation(Method patch) throws ParseException {
-		return PatcherAnnotation.parse(patch.getAnnotations());
+	protected Set<? extends Annotation> getAnnotations(Method patch) {
+		return patch.getAnnotations();
 	}
 
 	@Override
@@ -42,18 +45,17 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 
 	@Override
 	protected Method onAdd(Method patch, PatcherAnnotation annotation) {
-		if (annotation == null) {
-			return patch;
-		} else {
-			return new ImmutableMethod(
-					patch.getDefiningClass(),
-					patch.getName(),
-					patch.getParameters(),
-					patch.getReturnType(),
-					patch.getAccessFlags(),
-					annotation.getFilteredAnnotations(),
-					patch.getImplementation());
+		if (patch.getAnnotations() == annotation.getFilteredAnnotations()) {
+			return patch;	// avoid creating a new object unless necessary
 		}
+		return new ImmutableMethod(
+				patch.getDefiningClass(),
+				patch.getName(),
+				patch.getParameters(),
+				patch.getReturnType(),
+				patch.getAccessFlags(),
+				annotation.getFilteredAnnotations(),
+				patch.getImplementation());
 	}
 
 	@SuppressWarnings("unused")

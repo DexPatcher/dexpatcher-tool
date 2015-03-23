@@ -1,6 +1,9 @@
 package lanchon.dexpatcher;
 
+import java.util.Set;
+
 import org.jf.dexlib2.AccessFlags;
+import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.Field;
 import org.jf.dexlib2.immutable.ImmutableField;
 import lanchon.dexpatcher.PatcherAnnotation.ParseException;
@@ -9,8 +12,8 @@ import static lanchon.dexpatcher.Logger.Level.*;
 
 public class FieldSetPatcher extends MemberSetPatcher<Field> {
 
-	public FieldSetPatcher(Logger logger, String baseLogPrefix, String logMemberType, boolean warnOnImplicitIgnore) {
-		super(logger, baseLogPrefix, logMemberType, warnOnImplicitIgnore);
+	public FieldSetPatcher(Logger logger, String baseLogPrefix, String logMemberType, PatcherAnnotation annotation) {
+		super(logger, baseLogPrefix, logMemberType, annotation);
 	}
 
 	// Adapters
@@ -21,8 +24,8 @@ public class FieldSetPatcher extends MemberSetPatcher<Field> {
 	}
 
 	@Override
-	protected PatcherAnnotation getPatcherAnnotation(Field patch) throws ParseException {
-		return PatcherAnnotation.parse(patch.getAnnotations());
+	protected Set<? extends Annotation> getAnnotations(Field patch) {
+		return patch.getAnnotations();
 	}
 
 	@Override
@@ -40,17 +43,16 @@ public class FieldSetPatcher extends MemberSetPatcher<Field> {
 
 	@Override
 	protected Field onAdd(Field patch, PatcherAnnotation annotation) {
-		if (annotation == null) {
-			return patch;
-		} else {
-			return new ImmutableField(
-				patch.getDefiningClass(),
-				patch.getName(),
-				patch.getType(),
-				patch.getAccessFlags(),
-				patch.getInitialValue(),
-				annotation.getFilteredAnnotations());
+		if (patch.getAnnotations() == annotation.getFilteredAnnotations()) {
+			return patch;	// avoid creating a new object unless necessary
 		}
+		return new ImmutableField(
+			patch.getDefiningClass(),
+			patch.getName(),
+			patch.getType(),
+			patch.getAccessFlags(),
+			patch.getInitialValue(),
+			annotation.getFilteredAnnotations());
 	}
 
 	@Override

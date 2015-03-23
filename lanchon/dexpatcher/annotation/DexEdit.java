@@ -6,7 +6,8 @@ import java.lang.annotation.*;
 @Documented
 @Target({ElementType.TYPE, ElementType.CONSTRUCTOR, ElementType.METHOD, ElementType.FIELD})
 public @interface DexEdit {
-    String target() default "";
+	String target() default "";
 	Class<?> targetClass() default Void.class;
-    boolean warnOnImplicitIgnore() default false;
+	String staticConstructorAction() default "";
+	String defaultAction() default "";
 }

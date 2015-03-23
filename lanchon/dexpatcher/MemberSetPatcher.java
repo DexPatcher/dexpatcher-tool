@@ -9,25 +9,27 @@ import static org.jf.dexlib2.AccessFlags.*;
 public abstract class MemberSetPatcher<T> extends AbstractPatcher<T> {
 
 	private final String logMemberType;
-	private final boolean warnOnImplicitIgnore;
+	private final Action defaultAction;
 
-	public MemberSetPatcher(Logger logger, String baseLogPrefix, String logMemberType, boolean warnOnImplicitIgnore) {
+	public MemberSetPatcher(Logger logger, String baseLogPrefix, String logMemberType, PatcherAnnotation annotation) {
 		super(logger, baseLogPrefix);
 		this.logMemberType = logMemberType;
-		this.warnOnImplicitIgnore = warnOnImplicitIgnore;
+		Action da = annotation.getDefaultAction();
+		defaultAction = (da != null ? da : Action.ADD);
 	}
 
 	// Adapters
 
 	@Override
 	protected String parsePatcherAnnotation(T patch, PatcherAnnotation annotation) throws ParseException {
-		if (annotation.getTargetClass() != null) {
-			throw new ParseException("invalid patcher annotation element (" + PatcherAnnotation.AE_TARGET_CLASS + ")");
-		}
-		if (annotation.getWarnOnImplicitIgnore()) {
-			throw new ParseException("invalid patcher annotation element (" + PatcherAnnotation.AE_WARN_ON_IMPLICIT_IGNORE + ")");
-		}
+		if (annotation.getTargetClass() != null) onInvalidElement(PatcherAnnotation.AE_TARGET_CLASS);
+		if (annotation.getStaticConstructorAction() != null) onInvalidElement(PatcherAnnotation.AE_STATIC_CONSTRUCTOR_ACTION);
+		if (annotation.getDefaultAction() != null) onInvalidElement(PatcherAnnotation.AE_DEFAULT_ACTION);
 		return annotation.getTarget();
+	}
+
+	private void onInvalidElement(String e) throws ParseException {
+		throw new ParseException("invalid patcher annotation element (" + e + ")");
 	}
 
 	@Override
@@ -49,9 +51,9 @@ public abstract class MemberSetPatcher<T> extends AbstractPatcher<T> {
 	// Handlers
 
 	@Override
-	protected Action onUnspecifiedAction(T patch, PatcherAnnotation annotation) {
-		if (warnOnImplicitIgnore) log(WARN, "implicitly ignored");
-		return Action.IGNORE;
+	protected PatcherAnnotation getDefaultAnnotation(T patch) {
+		log(INFO, "default action (" + defaultAction.getLabel() + ")");
+		return new PatcherAnnotation(defaultAction, getAnnotations(patch));
 	}
 
 	// TODO:

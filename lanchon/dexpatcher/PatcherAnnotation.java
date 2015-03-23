@@ -5,7 +5,6 @@ import java.util.Set;
 
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.AnnotationElement;
-import org.jf.dexlib2.iface.value.BooleanEncodedValue;
 import org.jf.dexlib2.iface.value.EncodedValue;
 import org.jf.dexlib2.iface.value.StringEncodedValue;
 import org.jf.dexlib2.iface.value.TypeEncodedValue;
@@ -24,7 +23,8 @@ public class PatcherAnnotation {
 
 	public static final String AE_TARGET = "target";
 	public static final String AE_TARGET_CLASS = "targetClass";
-	public static final String AE_WARN_ON_IMPLICIT_IGNORE = "warnOnImplicitIgnore";
+	public static final String AE_STATIC_CONSTRUCTOR_ACTION = "staticConstructorAction";
+	public static final String AE_DEFAULT_ACTION = "defaultAction";
 
 	private static final String CL_VOID = Util.getTypeDescriptorFromClass(Void.class);
 
@@ -41,8 +41,8 @@ public class PatcherAnnotation {
 			Action ac = Action.fromAnnotationDescriptor(an.getType());
 			if (ac != null) {
 				if (action != null) {
-					throw new ParseException("conflicting patcher annotations (" + action.getAnnotationClass().getSimpleName() +
-							", " + ac.getAnnotationClass().getSimpleName() + ")");
+					throw new ParseException("conflicting patcher annotations (" +
+							action.getAnnotationClassName() + ", " + ac.getAnnotationClassName() + ")");
 				}
 				action = ac;
 				annotation = an;
@@ -55,25 +55,42 @@ public class PatcherAnnotation {
 
 		String target = null;
 		String targetClass = null;
-		boolean warnOnImplicitIgnore = false;
+		Action staticConstructorAction = null;
+		Action defaultAction = null;
 		for (AnnotationElement element : annotation.getElements()) {
 			String name = element.getName();
 			EncodedValue value = element.getValue();
 			switch (name) {
-			case AE_TARGET:
+			case AE_TARGET: {
 				if (target != null) break;
-				String t = ((StringEncodedValue) value).getValue();
-				if (t.length() != 0) target = t;
+				String s = ((StringEncodedValue) value).getValue();
+				if (s.length() != 0) target = s;
 				continue;
-			case AE_TARGET_CLASS:
+			}
+			case AE_TARGET_CLASS: {
 				if (targetClass != null) break;
-				String tc = ((TypeEncodedValue) value).getValue();
-				if (!CL_VOID.equals(tc)) targetClass = tc;
+				String s = ((TypeEncodedValue) value).getValue();
+				if (!CL_VOID.equals(s)) targetClass = s;
 				continue;
-			case AE_WARN_ON_IMPLICIT_IGNORE:
-				if (warnOnImplicitIgnore) break;
-				warnOnImplicitIgnore = ((BooleanEncodedValue) value).getValue();
+			}
+			case AE_STATIC_CONSTRUCTOR_ACTION: {
+				if (staticConstructorAction != null) break;
+				String s = ((StringEncodedValue) value).getValue();
+				if (s.length() != 0) {
+					staticConstructorAction = Action.fromLabel(s);
+					if (staticConstructorAction == null) break;
+				}
 				continue;
+			}
+			case AE_DEFAULT_ACTION: {
+				if (defaultAction != null) break;
+				String s = ((StringEncodedValue) value).getValue();
+				if (s.length() != 0) {
+					defaultAction = Action.fromLabel(s);
+					if (defaultAction == null) break;
+				}
+				continue;
+			}
 			default:
 				break;
 			}
@@ -81,27 +98,39 @@ public class PatcherAnnotation {
 		}
 
 		if (target != null && targetClass != null) {
-			throw new ParseException("conflicting patcher annotation elements (" + AE_TARGET + ", " + AE_TARGET_CLASS + ")");
+			throw new ParseException("conflicting patcher annotation elements (" +
+					AE_TARGET + ", " + AE_TARGET_CLASS + ")");
 		}
 
-		Set<? extends Annotation> filteredAnnotationSet = ImmutableAnnotation.immutableSetOf(filteredAnnotations);
-		return new PatcherAnnotation(action, target, targetClass, warnOnImplicitIgnore, filteredAnnotationSet);
+		return new PatcherAnnotation(action, target, targetClass, staticConstructorAction,
+				defaultAction, ImmutableAnnotation.immutableSetOf(filteredAnnotations));
 
 	}
 
-	//private final Annotation annotation;
 	private final Action action;
 	private final String target;
 	private final String targetClass;
-	private final boolean warnOnImplicitIgnore;
+	private final Action staticConstructorAction;
+	private final Action defaultAction;
 	private final Set<? extends Annotation> filteredAnnotations;
 
-	private PatcherAnnotation(Action action, String target, String targetClass, boolean warnOnImplicitIgnore,
+	public PatcherAnnotation(Action action, String target, String targetClass,
+			Action staticConstructorAction, Action defaultAction,
 			Set<? extends Annotation> filteredAnnotations) {
 		this.action = action;
 		this.target = target;
 		this.targetClass = targetClass;
-		this.warnOnImplicitIgnore = warnOnImplicitIgnore;
+		this.staticConstructorAction = staticConstructorAction;
+		this.defaultAction = defaultAction;
+		this.filteredAnnotations = filteredAnnotations;
+	}
+
+	public PatcherAnnotation(Action action, Set<? extends Annotation> filteredAnnotations) {
+		this.action = action;
+		this.target = null;
+		this.targetClass = null;
+		this.staticConstructorAction = null;
+		this.defaultAction = null;
 		this.filteredAnnotations = filteredAnnotations;
 	}
 
@@ -117,8 +146,12 @@ public class PatcherAnnotation {
 		return targetClass;
 	}
 
-	public boolean getWarnOnImplicitIgnore() {
-		return warnOnImplicitIgnore;
+	public Action getStaticConstructorAction() {
+		return staticConstructorAction;
+	}
+
+	public Action getDefaultAction() {
+		return defaultAction;
 	}
 
 	public Set<? extends Annotation> getFilteredAnnotations() {

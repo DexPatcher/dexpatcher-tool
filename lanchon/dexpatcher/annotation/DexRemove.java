@@ -6,6 +6,6 @@ import java.lang.annotation.*;
 @Documented
 @Target({ElementType.TYPE, ElementType.CONSTRUCTOR, ElementType.METHOD, ElementType.FIELD})
 public @interface DexRemove {
-    String target() default "";
+	String target() default "";
 	Class<?> targetClass() default Void.class;
 }

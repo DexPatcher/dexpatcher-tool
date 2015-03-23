@@ -2,7 +2,10 @@ package lanchon.dexpatcher;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.Set;
+
 import org.jf.dexlib2.AccessFlags;
+import org.jf.dexlib2.iface.Annotation;
 
 import static lanchon.dexpatcher.Logger.Level.*;
 
@@ -50,22 +53,14 @@ public abstract class AbstractPatcher<T> {
 			PatcherAnnotation annotation;
 			String targetId = null;
 			try {
-				annotation = getPatcherAnnotation(patch);
-				if (annotation != null) {
-					targetId = parsePatcherAnnotation(patch, annotation);
-				}
+				annotation = PatcherAnnotation.parse(getAnnotations(patch));
+				if (annotation == null) annotation = getDefaultAnnotation(patch);
+				targetId = parsePatcherAnnotation(patch, annotation);
 			} catch (PatcherAnnotation.ParseException e) {
 				log(ERROR, e.getMessage());
 				continue;
 			}
-
-			Action action;
-			if (annotation != null) {
-				action = annotation.getAction();
-			} else {
-				action = onUnspecifiedAction(patch, annotation);
-			}
-			assert action != null : "null action";
+			Action action = annotation.getAction();
 
 			if (targetId == null) targetId = patchId;
 			else {
@@ -78,7 +73,7 @@ public abstract class AbstractPatcher<T> {
 			if (action != Action.ADD && action != Action.IGNORE) {
 				target = targetMap.get(targetId);
 				if (target == null) {
-					log(ERROR, "nonexistent target");
+					log(ERROR, "target not found");
 					continue;
 				}
 				if (targetedMap.put(targetId, target) != null) {
@@ -153,17 +148,17 @@ public abstract class AbstractPatcher<T> {
 
 	// TODO:
 	// When this commit ships: https://code.google.com/p/smali/issues/detail?id=237
-	// Eliminate: protected abstract PatcherAnnotation getPatcherAnnotation(T t) throws PatcherAnnotation.ParseException;
+	// Eliminate: protected abstract Set<? extends Annotation> getAnnotations(T patch);
 
 	protected abstract String getId(T t);
-	protected abstract PatcherAnnotation getPatcherAnnotation(T patch) throws PatcherAnnotation.ParseException;
+	protected abstract Set<? extends Annotation> getAnnotations(T patch);
 	protected abstract String parsePatcherAnnotation(T patch, PatcherAnnotation annotation) throws PatcherAnnotation.ParseException;
 	protected abstract String getLogPrefix(T patch);
 	protected abstract String getLogTargetPrefix(PatcherAnnotation annotation, String targetId);
 
 	// Handlers
 
-	protected abstract Action onUnspecifiedAction(T patch, PatcherAnnotation annotation);
+	protected abstract PatcherAnnotation getDefaultAnnotation(T patch);
 	protected abstract T onAdd(T patch, PatcherAnnotation annotation);
 	protected abstract T onEdit(T patch, PatcherAnnotation annotation, T target);
 
