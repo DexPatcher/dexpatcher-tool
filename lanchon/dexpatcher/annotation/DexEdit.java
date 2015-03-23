@@ -8,6 +8,6 @@ import java.lang.annotation.*;
 public @interface DexEdit {
 	String target() default "";
 	Class<?> targetClass() default Void.class;
-	String staticConstructorAction() default "";
-	String defaultAction() default "";
+	DexAction staticConstructorAction() default DexAction.UNDEFINED;
+	DexAction defaultAction() default DexAction.UNDEFINED;
 }

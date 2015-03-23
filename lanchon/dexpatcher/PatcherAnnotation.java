@@ -6,6 +6,7 @@ import java.util.Set;
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.AnnotationElement;
 import org.jf.dexlib2.iface.value.EncodedValue;
+import org.jf.dexlib2.iface.value.EnumEncodedValue;
 import org.jf.dexlib2.iface.value.StringEncodedValue;
 import org.jf.dexlib2.iface.value.TypeEncodedValue;
 import org.jf.dexlib2.immutable.ImmutableAnnotation;
@@ -75,20 +76,14 @@ public class PatcherAnnotation {
 			}
 			case AE_STATIC_CONSTRUCTOR_ACTION: {
 				if (staticConstructorAction != null) break;
-				String s = ((StringEncodedValue) value).getValue();
-				if (s.length() != 0) {
-					staticConstructorAction = Action.fromLabel(s);
-					if (staticConstructorAction == null) break;
-				}
+				String s = ((EnumEncodedValue) value).getValue().getName();
+				staticConstructorAction = Action.fromLabel(s.toLowerCase());
 				continue;
 			}
 			case AE_DEFAULT_ACTION: {
 				if (defaultAction != null) break;
-				String s = ((StringEncodedValue) value).getValue();
-				if (s.length() != 0) {
-					defaultAction = Action.fromLabel(s);
-					if (defaultAction == null) break;
-				}
+				String s = ((EnumEncodedValue) value).getValue().getName();
+				defaultAction = Action.fromLabel(s.toLowerCase());
 				continue;
 			}
 			default:
