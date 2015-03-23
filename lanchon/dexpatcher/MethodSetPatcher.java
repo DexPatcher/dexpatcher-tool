@@ -1,18 +1,26 @@
 package lanchon.dexpatcher;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import org.jf.dexlib2.AccessFlags;
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.Method;
+import org.jf.dexlib2.iface.MethodImplementation;
+import org.jf.dexlib2.iface.MethodParameter;
 import org.jf.dexlib2.immutable.ImmutableMethod;
+import org.jf.dexlib2.immutable.ImmutableMethodImplementation;
 
 import lanchon.dexpatcher.PatcherAnnotation.ParseException;
+import lanchon.dexpatcher.annotation.DexTag;
 
 import static lanchon.dexpatcher.Logger.Level.*;
 import static org.jf.dexlib2.AccessFlags.*;
 
 public class MethodSetPatcher extends MemberSetPatcher<Method> {
+
+	private static final String CLASS_TAG = Util.getTypeDescriptorFromClass(DexTag.class);
 
 	public MethodSetPatcher(Logger logger, String baseLogPrefix, String logMemberType, PatcherAnnotation annotation) {
 		super(logger, baseLogPrefix, logMemberType, annotation);
@@ -33,7 +41,20 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 	@Override
 	protected String parsePatcherAnnotation(Method patch, PatcherAnnotation annotation) throws ParseException {
 		String target = super.parsePatcherAnnotation(patch, annotation);
-		return target != null ? Util.getMethodId(patch, target) : null;
+		if (isTaggedByParameter(patch)) {
+			ArrayList<MethodParameter> parameters = new ArrayList<MethodParameter>(patch.getParameters());
+			parameters.remove(parameters.size() - 1);
+			target = (target != null ? target : patch.getName());
+			return Util.getMethodId(parameters, patch.getReturnType(), target);
+		}
+		else return target != null ? Util.getMethodId(patch, target) : null;
+	}
+
+	private boolean isTaggedByParameter(Method patch) {
+		List<? extends MethodParameter> parameters = patch.getParameters();
+		int size = parameters.size();
+		if (size == 0) return false;
+		return CLASS_TAG.equals(parameters.get(size - 1).getType());
 	}
 
 	@Override
@@ -74,6 +95,15 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 		}
 		else flags = patch.getAccessFlags();
 
+		MethodImplementation implementation = target.getImplementation();
+		if (isTaggedByParameter(patch)) {
+			implementation = new ImmutableMethodImplementation(
+					implementation.getRegisterCount() + 1,
+					implementation.getInstructions(),
+					implementation.getTryBlocks(),
+					implementation.getDebugItems());
+		}
+
 		Method patched = new ImmutableMethod(
 				patch.getDefiningClass(),
 				patch.getName(),
@@ -81,7 +111,7 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 				patch.getReturnType(),
 				flags,
 				annotation.getFilteredAnnotations(),
-				target.getImplementation());
+				implementation);
 
 		return super.onEdit(patched, annotation, target);
 

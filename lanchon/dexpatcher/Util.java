@@ -1,5 +1,7 @@
 package lanchon.dexpatcher;
 
+import java.util.List;
+
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.AnnotationElement;
 import org.jf.dexlib2.iface.ClassDef;
@@ -57,10 +59,14 @@ public class Util {
 	}
 
 	public static String getMethodId(Method method, String name) {
+		return getMethodId(method.getParameters(), method.getReturnType(), name);
+	}
+
+	public static String getMethodId(List<? extends MethodParameter> parameters, String returnType, String name) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(name).append('(');
-		for (MethodParameter p : method.getParameters()) sb.append(p.getType());
-		sb.append(')').append(method.getReturnType());
+		for (MethodParameter p : parameters) sb.append(p.getType());
+		sb.append(')').append(returnType);
 		return sb.toString();
 	}
 
