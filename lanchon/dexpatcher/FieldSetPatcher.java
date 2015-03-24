@@ -5,6 +5,7 @@ import java.util.Set;
 import org.jf.dexlib2.AccessFlags;
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.Field;
+import org.jf.dexlib2.iface.value.EncodedValue;
 import org.jf.dexlib2.immutable.ImmutableField;
 import lanchon.dexpatcher.PatcherAnnotation.ParseException;
 
@@ -30,6 +31,10 @@ public class FieldSetPatcher extends MemberSetPatcher<Field> {
 
 	@Override
 	protected String parsePatcherAnnotation(Field patch, PatcherAnnotation annotation) throws ParseException {
+		Action action = annotation.getAction();
+		if (action == Action.REPLACE) {
+			throw new ParseException("invalid patcher annotation (" + action.getAnnotationClassName() + ")");
+		}
 		String target = super.parsePatcherAnnotation(patch, annotation);
 		return target != null ? Util.getFieldId(patch, target) : null;
 	}
@@ -43,57 +48,54 @@ public class FieldSetPatcher extends MemberSetPatcher<Field> {
 
 	@Override
 	protected Field onAdd(Field patch, PatcherAnnotation annotation) {
-		if (patch.getAnnotations() == annotation.getFilteredAnnotations()) {
-			return patch;	// avoid creating a new object unless necessary
-		}
+		EncodedValue value = filterInitialValue(patch, null);
 		return new ImmutableField(
 			patch.getDefiningClass(),
 			patch.getName(),
 			patch.getType(),
 			patch.getAccessFlags(),
-			patch.getInitialValue(),
+			value,
 			annotation.getFilteredAnnotations());
 	}
 
 	@Override
 	protected Field onEdit(Field patch, PatcherAnnotation annotation, Field target) {
-
-		if (patch.getInitialValue() != null) {
-			log(WARN, "ignoring simple field initializer value in patch");
+		EncodedValue value = filterInitialValue(patch, target.getInitialValue());
+		if (AccessFlags.FINAL.isSet(target.getAccessFlags())) {
+			log(WARN, "value of final field might be embedded in code");
 		}
-
 		Field patched = new ImmutableField(
 				patch.getDefiningClass(),
 				patch.getName(),
 				patch.getType(),
 				patch.getAccessFlags(),
-				target.getInitialValue(),
+				value,
 				annotation.getFilteredAnnotations());
-
 		return super.onEdit(patched, annotation, target);
+	}
 
+	private EncodedValue filterInitialValue(Field patch, EncodedValue value) {
+		if (AccessFlags.STATIC.isSet(patch.getAccessFlags())) {
+			// Use the static field initializer values in patch if and
+			// only if the static constructor in patch is being used.
+			// This makes behavior predictable across compilers.
+			if (resolvedStaticConstructorAction == Action.ADD || resolvedStaticConstructorAction == Action.REPLACE) {
+				value = patch.getInitialValue();
+			} else {
+				log(WARN, "field will not be initialized as specified in patch because the static constructor code in patch is being ignored");
+			}
+		} else {
+			// Instance fields should never have initializer values.
+			if (patch.getInitialValue() != null) {
+				log(ERROR, "unexpected instance field initializer value in patch");
+			}
+		}
+		return value;
 	}
 
 	@Override
 	protected Field onReplace(Field patch, PatcherAnnotation annotation, Field target) {
-
-		if (AccessFlags.STATIC.isSet(patch.getAccessFlags())) {
-			if (patch.getInitialValue() == null) {
-				log(WARN, "no simple field initializer value found in patch (either the field lacks an initializer or it is embedded in the static class constructor)");
-			}
-			if (target.getInitialValue() == null) {
-				log(WARN, "no simple field initializer value found in target (either the field lacks an initializer or it is embedded in the static class constructor)");
-			}
-		} else {
-			log(ERROR, "cannot replace instance fields (initializers are embedded in the instance constructors); edit the field instead");
-		}
-
-		if (AccessFlags.FINAL.isSet(target.getAccessFlags())) {
-			log(WARN, "value of final field might be embedded in code");
-		}
-
-		return super.onReplace(patch, annotation, target);
-
+		throw new AssertionError("field replace");
 	}
 
 }

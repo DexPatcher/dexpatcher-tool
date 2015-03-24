@@ -10,12 +10,10 @@ import static lanchon.dexpatcher.Logger.Level.*;
 
 public class DirectMethodSetPatcher extends MethodSetPatcher {
 
-	private final Action staticConstructorAction;
 	private boolean staticConstructorFound;
 
 	public DirectMethodSetPatcher(Logger logger, String baseLogPrefix, String logMemberType, PatcherAnnotation annotation) {
 		super(logger, baseLogPrefix, logMemberType, annotation);
-		staticConstructorAction = annotation.getStaticConstructorAction();
 	}
 
 	@Override

@@ -10,12 +10,16 @@ public abstract class MemberSetPatcher<T> extends AbstractPatcher<T> {
 
 	private final String logMemberType;
 	private final Action defaultAction;
+	protected final Action staticConstructorAction;
+	protected final Action resolvedStaticConstructorAction;
 
 	public MemberSetPatcher(Logger logger, String baseLogPrefix, String logMemberType, PatcherAnnotation annotation) {
 		super(logger, baseLogPrefix);
 		this.logMemberType = logMemberType;
 		Action da = annotation.getDefaultAction();
 		defaultAction = (da != null ? da : Action.ADD);
+		staticConstructorAction = annotation.getStaticConstructorAction();
+		resolvedStaticConstructorAction = (staticConstructorAction != null ? staticConstructorAction : defaultAction);
 	}
 
 	// Adapters
