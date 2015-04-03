@@ -80,7 +80,9 @@ public class FieldSetPatcher extends MemberSetPatcher<Field> {
 			// Use the static field initializer values in patch if and
 			// only if the static constructor in patch is being used.
 			// This makes behavior predictable across compilers.
-			if (resolvedStaticConstructorAction == Action.ADD || resolvedStaticConstructorAction == Action.REPLACE) {
+			if (resolvedStaticConstructorAction == null) {
+				log(ERROR, "must define an action for the static constructor of the class");
+			} else if (resolvedStaticConstructorAction == Action.ADD || resolvedStaticConstructorAction == Action.REPLACE) {
 				value = patch.getInitialValue();
 			} else {
 				log(WARN, "field will not be initialized as specified in patch because the static constructor code in patch is being ignored");

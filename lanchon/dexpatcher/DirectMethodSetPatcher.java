@@ -29,11 +29,12 @@ public class DirectMethodSetPatcher extends MethodSetPatcher {
 
 	@Override
 	protected PatcherAnnotation getDefaultAnnotation(Method patch) {
-		if (staticConstructorAction != null &&
-				"<clinit>".equals(patch.getName()) &&		// performance optimization
+		if ("<clinit>".equals(patch.getName()) &&		// performance optimization
 				"<clinit>()V".equals(getId(patch))) {
 			staticConstructorFound = true;
-			return new PatcherAnnotation(staticConstructorAction, patch.getAnnotations());
+			if (staticConstructorAction != null) {
+				return new PatcherAnnotation(staticConstructorAction, patch.getAnnotations());
+			}
 		}
 		return super.getDefaultAnnotation(patch);
 	}

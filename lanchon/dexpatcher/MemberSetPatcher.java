@@ -1,6 +1,7 @@
 package lanchon.dexpatcher;
 
 import org.jf.dexlib2.AccessFlags;
+
 import lanchon.dexpatcher.PatcherAnnotation.ParseException;
 
 import static lanchon.dexpatcher.Logger.Level.*;
@@ -16,8 +17,7 @@ public abstract class MemberSetPatcher<T> extends AbstractPatcher<T> {
 	public MemberSetPatcher(Logger logger, String baseLogPrefix, String logMemberType, PatcherAnnotation annotation) {
 		super(logger, baseLogPrefix);
 		this.logMemberType = logMemberType;
-		Action da = annotation.getDefaultAction();
-		defaultAction = (da != null ? da : Action.ADD);
+		defaultAction = annotation.getDefaultAction();
 		staticConstructorAction = annotation.getStaticConstructorAction();
 		resolvedStaticConstructorAction = (staticConstructorAction != null ? staticConstructorAction : defaultAction);
 	}
@@ -56,8 +56,13 @@ public abstract class MemberSetPatcher<T> extends AbstractPatcher<T> {
 
 	@Override
 	protected PatcherAnnotation getDefaultAnnotation(T patch) {
-		log(INFO, "default action (" + defaultAction.getLabel() + ")");
-		return new PatcherAnnotation(defaultAction, getAnnotations(patch));
+		if (defaultAction != null) {
+			log(INFO, "default action (" + defaultAction.getLabel() + ")");
+			return new PatcherAnnotation(defaultAction, getAnnotations(patch));
+		} else {
+			log(ERROR, "no default action defined");
+			return new PatcherAnnotation(Action.IGNORE, getAnnotations(patch));
+		}
 	}
 
 	// TODO:
