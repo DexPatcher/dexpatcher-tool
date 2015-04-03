@@ -60,7 +60,8 @@ public class FieldSetPatcher extends MemberSetPatcher<Field> {
 
 	@Override
 	protected Field onEdit(Field patch, PatcherAnnotation annotation, Field target) {
-		EncodedValue value = filterInitialValue(patch, target.getInitialValue());
+		EncodedValue value = (patch.getName().equals(target.getName()) ? target.getInitialValue() : null);
+		value = filterInitialValue(patch, target.getInitialValue());
 		if (AccessFlags.FINAL.isSet(target.getAccessFlags())) {
 			log(WARN, "value of final field might be embedded in code");
 		}
