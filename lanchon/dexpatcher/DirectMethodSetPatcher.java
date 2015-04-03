@@ -2,8 +2,6 @@ package lanchon.dexpatcher;
 
 import java.util.Collection;
 
-import lanchon.dexpatcher.annotation.DexTarget;
-
 import org.jf.dexlib2.iface.Method;
 
 import static lanchon.dexpatcher.Logger.Level.*;
@@ -32,8 +30,8 @@ public class DirectMethodSetPatcher extends MethodSetPatcher {
 	@Override
 	protected PatcherAnnotation getDefaultAnnotation(Method patch) {
 		if (staticConstructorAction != null &&
-				DexTarget.STATIC_CONSTRUCTOR.equals(patch.getName()) &&
-				"()V".equals(Util.getMethodId(patch, ""))) {
+				"<clinit>".equals(patch.getName()) &&		// performance optimization
+				"<clinit>()V".equals(getId(patch))) {
 			staticConstructorFound = true;
 			return new PatcherAnnotation(staticConstructorAction, patch.getAnnotations());
 		}
