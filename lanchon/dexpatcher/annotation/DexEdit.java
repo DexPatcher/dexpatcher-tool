@@ -10,4 +10,5 @@ public @interface DexEdit {
 	Class<?> targetClass() default Void.class;
 	DexAction staticConstructorAction() default DexAction.UNDEFINED;
 	DexAction defaultAction() default DexAction.UNDEFINED;
+	boolean onlyEditMembers() default false;
 }

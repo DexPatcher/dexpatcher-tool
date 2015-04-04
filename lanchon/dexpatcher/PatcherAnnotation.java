@@ -5,6 +5,7 @@ import java.util.Set;
 
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.AnnotationElement;
+import org.jf.dexlib2.iface.value.BooleanEncodedValue;
 import org.jf.dexlib2.iface.value.EncodedValue;
 import org.jf.dexlib2.iface.value.EnumEncodedValue;
 import org.jf.dexlib2.iface.value.StringEncodedValue;
@@ -26,6 +27,7 @@ public class PatcherAnnotation {
 	public static final String AE_TARGET_CLASS = "targetClass";
 	public static final String AE_STATIC_CONSTRUCTOR_ACTION = "staticConstructorAction";
 	public static final String AE_DEFAULT_ACTION = "defaultAction";
+	public static final String AE_ONLY_EDIT_MEMBERS = "onlyEditMembers";
 
 	private static final String CLASS_VOID = Util.getTypeDescriptorFromClass(Void.class);
 
@@ -58,6 +60,7 @@ public class PatcherAnnotation {
 		String targetClass = null;
 		Action staticConstructorAction = null;
 		Action defaultAction = null;
+		boolean onlyEditMembers = false;
 		for (AnnotationElement element : annotation.getElements()) {
 			String name = element.getName();
 			EncodedValue value = element.getValue();
@@ -86,6 +89,11 @@ public class PatcherAnnotation {
 				defaultAction = Action.fromLabel(s.toLowerCase());
 				continue;
 			}
+			case AE_ONLY_EDIT_MEMBERS: {
+				if (onlyEditMembers) break;
+				onlyEditMembers = ((BooleanEncodedValue) value).getValue();
+				continue;
+			}
 			default:
 				break;
 			}
@@ -97,8 +105,8 @@ public class PatcherAnnotation {
 					AE_TARGET + ", " + AE_TARGET_CLASS + ")");
 		}
 
-		return new PatcherAnnotation(action, target, targetClass, staticConstructorAction,
-				defaultAction, ImmutableAnnotation.immutableSetOf(filteredAnnotations));
+		return new PatcherAnnotation(action, target, targetClass, staticConstructorAction, defaultAction,
+				onlyEditMembers, ImmutableAnnotation.immutableSetOf(filteredAnnotations));
 
 	}
 
@@ -107,16 +115,17 @@ public class PatcherAnnotation {
 	private final String targetClass;
 	private final Action staticConstructorAction;
 	private final Action defaultAction;
+	private final boolean onlyEditMembers;
 	private final Set<? extends Annotation> filteredAnnotations;
 
-	public PatcherAnnotation(Action action, String target, String targetClass,
-			Action staticConstructorAction, Action defaultAction,
-			Set<? extends Annotation> filteredAnnotations) {
+	public PatcherAnnotation(Action action, String target, String targetClass, Action staticConstructorAction,
+			Action defaultAction, boolean onlyEditMembers, Set<? extends Annotation> filteredAnnotations) {
 		this.action = action;
 		this.target = target;
 		this.targetClass = targetClass;
 		this.staticConstructorAction = staticConstructorAction;
 		this.defaultAction = defaultAction;
+		this.onlyEditMembers = onlyEditMembers;
 		this.filteredAnnotations = filteredAnnotations;
 	}
 
@@ -126,6 +135,7 @@ public class PatcherAnnotation {
 		this.targetClass = null;
 		this.staticConstructorAction = null;
 		this.defaultAction = null;
+		this.onlyEditMembers = false;
 		this.filteredAnnotations = filteredAnnotations;
 	}
 
@@ -147,6 +157,10 @@ public class PatcherAnnotation {
 
 	public Action getDefaultAction() {
 		return defaultAction;
+	}
+
+	public boolean getOnlyEditMembers() {
+		return onlyEditMembers;
 	}
 
 	public Set<? extends Annotation> getFilteredAnnotations() {

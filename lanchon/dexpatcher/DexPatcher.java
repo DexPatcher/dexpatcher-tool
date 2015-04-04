@@ -1,5 +1,6 @@
 package lanchon.dexpatcher;
 
+import java.util.Collection;
 import java.util.Set;
 
 import org.jf.dexlib2.AccessFlags;
@@ -115,13 +116,23 @@ public class DexPatcher extends AbstractPatcher<ClassDef> {
 			// Ignored flags: PUBLIC, PRIVATE, PROTECTED
 		}
 
+		ClassDef source;
+		Collection<? extends Annotation> annotations;
+		if (annotation.getOnlyEditMembers()) {
+			source = target;
+			annotations = target.getAnnotations();
+		} else {
+			source = patch;
+			annotations = annotation.getFilteredAnnotations();
+		}
+
 		return new ImmutableClassDef(
-				patch.getType(),
-				patch.getAccessFlags(),
-				patch.getSuperclass(),
-				patch.getInterfaces(),
-				patch.getSourceFile(),
-				annotation.getFilteredAnnotations(),
+				source.getType(),
+				source.getAccessFlags(),
+				source.getSuperclass(),
+				source.getInterfaces(),
+				source.getSourceFile(),
+				annotations,
 				new FieldSetPatcher(logger, getLogPrefix(), "static field", annotation)
 						.run(target.getStaticFields(), patch.getStaticFields()),
 				new FieldSetPatcher(logger, getLogPrefix(), "instance field", annotation)
@@ -130,6 +141,7 @@ public class DexPatcher extends AbstractPatcher<ClassDef> {
 						.run(target.getDirectMethods(), patch.getDirectMethods()),
 				new MethodSetPatcher(logger, getLogPrefix(), "virtual method", annotation)
 						.run(target.getVirtualMethods(), patch.getVirtualMethods()));
+
 	}
 
 	@Override

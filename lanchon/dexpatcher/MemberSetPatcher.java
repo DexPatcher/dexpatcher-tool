@@ -29,6 +29,7 @@ public abstract class MemberSetPatcher<T> extends AbstractPatcher<T> {
 		if (annotation.getTargetClass() != null) onInvalidElement(PatcherAnnotation.AE_TARGET_CLASS);
 		if (annotation.getStaticConstructorAction() != null) onInvalidElement(PatcherAnnotation.AE_STATIC_CONSTRUCTOR_ACTION);
 		if (annotation.getDefaultAction() != null) onInvalidElement(PatcherAnnotation.AE_DEFAULT_ACTION);
+		if (annotation.getOnlyEditMembers()) onInvalidElement(PatcherAnnotation.AE_ONLY_EDIT_MEMBERS);
 		return annotation.getTarget();
 	}
 
