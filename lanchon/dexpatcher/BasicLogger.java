@@ -24,7 +24,7 @@ public class BasicLogger extends Logger {
 			System.out.println(message);
 			break;
 		default:
-			throw new AssertionError("unexpected log level");
+			throw new AssertionError("Unexpected log level");
 		}
 	}
 

@@ -100,15 +100,15 @@ public abstract class AbstractPatcher<T> {
 			case IGNORE:
 				break;
 			default:
-				throw new AssertionError("unexpected action");
+				throw new AssertionError("Unexpected action");
 			}
 
 			if (action != Action.REMOVE && action != Action.IGNORE) {
-				assert patched != null : "patched is null";
+				if (patched == null) throw new AssertionError("Patched is null");
 				String patchedId = getId(patched);
-				assert patchId.equals(patchedId) : "patched id changed";
+				if (!patchId.equals(patchedId)) throw new AssertionError("Patched id changed");
 				T previous = patchedMap.put(patchedId, patched);
-				assert previous == null : "patched id collision";
+				if (previous != null) throw new AssertionError("Patched id collision");
 			}
 
 		}
