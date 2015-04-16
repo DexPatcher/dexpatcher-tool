@@ -13,14 +13,11 @@ import org.jf.dexlib2.immutable.ImmutableMethod;
 import org.jf.dexlib2.immutable.ImmutableMethodImplementation;
 
 import lanchon.dexpatcher.PatcherAnnotation.ParseException;
-import lanchon.dexpatcher.annotation.DexTag;
 
 import static lanchon.dexpatcher.Logger.Level.*;
 import static org.jf.dexlib2.AccessFlags.*;
 
 public class MethodSetPatcher extends MemberSetPatcher<Method> {
-
-	private static final String CLASS_TAG = Util.getTypeDescriptorFromClass(DexTag.class);
 
 	public MethodSetPatcher(Logger logger, String baseLogPrefix, String logMemberType, PatcherAnnotation annotation) {
 		super(logger, baseLogPrefix, logMemberType, annotation);
@@ -54,7 +51,7 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 		List<? extends MethodParameter> parameters = patch.getParameters();
 		int size = parameters.size();
 		if (size == 0) return false;
-		return CLASS_TAG.equals(parameters.get(size - 1).getType());
+		return Tag.TYPE_TAG.equals(parameters.get(size - 1).getType());
 	}
 
 	@Override

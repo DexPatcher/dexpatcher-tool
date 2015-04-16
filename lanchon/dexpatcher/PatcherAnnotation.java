@@ -23,14 +23,6 @@ public class PatcherAnnotation {
 
 	}
 
-	public static final String AE_TARGET = "target";
-	public static final String AE_TARGET_CLASS = "targetClass";
-	public static final String AE_STATIC_CONSTRUCTOR_ACTION = "staticConstructorAction";
-	public static final String AE_DEFAULT_ACTION = "defaultAction";
-	public static final String AE_ONLY_EDIT_MEMBERS = "onlyEditMembers";
-
-	private static final String CLASS_VOID = Util.getTypeDescriptorFromClass(Void.class);
-
 	// TODO:
 	// When this commit ships: https://code.google.com/p/smali/issues/detail?id=237
 	// Change to: public static PatcherAnnotation parse(Annotable annotable) throws ParseException {
@@ -65,31 +57,31 @@ public class PatcherAnnotation {
 			String name = element.getName();
 			EncodedValue value = element.getValue();
 			switch (name) {
-			case AE_TARGET: {
+			case Tag.ELEM_TARGET: {
 				if (target != null) break;
 				String s = ((StringEncodedValue) value).getValue();
 				if (s.length() != 0) target = s;
 				continue;
 			}
-			case AE_TARGET_CLASS: {
+			case Tag.ELEM_TARGET_CLASS: {
 				if (targetClass != null) break;
 				String s = ((TypeEncodedValue) value).getValue();
-				if (!CLASS_VOID.equals(s)) targetClass = s;
+				if (!Tag.TYPE_VOID.equals(s)) targetClass = s;
 				continue;
 			}
-			case AE_STATIC_CONSTRUCTOR_ACTION: {
+			case Tag.ELEM_STATIC_CONSTRUCTOR_ACTION: {
 				if (staticConstructorAction != null) break;
 				String s = ((EnumEncodedValue) value).getValue().getName();
 				staticConstructorAction = Action.fromLabel(s.toLowerCase());
 				continue;
 			}
-			case AE_DEFAULT_ACTION: {
+			case Tag.ELEM_DEFAULT_ACTION: {
 				if (defaultAction != null) break;
 				String s = ((EnumEncodedValue) value).getValue().getName();
 				defaultAction = Action.fromLabel(s.toLowerCase());
 				continue;
 			}
-			case AE_ONLY_EDIT_MEMBERS: {
+			case Tag.ELEM_ONLY_EDIT_MEMBERS: {
 				if (onlyEditMembers) break;
 				onlyEditMembers = ((BooleanEncodedValue) value).getValue();
 				continue;
@@ -102,7 +94,7 @@ public class PatcherAnnotation {
 
 		if (target != null && targetClass != null) {
 			throw new ParseException("conflicting patcher annotation elements (" +
-					AE_TARGET + ", " + AE_TARGET_CLASS + ")");
+					Tag.ELEM_TARGET + ", " + Tag.ELEM_TARGET_CLASS + ")");
 		}
 
 		return new PatcherAnnotation(action, target, targetClass, staticConstructorAction, defaultAction,

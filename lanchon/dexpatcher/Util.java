@@ -11,9 +11,7 @@ import org.jf.dexlib2.iface.MethodParameter;
 import org.jf.dexlib2.iface.value.EncodedValue;
 import org.jf.dexlib2.iface.value.IntEncodedValue;
 
-public class Util {
-
-	private Util() {}
+public abstract class Util {
 
 	public static String getTypeDescriptorFromClass(Class<?> c) {
 		return getTypeDescriptorFromName(c.getName());

@@ -1,22 +1,15 @@
 package lanchon.dexpatcher;
 
-import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;
 
-import lanchon.dexpatcher.annotation.DexAdd;
-import lanchon.dexpatcher.annotation.DexEdit;
-import lanchon.dexpatcher.annotation.DexIgnore;
-import lanchon.dexpatcher.annotation.DexRemove;
-import lanchon.dexpatcher.annotation.DexReplace;
-
 public enum Action {
 
-	ADD(DexAdd.class),
-	EDIT(DexEdit.class),
-	REPLACE(DexReplace.class),
-	REMOVE(DexRemove.class),
-	IGNORE(DexIgnore.class);
+	ADD(Tag.ADD),
+	EDIT(Tag.EDIT),
+	REPLACE(Tag.REPLACE),
+	REMOVE(Tag.REMOVE),
+	IGNORE(Tag.IGNORE);
 
 	private static final Map<String, Action> labelMap;
 	private static final Map<String, Action> annotationDescriptorMap;
@@ -42,10 +35,10 @@ public enum Action {
 	private final String annotationClassName;
 	private final String annotationDescriptor;
 
-	Action(Class<? extends Annotation> annotationClass) {
+	Action(String annotationClassName) {
 		this.label = name().toLowerCase();
-		this.annotationClassName = annotationClass.getSimpleName();
-		this.annotationDescriptor = Util.getTypeDescriptorFromClass(annotationClass);
+		this.annotationClassName = annotationClassName;
+		this.annotationDescriptor = Tag.getTypeDescriptor(annotationClassName);
 	}
 
 	public String getLabel() {

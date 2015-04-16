@@ -26,10 +26,10 @@ public abstract class MemberSetPatcher<T> extends AbstractPatcher<T> {
 
 	@Override
 	protected String parsePatcherAnnotation(T patch, PatcherAnnotation annotation) throws ParseException {
-		if (annotation.getTargetClass() != null) onInvalidElement(PatcherAnnotation.AE_TARGET_CLASS);
-		if (annotation.getStaticConstructorAction() != null) onInvalidElement(PatcherAnnotation.AE_STATIC_CONSTRUCTOR_ACTION);
-		if (annotation.getDefaultAction() != null) onInvalidElement(PatcherAnnotation.AE_DEFAULT_ACTION);
-		if (annotation.getOnlyEditMembers()) onInvalidElement(PatcherAnnotation.AE_ONLY_EDIT_MEMBERS);
+		if (annotation.getTargetClass() != null) onInvalidElement(Tag.ELEM_TARGET_CLASS);
+		if (annotation.getStaticConstructorAction() != null) onInvalidElement(Tag.ELEM_STATIC_CONSTRUCTOR_ACTION);
+		if (annotation.getDefaultAction() != null) onInvalidElement(Tag.ELEM_DEFAULT_ACTION);
+		if (annotation.getOnlyEditMembers()) onInvalidElement(Tag.ELEM_ONLY_EDIT_MEMBERS);
 		return annotation.getTarget();
 	}
 
