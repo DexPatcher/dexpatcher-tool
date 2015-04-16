@@ -82,7 +82,7 @@ public abstract class AbstractPatcher<T> {
 				}
 			}
 
-			log(DEBUG, action.getLabel());
+			if (logger.isLogging(DEBUG)) log(DEBUG, action.getLabel());
 			T patched = null;
 			switch (action) {
 			case ADD:

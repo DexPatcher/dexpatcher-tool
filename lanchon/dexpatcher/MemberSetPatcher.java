@@ -77,18 +77,19 @@ public abstract class MemberSetPatcher<T> extends AbstractPatcher<T> {
 		int flags2 = getAccessFlags(target);
 		if (getId(patch).equals(getId(target))) {
 			// Avoid duplicated messages if not renaming.
-			checkAccessFlags(WARN, flags1, flags2,
+			if (logger.isLogging(WARN)) checkAccessFlags(WARN, flags1, flags2,
 					new AccessFlags[] { NATIVE, DECLARED_SYNCHRONIZED }, message);
-			checkAccessFlags(INFO, flags1, flags2,
+			if (logger.isLogging(INFO)) checkAccessFlags(INFO, flags1, flags2,
 					new AccessFlags[] { SYNCHRONIZED }, message);
 		} else {
-			checkAccessFlags(WARN, flags1, flags2,
+			if (logger.isLogging(WARN)) checkAccessFlags(WARN, flags1, flags2,
 					new AccessFlags[] { STATIC, VARARGS, NATIVE, ABSTRACT, STRICTFP,
 					ENUM, DECLARED_SYNCHRONIZED }, message);
-			checkAccessFlags(INFO, flags1, flags2,
+			if (logger.isLogging(INFO)) checkAccessFlags(INFO, flags1, flags2,
 					new AccessFlags[] { FINAL, SYNCHRONIZED, VOLATILE, BRIDGE,
-					TRANSIENT, SYNTHETIC, CONSTRUCTOR }, message);
-			// Ignored flags: PUBLIC, PRIVATE, PROTECTED
+					TRANSIENT, SYNTHETIC }, message);
+			if (logger.isLogging(DEBUG)) checkAccessFlags(DEBUG, flags1, flags2,
+					new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED, CONSTRUCTOR }, message);
 		}
 		return patch;
 	}
@@ -98,12 +99,14 @@ public abstract class MemberSetPatcher<T> extends AbstractPatcher<T> {
 		String message = "'%s' modifier mismatch in original and replacement members";
 		int flags1 = getAccessFlags(patched);
 		int flags2 = getAccessFlags(original);
-		checkAccessFlags(WARN, flags1, flags2,
+		if (logger.isLogging(WARN)) checkAccessFlags(WARN, flags1, flags2,
 				new AccessFlags[] { STATIC, FINAL, VOLATILE, TRANSIENT, VARARGS,
 				ABSTRACT, STRICTFP, ENUM, CONSTRUCTOR }, message);
-		checkAccessFlags(INFO, flags1, flags2,
+		if (logger.isLogging(INFO)) checkAccessFlags(INFO, flags1, flags2,
 				new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED, BRIDGE, SYNTHETIC }, message);
-		// Ignored flags: SYNCHRONIZED, NATIVE, DECLARED_SYNCHRONIZED
+		// Avoid duplicated messages if not renaming.
+		//if (logger.isLogging(DEBUG)) checkAccessFlags(DEBUG, flags1, flags2,
+		//		new AccessFlags[] { SYNCHRONIZED, NATIVE, DECLARED_SYNCHRONIZED }, message);
 	}
 
 }
