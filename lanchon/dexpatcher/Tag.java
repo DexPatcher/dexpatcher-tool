@@ -21,6 +21,7 @@ public abstract class Tag {
 	public static final String ELEM_STATIC_CONSTRUCTOR_ACTION = "staticConstructorAction";
 	public static final String ELEM_DEFAULT_ACTION = "defaultAction";
 	public static final String ELEM_ONLY_EDIT_MEMBERS = "onlyEditMembers";
+	public static final String ELEM_RECURSIVE = "recursive";
 
 	// Type Descriptors
 

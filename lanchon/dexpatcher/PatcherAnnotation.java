@@ -53,6 +53,7 @@ public class PatcherAnnotation {
 		Action staticConstructorAction = null;
 		Action defaultAction = null;
 		boolean onlyEditMembers = false;
+		boolean recursive = false;
 		for (AnnotationElement element : annotation.getElements()) {
 			String name = element.getName();
 			EncodedValue value = element.getValue();
@@ -86,6 +87,11 @@ public class PatcherAnnotation {
 				onlyEditMembers = ((BooleanEncodedValue) value).getValue();
 				continue;
 			}
+			case Tag.ELEM_RECURSIVE: {
+				if (recursive) break;
+				recursive = ((BooleanEncodedValue) value).getValue();
+				continue;
+			}
 			default:
 				break;
 			}
@@ -98,7 +104,7 @@ public class PatcherAnnotation {
 		}
 
 		return new PatcherAnnotation(action, target, targetClass, staticConstructorAction, defaultAction,
-				onlyEditMembers, ImmutableAnnotation.immutableSetOf(filteredAnnotations));
+				onlyEditMembers, recursive, ImmutableAnnotation.immutableSetOf(filteredAnnotations));
 
 	}
 
@@ -108,16 +114,19 @@ public class PatcherAnnotation {
 	private final Action staticConstructorAction;
 	private final Action defaultAction;
 	private final boolean onlyEditMembers;
+	private final boolean recursive;
 	private final Set<? extends Annotation> filteredAnnotations;
 
-	public PatcherAnnotation(Action action, String target, String targetClass, Action staticConstructorAction,
-			Action defaultAction, boolean onlyEditMembers, Set<? extends Annotation> filteredAnnotations) {
+	public PatcherAnnotation(Action action, String target, String targetClass,
+			Action staticConstructorAction, Action defaultAction, boolean onlyEditMembers,
+			boolean recursive, Set<? extends Annotation> filteredAnnotations) {
 		this.action = action;
 		this.target = target;
 		this.targetClass = targetClass;
 		this.staticConstructorAction = staticConstructorAction;
 		this.defaultAction = defaultAction;
 		this.onlyEditMembers = onlyEditMembers;
+		this.recursive = recursive;
 		this.filteredAnnotations = filteredAnnotations;
 	}
 
@@ -128,6 +137,7 @@ public class PatcherAnnotation {
 		this.staticConstructorAction = null;
 		this.defaultAction = null;
 		this.onlyEditMembers = false;
+		this.recursive = false;
 		this.filteredAnnotations = filteredAnnotations;
 	}
 
@@ -153,6 +163,10 @@ public class PatcherAnnotation {
 
 	public boolean getOnlyEditMembers() {
 		return onlyEditMembers;
+	}
+
+	public boolean getRecursive() {
+		return recursive;
 	}
 
 	public Set<? extends Annotation> getFilteredAnnotations() {
