@@ -48,7 +48,7 @@ public abstract class AbstractPatcher<T> {
 		for (T patch : patchSet) {
 
 			String patchId = getId(patch);
-			logPrefix = baseLogPrefix + getLogPrefix(patch) + ": ";
+			setupLogPrefix(patch);
 
 			PatcherAnnotation annotation;
 			String targetId = null;
@@ -118,7 +118,7 @@ public abstract class AbstractPatcher<T> {
 			T patched = patchedMap.get(id);
 			if (patched == null) targetMap.remove(id);
 			else {
-				logPrefix = baseLogPrefix + getLogPrefix(patched) + ": ";
+				setupLogPrefix(patched);
 				onEffectiveReplacement(patched, targeted);
 				targetMap.put(id, patched);		// keep ordering stable when replacing items
 				patchedMap.remove(id);
@@ -127,13 +127,17 @@ public abstract class AbstractPatcher<T> {
 
 		for (T patched : patchedMap.values()) {
 			if (targetMap.put(getId(patched), patched) != null) {
-				logPrefix = baseLogPrefix + getLogPrefix(patched) + ": ";
+				setupLogPrefix(patched);
 				log(ERROR, "already exists");
 			}
 		}
 
 		return targetMap.values();
 
+	}
+
+	private void setupLogPrefix(T t) {
+		logPrefix = baseLogPrefix + getLogPrefix(t) + ": ";
 	}
 
 	protected void checkAccessFlags(Logger.Level level, int flags1, int flags2, AccessFlags flags[], String message) {
