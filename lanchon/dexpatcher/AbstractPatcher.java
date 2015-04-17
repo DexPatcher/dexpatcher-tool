@@ -149,11 +149,11 @@ public abstract class AbstractPatcher<T> {
 	}
 
 	private final void addPatched(String patchId, T patch, T patched) {
-		if (patched == null) throw new AssertionError("Patched is null");
+		if (patched == null) throw new AssertionError("Null patched");
 		String patchedId = getId(patched);
-		if (!patchId.equals(patchedId)) throw new AssertionError("Patched id changed");
+		if (!patchId.equals(patchedId)) throw new AssertionError("Changed patchedId");
 		T previous = patchedMap.put(patchedId, patched);
-		if (previous != null) throw new AssertionError("Patched id collision");
+		if (previous != null) throw new AssertionError("Colliding patchedId");
 	}
 
 	protected void checkAccessFlags(Logger.Level level, int flags1, int flags2, AccessFlags flags[], String message) {

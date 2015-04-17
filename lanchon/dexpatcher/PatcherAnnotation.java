@@ -117,9 +117,14 @@ public class PatcherAnnotation {
 	private final boolean recursive;
 	private final Set<? extends Annotation> filteredAnnotations;
 
+	public PatcherAnnotation(Action action, Set<? extends Annotation> filteredAnnotations) {
+		this(action, null, null, null, null, false, false, filteredAnnotations);
+	}
+
 	public PatcherAnnotation(Action action, String target, String targetClass,
 			Action staticConstructorAction, Action defaultAction, boolean onlyEditMembers,
 			boolean recursive, Set<? extends Annotation> filteredAnnotations) {
+		if (action == null) throw new AssertionError("Null action");
 		this.action = action;
 		this.target = target;
 		this.targetClass = targetClass;
@@ -127,17 +132,6 @@ public class PatcherAnnotation {
 		this.defaultAction = defaultAction;
 		this.onlyEditMembers = onlyEditMembers;
 		this.recursive = recursive;
-		this.filteredAnnotations = filteredAnnotations;
-	}
-
-	public PatcherAnnotation(Action action, Set<? extends Annotation> filteredAnnotations) {
-		this.action = action;
-		this.target = null;
-		this.targetClass = null;
-		this.staticConstructorAction = null;
-		this.defaultAction = null;
-		this.onlyEditMembers = false;
-		this.recursive = false;
 		this.filteredAnnotations = filteredAnnotations;
 	}
 

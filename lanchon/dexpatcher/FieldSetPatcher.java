@@ -98,7 +98,7 @@ public class FieldSetPatcher extends MemberSetPatcher<Field> {
 
 	@Override
 	protected Field onReplace(Field patch, PatcherAnnotation annotation, Field target) {
-		throw new AssertionError("Field replace");
+		throw new AssertionError("Replace field");
 	}
 
 }
