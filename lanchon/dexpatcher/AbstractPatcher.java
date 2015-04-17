@@ -88,16 +88,15 @@ public abstract class AbstractPatcher<T> {
 				}
 
 				if (logger.isLogging(DEBUG)) log(DEBUG, action.getLabel());
-				T patched = null;
 				switch (action) {
 				case ADD:
-					patched = onAdd(patch, annotation);
+					addPatched(patchId, patch, onAdd(patch, annotation));
 					break;
 				case EDIT:
-					patched = onEdit(patch, annotation, target);
+					addPatched(patchId, patch, onEdit(patch, annotation, target));
 					break;
 				case REPLACE:
-					patched = onReplace(patch, annotation, target);
+					addPatched(patchId, patch, onReplace(patch, annotation, target));
 					break;
 				case REMOVE:
 					onRemove(patch, annotation, target);
@@ -106,14 +105,6 @@ public abstract class AbstractPatcher<T> {
 					break;
 				default:
 					throw new AssertionError("Unexpected action");
-				}
-
-				if (action != Action.REMOVE && action != Action.IGNORE) {
-					if (patched == null) throw new AssertionError("Patched is null");
-					String patchedId = getId(patched);
-					if (!patchId.equals(patchedId)) throw new AssertionError("Patched id changed");
-					T previous = patchedMap.put(patchedId, patched);
-					if (previous != null) throw new AssertionError("Patched id collision");
 				}
 
 			}
@@ -155,6 +146,14 @@ public abstract class AbstractPatcher<T> {
 		if (targetedMap.put(targetId, target) == null) return true;
 		log(ERROR, "already targeted");
 		return false;
+	}
+
+	private final void addPatched(String patchId, T patch, T patched) {
+		if (patched == null) throw new AssertionError("Patched is null");
+		String patchedId = getId(patched);
+		if (!patchId.equals(patchedId)) throw new AssertionError("Patched id changed");
+		T previous = patchedMap.put(patchedId, patched);
+		if (previous != null) throw new AssertionError("Patched id collision");
 	}
 
 	protected void checkAccessFlags(Logger.Level level, int flags1, int flags2, AccessFlags flags[], String message) {
