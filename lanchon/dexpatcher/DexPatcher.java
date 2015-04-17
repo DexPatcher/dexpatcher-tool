@@ -109,11 +109,11 @@ public class DexPatcher extends AbstractPatcher<ClassDef> {
 			String message = "'%s' modifier mismatch in targeted and edited types";
 			int flags1 = Util.getClassAccessFlags(patch);
 			int flags2 = Util.getClassAccessFlags(target);
-			if (logger.isLogging(WARN)) checkAccessFlags(WARN, flags1, flags2,
+			if (isLogging(WARN)) checkAccessFlags(WARN, flags1, flags2,
 					new AccessFlags[] { STATIC, FINAL, INTERFACE, ABSTRACT, ANNOTATION, ENUM }, message);
-			if (logger.isLogging(INFO)) checkAccessFlags(INFO, flags1, flags2,
+			if (isLogging(INFO)) checkAccessFlags(INFO, flags1, flags2,
 					new AccessFlags[] { SYNTHETIC }, message);
-			if (logger.isLogging(DEBUG)) checkAccessFlags(DEBUG, flags1, flags2,
+			if (isLogging(DEBUG)) checkAccessFlags(DEBUG, flags1, flags2,
 					new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED }, message);
 		}
 
@@ -150,9 +150,9 @@ public class DexPatcher extends AbstractPatcher<ClassDef> {
 		String message = "'%s' modifier mismatch in original and replacement types";
 		int flags1 = Util.getClassAccessFlags(patched);
 		int flags2 = Util.getClassAccessFlags(original);
-		if (logger.isLogging(WARN)) checkAccessFlags(WARN, flags1, flags2,
+		if (isLogging(WARN)) checkAccessFlags(WARN, flags1, flags2,
 				new AccessFlags[] { STATIC, FINAL, INTERFACE, ABSTRACT, ANNOTATION, ENUM }, message);
-		if (logger.isLogging(INFO)) checkAccessFlags(INFO, flags1, flags2,
+		if (isLogging(INFO)) checkAccessFlags(INFO, flags1, flags2,
 				new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED, SYNTHETIC }, message);
 	}
 

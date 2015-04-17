@@ -12,8 +12,8 @@ import static lanchon.dexpatcher.Logger.Level.*;
 public abstract class AbstractPatcher<T> {
 
 	protected final Logger logger;
-	protected final String baseLogPrefix;
 
+	private final String baseLogPrefix;
 	private String logPrefix;
 
 	private LinkedHashMap<String, T> targetMap;
@@ -27,6 +27,10 @@ public abstract class AbstractPatcher<T> {
 
 	protected final void log(Logger.Level level, String message) {
 		logger.log(level, logPrefix + message);
+	}
+
+	protected final boolean isLogging(Logger.Level level) {
+		return logger.isLogging(level);
 	}
 
 	protected final String getLogPrefix() {
@@ -71,11 +75,7 @@ public abstract class AbstractPatcher<T> {
 				Action action = annotation.getAction();
 
 				if (targetId == null) targetId = patchId;
-				else {
-					if (!targetId.equals(patchId)) {
-						logPrefix += getLogTargetPrefix(annotation, targetId) + ": ";
-					}
-				}
+				else extendLogPrefix(patchId, annotation, targetId);
 
 				T target = null;
 				if (action != Action.ADD && action != Action.IGNORE) {
@@ -87,7 +87,7 @@ public abstract class AbstractPatcher<T> {
 					if (!markAsTargeted(targetId, target)) continue;
 				}
 
-				if (logger.isLogging(DEBUG)) log(DEBUG, action.getLabel());
+				if (isLogging(DEBUG)) log(DEBUG, action.getLabel());
 				switch (action) {
 				case ADD:
 					addPatched(patchId, patch, onAdd(patch, annotation));
@@ -140,6 +140,12 @@ public abstract class AbstractPatcher<T> {
 
 	private final void setupLogPrefix(T t) {
 		logPrefix = baseLogPrefix + getLogPrefix(t) + ": ";
+	}
+
+	private final void extendLogPrefix(String patchId, PatcherAnnotation annotation, String targetId) {
+		if (!targetId.equals(patchId)) {
+			logPrefix += getLogTargetPrefix(annotation, targetId) + ": ";
+		}
 	}
 
 	private final boolean markAsTargeted(String targetId, T target) {
