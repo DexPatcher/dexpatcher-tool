@@ -98,9 +98,9 @@ public abstract class MemberSetPatcher<T> extends AbstractPatcher<T> {
 				ABSTRACT, STRICTFP, ENUM, CONSTRUCTOR }, message);
 		if (isLogging(INFO)) checkAccessFlags(INFO, flags1, flags2,
 				new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED, BRIDGE, SYNTHETIC }, message);
-		// Avoid duplicated messages if not renaming.
-		//if (logger.isLogging(DEBUG)) checkAccessFlags(DEBUG, flags1, flags2,
-		//		new AccessFlags[] { SYNCHRONIZED, NATIVE, DECLARED_SYNCHRONIZED }, message);
+		// These messages will be duplicated if not renaming, hence they are demoted to debug level.
+		if (logger.isLogging(DEBUG)) checkAccessFlags(DEBUG, flags1, flags2,
+				new AccessFlags[] { SYNCHRONIZED, NATIVE, DECLARED_SYNCHRONIZED }, message);
 	}
 
 }
