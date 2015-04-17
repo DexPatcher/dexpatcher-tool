@@ -12,13 +12,13 @@ import static lanchon.dexpatcher.Logger.Level.*;
 public abstract class AbstractPatcher<T> {
 
 	private final Logger logger;
-
 	private final String baseLogPrefix;
-	private String logPrefix;
 
 	private LinkedHashMap<String, T> targetMap;
 	private LinkedHashMap<String, T> targetedMap;
 	private LinkedHashMap<String, T> patchedMap;
+
+	private String logPrefix;
 
 	protected AbstractPatcher(Logger logger, String baseLogPrefix) {
 		this.logger = logger;
@@ -101,15 +101,15 @@ public abstract class AbstractPatcher<T> {
 				T patched = patchedMap.get(id);
 				if (patched == null) targetMap.remove(id);
 				else {
+					targetMap.put(id, null);		// keep ordering stable when replacing items
 					setupLogPrefix(patched);
 					onEffectiveReplacement(patched, targeted);
-					targetMap.put(id, patched);		// keep ordering stable when replacing items
-					patchedMap.remove(id);
 				}
 			}
 
 			for (T patched : patchedMap.values()) {
-				if (targetMap.put(getId(patched), patched) != null) {
+				String patchedId = getId(patched);
+				if (targetMap.put(patchedId, patched) != null) {
 					setupLogPrefix(patched);
 					log(ERROR, "already exists");
 				}
