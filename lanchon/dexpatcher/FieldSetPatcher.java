@@ -7,8 +7,6 @@ import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.Field;
 import org.jf.dexlib2.iface.value.EncodedValue;
 import org.jf.dexlib2.immutable.ImmutableField;
-import lanchon.dexpatcher.PatcherAnnotation.ParseException;
-
 import static lanchon.dexpatcher.Logger.Level.*;
 
 public class FieldSetPatcher extends MemberSetPatcher<Field> {
@@ -30,11 +28,9 @@ public class FieldSetPatcher extends MemberSetPatcher<Field> {
 	}
 
 	@Override
-	protected String parsePatcherAnnotation(Field patch, PatcherAnnotation annotation) throws ParseException {
+	protected String parsePatcherAnnotation(Field patch, PatcherAnnotation annotation) throws PatchException {
 		Action action = annotation.getAction();
-		if (action == Action.REPLACE) {
-			throw new ParseException("invalid patcher annotation (" + action.getAnnotationClassName() + ")");
-		}
+		if (action == Action.REPLACE) PatcherAnnotation.throwInvalidAnnotation(Tag.REPLACE);
 		String target = super.parsePatcherAnnotation(patch, annotation);
 		return target != null ? Util.getFieldId(patch, target) : null;
 	}

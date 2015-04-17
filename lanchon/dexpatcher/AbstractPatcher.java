@@ -56,57 +56,52 @@ public abstract class AbstractPatcher<T> {
 			}
 
 			for (T patch : patchSet) {
-
-				String patchId = getId(patch);
 				setupLogPrefix(patch);
-
-				PatcherAnnotation annotation;
-				String targetId = null;
+				String patchId = getId(patch);
 				try {
-					annotation = PatcherAnnotation.parse(getAnnotations(patch));
-					if (annotation == null) {
-						annotation = new PatcherAnnotation(getDefaultAction(patch), getAnnotations(patch));
+
+					Set<? extends Annotation> rawAnnotations = getAnnotations(patch);
+					PatcherAnnotation annotation = PatcherAnnotation.parse(rawAnnotations);
+					if (annotation == null) annotation = new PatcherAnnotation(getDefaultAction(patch), rawAnnotations);
+					String targetId = parsePatcherAnnotation(patch, annotation);
+					Action action = annotation.getAction();
+
+					if (targetId == null) targetId = patchId;
+					else extendLogPrefix(patchId, annotation, targetId);
+
+					T target = null;
+					if (action != Action.ADD && action != Action.IGNORE) {
+						target = targetMap.get(targetId);
+						if (target == null) throw new PatchException("target not found");
+						markAsTargeted(targetId, target);
 					}
-					targetId = parsePatcherAnnotation(patch, annotation);
-				} catch (PatcherAnnotation.ParseException e) {
+
+					if (isLogging(DEBUG)) log(DEBUG, action.getLabel());
+					switch (action) {
+					case ADD:
+						addPatched(patchId, patch, onAdd(patch, annotation));
+						break;
+					case EDIT:
+						addPatched(patchId, patch, onEdit(patch, annotation, target));
+						break;
+					case REPLACE:
+						addPatched(patchId, patch, onReplace(patch, annotation, target));
+						break;
+					case REMOVE:
+						onRemove(patch, annotation, target);
+						break;
+					case IGNORE:
+						break;
+					default:
+						throw new AssertionError("Unexpected action");
+					}
+
+				} catch (PatchException e) {
 					log(ERROR, e.getMessage());
-					continue;
+//				} finally {
+//					patch = null;
+//					patchId = null;
 				}
-				Action action = annotation.getAction();
-
-				if (targetId == null) targetId = patchId;
-				else extendLogPrefix(patchId, annotation, targetId);
-
-				T target = null;
-				if (action != Action.ADD && action != Action.IGNORE) {
-					target = targetMap.get(targetId);
-					if (target == null) {
-						log(ERROR, "target not found");
-						continue;
-					}
-					if (!markAsTargeted(targetId, target)) continue;
-				}
-
-				if (isLogging(DEBUG)) log(DEBUG, action.getLabel());
-				switch (action) {
-				case ADD:
-					addPatched(patchId, patch, onAdd(patch, annotation));
-					break;
-				case EDIT:
-					addPatched(patchId, patch, onEdit(patch, annotation, target));
-					break;
-				case REPLACE:
-					addPatched(patchId, patch, onReplace(patch, annotation, target));
-					break;
-				case REMOVE:
-					onRemove(patch, annotation, target);
-					break;
-				case IGNORE:
-					break;
-				default:
-					throw new AssertionError("Unexpected action");
-				}
-
 			}
 
 			for (T targeted : targetedMap.values()) {
@@ -148,10 +143,10 @@ public abstract class AbstractPatcher<T> {
 		}
 	}
 
-	private final boolean markAsTargeted(String targetId, T target) {
-		if (targetedMap.put(targetId, target) == null) return true;
-		log(ERROR, "already targeted");
-		return false;
+	private final void markAsTargeted(String targetId, T target) throws PatchException {
+		if (targetedMap.put(targetId, target) != null) {
+			throw new PatchException("already targeted");
+		}
 	}
 
 	private final void addPatched(String patchId, T patch, T patched) {
@@ -178,7 +173,7 @@ public abstract class AbstractPatcher<T> {
 
 	protected abstract String getId(T t);
 	protected abstract Set<? extends Annotation> getAnnotations(T patch);
-	protected abstract String parsePatcherAnnotation(T patch, PatcherAnnotation annotation) throws PatcherAnnotation.ParseException;
+	protected abstract String parsePatcherAnnotation(T patch, PatcherAnnotation annotation) throws PatchException;
 	protected abstract String getLogPrefix(T patch);
 	protected abstract String getLogTargetPrefix(PatcherAnnotation annotation, String targetId);
 

@@ -2,8 +2,6 @@ package lanchon.dexpatcher;
 
 import org.jf.dexlib2.AccessFlags;
 
-import lanchon.dexpatcher.PatcherAnnotation.ParseException;
-
 import static lanchon.dexpatcher.Logger.Level.*;
 import static org.jf.dexlib2.AccessFlags.*;
 
@@ -25,16 +23,12 @@ public abstract class MemberSetPatcher<T> extends AbstractPatcher<T> {
 	// Adapters
 
 	@Override
-	protected String parsePatcherAnnotation(T patch, PatcherAnnotation annotation) throws ParseException {
-		if (annotation.getTargetClass() != null) onInvalidElement(Tag.ELEM_TARGET_CLASS);
-		if (annotation.getStaticConstructorAction() != null) onInvalidElement(Tag.ELEM_STATIC_CONSTRUCTOR_ACTION);
-		if (annotation.getDefaultAction() != null) onInvalidElement(Tag.ELEM_DEFAULT_ACTION);
-		if (annotation.getOnlyEditMembers()) onInvalidElement(Tag.ELEM_ONLY_EDIT_MEMBERS);
+	protected String parsePatcherAnnotation(T patch, PatcherAnnotation annotation) throws PatchException {
+		if (annotation.getTargetClass() != null) PatcherAnnotation.throwInvalidElement(Tag.ELEM_TARGET_CLASS);
+		if (annotation.getStaticConstructorAction() != null) PatcherAnnotation.throwInvalidElement(Tag.ELEM_STATIC_CONSTRUCTOR_ACTION);
+		if (annotation.getDefaultAction() != null) PatcherAnnotation.throwInvalidElement(Tag.ELEM_DEFAULT_ACTION);
+		if (annotation.getOnlyEditMembers()) PatcherAnnotation.throwInvalidElement(Tag.ELEM_ONLY_EDIT_MEMBERS);
 		return annotation.getTarget();
-	}
-
-	private void onInvalidElement(String e) throws ParseException {
-		throw new ParseException("invalid patcher annotation element (" + e + ")");
 	}
 
 	@Override

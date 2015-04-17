@@ -14,20 +14,11 @@ import org.jf.dexlib2.immutable.ImmutableAnnotation;
 
 public class PatcherAnnotation {
 
-	@SuppressWarnings("serial")
-	public static class ParseException extends Exception {
-
-		public ParseException(String message) {
-			super(message);
-		}
-
-	}
-
 	// TODO:
 	// When this commit ships: https://code.google.com/p/smali/issues/detail?id=237
 	// Change to: public static PatcherAnnotation parse(Annotable annotable) throws ParseException {
 
-	public static PatcherAnnotation parse(Set<? extends Annotation> annotations) throws ParseException {
+	public static PatcherAnnotation parse(Set<? extends Annotation> annotations) throws PatchException {
 
 		Annotation annotation = null;
 		Action action = null;
@@ -36,8 +27,8 @@ public class PatcherAnnotation {
 			Action ac = Action.fromAnnotationDescriptor(an.getType());
 			if (ac != null) {
 				if (action != null) {
-					throw new ParseException("conflicting patcher annotations (" +
-							action.getAnnotationClassName() + ", " + ac.getAnnotationClassName() + ")");
+					throw new PatchException("conflicting patcher annotations (" +
+							action.getSimpleClassName() + ", " + ac.getSimpleClassName() + ")");
 				}
 				action = ac;
 				annotation = an;
@@ -95,17 +86,25 @@ public class PatcherAnnotation {
 			default:
 				break;
 			}
-			throw new ParseException("invalid patcher annotation element (" + name + ")");
+			throwInvalidElement(name);
 		}
 
 		if (target != null && targetClass != null) {
-			throw new ParseException("conflicting patcher annotation elements (" +
+			throw new PatchException("conflicting patcher annotation elements (" +
 					Tag.ELEM_TARGET + ", " + Tag.ELEM_TARGET_CLASS + ")");
 		}
 
 		return new PatcherAnnotation(action, target, targetClass, staticConstructorAction, defaultAction,
 				onlyEditMembers, recursive, ImmutableAnnotation.immutableSetOf(filteredAnnotations));
 
+	}
+
+	public static void throwInvalidAnnotation(String name) throws PatchException {
+		throw new PatchException("invalid patcher annotation (" + name + ")");
+	}
+
+	public static void throwInvalidElement(String name) throws PatchException {
+		throw new PatchException("invalid patcher annotation element (" + name + ")");
 	}
 
 	private final Action action;

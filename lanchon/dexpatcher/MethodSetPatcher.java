@@ -12,8 +12,6 @@ import org.jf.dexlib2.iface.MethodParameter;
 import org.jf.dexlib2.immutable.ImmutableMethod;
 import org.jf.dexlib2.immutable.ImmutableMethodImplementation;
 
-import lanchon.dexpatcher.PatcherAnnotation.ParseException;
-
 import static lanchon.dexpatcher.Logger.Level.*;
 import static org.jf.dexlib2.AccessFlags.*;
 
@@ -36,7 +34,7 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 	}
 
 	@Override
-	protected String parsePatcherAnnotation(Method patch, PatcherAnnotation annotation) throws ParseException {
+	protected String parsePatcherAnnotation(Method patch, PatcherAnnotation annotation) throws PatchException {
 		String target = super.parsePatcherAnnotation(patch, annotation);
 		if (isTaggedByParameter(patch)) {
 			ArrayList<MethodParameter> parameters = new ArrayList<MethodParameter>(patch.getParameters());

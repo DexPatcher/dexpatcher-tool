@@ -10,8 +10,6 @@ import org.jf.dexlib2.iface.DexFile;
 import org.jf.dexlib2.immutable.ImmutableClassDef;
 import org.jf.dexlib2.immutable.ImmutableDexFile;
 
-import lanchon.dexpatcher.PatcherAnnotation.ParseException;
-
 import static lanchon.dexpatcher.Logger.Level.*;
 import static org.jf.dexlib2.AccessFlags.*;
 
@@ -43,7 +41,7 @@ public class DexPatcher extends AbstractPatcher<ClassDef> {
 	}
 
 	@Override
-	protected String parsePatcherAnnotation(ClassDef patch, PatcherAnnotation annotation) throws ParseException {
+	protected String parsePatcherAnnotation(ClassDef patch, PatcherAnnotation annotation) throws PatchException {
 		String target = annotation.getTarget();
 		String targetClass = annotation.getTargetClass();
 		String targetId;

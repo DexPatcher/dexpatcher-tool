@@ -12,14 +12,14 @@ public enum Action {
 	IGNORE(Tag.IGNORE);
 
 	private static final Map<String, Action> labelMap;
-	private static final Map<String, Action> annotationDescriptorMap;
+	private static final Map<String, Action> typeDescriptorMap;
 
 	static {
 		labelMap = new HashMap<>();
-		annotationDescriptorMap = new HashMap<>();
+		typeDescriptorMap = new HashMap<>();
 		for (Action action: Action.values()) {
 			labelMap.put(action.getLabel(), action);
-			annotationDescriptorMap.put(action.getAnnotationDescriptor(), action);
+			typeDescriptorMap.put(action.getTypeDescriptor(), action);
 		}
 	}
 
@@ -28,29 +28,29 @@ public enum Action {
 	}
 
 	public static Action fromAnnotationDescriptor(String annotationDescriptor) {
-		return annotationDescriptorMap.get(annotationDescriptor);
+		return typeDescriptorMap.get(annotationDescriptor);
 	}
 
 	private final String label;
-	private final String annotationClassName;
-	private final String annotationDescriptor;
+	private final String simpleClassName;
+	private final String typeDescriptor;
 
-	Action(String annotationClassName) {
+	Action(String simpleClassName) {
 		this.label = name().toLowerCase();
-		this.annotationClassName = annotationClassName;
-		this.annotationDescriptor = Tag.getTypeDescriptor(annotationClassName);
+		this.simpleClassName = simpleClassName;
+		this.typeDescriptor = Tag.getTypeDescriptor(simpleClassName);
 	}
 
 	public String getLabel() {
 		return label;
 	}
 
-	public String getAnnotationClassName() {
-		return annotationClassName;
+	public String getSimpleClassName() {
+		return simpleClassName;
 	}
 
-	public String getAnnotationDescriptor() {
-		return annotationDescriptor;
+	public String getTypeDescriptor() {
+		return typeDescriptor;
 	}
 
 }
