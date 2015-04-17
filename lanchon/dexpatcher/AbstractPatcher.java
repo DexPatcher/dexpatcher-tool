@@ -11,7 +11,7 @@ import static lanchon.dexpatcher.Logger.Level.*;
 
 public abstract class AbstractPatcher<T> {
 
-	protected final Logger logger;
+	private final Logger logger;
 
 	private final String baseLogPrefix;
 	private String logPrefix;
@@ -25,16 +25,17 @@ public abstract class AbstractPatcher<T> {
 		this.baseLogPrefix = baseLogPrefix != null ? baseLogPrefix : "";
 	}
 
+	protected AbstractPatcher(AbstractPatcher<?> parent) {
+		this.logger = parent.logger;
+		this.baseLogPrefix = parent.logPrefix;
+	}
+
 	protected final void log(Logger.Level level, String message) {
 		logger.log(level, logPrefix + message);
 	}
 
 	protected final boolean isLogging(Logger.Level level) {
 		return logger.isLogging(level);
-	}
-
-	protected final String getLogPrefix() {
-		return logPrefix;
 	}
 
 	public Collection<T> process(Iterable<? extends T> sourceSet, Iterable<? extends T> patchSet) {
@@ -63,18 +64,9 @@ public abstract class AbstractPatcher<T> {
 					Set<? extends Annotation> rawAnnotations = getAnnotations(patch);
 					PatcherAnnotation annotation = PatcherAnnotation.parse(rawAnnotations);
 					if (annotation == null) annotation = new PatcherAnnotation(getDefaultAction(patch), rawAnnotations);
-					String targetId = parsePatcherAnnotation(patch, annotation);
 					Action action = annotation.getAction();
-
+					String targetId = parsePatcherAnnotation(patch, annotation);
 					if (targetId == null) targetId = patchId;
-					else extendLogPrefix(patchId, annotation, targetId);
-
-					T target = null;
-					if (action != Action.ADD && action != Action.IGNORE) {
-						target = targetMap.get(targetId);
-						if (target == null) throw new PatchException("target not found");
-						markAsTargeted(targetId, target);
-					}
 
 					if (isLogging(DEBUG)) log(DEBUG, action.getLabel());
 					switch (action) {
@@ -82,13 +74,13 @@ public abstract class AbstractPatcher<T> {
 						addPatched(patchId, patch, onAdd(patch, annotation));
 						break;
 					case EDIT:
-						addPatched(patchId, patch, onEdit(patch, annotation, target));
+						addPatched(patchId, patch, onEdit(patch, annotation, setupTarget(patchId, annotation, targetId)));
 						break;
 					case REPLACE:
-						addPatched(patchId, patch, onReplace(patch, annotation, target));
+						addPatched(patchId, patch, onReplace(patch, annotation, setupTarget(patchId, annotation, targetId)));
 						break;
 					case REMOVE:
-						onRemove(patch, annotation, target);
+						onRemove(patch, annotation, setupTarget(patchId, annotation, targetId));
 						break;
 					case IGNORE:
 						break;
@@ -141,6 +133,14 @@ public abstract class AbstractPatcher<T> {
 		if (!targetId.equals(patchId)) {
 			logPrefix += getLogTargetPrefix(annotation, targetId) + ": ";
 		}
+	}
+
+	private final T setupTarget(String patchId, PatcherAnnotation annotation, String targetId) throws PatchException {
+		extendLogPrefix(patchId, annotation, targetId);
+		T target = targetMap.get(targetId);
+		if (target == null) throw new PatchException("target not found");
+		markAsTargeted(targetId, target);
+		return target;
 	}
 
 	private final void markAsTargeted(String targetId, T target) throws PatchException {

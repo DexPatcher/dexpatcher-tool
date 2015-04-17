@@ -10,8 +10,8 @@ public class DirectMethodSetPatcher extends MethodSetPatcher {
 
 	private boolean staticConstructorFound;
 
-	public DirectMethodSetPatcher(Logger logger, String baseLogPrefix, String logMemberType, PatcherAnnotation annotation) {
-		super(logger, baseLogPrefix, logMemberType, annotation);
+	public DirectMethodSetPatcher(DexPatcher parent, String logMemberType, PatcherAnnotation annotation) {
+		super(parent, logMemberType, annotation);
 	}
 
 	@Override

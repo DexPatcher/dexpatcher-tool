@@ -12,8 +12,8 @@ public abstract class MemberSetPatcher<T> extends AbstractPatcher<T> {
 	protected final Action staticConstructorAction;
 	protected final Action resolvedStaticConstructorAction;
 
-	public MemberSetPatcher(Logger logger, String baseLogPrefix, String logMemberType, PatcherAnnotation annotation) {
-		super(logger, baseLogPrefix);
+	public MemberSetPatcher(DexPatcher parent, String logMemberType, PatcherAnnotation annotation) {
+		super(parent);
 		this.logMemberType = logMemberType;
 		defaultAction = annotation.getDefaultAction();
 		staticConstructorAction = annotation.getStaticConstructorAction();
@@ -99,7 +99,7 @@ public abstract class MemberSetPatcher<T> extends AbstractPatcher<T> {
 		if (isLogging(INFO)) checkAccessFlags(INFO, flags1, flags2,
 				new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED, BRIDGE, SYNTHETIC }, message);
 		// These messages will be duplicated if not renaming, hence they are demoted to debug level.
-		if (logger.isLogging(DEBUG)) checkAccessFlags(DEBUG, flags1, flags2,
+		if (isLogging(DEBUG)) checkAccessFlags(DEBUG, flags1, flags2,
 				new AccessFlags[] { SYNCHRONIZED, NATIVE, DECLARED_SYNCHRONIZED }, message);
 	}
 

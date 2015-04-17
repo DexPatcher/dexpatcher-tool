@@ -13,8 +13,7 @@ import org.jf.dexlib2.immutable.ImmutableDexFile;
 import static lanchon.dexpatcher.Logger.Level.*;
 import static org.jf.dexlib2.AccessFlags.*;
 
-// TODO:
-// Warn about changes in superclass and interfaces.
+// TODO: Warn about changes in superclass and interfaces.
 
 public class DexPatcher extends AbstractPatcher<ClassDef> {
 
@@ -22,7 +21,7 @@ public class DexPatcher extends AbstractPatcher<ClassDef> {
 		super(logger, null);
 	}
 
-	public DexFile run(DexFile sourceDex, DexFile patchDex) {
+	public DexFile process(DexFile sourceDex, DexFile patchDex) {
 		Set<? extends ClassDef> sourceClasses = sourceDex.getClasses();
 		Set<? extends ClassDef> patchClasses = patchDex.getClasses();
 		return new ImmutableDexFile(process(sourceClasses, sourceClasses.size(), patchClasses, patchClasses.size()));
@@ -132,13 +131,13 @@ public class DexPatcher extends AbstractPatcher<ClassDef> {
 				source.getInterfaces(),
 				source.getSourceFile(),
 				annotations,
-				new FieldSetPatcher(logger, getLogPrefix(), "static field", annotation)
+				new FieldSetPatcher(this, "static field", annotation)
 						.process(target.getStaticFields(), patch.getStaticFields()),
-				new FieldSetPatcher(logger, getLogPrefix(), "instance field", annotation)
+				new FieldSetPatcher(this, "instance field", annotation)
 						.process(target.getInstanceFields(), patch.getInstanceFields()),
-				new DirectMethodSetPatcher(logger, getLogPrefix(), "direct method", annotation)
+				new DirectMethodSetPatcher(this, "direct method", annotation)
 						.process(target.getDirectMethods(), patch.getDirectMethods()),
-				new MethodSetPatcher(logger, getLogPrefix(), "virtual method", annotation)
+				new MethodSetPatcher(this, "virtual method", annotation)
 						.process(target.getVirtualMethods(), patch.getVirtualMethods()));
 
 	}

@@ -11,8 +11,8 @@ import static lanchon.dexpatcher.Logger.Level.*;
 
 public class FieldSetPatcher extends MemberSetPatcher<Field> {
 
-	public FieldSetPatcher(Logger logger, String baseLogPrefix, String logMemberType, PatcherAnnotation annotation) {
-		super(logger, baseLogPrefix, logMemberType, annotation);
+	public FieldSetPatcher(DexPatcher parent, String logMemberType, PatcherAnnotation annotation) {
+		super(parent, logMemberType, annotation);
 	}
 
 	// Adapters

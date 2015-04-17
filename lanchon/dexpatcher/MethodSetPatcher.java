@@ -17,8 +17,8 @@ import static org.jf.dexlib2.AccessFlags.*;
 
 public class MethodSetPatcher extends MemberSetPatcher<Method> {
 
-	public MethodSetPatcher(Logger logger, String baseLogPrefix, String logMemberType, PatcherAnnotation annotation) {
-		super(logger, baseLogPrefix, logMemberType, annotation);
+	public MethodSetPatcher(DexPatcher parent, String logMemberType, PatcherAnnotation annotation) {
+		super(parent, logMemberType, annotation);
 	}
 
 	// Adapters

@@ -64,7 +64,7 @@ public class Main {
 			DexFile dex = loadDex(sourceFile, api);
 			for (String patchFile : files) {
 				DexFile patchDex = loadDex(patchFile, api);
-				dex = new DexPatcher(logger).run(dex, patchDex);
+				dex = new DexPatcher(logger).process(dex, patchDex);
 			}
 
 			if (patchedFile == null) {
