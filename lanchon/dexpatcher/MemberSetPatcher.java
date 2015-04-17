@@ -57,6 +57,7 @@ public abstract class MemberSetPatcher<T> extends SimplePatcher<T> {
 		if (annotation.getStaticConstructorAction() != null) PatcherAnnotation.throwInvalidElement(Tag.ELEM_STATIC_CONSTRUCTOR_ACTION);
 		if (annotation.getDefaultAction() != null) PatcherAnnotation.throwInvalidElement(Tag.ELEM_DEFAULT_ACTION);
 		if (annotation.getOnlyEditMembers()) PatcherAnnotation.throwInvalidElement(Tag.ELEM_ONLY_EDIT_MEMBERS);
+		if (annotation.getRecursive()) PatcherAnnotation.throwInvalidElement(Tag.ELEM_RECURSIVE);
 	}
 
 	@Override
@@ -84,18 +85,23 @@ public abstract class MemberSetPatcher<T> extends SimplePatcher<T> {
 	}
 
 	@Override
-	protected void onEffectiveReplacement(String id, T patched, T original) {
+	protected void onEffectiveReplacement(String id, T patched, T original, boolean editedInPlace) {
 		String message = "'%s' modifier mismatch in original and replacement members";
 		int flags1 = getAccessFlags(patched);
 		int flags2 = getAccessFlags(original);
 		if (isLogging(WARN)) checkAccessFlags(WARN, flags1, flags2,
 				new AccessFlags[] { STATIC, FINAL, VOLATILE, TRANSIENT, VARARGS,
 				ABSTRACT, STRICTFP, ENUM, CONSTRUCTOR }, message);
-		if (isLogging(INFO)) checkAccessFlags(INFO, flags1, flags2,
-				new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED, BRIDGE, SYNTHETIC }, message);
-		// These messages will be duplicated if not renaming, hence they are demoted to debug level.
-		if (isLogging(DEBUG)) checkAccessFlags(DEBUG, flags1, flags2,
-				new AccessFlags[] { SYNCHRONIZED, NATIVE, DECLARED_SYNCHRONIZED }, message);
+		// Avoid duplicated messages if not renaming.
+		if (editedInPlace) {
+			if (isLogging(INFO)) checkAccessFlags(INFO, flags1, flags2,
+					new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED, BRIDGE, SYNTHETIC }, message);
+			// Ignored flags: SYNCHRONIZED, NATIVE, DECLARED_SYNCHRONIZED
+		} else {
+			if (isLogging(INFO)) checkAccessFlags(INFO, flags1, flags2,
+					new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED, SYNCHRONIZED,
+					BRIDGE, NATIVE, SYNTHETIC, DECLARED_SYNCHRONIZED }, message);
+		}
 	}
 
 }

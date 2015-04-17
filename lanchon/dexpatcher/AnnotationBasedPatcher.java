@@ -16,11 +16,10 @@ public abstract class AnnotationBasedPatcher<T> extends AbstractPatcher<T>{
 		super(parent);
 	}
 
-	protected final T setupTarget(String patchId, String targetId, PatcherAnnotation annotation) throws PatchException {
-		if (!targetId.equals(patchId)) {
-			extendLogPrefix(getTargetLogPrefix(targetId, annotation));
-		}
-		return findTarget(targetId);
+	protected final T setupTarget(String patchId, String targetId, PatcherAnnotation annotation,
+			boolean editingInPlace) throws PatchException {
+		if (!targetId.equals(patchId)) extendLogPrefix(getTargetLogPrefix(targetId, annotation));
+		return findTarget(targetId, editingInPlace);
 	}
 
 	// Implementation

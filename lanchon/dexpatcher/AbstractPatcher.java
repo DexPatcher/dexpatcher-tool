@@ -2,6 +2,7 @@ package lanchon.dexpatcher;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.Map.Entry;
 
 import org.jf.dexlib2.AccessFlags;
 
@@ -13,7 +14,7 @@ public abstract class AbstractPatcher<T> {
 	private final String baseLogPrefix;
 
 	private LinkedHashMap<String, T> targetMap;
-	private LinkedHashMap<String, T> targetedMap;
+	private LinkedHashMap<String, Boolean> targetedMap;
 	private LinkedHashMap<String, T> patchedMap;
 
 	private String logPrefix;
@@ -65,23 +66,28 @@ public abstract class AbstractPatcher<T> {
 				}
 			}
 
-			for (T targeted : targetedMap.values()) {
-				String id = getId(targeted);
+			for (Entry<String, Boolean> entry : targetedMap.entrySet()) {
+				String id = entry.getKey();
+				boolean editedInPlace = entry.getValue();
 				T patched = patchedMap.get(id);
-				if (patched == null) targetMap.remove(id);
-				else {
-					targetMap.put(id, null);		// keep ordering stable when replacing items
+				if (patched == null) {
+					T original = targetMap.remove(id);
+					if (original == null) throw new AssertionError("Missing target");
+				} else {
+					T original = targetMap.put(id, null);		// keep ordering stable when replacing items
+					if (original == null) throw new AssertionError("Missing target");
 					setupLogPrefix(id, patched);
 					try {
-						onEffectiveReplacement(id, patched, targeted);
+						onEffectiveReplacement(id, patched, original, editedInPlace);
 					} catch (PatchException e) {
 						log(ERROR, e.getMessage());
 					}
 				}
 			}
 
-			for (T patched : patchedMap.values()) {
-				String patchedId = getId(patched);
+			for (Entry<String, T> entry : patchedMap.entrySet()) {
+				String patchedId = entry.getKey();
+				T patched = entry.getValue();
 				if (targetMap.put(patchedId, patched) != null) {
 					setupLogPrefix(patchedId, patched);
 					log(ERROR, "already exists");
@@ -109,15 +115,15 @@ public abstract class AbstractPatcher<T> {
 		logPrefix += prefixComponent + ": ";
 	}
 
-	protected final T findTarget(String targetId) throws PatchException {
+	protected final T findTarget(String targetId, boolean editingInPlace) throws PatchException {
 		T target = targetMap.get(targetId);
 		if (target == null) throw new PatchException("target not found");
-		addTargeted(targetId, target);
+		addTargeted(targetId, editingInPlace);
 		return target;
 	}
 
-	protected final void addTargeted(String targetId, T target) throws PatchException {
-		if (targetedMap.put(targetId, target) != null) throw new PatchException("already targeted");
+	protected final void addTargeted(String targetId, boolean editingInPlace) throws PatchException {
+		if (targetedMap.put(targetId, editingInPlace) != null) throw new PatchException("already targeted");
 	}
 
 	protected final void addPatched(String patchedId, T patched) throws PatchException {
@@ -148,6 +154,6 @@ public abstract class AbstractPatcher<T> {
 	// Handlers
 
 	protected abstract void onPatch(String patchId, T patch) throws PatchException;
-	protected void onEffectiveReplacement(String id, T patched, T original) throws PatchException {}
+	protected void onEffectiveReplacement(String id, T patched, T original, boolean editedInPlace) throws PatchException {}
 
 }

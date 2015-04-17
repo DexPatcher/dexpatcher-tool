@@ -57,6 +57,11 @@ public class DexPatcher extends SimplePatcher<ClassDef> {
 	}
 
 	@Override
+	protected void onPrepare(String patchId, ClassDef patch, PatcherAnnotation annotation) throws PatchException {
+		if (annotation.getRecursive()) PatcherAnnotation.throwInvalidElement(Tag.ELEM_RECURSIVE);
+	}
+
+	@Override
 	protected String getTargetId(String patchId, ClassDef patch, PatcherAnnotation annotation) {
 		String target = annotation.getTarget();
 		String targetClass = annotation.getTargetClass();
@@ -145,7 +150,7 @@ public class DexPatcher extends SimplePatcher<ClassDef> {
 	}
 
 	@Override
-	protected void onEffectiveReplacement(String id, ClassDef patched, ClassDef original) {
+	protected void onEffectiveReplacement(String id, ClassDef patched, ClassDef original, boolean editedInPlace) {
 		String message = "'%s' modifier mismatch in original and replacement types";
 		int flags1 = Util.getClassAccessFlags(patched);
 		int flags2 = Util.getClassAccessFlags(original);
