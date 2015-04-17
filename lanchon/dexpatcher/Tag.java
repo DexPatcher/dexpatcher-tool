@@ -30,6 +30,14 @@ public abstract class Tag {
 	public static final String TYPE_TAG = getTypeDescriptor(TAG);
 	public static final String TYPE_VOID = Util.getTypeDescriptorFromClass(Void.class);
 
+	// Dalvik
+
+	private static final String NAME_INNER_CLASS = "dalvik.annotation.InnerClass";
+
+	public static final String TYPE_INNER_CLASS = Util.getTypeDescriptorFromName(NAME_INNER_CLASS);
+	public static final String ELEM_ACCESS_FLAGS = "accessFlags";
+	public static final String STATIC_CONSTRUCTOR = "<clinit>()V";
+
 	// Helpers
 
 	private static String getSimpleClassName(String tag) {

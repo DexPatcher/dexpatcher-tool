@@ -35,8 +35,25 @@ public class DexPatcher extends SimplePatcher<ClassDef> {
 	}
 
 	@Override
+	protected String getLogPrefix(String id, ClassDef t) {
+		return "type '" + Util.getTypeNameFromDescriptor(id) + "'";
+	}
+
+	@Override
 	protected Set<? extends Annotation> getAnnotations(ClassDef patch) {
 		return patch.getAnnotations();
+	}
+
+	@Override
+	protected String getTargetLogPrefix(String targetId, PatcherAnnotation annotation) {
+		return "target '" + Util.getTypeNameFromDescriptor(targetId) + "'";
+	}
+
+	// Handlers
+
+	@Override
+	protected Action getDefaultAction(String patchId, ClassDef patch) {
+		return Action.ADD;
 	}
 
 	@Override
@@ -48,7 +65,7 @@ public class DexPatcher extends SimplePatcher<ClassDef> {
 			int l = target.length();					// target cannot be the empty string
 			if (target.charAt(l - 1) != ';') {			// if target is not a type descriptor
 				if (target.indexOf('.') == -1) {		// if target is not a fully qualified name
-					String base = Util.getTypeNameFromDescriptor(patch.getType());
+					String base = Util.getTypeNameFromDescriptor(patchId);
 					int i = base.lastIndexOf('.');
 					if (target.indexOf('$') == -1) {	// if target is not a qualified nested type
 						i = Math.max(i, base.lastIndexOf('$'));
@@ -63,23 +80,6 @@ public class DexPatcher extends SimplePatcher<ClassDef> {
 		}
 		if (targetId == null) targetId = patchId;
 		return targetId;
-	}
-
-	@Override
-	protected String getLogPrefix(ClassDef patch) {
-		return "type '" + Util.getTypeNameFromDescriptor(patch.getType()) + "'";
-	}
-
-	@Override
-	protected String getTargetLogPrefix(String targetId, PatcherAnnotation annotation) {
-		return "target '" + Util.getTypeNameFromDescriptor(targetId) + "'";
-	}
-
-	// Handlers
-
-	@Override
-	protected Action getDefaultAction(String patchId, ClassDef patch) {
-		return Action.ADD;
 	}
 
 	@Override
@@ -101,9 +101,10 @@ public class DexPatcher extends SimplePatcher<ClassDef> {
 	}
 
 	@Override
-	protected ClassDef onSimpleEdit(ClassDef patch, PatcherAnnotation annotation, ClassDef target) {
+	protected ClassDef onSimpleEdit(ClassDef patch, PatcherAnnotation annotation, ClassDef target, boolean renaming) {
 
-		if (!patch.getType().equals(target.getType())) {		// avoid duplicated messages if not renaming
+		// Avoid duplicated messages if not renaming.
+		if (renaming) {
 			String message = "'%s' modifier mismatch in targeted and edited types";
 			int flags1 = Util.getClassAccessFlags(patch);
 			int flags2 = Util.getClassAccessFlags(target);

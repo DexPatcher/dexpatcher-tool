@@ -29,8 +29,7 @@ public class DirectMethodSetPatcher extends MethodSetPatcher {
 
 	@Override
 	protected Action getDefaultAction(String patchId, Method patch) {
-		if ("<clinit>".equals(patch.getName()) &&		// performance optimization
-				"<clinit>()V".equals(getId(patch))) {
+		if (Tag.STATIC_CONSTRUCTOR.equals(patchId)) {
 			staticConstructorFound = true;
 			if (staticConstructorAction != null) return staticConstructorAction;
 		}

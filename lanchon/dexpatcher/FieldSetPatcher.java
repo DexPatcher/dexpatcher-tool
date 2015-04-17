@@ -28,6 +28,13 @@ public class FieldSetPatcher extends MemberSetPatcher<Field> {
 	}
 
 	@Override
+	protected int getAccessFlags(Field t) {
+		return t.getAccessFlags();
+	}
+
+	// Handlers
+
+	@Override
 	protected void onPrepare(String patchId, Field patch, PatcherAnnotation annotation) throws PatchException {
 		Action action = annotation.getAction();
 		if (action == Action.REPLACE) PatcherAnnotation.throwInvalidAnnotation(Tag.REPLACE);
@@ -39,13 +46,6 @@ public class FieldSetPatcher extends MemberSetPatcher<Field> {
 		String target = annotation.getTarget();
 		return target != null ? Util.getFieldId(patch, target) : patchId;
 	}
-
-	@Override
-	protected int getAccessFlags(Field t) {
-		return t.getAccessFlags();
-	}
-
-	// Handlers
 
 	@Override
 	protected Field onSimpleAdd(Field patch, PatcherAnnotation annotation) {
@@ -60,8 +60,12 @@ public class FieldSetPatcher extends MemberSetPatcher<Field> {
 	}
 
 	@Override
-	protected Field onSimpleEdit(Field patch, PatcherAnnotation annotation, Field target) {
-		EncodedValue value = (patch.getName().equals(target.getName()) ? target.getInitialValue() : null);
+	protected Field onSimpleEdit(Field patch, PatcherAnnotation annotation, Field target, boolean renaming) {
+		// Use the static field initializer value in source only
+		// if not renaming, given that the static constructor in
+		// source would only initialize it if not renamed.
+		// This makes behavior predictable across compilers.
+		EncodedValue value = renaming ? null : target.getInitialValue();
 		value = filterInitialValue(patch, value);
 		if (AccessFlags.FINAL.isSet(target.getAccessFlags())) {
 			log(WARN, "value of final field might be embedded in code");
@@ -73,7 +77,7 @@ public class FieldSetPatcher extends MemberSetPatcher<Field> {
 				patch.getAccessFlags(),
 				value,
 				annotation.getFilteredAnnotations());
-		return super.onSimpleEdit(patched, annotation, target);
+		return super.onSimpleEdit(patched, annotation, target, renaming);
 	}
 
 	private EncodedValue filterInitialValue(Field patch, EncodedValue value) {

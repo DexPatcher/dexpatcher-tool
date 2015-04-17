@@ -57,7 +57,7 @@ public abstract class AbstractPatcher<T> {
 
 			for (T patch : patchSet) {
 				String patchId = getId(patch);
-				setupLogPrefix(patch);
+				setupLogPrefix(patchId, patch);
 				try {
 					onPatch(patchId, patch);
 				} catch (PatchException e) {
@@ -71,7 +71,7 @@ public abstract class AbstractPatcher<T> {
 				if (patched == null) targetMap.remove(id);
 				else {
 					targetMap.put(id, null);		// keep ordering stable when replacing items
-					setupLogPrefix(patched);
+					setupLogPrefix(id, patched);
 					try {
 						onEffectiveReplacement(id, patched, targeted);
 					} catch (PatchException e) {
@@ -83,7 +83,7 @@ public abstract class AbstractPatcher<T> {
 			for (T patched : patchedMap.values()) {
 				String patchedId = getId(patched);
 				if (targetMap.put(patchedId, patched) != null) {
-					setupLogPrefix(patched);
+					setupLogPrefix(patchedId, patched);
 					log(ERROR, "already exists");
 				}
 			}
@@ -101,8 +101,8 @@ public abstract class AbstractPatcher<T> {
 
 	}
 
-	private final void setupLogPrefix(T t) {
-		logPrefix = baseLogPrefix + getLogPrefix(t) + ": ";
+	private final void setupLogPrefix(String id, T t) {
+		logPrefix = baseLogPrefix + getLogPrefix(id, t) + ": ";
 	}
 
 	protected final void extendLogPrefix(String prefixComponent) {
@@ -143,7 +143,7 @@ public abstract class AbstractPatcher<T> {
 	// Adapters
 
 	protected abstract String getId(T t);
-	protected abstract String getLogPrefix(T patch);
+	protected abstract String getLogPrefix(String id, T t);
 
 	// Handlers
 

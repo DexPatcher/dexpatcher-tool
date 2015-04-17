@@ -4,16 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.jf.dexlib2.AccessFlags;
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.Method;
 import org.jf.dexlib2.iface.MethodImplementation;
 import org.jf.dexlib2.iface.MethodParameter;
 import org.jf.dexlib2.immutable.ImmutableMethod;
 import org.jf.dexlib2.immutable.ImmutableMethodImplementation;
-
-import static lanchon.dexpatcher.Logger.Level.*;
-import static org.jf.dexlib2.AccessFlags.*;
 
 public class MethodSetPatcher extends MemberSetPatcher<Method> {
 
@@ -32,6 +28,13 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 	protected Set<? extends Annotation> getAnnotations(Method patch) {
 		return patch.getAnnotations();
 	}
+
+	@Override
+	protected int getAccessFlags(Method t) {
+		return t.getAccessFlags();
+	}
+
+	// Handlers
 
 	@Override
 	protected String getTargetId(String patchId, Method patch, PatcherAnnotation annotation) {
@@ -55,13 +58,6 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 	}
 
 	@Override
-	protected int getAccessFlags(Method t) {
-		return t.getAccessFlags();
-	}
-
-	// Handlers
-
-	@Override
 	protected Method onSimpleAdd(Method patch, PatcherAnnotation annotation) {
 		if (patch.getAnnotations() == annotation.getFilteredAnnotations()) {
 			return patch;	// avoid creating a new object unless necessary
@@ -76,21 +72,18 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 				patch.getImplementation());
 	}
 
-	@SuppressWarnings("unused")
 	@Override
-	protected Method onSimpleEdit(Method patch, PatcherAnnotation annotation, Method target) {
+	protected Method onSimpleEdit(Method patch, PatcherAnnotation annotation, Method target, boolean renaming) {
 
-		int flags;
-		if (false) {
-			String message = "updating '%s' modifier in edited member to match its target";
-			AccessFlags[] flagArray = new AccessFlags[] { CONSTRUCTOR };
-			int flagMask = AccessFlags.CONSTRUCTOR.getValue();
-			int patchFlags = patch.getAccessFlags();
-			int targetFlags = target.getAccessFlags();
-			checkAccessFlags(INFO, patchFlags, targetFlags, flagArray, message);
-			flags = (patchFlags & ~flagMask) | (targetFlags & flagMask); 
-		}
-		else flags = patch.getAccessFlags();
+		//String message = "updating '%s' modifier in edited member to match its target";
+		//AccessFlags[] flagArray = new AccessFlags[] { CONSTRUCTOR };
+		//int flagMask = AccessFlags.CONSTRUCTOR.getValue();
+		//int patchFlags = patch.getAccessFlags();
+		//int targetFlags = target.getAccessFlags();
+		//checkAccessFlags(INFO, patchFlags, targetFlags, flagArray, message);
+		//int flags = (patchFlags & ~flagMask) | (targetFlags & flagMask); 
+
+		int flags = patch.getAccessFlags();
 
 		MethodImplementation implementation = target.getImplementation();
 		if (isTaggedByParameter(patch)) {
@@ -110,7 +103,7 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 				annotation.getFilteredAnnotations(),
 				implementation);
 
-		return super.onSimpleEdit(patched, annotation, target);
+		return super.onSimpleEdit(patched, annotation, target, renaming);
 
 	}
 

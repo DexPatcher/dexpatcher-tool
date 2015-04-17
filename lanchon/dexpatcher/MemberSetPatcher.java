@@ -23,16 +23,8 @@ public abstract class MemberSetPatcher<T> extends SimplePatcher<T> {
 	// Adapters
 
 	@Override
-	protected void onPrepare(String patchId, T patch, PatcherAnnotation annotation) throws PatchException {
-		if (annotation.getTargetClass() != null) PatcherAnnotation.throwInvalidElement(Tag.ELEM_TARGET_CLASS);
-		if (annotation.getStaticConstructorAction() != null) PatcherAnnotation.throwInvalidElement(Tag.ELEM_STATIC_CONSTRUCTOR_ACTION);
-		if (annotation.getDefaultAction() != null) PatcherAnnotation.throwInvalidElement(Tag.ELEM_DEFAULT_ACTION);
-		if (annotation.getOnlyEditMembers()) PatcherAnnotation.throwInvalidElement(Tag.ELEM_ONLY_EDIT_MEMBERS);
-	}
-
-	@Override
-	protected String getLogPrefix(T patch) {
-		return logMemberType + " '" + getId(patch) + "'";
+	protected String getLogPrefix(String id, T t) {
+		return logMemberType + " '" + id + "'";
 	}
 
 	@Override
@@ -59,22 +51,21 @@ public abstract class MemberSetPatcher<T> extends SimplePatcher<T> {
 		}
 	}
 
-	// TODO:
-	// When this commit ships: https://code.google.com/p/smali/issues/detail?id=237
-	// Change getId(t) to t.getName().
+	@Override
+	protected void onPrepare(String patchId, T patch, PatcherAnnotation annotation) throws PatchException {
+		if (annotation.getTargetClass() != null) PatcherAnnotation.throwInvalidElement(Tag.ELEM_TARGET_CLASS);
+		if (annotation.getStaticConstructorAction() != null) PatcherAnnotation.throwInvalidElement(Tag.ELEM_STATIC_CONSTRUCTOR_ACTION);
+		if (annotation.getDefaultAction() != null) PatcherAnnotation.throwInvalidElement(Tag.ELEM_DEFAULT_ACTION);
+		if (annotation.getOnlyEditMembers()) PatcherAnnotation.throwInvalidElement(Tag.ELEM_ONLY_EDIT_MEMBERS);
+	}
 
 	@Override
-	protected T onSimpleEdit(T patch, PatcherAnnotation annotation, T target) {
+	protected T onSimpleEdit(T patch, PatcherAnnotation annotation, T target, boolean renaming) {
 		String message = "'%s' modifier mismatch in targeted and edited members";
 		int flags1 = getAccessFlags(patch);
 		int flags2 = getAccessFlags(target);
-		if (getId(patch).equals(getId(target))) {
-			// Avoid duplicated messages if not renaming.
-			if (isLogging(WARN)) checkAccessFlags(WARN, flags1, flags2,
-					new AccessFlags[] { NATIVE, DECLARED_SYNCHRONIZED }, message);
-			if (isLogging(INFO)) checkAccessFlags(INFO, flags1, flags2,
-					new AccessFlags[] { SYNCHRONIZED }, message);
-		} else {
+		// Avoid duplicated messages if not renaming.
+		if (renaming) {
 			if (isLogging(WARN)) checkAccessFlags(WARN, flags1, flags2,
 					new AccessFlags[] { STATIC, VARARGS, NATIVE, ABSTRACT, STRICTFP,
 					ENUM, DECLARED_SYNCHRONIZED }, message);
@@ -83,6 +74,11 @@ public abstract class MemberSetPatcher<T> extends SimplePatcher<T> {
 					TRANSIENT, SYNTHETIC }, message);
 			if (isLogging(DEBUG)) checkAccessFlags(DEBUG, flags1, flags2,
 					new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED, CONSTRUCTOR }, message);
+		} else {
+			if (isLogging(WARN)) checkAccessFlags(WARN, flags1, flags2,
+					new AccessFlags[] { NATIVE, DECLARED_SYNCHRONIZED }, message);
+			if (isLogging(INFO)) checkAccessFlags(INFO, flags1, flags2,
+					new AccessFlags[] { SYNCHRONIZED }, message);
 		}
 		return patch;
 	}

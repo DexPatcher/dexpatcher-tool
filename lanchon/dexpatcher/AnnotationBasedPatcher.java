@@ -23,16 +23,7 @@ public abstract class AnnotationBasedPatcher<T> extends AbstractPatcher<T>{
 		return findTarget(targetId);
 	}
 
-	// Adapters
-
-	// TODO:
-	// When this commit ships: https://code.google.com/p/smali/issues/detail?id=237
-	// Eliminate: protected abstract Set<? extends Annotation> getAnnotations(T patch);
-
-	protected abstract Set<? extends Annotation> getAnnotations(T patch);
-	protected abstract String getTargetLogPrefix(String targetId, PatcherAnnotation annotation);
-
-	// Handlers
+	// Implementation
 
 	@Override
 	protected void onPatch(String patchId, T patch) throws PatchException {
@@ -67,7 +58,16 @@ public abstract class AnnotationBasedPatcher<T> extends AbstractPatcher<T>{
 
 	}
 
-	// New Handlers
+	// Adapters
+
+	// TODO:
+	// When this commit ships: https://code.google.com/p/smali/issues/detail?id=237
+	// Eliminate: protected abstract Set<? extends Annotation> getAnnotations(T patch);
+
+	protected abstract Set<? extends Annotation> getAnnotations(T patch);
+	protected abstract String getTargetLogPrefix(String targetId, PatcherAnnotation annotation);
+
+	// Handlers
 
 	protected abstract Action getDefaultAction(String patchId, T patch) throws PatchException;
 	protected void onPrepare(String patchId, T patch, PatcherAnnotation annotation) throws PatchException {}

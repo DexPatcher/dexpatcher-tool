@@ -10,7 +10,7 @@ public abstract class SimplePatcher<T> extends AnnotationBasedPatcher<T> {
 		super(parent);
 	}
 
-	// Handlers
+	// Implementation
 
 	@Override
 	protected void onAdd(String patchId, T patch, PatcherAnnotation annotation) throws PatchException {
@@ -22,7 +22,8 @@ public abstract class SimplePatcher<T> extends AnnotationBasedPatcher<T> {
 	protected void onEdit(String patchId, T patch, PatcherAnnotation annotation) throws PatchException {
 		String targetId = getTargetId(patchId, patch, annotation);
 		T target = setupTarget(patchId, targetId, annotation);
-		T patched = onSimpleEdit(patch, annotation, target);
+		boolean renaming = !patchId.equals(targetId);
+		T patched = onSimpleEdit(patch, annotation, target, renaming);
 		addPatched(patchId, patch, patched);
 	}
 
@@ -41,12 +42,12 @@ public abstract class SimplePatcher<T> extends AnnotationBasedPatcher<T> {
 		onSimpleRemove(patch, annotation, target);
 	}
 
-	// New Handlers
+	// Handlers
 
 	protected abstract String getTargetId(String patchId, T patch, PatcherAnnotation annotation);
 
 	protected abstract T onSimpleAdd(T patch, PatcherAnnotation annotation);
-	protected abstract T onSimpleEdit(T patch, PatcherAnnotation annotation, T target);
+	protected abstract T onSimpleEdit(T patch, PatcherAnnotation annotation, T target, boolean renaming);
 	protected T onSimpleReplace(T patch, PatcherAnnotation annotation, T target) { return onSimpleAdd(patch, annotation); }
 	protected void onSimpleRemove(T patch, PatcherAnnotation annotation, T target) {}
 
