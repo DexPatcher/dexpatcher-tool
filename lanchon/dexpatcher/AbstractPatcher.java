@@ -16,6 +16,10 @@ public abstract class AbstractPatcher<T> {
 
 	private String logPrefix;
 
+	private LinkedHashMap<String, T> targetMap;
+	private LinkedHashMap<String, T> targetedMap;
+	private LinkedHashMap<String, T> patchedMap;
+
 	protected AbstractPatcher(Logger logger, String baseLogPrefix) {
 		this.logger = logger;
 		this.baseLogPrefix = baseLogPrefix != null ? baseLogPrefix : "";
@@ -29,115 +33,128 @@ public abstract class AbstractPatcher<T> {
 		return logPrefix;
 	}
 
-	public Collection<T> run(Iterable<? extends T> sourceSet, Iterable<? extends T> patchSet) {
+	public Collection<T> process(Iterable<? extends T> sourceSet, Iterable<? extends T> patchSet) {
 		final int sizeHint = 16;
-		return run(sourceSet, sizeHint, patchSet, sizeHint);
+		return process(sourceSet, sizeHint, patchSet, sizeHint);
 	}
 
-	public Collection<T> run(Iterable<? extends T> sourceSet, int sourceSetSizeHint,
+	public Collection<T> process(Iterable<? extends T> sourceSet, int sourceSetSizeHint,
 			Iterable<? extends T> patchSet, int patchSetSizeHint) {
 
-		LinkedHashMap<String, T> targetMap = new LinkedHashMap<>(sourceSetSizeHint + patchSetSizeHint);
-		LinkedHashMap<String, T> targetedMap = new LinkedHashMap<>();
-		LinkedHashMap<String, T> patchedMap = new LinkedHashMap<>(patchSetSizeHint);
+		targetMap = new LinkedHashMap<>(sourceSetSizeHint + patchSetSizeHint);
+		targetedMap = new LinkedHashMap<>();
+		patchedMap = new LinkedHashMap<>(patchSetSizeHint);
+		try
+		{
 
-		for (T source : sourceSet) {
-			targetMap.put(getId(source), source);
-		}
-
-		for (T patch : patchSet) {
-
-			String patchId = getId(patch);
-			setupLogPrefix(patch);
-
-			PatcherAnnotation annotation;
-			String targetId = null;
-			try {
-				annotation = PatcherAnnotation.parse(getAnnotations(patch));
-				if (annotation == null) annotation = getDefaultAnnotation(patch);
-				targetId = parsePatcherAnnotation(patch, annotation);
-			} catch (PatcherAnnotation.ParseException e) {
-				log(ERROR, e.getMessage());
-				continue;
-			}
-			Action action = annotation.getAction();
-
-			if (targetId == null) targetId = patchId;
-			else {
-				if (!targetId.equals(patchId)) {
-					logPrefix += getLogTargetPrefix(annotation, targetId) + ": ";
-				}
+			for (T source : sourceSet) {
+				targetMap.put(getId(source), source);
 			}
 
-			T target = null;
-			if (action != Action.ADD && action != Action.IGNORE) {
-				target = targetMap.get(targetId);
-				if (target == null) {
-					log(ERROR, "target not found");
+			for (T patch : patchSet) {
+
+				String patchId = getId(patch);
+				setupLogPrefix(patch);
+
+				PatcherAnnotation annotation;
+				String targetId = null;
+				try {
+					annotation = PatcherAnnotation.parse(getAnnotations(patch));
+					if (annotation == null) {
+						annotation = new PatcherAnnotation(getDefaultAction(patch), getAnnotations(patch));
+					}
+					targetId = parsePatcherAnnotation(patch, annotation);
+				} catch (PatcherAnnotation.ParseException e) {
+					log(ERROR, e.getMessage());
 					continue;
 				}
-				if (targetedMap.put(targetId, target) != null) {
-					log(ERROR, "already targeted");
-					continue;
+				Action action = annotation.getAction();
+
+				if (targetId == null) targetId = patchId;
+				else {
+					if (!targetId.equals(patchId)) {
+						logPrefix += getLogTargetPrefix(annotation, targetId) + ": ";
+					}
+				}
+
+				T target = null;
+				if (action != Action.ADD && action != Action.IGNORE) {
+					target = targetMap.get(targetId);
+					if (target == null) {
+						log(ERROR, "target not found");
+						continue;
+					}
+					if (!markAsTargeted(targetId, target)) continue;
+				}
+
+				if (logger.isLogging(DEBUG)) log(DEBUG, action.getLabel());
+				T patched = null;
+				switch (action) {
+				case ADD:
+					patched = onAdd(patch, annotation);
+					break;
+				case EDIT:
+					patched = onEdit(patch, annotation, target);
+					break;
+				case REPLACE:
+					patched = onReplace(patch, annotation, target);
+					break;
+				case REMOVE:
+					onRemove(patch, annotation, target);
+					break;
+				case IGNORE:
+					break;
+				default:
+					throw new AssertionError("Unexpected action");
+				}
+
+				if (action != Action.REMOVE && action != Action.IGNORE) {
+					if (patched == null) throw new AssertionError("Patched is null");
+					String patchedId = getId(patched);
+					if (!patchId.equals(patchedId)) throw new AssertionError("Patched id changed");
+					T previous = patchedMap.put(patchedId, patched);
+					if (previous != null) throw new AssertionError("Patched id collision");
+				}
+
+			}
+
+			for (T targeted : targetedMap.values()) {
+				String id = getId(targeted);
+				T patched = patchedMap.get(id);
+				if (patched == null) targetMap.remove(id);
+				else {
+					setupLogPrefix(patched);
+					onEffectiveReplacement(patched, targeted);
+					targetMap.put(id, patched);		// keep ordering stable when replacing items
+					patchedMap.remove(id);
 				}
 			}
 
-			if (logger.isLogging(DEBUG)) log(DEBUG, action.getLabel());
-			T patched = null;
-			switch (action) {
-			case ADD:
-				patched = onAdd(patch, annotation);
-				break;
-			case EDIT:
-				patched = onEdit(patch, annotation, target);
-				break;
-			case REPLACE:
-				patched = onReplace(patch, annotation, target);
-				break;
-			case REMOVE:
-				onRemove(patch, annotation, target);
-				break;
-			case IGNORE:
-				break;
-			default:
-				throw new AssertionError("Unexpected action");
+			for (T patched : patchedMap.values()) {
+				if (targetMap.put(getId(patched), patched) != null) {
+					setupLogPrefix(patched);
+					log(ERROR, "already exists");
+				}
 			}
 
-			if (action != Action.REMOVE && action != Action.IGNORE) {
-				if (patched == null) throw new AssertionError("Patched is null");
-				String patchedId = getId(patched);
-				if (!patchId.equals(patchedId)) throw new AssertionError("Patched id changed");
-				T previous = patchedMap.put(patchedId, patched);
-				if (previous != null) throw new AssertionError("Patched id collision");
-			}
+			return targetMap.values();
 
+		} finally {
+			targetMap = null;
+			targetedMap = null;
+			patchedMap = null;
 		}
-
-		for (T targeted : targetedMap.values()) {
-			String id = getId(targeted);
-			T patched = patchedMap.get(id);
-			if (patched == null) targetMap.remove(id);
-			else {
-				setupLogPrefix(patched);
-				onEffectiveReplacement(patched, targeted);
-				targetMap.put(id, patched);		// keep ordering stable when replacing items
-				patchedMap.remove(id);
-			}
-		}
-
-		for (T patched : patchedMap.values()) {
-			if (targetMap.put(getId(patched), patched) != null) {
-				setupLogPrefix(patched);
-				log(ERROR, "already exists");
-			}
-		}
-
-		return targetMap.values();
 
 	}
 
-	private void setupLogPrefix(T t) {
+	private final void setupLogPrefix(T t) {
 		logPrefix = baseLogPrefix + getLogPrefix(t) + ": ";
+	}
+
+	private final boolean markAsTargeted(String targetId, T target) {
+		if (targetedMap.put(targetId, target) == null) return true;
+		log(ERROR, "already targeted");
+		return false;
 	}
 
 	protected void checkAccessFlags(Logger.Level level, int flags1, int flags2, AccessFlags flags[], String message) {
@@ -162,7 +179,7 @@ public abstract class AbstractPatcher<T> {
 
 	// Handlers
 
-	protected abstract PatcherAnnotation getDefaultAnnotation(T patch);
+	protected abstract Action getDefaultAction(T patch);
 	protected abstract T onAdd(T patch, PatcherAnnotation annotation);
 	protected abstract T onEdit(T patch, PatcherAnnotation annotation, T target);
 

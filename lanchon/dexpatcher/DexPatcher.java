@@ -27,7 +27,7 @@ public class DexPatcher extends AbstractPatcher<ClassDef> {
 	public DexFile run(DexFile sourceDex, DexFile patchDex) {
 		Set<? extends ClassDef> sourceClasses = sourceDex.getClasses();
 		Set<? extends ClassDef> patchClasses = patchDex.getClasses();
-		return new ImmutableDexFile(run(sourceClasses, sourceClasses.size(), patchClasses, patchClasses.size()));
+		return new ImmutableDexFile(process(sourceClasses, sourceClasses.size(), patchClasses, patchClasses.size()));
 	}
 
 	// Adapters
@@ -80,8 +80,8 @@ public class DexPatcher extends AbstractPatcher<ClassDef> {
 	// Handlers
 
 	@Override
-	protected PatcherAnnotation getDefaultAnnotation(ClassDef patch) {
-		return new PatcherAnnotation(Action.ADD, patch.getAnnotations());
+	protected Action getDefaultAction(ClassDef patch) {
+		return Action.ADD;
 	}
 
 	@Override
@@ -135,13 +135,13 @@ public class DexPatcher extends AbstractPatcher<ClassDef> {
 				source.getSourceFile(),
 				annotations,
 				new FieldSetPatcher(logger, getLogPrefix(), "static field", annotation)
-						.run(target.getStaticFields(), patch.getStaticFields()),
+						.process(target.getStaticFields(), patch.getStaticFields()),
 				new FieldSetPatcher(logger, getLogPrefix(), "instance field", annotation)
-						.run(target.getInstanceFields(), patch.getInstanceFields()),
+						.process(target.getInstanceFields(), patch.getInstanceFields()),
 				new DirectMethodSetPatcher(logger, getLogPrefix(), "direct method", annotation)
-						.run(target.getDirectMethods(), patch.getDirectMethods()),
+						.process(target.getDirectMethods(), patch.getDirectMethods()),
 				new MethodSetPatcher(logger, getLogPrefix(), "virtual method", annotation)
-						.run(target.getVirtualMethods(), patch.getVirtualMethods()));
+						.process(target.getVirtualMethods(), patch.getVirtualMethods()));
 
 	}
 

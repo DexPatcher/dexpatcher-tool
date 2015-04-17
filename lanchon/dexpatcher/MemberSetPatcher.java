@@ -56,13 +56,13 @@ public abstract class MemberSetPatcher<T> extends AbstractPatcher<T> {
 	// Handlers
 
 	@Override
-	protected PatcherAnnotation getDefaultAnnotation(T patch) {
+	protected Action getDefaultAction(T patch) {
 		if (defaultAction != null) {
 			log(INFO, "default action (" + defaultAction.getLabel() + ")");
-			return new PatcherAnnotation(defaultAction, getAnnotations(patch));
+			return defaultAction;
 		} else {
 			log(ERROR, "no default action defined");
-			return new PatcherAnnotation(Action.IGNORE, getAnnotations(patch));
+			return Action.IGNORE;
 		}
 	}
 

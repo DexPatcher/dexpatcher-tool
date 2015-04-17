@@ -15,10 +15,10 @@ public class DirectMethodSetPatcher extends MethodSetPatcher {
 	}
 
 	@Override
-	public Collection<Method> run(Iterable<? extends Method> sourceSet, int sourceSetSizeHint,
+	public Collection<Method> process(Iterable<? extends Method> sourceSet, int sourceSetSizeHint,
 			Iterable<? extends Method> patchSet, int patchSetSizeHint) {
 		staticConstructorFound = false;
-		Collection<Method> methods = super.run(sourceSet, sourceSetSizeHint, patchSet, patchSetSizeHint);
+		Collection<Method> methods = super.process(sourceSet, sourceSetSizeHint, patchSet, patchSetSizeHint);
 		if (staticConstructorAction != null && !staticConstructorFound) {
 			log(ERROR, "static constructor not found");
 		}
@@ -28,15 +28,13 @@ public class DirectMethodSetPatcher extends MethodSetPatcher {
 	// Handlers
 
 	@Override
-	protected PatcherAnnotation getDefaultAnnotation(Method patch) {
+	protected Action getDefaultAction(Method patch) {
 		if ("<clinit>".equals(patch.getName()) &&		// performance optimization
 				"<clinit>()V".equals(getId(patch))) {
 			staticConstructorFound = true;
-			if (staticConstructorAction != null) {
-				return new PatcherAnnotation(staticConstructorAction, patch.getAnnotations());
-			}
+			if (staticConstructorAction != null) return staticConstructorAction;
 		}
-		return super.getDefaultAnnotation(patch);
+		return super.getDefaultAction(patch);
 	}
 
 }
