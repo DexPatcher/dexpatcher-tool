@@ -15,7 +15,7 @@ import static org.jf.dexlib2.AccessFlags.*;
 
 // TODO: Warn about changes in superclass and interfaces.
 
-public class DexPatcher extends AbstractPatcher<ClassDef> {
+public class DexPatcher extends SimplePatcher<ClassDef> {
 
 	public DexPatcher(Logger logger) {
 		super(logger, null);
@@ -40,7 +40,7 @@ public class DexPatcher extends AbstractPatcher<ClassDef> {
 	}
 
 	@Override
-	protected String parsePatcherAnnotation(ClassDef patch, PatcherAnnotation annotation) throws PatchException {
+	protected String getTargetId(String patchId, ClassDef patch, PatcherAnnotation annotation) {
 		String target = annotation.getTarget();
 		String targetClass = annotation.getTargetClass();
 		String targetId;
@@ -61,6 +61,7 @@ public class DexPatcher extends AbstractPatcher<ClassDef> {
 		} else {
 			targetId = targetClass;				
 		}
+		if (targetId == null) targetId = patchId;
 		return targetId;
 	}
 
@@ -70,19 +71,19 @@ public class DexPatcher extends AbstractPatcher<ClassDef> {
 	}
 
 	@Override
-	protected String getLogTargetPrefix(PatcherAnnotation annotation, String targetId) {
+	protected String getTargetLogPrefix(String targetId, PatcherAnnotation annotation) {
 		return "target '" + Util.getTypeNameFromDescriptor(targetId) + "'";
 	}
 
 	// Handlers
 
 	@Override
-	protected Action getDefaultAction(ClassDef patch) {
+	protected Action getDefaultAction(String patchId, ClassDef patch) {
 		return Action.ADD;
 	}
 
 	@Override
-	protected ClassDef onAdd(ClassDef patch, PatcherAnnotation annotation) {
+	protected ClassDef onSimpleAdd(ClassDef patch, PatcherAnnotation annotation) {
 		if (patch.getAnnotations() == annotation.getFilteredAnnotations()) {
 			return patch;	// avoid creating a new object unless necessary
 		}
@@ -100,7 +101,7 @@ public class DexPatcher extends AbstractPatcher<ClassDef> {
 	}
 
 	@Override
-	protected ClassDef onEdit(ClassDef patch, PatcherAnnotation annotation, ClassDef target) {
+	protected ClassDef onSimpleEdit(ClassDef patch, PatcherAnnotation annotation, ClassDef target) {
 
 		if (!patch.getType().equals(target.getType())) {		// avoid duplicated messages if not renaming
 			String message = "'%s' modifier mismatch in targeted and edited types";
@@ -143,7 +144,7 @@ public class DexPatcher extends AbstractPatcher<ClassDef> {
 	}
 
 	@Override
-	protected void onEffectiveReplacement(ClassDef patched, ClassDef original) {
+	protected void onEffectiveReplacement(String id, ClassDef patched, ClassDef original) {
 		String message = "'%s' modifier mismatch in original and replacement types";
 		int flags1 = Util.getClassAccessFlags(patched);
 		int flags2 = Util.getClassAccessFlags(original);

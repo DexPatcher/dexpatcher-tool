@@ -5,7 +5,7 @@ import org.jf.dexlib2.AccessFlags;
 import static lanchon.dexpatcher.Logger.Level.*;
 import static org.jf.dexlib2.AccessFlags.*;
 
-public abstract class MemberSetPatcher<T> extends AbstractPatcher<T> {
+public abstract class MemberSetPatcher<T> extends SimplePatcher<T> {
 
 	private final String logMemberType;
 	private final Action defaultAction;
@@ -23,12 +23,11 @@ public abstract class MemberSetPatcher<T> extends AbstractPatcher<T> {
 	// Adapters
 
 	@Override
-	protected String parsePatcherAnnotation(T patch, PatcherAnnotation annotation) throws PatchException {
+	protected void onPrepare(String patchId, T patch, PatcherAnnotation annotation) throws PatchException {
 		if (annotation.getTargetClass() != null) PatcherAnnotation.throwInvalidElement(Tag.ELEM_TARGET_CLASS);
 		if (annotation.getStaticConstructorAction() != null) PatcherAnnotation.throwInvalidElement(Tag.ELEM_STATIC_CONSTRUCTOR_ACTION);
 		if (annotation.getDefaultAction() != null) PatcherAnnotation.throwInvalidElement(Tag.ELEM_DEFAULT_ACTION);
 		if (annotation.getOnlyEditMembers()) PatcherAnnotation.throwInvalidElement(Tag.ELEM_ONLY_EDIT_MEMBERS);
-		return annotation.getTarget();
 	}
 
 	@Override
@@ -37,7 +36,7 @@ public abstract class MemberSetPatcher<T> extends AbstractPatcher<T> {
 	}
 
 	@Override
-	protected String getLogTargetPrefix(PatcherAnnotation annotation, String targetId) {
+	protected String getTargetLogPrefix(String targetId, PatcherAnnotation annotation) {
 		return "target '" + annotation.getTarget() + "'";
 	}
 
@@ -50,7 +49,7 @@ public abstract class MemberSetPatcher<T> extends AbstractPatcher<T> {
 	// Handlers
 
 	@Override
-	protected Action getDefaultAction(T patch) {
+	protected Action getDefaultAction(String patchId, T patch) {
 		if (defaultAction != null) {
 			log(INFO, "default action (" + defaultAction.getLabel() + ")");
 			return defaultAction;
@@ -65,7 +64,7 @@ public abstract class MemberSetPatcher<T> extends AbstractPatcher<T> {
 	// Change getId(t) to t.getName().
 
 	@Override
-	protected T onEdit(T patch, PatcherAnnotation annotation, T target) {
+	protected T onSimpleEdit(T patch, PatcherAnnotation annotation, T target) {
 		String message = "'%s' modifier mismatch in targeted and edited members";
 		int flags1 = getAccessFlags(patch);
 		int flags2 = getAccessFlags(target);
@@ -89,7 +88,7 @@ public abstract class MemberSetPatcher<T> extends AbstractPatcher<T> {
 	}
 
 	@Override
-	protected void onEffectiveReplacement(T patched, T original) {
+	protected void onEffectiveReplacement(String id, T patched, T original) {
 		String message = "'%s' modifier mismatch in original and replacement members";
 		int flags1 = getAccessFlags(patched);
 		int flags2 = getAccessFlags(original);

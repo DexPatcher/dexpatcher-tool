@@ -34,15 +34,17 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 	}
 
 	@Override
-	protected String parsePatcherAnnotation(Method patch, PatcherAnnotation annotation) throws PatchException {
-		String target = super.parsePatcherAnnotation(patch, annotation);
+	protected String getTargetId(String patchId, Method patch, PatcherAnnotation annotation) {
+		String target = annotation.getTarget();
 		if (isTaggedByParameter(patch)) {
 			ArrayList<MethodParameter> parameters = new ArrayList<MethodParameter>(patch.getParameters());
 			parameters.remove(parameters.size() - 1);
 			target = (target != null ? target : patch.getName());
 			return Util.getMethodId(parameters, patch.getReturnType(), target);
 		}
-		else return target != null ? Util.getMethodId(patch, target) : null;
+		else {
+			return target != null ? Util.getMethodId(patch, target) : patchId;
+		}
 	}
 
 	private boolean isTaggedByParameter(Method patch) {
@@ -60,7 +62,7 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 	// Handlers
 
 	@Override
-	protected Method onAdd(Method patch, PatcherAnnotation annotation) {
+	protected Method onSimpleAdd(Method patch, PatcherAnnotation annotation) {
 		if (patch.getAnnotations() == annotation.getFilteredAnnotations()) {
 			return patch;	// avoid creating a new object unless necessary
 		}
@@ -76,7 +78,7 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 
 	@SuppressWarnings("unused")
 	@Override
-	protected Method onEdit(Method patch, PatcherAnnotation annotation, Method target) {
+	protected Method onSimpleEdit(Method patch, PatcherAnnotation annotation, Method target) {
 
 		int flags;
 		if (false) {
@@ -108,7 +110,7 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 				annotation.getFilteredAnnotations(),
 				implementation);
 
-		return super.onEdit(patched, annotation, target);
+		return super.onSimpleEdit(patched, annotation, target);
 
 	}
 

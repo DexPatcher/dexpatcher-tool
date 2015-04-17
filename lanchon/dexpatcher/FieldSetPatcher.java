@@ -28,11 +28,16 @@ public class FieldSetPatcher extends MemberSetPatcher<Field> {
 	}
 
 	@Override
-	protected String parsePatcherAnnotation(Field patch, PatcherAnnotation annotation) throws PatchException {
+	protected void onPrepare(String patchId, Field patch, PatcherAnnotation annotation) throws PatchException {
 		Action action = annotation.getAction();
 		if (action == Action.REPLACE) PatcherAnnotation.throwInvalidAnnotation(Tag.REPLACE);
-		String target = super.parsePatcherAnnotation(patch, annotation);
-		return target != null ? Util.getFieldId(patch, target) : null;
+		super.onPrepare(patchId, patch, annotation);
+	}
+
+	@Override
+	protected String getTargetId(String patchId, Field patch, PatcherAnnotation annotation) {
+		String target = annotation.getTarget();
+		return target != null ? Util.getFieldId(patch, target) : patchId;
 	}
 
 	@Override
@@ -43,7 +48,7 @@ public class FieldSetPatcher extends MemberSetPatcher<Field> {
 	// Handlers
 
 	@Override
-	protected Field onAdd(Field patch, PatcherAnnotation annotation) {
+	protected Field onSimpleAdd(Field patch, PatcherAnnotation annotation) {
 		EncodedValue value = filterInitialValue(patch, null);
 		return new ImmutableField(
 			patch.getDefiningClass(),
@@ -55,7 +60,7 @@ public class FieldSetPatcher extends MemberSetPatcher<Field> {
 	}
 
 	@Override
-	protected Field onEdit(Field patch, PatcherAnnotation annotation, Field target) {
+	protected Field onSimpleEdit(Field patch, PatcherAnnotation annotation, Field target) {
 		EncodedValue value = (patch.getName().equals(target.getName()) ? target.getInitialValue() : null);
 		value = filterInitialValue(patch, value);
 		if (AccessFlags.FINAL.isSet(target.getAccessFlags())) {
@@ -68,7 +73,7 @@ public class FieldSetPatcher extends MemberSetPatcher<Field> {
 				patch.getAccessFlags(),
 				value,
 				annotation.getFilteredAnnotations());
-		return super.onEdit(patched, annotation, target);
+		return super.onSimpleEdit(patched, annotation, target);
 	}
 
 	private EncodedValue filterInitialValue(Field patch, EncodedValue value) {
@@ -93,7 +98,7 @@ public class FieldSetPatcher extends MemberSetPatcher<Field> {
 	}
 
 	@Override
-	protected Field onReplace(Field patch, PatcherAnnotation annotation, Field target) {
+	protected Field onSimpleReplace(Field patch, PatcherAnnotation annotation, Field target) {
 		throw new AssertionError("Replace field");
 	}
 

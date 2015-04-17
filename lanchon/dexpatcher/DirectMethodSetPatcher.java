@@ -28,13 +28,13 @@ public class DirectMethodSetPatcher extends MethodSetPatcher {
 	// Handlers
 
 	@Override
-	protected Action getDefaultAction(Method patch) {
+	protected Action getDefaultAction(String patchId, Method patch) {
 		if ("<clinit>".equals(patch.getName()) &&		// performance optimization
 				"<clinit>()V".equals(getId(patch))) {
 			staticConstructorFound = true;
 			if (staticConstructorAction != null) return staticConstructorAction;
 		}
-		return super.getDefaultAction(patch);
+		return super.getDefaultAction(patchId, patch);
 	}
 
 }
