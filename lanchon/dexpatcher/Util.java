@@ -31,10 +31,10 @@ public abstract class Util {
 	}
 
 	public static String getTypeNameFromDescriptor(String descriptor) {
-		int l = descriptor.length();
-		if (l < 2 || descriptor.charAt(0) != 'L' || descriptor.charAt(l - 1) != ';') {
+		if (!isTypeDescriptor(descriptor)) {
 			throw new RuntimeException("Invalid type descriptor (" + descriptor + ")");
 		}
+		int l = descriptor.length();
 		StringBuilder sb = new StringBuilder(l - 2);
 		for (int i = 1; i < l - 1; i++) {
 			char c = descriptor.charAt(i);
@@ -42,6 +42,22 @@ public abstract class Util {
 			sb.append(c);
 		}
 		return sb.toString();
+	}
+
+	public static boolean isTypeDescriptor(String descriptor) {
+		int l = descriptor.length();
+		return l >= 2 && descriptor.charAt(l - 1) == ';' && descriptor.charAt(0) == 'L';
+	}
+
+	public static String resolveTypeName(String name, String base) {
+		if (name.indexOf('.') == -1) {			// if name is not a fully qualified name
+			int i = base.lastIndexOf('.');
+			if (name.indexOf('$') == -1) {		// if name is not a qualified nested type
+				i = Math.max(i, base.lastIndexOf('$'));
+			}
+			if (i != -1) name = base.substring(0, i + 1) + name;
+		}
+		return name;
 	}
 
 	public static String getFieldId(Field field) {

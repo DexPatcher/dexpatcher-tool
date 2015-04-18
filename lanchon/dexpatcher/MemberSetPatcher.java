@@ -12,7 +12,7 @@ public abstract class MemberSetPatcher<T> extends SimplePatcher<T> {
 	protected final Action staticConstructorAction;
 	protected final Action resolvedStaticConstructorAction;
 
-	public MemberSetPatcher(DexPatcher parent, String logMemberType, PatcherAnnotation annotation) {
+	public MemberSetPatcher(ClassSetPatcher parent, String logMemberType, PatcherAnnotation annotation) {
 		super(parent);
 		this.logMemberType = logMemberType;
 		defaultAction = annotation.getDefaultAction();
