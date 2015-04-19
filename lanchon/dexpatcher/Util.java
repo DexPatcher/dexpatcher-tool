@@ -13,6 +13,8 @@ import org.jf.dexlib2.iface.value.IntEncodedValue;
 
 public abstract class Util {
 
+	// Types
+
 	public static String getTypeDescriptorFromClass(Class<?> c) {
 		return getTypeDescriptorFromName(c.getName());
 	}
@@ -60,6 +62,8 @@ public abstract class Util {
 		return name;
 	}
 
+	// IDs
+
 	public static String getFieldId(Field field) {
 		return getFieldId(field, field.getName());
 	}
@@ -83,6 +87,8 @@ public abstract class Util {
 		sb.append(')').append(returnType);
 		return sb.toString();
 	}
+
+	// Access Flags
 
 	public static int getClassAccessFlags(ClassDef t) {
 		int f = t.getAccessFlags();

@@ -43,7 +43,7 @@ public abstract class MemberSetPatcher<T> extends SimplePatcher<T> {
 	@Override
 	protected Action getDefaultAction(String patchId, T patch) {
 		if (defaultAction != null) {
-			log(INFO, "default action (" + defaultAction.getLabel() + ")");
+			log(INFO, "default " + defaultAction.getLabel());
 			return defaultAction;
 		} else {
 			log(ERROR, "no default action defined");

@@ -3,8 +3,7 @@ package lanchon.dexpatcher;
 public abstract class Tag {
 
 	private static final String PACKAGE_PREFIX = "lanchon.dexpatcher.annotation.";
-
-	private static final String SIMPLE_CLASS_NAME_PREFIX = "Dex";
+	private static final String CLASS_PREFIX = "Dex";
 
 	// Annotations
 
@@ -13,6 +12,8 @@ public abstract class Tag {
 	public static final String REPLACE = getSimpleClassName("Replace");
 	public static final String REMOVE = getSimpleClassName("Remove");
 	public static final String IGNORE = getSimpleClassName("Ignore");
+
+	private static final String TAG = getSimpleClassName("Tag");
 
 	// Annotation Elements
 
@@ -25,8 +26,6 @@ public abstract class Tag {
 
 	// Type Descriptors
 
-	private static final String TAG = getSimpleClassName("Tag");
-
 	public static final String TYPE_TAG = getTypeDescriptor(TAG);
 	public static final String TYPE_VOID = Util.getTypeDescriptorFromClass(Void.class);
 
@@ -36,12 +35,13 @@ public abstract class Tag {
 
 	public static final String TYPE_INNER_CLASS = Util.getTypeDescriptorFromName(NAME_INNER_CLASS);
 	public static final String ELEM_ACCESS_FLAGS = "accessFlags";
-	public static final String STATIC_CONSTRUCTOR = "<clinit>()V";
+	public static final String SIGN_STATIC_CONSTRUCTOR = "<clinit>()V";
+	public static final String PACKAGE_INFO = "package-info";
 
 	// Helpers
 
 	private static String getSimpleClassName(String tag) {
-		return SIMPLE_CLASS_NAME_PREFIX + tag;
+		return CLASS_PREFIX + tag;
 	}
 
 	private static String getClassName(String simpleClassName) {

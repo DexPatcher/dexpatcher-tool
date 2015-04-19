@@ -6,7 +6,7 @@ import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.DexFile;
 import org.jf.dexlib2.immutable.ImmutableDexFile;
 
-public class DexPatcher extends ClassSetPatcher {
+public class DexPatcher extends PackagePatcher {
 
 	public DexPatcher(Logger logger) {
 		super(logger);

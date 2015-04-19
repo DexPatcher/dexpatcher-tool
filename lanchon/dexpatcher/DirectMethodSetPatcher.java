@@ -29,7 +29,7 @@ public class DirectMethodSetPatcher extends MethodSetPatcher {
 
 	@Override
 	protected Action getDefaultAction(String patchId, Method patch) {
-		if (Tag.STATIC_CONSTRUCTOR.equals(patchId)) {
+		if (Tag.SIGN_STATIC_CONSTRUCTOR.equals(patchId)) {
 			staticConstructorFound = true;
 			if (staticConstructorAction != null) return staticConstructorAction;
 		}

@@ -2,12 +2,13 @@ package lanchon.dexpatcher;
 
 import java.util.Set;
 
-import org.jf.dexlib2.AccessFlags;
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.Field;
 import org.jf.dexlib2.iface.value.EncodedValue;
 import org.jf.dexlib2.immutable.ImmutableField;
+
 import static lanchon.dexpatcher.Logger.Level.*;
+import static org.jf.dexlib2.AccessFlags.*;
 
 public class FieldSetPatcher extends MemberSetPatcher<Field> {
 
@@ -67,7 +68,7 @@ public class FieldSetPatcher extends MemberSetPatcher<Field> {
 		// This makes behavior predictable across compilers.
 		EncodedValue value = renaming ? null : target.getInitialValue();
 		value = filterInitialValue(patch, value);
-		if (AccessFlags.FINAL.isSet(target.getAccessFlags())) {
+		if (FINAL.isSet(target.getAccessFlags())) {
 			log(WARN, "value of final field might be embedded in code");
 		}
 		Field patched = new ImmutableField(
@@ -81,7 +82,7 @@ public class FieldSetPatcher extends MemberSetPatcher<Field> {
 	}
 
 	private EncodedValue filterInitialValue(Field patch, EncodedValue value) {
-		if (AccessFlags.STATIC.isSet(patch.getAccessFlags())) {
+		if (STATIC.isSet(patch.getAccessFlags())) {
 			// Use the static field initializer values in patch if and
 			// only if the static constructor in patch is being used.
 			// This makes behavior predictable across compilers.
