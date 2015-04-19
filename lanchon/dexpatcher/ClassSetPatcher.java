@@ -94,17 +94,25 @@ public class ClassSetPatcher extends SimplePatcher<ClassDef> {
 	@Override
 	protected ClassDef onSimpleEdit(ClassDef patch, PatcherAnnotation annotation, ClassDef target, boolean renaming) {
 
-		// Avoid duplicated messages if not renaming.
-		if (renaming) {
-			String message = "'%s' modifier mismatch in targeted and edited types";
+		if (!annotation.getOnlyEditMembers()) {
 			int flags1 = Util.getClassAccessFlags(patch);
 			int flags2 = Util.getClassAccessFlags(target);
-			if (isLogging(WARN)) checkAccessFlags(WARN, flags1, flags2,
-					new AccessFlags[] { STATIC, FINAL, INTERFACE, ABSTRACT, ANNOTATION, ENUM }, message);
-			if (isLogging(INFO)) checkAccessFlags(INFO, flags1, flags2,
-					new AccessFlags[] { SYNTHETIC }, message);
-			if (isLogging(DEBUG)) checkAccessFlags(DEBUG, flags1, flags2,
-					new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED }, message);
+			// Avoid duplicated messages if not renaming.
+			if (renaming) {
+				String message = "'%s' modifier mismatch in targeted and edited types";
+				if (isLogging(WARN)) checkAccessFlags(WARN, flags1, flags2,
+						new AccessFlags[] { STATIC, FINAL, INTERFACE, ABSTRACT, ANNOTATION, ENUM }, message);
+				if (isLogging(DEBUG)) checkAccessFlags(DEBUG, flags1, flags2,
+						new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED, SYNTHETIC }, message);
+			} else {
+				String message = "'%s' modifier mismatch in original and edited versions";
+				if (isLogging(WARN)) checkAccessFlags(WARN, flags1, flags2,
+						new AccessFlags[] { STATIC, FINAL, INTERFACE, ABSTRACT, ANNOTATION, ENUM }, message);
+				if (isLogging(INFO)) checkAccessFlags(INFO, flags1, flags2,
+						new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED }, message);
+				if (isLogging(DEBUG)) checkAccessFlags(DEBUG, flags1, flags2,
+						new AccessFlags[] { SYNTHETIC }, message);
+			}
 		}
 
 		ClassDef source;
@@ -118,7 +126,7 @@ public class ClassSetPatcher extends SimplePatcher<ClassDef> {
 		}
 
 		return new ImmutableClassDef(
-				source.getType(),
+				patch.getType(),
 				source.getAccessFlags(),
 				source.getSuperclass(),
 				source.getInterfaces(),
@@ -137,13 +145,18 @@ public class ClassSetPatcher extends SimplePatcher<ClassDef> {
 
 	@Override
 	protected void onEffectiveReplacement(String id, ClassDef patched, ClassDef original, boolean editedInPlace) {
-		String message = "'%s' modifier mismatch in original and replacement types";
-		int flags1 = Util.getClassAccessFlags(patched);
-		int flags2 = Util.getClassAccessFlags(original);
-		if (isLogging(WARN)) checkAccessFlags(WARN, flags1, flags2,
-				new AccessFlags[] { STATIC, FINAL, INTERFACE, ABSTRACT, ANNOTATION, ENUM }, message);
-		if (isLogging(INFO)) checkAccessFlags(INFO, flags1, flags2,
-				new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED, SYNTHETIC }, message);
+		// Avoid duplicated messages if not renaming.
+		if (!editedInPlace) {
+			int flags1 = Util.getClassAccessFlags(patched);
+			int flags2 = Util.getClassAccessFlags(original);
+			String message = "'%s' modifier mismatch in original and replacement types";
+			if (isLogging(WARN)) checkAccessFlags(WARN, flags1, flags2,
+					new AccessFlags[] { STATIC, FINAL, INTERFACE, ABSTRACT, ANNOTATION, ENUM }, message);
+			if (isLogging(INFO)) checkAccessFlags(INFO, flags1, flags2,
+					new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED }, message);
+			if (isLogging(DEBUG)) checkAccessFlags(DEBUG, flags1, flags2,
+					new AccessFlags[] { SYNTHETIC }, message);
+		}
 	}
 
 }

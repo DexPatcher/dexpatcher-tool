@@ -62,45 +62,42 @@ public abstract class MemberSetPatcher<T> extends SimplePatcher<T> {
 
 	@Override
 	protected T onSimpleEdit(T patch, PatcherAnnotation annotation, T target, boolean renaming) {
-		String message = "'%s' modifier mismatch in targeted and edited members";
 		int flags1 = getAccessFlags(patch);
 		int flags2 = getAccessFlags(target);
 		// Avoid duplicated messages if not renaming.
 		if (renaming) {
+			String message = "'%s' modifier mismatch in targeted and edited members";
 			if (isLogging(WARN)) checkAccessFlags(WARN, flags1, flags2,
-					new AccessFlags[] { STATIC, VARARGS, NATIVE, ABSTRACT, STRICTFP,
-					ENUM, DECLARED_SYNCHRONIZED }, message);
+					new AccessFlags[] { STATIC, VARARGS, NATIVE, ABSTRACT, ENUM, DECLARED_SYNCHRONIZED }, message);
 			if (isLogging(INFO)) checkAccessFlags(INFO, flags1, flags2,
-					new AccessFlags[] { FINAL, SYNCHRONIZED, VOLATILE, BRIDGE,
-					TRANSIENT, SYNTHETIC }, message);
+					new AccessFlags[] { FINAL, SYNCHRONIZED, VOLATILE, TRANSIENT, STRICTFP }, message);
 			if (isLogging(DEBUG)) checkAccessFlags(DEBUG, flags1, flags2,
-					new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED, CONSTRUCTOR }, message);
+					new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED, BRIDGE, SYNTHETIC, CONSTRUCTOR }, message);
 		} else {
+			String message = "'%s' modifier mismatch in original and edited versions";
 			if (isLogging(WARN)) checkAccessFlags(WARN, flags1, flags2,
-					new AccessFlags[] { NATIVE, DECLARED_SYNCHRONIZED }, message);
+					new AccessFlags[] { STATIC, VARARGS, NATIVE, ABSTRACT, ENUM, CONSTRUCTOR, DECLARED_SYNCHRONIZED }, message);
 			if (isLogging(INFO)) checkAccessFlags(INFO, flags1, flags2,
-					new AccessFlags[] { SYNCHRONIZED }, message);
+					new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED, FINAL, SYNCHRONIZED, VOLATILE, TRANSIENT, STRICTFP }, message);
+			if (isLogging(DEBUG)) checkAccessFlags(DEBUG, flags1, flags2,
+					new AccessFlags[] { BRIDGE, SYNTHETIC }, message);
 		}
 		return patch;
 	}
 
 	@Override
 	protected void onEffectiveReplacement(String id, T patched, T original, boolean editedInPlace) {
-		String message = "'%s' modifier mismatch in original and replacement members";
-		int flags1 = getAccessFlags(patched);
-		int flags2 = getAccessFlags(original);
-		if (isLogging(WARN)) checkAccessFlags(WARN, flags1, flags2,
-				new AccessFlags[] { STATIC, FINAL, VOLATILE, TRANSIENT, VARARGS,
-				ABSTRACT, STRICTFP, ENUM, CONSTRUCTOR }, message);
 		// Avoid duplicated messages if not renaming.
-		if (editedInPlace) {
+		if (!editedInPlace) {
+			int flags1 = getAccessFlags(patched);
+			int flags2 = getAccessFlags(original);
+			String message = "'%s' modifier mismatch in original and replacement members";
+			if (isLogging(WARN)) checkAccessFlags(WARN, flags1, flags2,
+					new AccessFlags[] { STATIC,  ABSTRACT, ENUM, CONSTRUCTOR }, message);
 			if (isLogging(INFO)) checkAccessFlags(INFO, flags1, flags2,
-					new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED, BRIDGE, SYNTHETIC }, message);
-			// Ignored flags: SYNCHRONIZED, NATIVE, DECLARED_SYNCHRONIZED
-		} else {
-			if (isLogging(INFO)) checkAccessFlags(INFO, flags1, flags2,
-					new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED, SYNCHRONIZED,
-					BRIDGE, NATIVE, SYNTHETIC, DECLARED_SYNCHRONIZED }, message);
+					new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED, FINAL, VOLATILE, TRANSIENT, VARARGS }, message);
+			if (isLogging(DEBUG)) checkAccessFlags(DEBUG, flags1, flags2,
+					new AccessFlags[] { SYNCHRONIZED, BRIDGE, NATIVE, STRICTFP, SYNTHETIC, DECLARED_SYNCHRONIZED }, message);
 		}
 	}
 
