@@ -1,11 +1,12 @@
 package lanchon.dexpatcher;
 
 import org.jf.dexlib2.AccessFlags;
+import org.jf.dexlib2.iface.Member;
 
 import static lanchon.dexpatcher.Logger.Level.*;
 import static org.jf.dexlib2.AccessFlags.*;
 
-public abstract class MemberSetPatcher<T> extends SimplePatcher<T> {
+public abstract class MemberSetPatcher<T extends Member> extends SimplePatcher<T> {
 
 	private final String logMemberType;
 	private final Action defaultAction;
@@ -32,12 +33,6 @@ public abstract class MemberSetPatcher<T> extends SimplePatcher<T> {
 		return "target '" + annotation.getTarget() + "'";
 	}
 
-	// TODO:
-	// When this commit ships: https://code.google.com/p/smali/issues/detail?id=237
-	// Eliminate: protected abstract int getAccessFlags(T t);
-
-	protected abstract int getAccessFlags(T t);
-
 	// Handlers
 
 	@Override
@@ -62,8 +57,8 @@ public abstract class MemberSetPatcher<T> extends SimplePatcher<T> {
 
 	@Override
 	protected T onSimpleEdit(T patch, PatcherAnnotation annotation, T target, boolean renaming) {
-		int flags1 = getAccessFlags(patch);
-		int flags2 = getAccessFlags(target);
+		int flags1 = patch.getAccessFlags();
+		int flags2 = target.getAccessFlags();
 		// Avoid duplicated messages if not renaming.
 		if (renaming) {
 			String message = "'%s' modifier mismatch in targeted and edited members";
@@ -89,8 +84,8 @@ public abstract class MemberSetPatcher<T> extends SimplePatcher<T> {
 	protected void onEffectiveReplacement(String id, T patched, T original, boolean editedInPlace) {
 		// Avoid duplicated messages if not renaming.
 		if (!editedInPlace) {
-			int flags1 = getAccessFlags(patched);
-			int flags2 = getAccessFlags(original);
+			int flags1 = patched.getAccessFlags();
+			int flags2 = original.getAccessFlags();
 			String message = "'%s' modifier mismatch in original and replacement members";
 			if (isLogging(WARN)) checkAccessFlags(WARN, flags1, flags2,
 					new AccessFlags[] { STATIC,  ABSTRACT, ENUM, CONSTRUCTOR }, message);

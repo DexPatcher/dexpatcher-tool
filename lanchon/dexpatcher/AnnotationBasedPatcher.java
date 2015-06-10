@@ -2,11 +2,12 @@ package lanchon.dexpatcher;
 
 import java.util.Set;
 
+import org.jf.dexlib2.iface.Annotatable;
 import org.jf.dexlib2.iface.Annotation;
 
 import static lanchon.dexpatcher.Logger.Level.*;
 
-public abstract class AnnotationBasedPatcher<T> extends AbstractPatcher<T>{
+public abstract class AnnotationBasedPatcher<T extends Annotatable> extends AbstractPatcher<T>{
 
 	protected AnnotationBasedPatcher(Logger logger, String baseLogPrefix) {
 		super(logger, baseLogPrefix);
@@ -31,7 +32,7 @@ public abstract class AnnotationBasedPatcher<T> extends AbstractPatcher<T>{
 	@Override
 	protected void onPatch(String patchId, T patch) throws PatchException {
 
-		Set<? extends Annotation> rawAnnotations = getAnnotations(patch);
+		Set<? extends Annotation> rawAnnotations = patch.getAnnotations();
 		PatcherAnnotation annotation = PatcherAnnotation.parse(rawAnnotations);
 		if (annotation == null) annotation = new PatcherAnnotation(getDefaultAction(patchId, patch), rawAnnotations);
 
@@ -63,11 +64,6 @@ public abstract class AnnotationBasedPatcher<T> extends AbstractPatcher<T>{
 
 	// Adapters
 
-	// TODO:
-	// When this commit ships: https://code.google.com/p/smali/issues/detail?id=237
-	// Eliminate: protected abstract Set<? extends Annotation> getAnnotations(T patch);
-
-	protected abstract Set<? extends Annotation> getAnnotations(T patch);
 	protected abstract String getTargetLogPrefix(String targetId, PatcherAnnotation annotation);
 
 	// Handlers

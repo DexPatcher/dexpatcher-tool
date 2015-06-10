@@ -2,9 +2,7 @@ package lanchon.dexpatcher;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
-import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.Method;
 import org.jf.dexlib2.iface.MethodImplementation;
 import org.jf.dexlib2.iface.MethodParameter;
@@ -22,16 +20,6 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 	@Override
 	protected String getId(Method t) {
 		return Util.getMethodId(t);
-	}
-
-	@Override
-	protected Set<? extends Annotation> getAnnotations(Method patch) {
-		return patch.getAnnotations();
-	}
-
-	@Override
-	protected int getAccessFlags(Method t) {
-		return t.getAccessFlags();
 	}
 
 	// Handlers

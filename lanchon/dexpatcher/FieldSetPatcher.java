@@ -1,8 +1,5 @@
 package lanchon.dexpatcher;
 
-import java.util.Set;
-
-import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.Field;
 import org.jf.dexlib2.iface.value.EncodedValue;
 import org.jf.dexlib2.immutable.ImmutableField;
@@ -21,16 +18,6 @@ public class FieldSetPatcher extends MemberSetPatcher<Field> {
 	@Override
 	protected String getId(Field t) {
 		return Util.getFieldId(t);
-	}
-
-	@Override
-	protected Set<? extends Annotation> getAnnotations(Field patch) {
-		return patch.getAnnotations();
-	}
-
-	@Override
-	protected int getAccessFlags(Field t) {
-		return t.getAccessFlags();
 	}
 
 	// Handlers

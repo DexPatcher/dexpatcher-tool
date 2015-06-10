@@ -1,7 +1,6 @@
 package lanchon.dexpatcher;
 
 import java.util.Collection;
-import java.util.Set;
 
 import org.jf.dexlib2.AccessFlags;
 import org.jf.dexlib2.iface.Annotation;
@@ -29,11 +28,6 @@ public class ClassSetPatcher extends SimplePatcher<ClassDef> {
 	@Override
 	protected String getLogPrefix(String id, ClassDef t) {
 		return "type '" + Util.getTypeNameFromDescriptor(id) + "'";
-	}
-
-	@Override
-	protected Set<? extends Annotation> getAnnotations(ClassDef patch) {
-		return patch.getAnnotations();
 	}
 
 	@Override

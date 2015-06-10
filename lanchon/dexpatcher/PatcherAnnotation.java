@@ -14,10 +14,6 @@ import org.jf.dexlib2.immutable.ImmutableAnnotation;
 
 public class PatcherAnnotation {
 
-	// TODO:
-	// When this commit ships: https://code.google.com/p/smali/issues/detail?id=237
-	// Change to: public static PatcherAnnotation parse(Annotable annotable) throws ParseException {
-
 	public static PatcherAnnotation parse(Set<? extends Annotation> annotations) throws PatchException {
 
 		Annotation annotation = null;

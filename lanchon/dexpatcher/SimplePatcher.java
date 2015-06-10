@@ -1,6 +1,8 @@
 package lanchon.dexpatcher;
 
-public abstract class SimplePatcher<T> extends AnnotationBasedPatcher<T> {
+import org.jf.dexlib2.iface.Annotatable;
+
+public abstract class SimplePatcher<T extends Annotatable> extends AnnotationBasedPatcher<T> {
 
 	protected SimplePatcher(Logger logger, String baseLogPrefix) {
 		super(logger, baseLogPrefix);
