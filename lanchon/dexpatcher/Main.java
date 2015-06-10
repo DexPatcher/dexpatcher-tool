@@ -21,16 +21,20 @@ import static lanchon.dexpatcher.Logger.Level.*;
 
 public class Main {
 
+	private static boolean EXPERIMENTAL_OPCODES = false;
+	
 	public static void main(String[] args) {
+
+		Locale locale = new Locale("en", "US");
+		Locale.setDefault(locale);
+
 		new Main(args);
+
 	}
 
 	private final Logger logger;
 
 	public Main(String[] args) {
-
-		Locale locale = new Locale("en", "US");
-		Locale.setDefault(locale);
 
 		Options options = getOptions();
 		logger = new BasicLogger(WARN);
@@ -89,7 +93,7 @@ public class Main {
 
 	private DexFile loadDex(String name, int api) throws IOException {
 		logger.log(INFO, "load '" + name + "'");
-		DexBackedDexFile dex = DexFileFactory.loadDexFile(new File(name), api);
+		DexBackedDexFile dex = DexFileFactory.loadDexFile(new File(name), api, EXPERIMENTAL_OPCODES);
 		if (dex.isOdexFile()) throw new RuntimeException(name + " is an odex file");
 		return dex;
 	}
