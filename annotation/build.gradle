@@ -1,0 +1,13 @@
+plugins {
+    id 'java'
+}
+
+jar {
+    baseName = 'dexpatcher-annotation'
+    manifest {
+        attributes(
+                'Implementation-Title': 'DexPatcher-annotation',
+                'Implementation-Version': version
+        )
+    }
+}

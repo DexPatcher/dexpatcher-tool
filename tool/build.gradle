@@ -1,0 +1,54 @@
+plugins {
+    id 'java'
+    id "com.github.johnrengelman.shadow" version "1.2.1"
+}
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile 'org.smali:dexlib2:2.0.6'
+    compile 'commons-cli:commons-cli:1.2'
+}
+
+task writeVersionFile {
+    ext.version = version
+    ext.outputFile = file('build/classes/main/lanchon/dexpatcher/version');
+    dependsOn compileJava
+    inputs.property 'version', { ext.version }
+    outputs.file { ext.outputFile }
+    doLast {
+        ext.outputFile.text = "${ext.version}"
+    }
+}
+jar.dependsOn writeVersionFile
+
+jar {
+    baseName = 'dexpatcher-tool'
+    manifest {
+        attributes(
+                'Implementation-Title': 'DexPatcher-tool',
+                'Implementation-Version': version,
+                'Main-Class': 'lanchon.dexpatcher.Main'
+        )
+    }
+}
+
+task shadowBugWorkaround(type: Jar) {
+    destinationDir file('build/shadow-bug-workaround')
+    baseName = 'dexpatcher-annotation-nested'
+    from tasks.getByPath(':annotation:jar')
+}
+
+shadowJar {
+    baseName = 'dexpatcher'
+    classifier = null
+    exclude 'META-INF/**'
+    from 'extras'
+    // Shadow plugin bug: explodes the nested jar.
+    //from tasks.getByPath(':annotation:jar')
+    // Workaround: double-nest the jar.
+    from shadowBugWorkaround
+}
+assemble.dependsOn shadowJar

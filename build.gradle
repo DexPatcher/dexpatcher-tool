@@ -1,0 +1,4 @@
+allprojects {
+    group = 'com.github.lanchon.dexpatcher'
+    version = '1.0.0'
+}
