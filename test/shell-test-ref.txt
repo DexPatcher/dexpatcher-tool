@@ -1,0 +1,143 @@
+$ dx --dex --output build/source.dex source/build/libs/source.jar
+
+$ dx --dex --output build/patch.dex patch/build/libs/patch.jar
+
+$ dexpatcher --help
+DexPatcher Version 1.0.0 by Lanchon
+usage: dexpatcher [<option> ...] [--output <patched-dex>]
+                  <source-dex-or-apk> [<patch-dex-or-apk> ...]
+ -?,--help                   print this help message and exit
+ -a,--api-level <n>          api level of dex files (defaults to 14)
+                             (needed for android 3 and earlier dex files)
+    --debug                  output debugging information
+ -o,--output <patched-dex>   name of patched dex file to write
+ -q,--quiet                  do not output warnings
+ -v,--verbose                output extra information
+    --version                print version information and exit
+
+$ dexpatcher build/source.dex build/patch.dex --output build/patched.dex --verbose
+info: load 'build/source.dex'
+info: load 'build/patch.dex'
+info: type 'test.Main$B': instance field 'privateKey:Ljava/lang/String;': 'public' modifier mismatch in original and edited versions
+info: type 'test.Main$B': instance field 'privateKey:Ljava/lang/String;': 'private' modifier mismatch in original and edited versions
+info: type 'test.Main$B': direct method 'privateStaticMethod(I)V': 'public' modifier mismatch in original and edited versions
+info: type 'test.Main$B': direct method 'privateStaticMethod(I)V': 'private' modifier mismatch in original and edited versions
+warning: type 'test.Main$C': static field 'patchStaticField:I': field will not be initialized as specified in patch because the static constructor code in patch is being ignored
+warning: type 'test.Main$C': static field 'redefinedSourceStaticField:I': field will not be initialized as specified in patch because the static constructor code in patch is being ignored
+info: type 'test.Main$Derived': direct method '<init>()V': default ignore
+info: type 'test.Main$E': direct method '<clinit>()V': default add
+info: write 'build/patched.dex'
+0 error(s), 2 warning(s)
+
+$ dex2jar --force --output build/patched-dex2jar.jar build/patched.dex
+dex2jar build/patched.dex -> build/patched-dex2jar.jar
+
+--- run source/build/libs/source.jar ---
+original A::<clinit>
+original A::<init>
+
+B::staticMethod: 42
+original B::directMethod
+original B::virtualMethod: data
+
+entering original Derived::method
+original Base::method
+exiting original Derived::method
+
+original C::<clinit>
+original C::<init>
+C::sourceStaticField: 100
+C::sourceField: 100
+C::redefinedSourceStaticField: 100
+C::redefinedSourceField: 100
+
+original D::<clinit>
+original D::<init>
+D::sourceStaticField: 100
+D::sourceField: 100
+D::redefinedSourceStaticField: 100
+D::redefinedSourceField: 100
+
+original E::<clinit>
+original E::<init>: data
+E::sourceStaticField: 100
+E::sourceField: 100
+E::redefinedSourceStaticField: 100
+E::redefinedSourceField: 100
+
+Concrete1::interfaceMethod
+Concrete1::abstractMethod
+original Concrete1::method
+
+Concrete2::interfaceMethod
+Concrete2::abstractMethod
+original Concrete2::method
+
+Concrete3::interfaceMethod
+Concrete3::abstractMethod
+original Concrete3::method
+--- end source/build/libs/source.jar ---
+
+--- run build/patched-dex2jar.jar ---
+replaced A::<clinit>
+replaced A::<init>
+
+B::staticMethod: 42
+replaced B::directMethod
+B::staticField: 100   <-- initialized
+B::instanceField: 0   <-- *not* initialized
+B::addedMethod
+B::privateKey: my-key
+entering replaced B::virtualMethod: data
+original B::virtualMethod: filtered data
+exiting replaced B::virtualMethod
+
+entering replaced Derived::method
+entering original Derived::method
+original Base::method
+exiting original Derived::method
+exiting replaced Derived::method
+
+original C::<clinit>
+original C::<init>
+C::sourceStaticField: 100
+C::sourceField: 100
+C::redefinedSourceStaticField: 100
+C::redefinedSourceField: 100
+C::patchStaticField: 0
+C::patchField: 0
+
+replaced D::<clinit>
+replaced D::<init>
+D::sourceStaticField: 0
+D::sourceField: 0
+D::redefinedSourceStaticField: 200
+D::redefinedSourceField: 200
+D::patchStaticField: 200
+D::patchField: 200
+
+entering replaced E::<clinit>
+original E::<clinit>
+exiting replaced E::<clinit>
+original E::<init>: filtered data
+continuing on replaced E::<init>: data
+E::sourceStaticField: 100
+E::sourceField: 100
+E::redefinedSourceStaticField: 100
+E::redefinedSourceField: 100
+E::patchStaticField: 200
+E::patchField: 0
+
+Concrete1::interfaceMethod
+Concrete1::abstractMethod
+replaced Concrete1::method
+
+Concrete2::interfaceMethod
+Concrete2::abstractMethod
+replaced Concrete2::method
+
+Concrete3::interfaceMethod
+Concrete3::abstractMethod
+replaced Concrete3::method
+--- end build/patched-dex2jar.jar ---
+

@@ -3,6 +3,9 @@ plugins {
     id "com.github.johnrengelman.shadow" version "1.2.1"
 }
 
+group = parent.group
+version = parent.version
+
 repositories {
     jcenter()
 }
@@ -36,12 +39,14 @@ jar {
 }
 
 task shadowBugWorkaround(type: Jar) {
+    dependsOn jar
     destinationDir file('build/shadow-bug-workaround')
     baseName = 'dexpatcher-annotation-nested'
     from tasks.getByPath(':annotation:jar')
 }
 
 shadowJar {
+    dependsOn jar
     baseName = 'dexpatcher'
     classifier = null
     exclude 'META-INF/**'

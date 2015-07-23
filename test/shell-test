@@ -1,0 +1,44 @@
+#!/bin/bash
+
+set -e
+
+source shell-test.config
+
+run() {
+    echo "\$ $@"
+    eval "run-$@"
+    echo
+}
+
+run-dexpatcher() {
+    run-java -jar ../tool/build/libs/dexpatcher-[0-9]*.jar "$@"
+}
+
+dex-jar() {
+    name="$1"
+    jar=$name/build/libs/$name.jar
+    dex=build/$name.dex
+    run dx --dex --output $dex $jar
+    #run dex2jar --force --output $name-dex2jar.jar $dex
+}
+
+run-jar() {
+    jar="$1"
+    echo "--- run $jar ---"
+    run-java -cp $jar test.Main
+    echo "--- end $jar ---"
+    echo
+}
+
+mkdir -p build
+
+dex-jar source
+dex-jar patch
+
+run dexpatcher --help
+run dexpatcher build/source.dex build/patch.dex --output build/patched.dex --verbose
+
+run dex2jar --force --output build/patched-dex2jar.jar build/patched.dex
+
+run-jar source/build/libs/source.jar
+run-jar build/patched-dex2jar.jar

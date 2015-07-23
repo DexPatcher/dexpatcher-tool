@@ -1,0 +1,18 @@
+plugins {
+    id 'java'
+}
+
+task dex(type:Exec) {
+
+    dependsOn jar
+    ext.inputFile = jar.archivePath
+    ext.outputFile = file("build/libs/${project.name}.dex")
+
+    inputs.file parent.dxPath
+    inputs.file inputFile
+    outputs.file outputFile
+
+    executable parent.dxPath
+    args '--dex', '--output', outputFile, inputFile
+
+}

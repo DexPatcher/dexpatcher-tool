@@ -1,0 +1,10 @@
+#!/bin/bash
+
+set -e
+
+mkdir -p build
+
+./shell-test &> build/shell-test-out.txt
+
+cp build/shell-test-out.txt shell-test-ref.txt
+

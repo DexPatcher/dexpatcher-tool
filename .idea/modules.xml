@@ -4,6 +4,9 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/annotation/annotation.iml" filepath="$PROJECT_DIR$/annotation/annotation.iml" />
       <module fileurl="file://$PROJECT_DIR$/dexpatcher-tool.iml" filepath="$PROJECT_DIR$/dexpatcher-tool.iml" />
+      <module fileurl="file://$PROJECT_DIR$/test/patch/patch.iml" filepath="$PROJECT_DIR$/test/patch/patch.iml" />
+      <module fileurl="file://$PROJECT_DIR$/test/source/source.iml" filepath="$PROJECT_DIR$/test/source/source.iml" />
+      <module fileurl="file://$PROJECT_DIR$/test/test.iml" filepath="$PROJECT_DIR$/test/test.iml" />
       <module fileurl="file://$PROJECT_DIR$/tool/tool.iml" filepath="$PROJECT_DIR$/tool/tool.iml" />
     </modules>
   </component>

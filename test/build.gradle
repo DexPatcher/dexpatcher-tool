@@ -1,0 +1,115 @@
+plugins {
+    id 'java-base'
+}
+
+// This project implements two test tasks:
+// 1) The portable test, that is reduced in scope:
+//    -Produces a patched dex file from test source and patch files.
+// 2) The shell test, that is Linux-only:
+//    -Produces a patched dex file from test source and patch files.
+//    -Runs the source and patched dex files.
+//    -Captures all output and compares it with a reference output.
+
+// Select tests to run when executing the 'check' task:
+def runPortableTest = false
+def runShellTest = true
+
+// Portable Test
+
+// This test invokes the 'dx' tool from the Android SDK.
+// Either set the path to the 'dx' executable:
+def dxPath = null
+// Or set the version of the SDK 'build tools' to use:
+def sdkBuildToolVersion = 'current'
+// And the SDK path will be obtained from 'local.properties'.
+// (For convenience I always have a symbolic link named 'current' in
+// '<sdk-dir>/build-tools/' that aliases the latest build tools.)
+
+if (dxPath == null) {
+    def localProperties = new Properties()
+    rootProject.file("local.properties").withReader {
+        localProperties.load(it)
+    }
+    def sdkDir = new File(localProperties.get('sdk.dir'))
+    dxPath = new File(sdkDir, "build-tools/$sdkBuildToolVersion/dx")
+}
+ext.dxPath = dxPath
+
+task portableTest(type:JavaExec) {
+
+    group 'verification'
+
+    def toolShadowJar = tasks.getByPath(':tool:shadowJar')
+    def sourceDex = tasks.getByPath(':test:source:dex')
+    def patchDex = tasks.getByPath(':test:patch:dex')
+
+    dependsOn toolShadowJar, sourceDex, patchDex
+    ext.sourceFile = sourceDex.outputFile
+    ext.patchFile = patchDex.outputFile
+    ext.outputFile = file("build/libs/patched.dex")
+
+    inputs.file toolShadowJar.archivePath
+    inputs.file sourceFile
+    inputs.file patchFile
+    outputs.file outputFile
+
+    outputs.upToDateWhen { false }
+
+    main = '-jar'
+    args toolShadowJar.archivePath, '--verbose', '--output', outputFile, sourceFile, patchFile
+
+    doFirst {
+        outputFile.parentFile.mkdirs()
+    }
+
+}
+
+// Shell Test (Linux-only)
+
+// Tool paths for this test are configured in 'shell-test.conf'.
+
+task shellTest(type:Exec) {
+
+    group 'verification'
+
+    def toolShadowJar = tasks.getByPath(':tool:shadowJar')
+    def sourceJar = tasks.getByPath(':test:source:jar')
+    def patchShadowJar = tasks.getByPath(':test:patch:shadowJar')
+
+    dependsOn toolShadowJar, sourceJar, patchShadowJar
+
+    inputs.file toolShadowJar.archivePath
+    inputs.file sourceJar.archivePath
+    inputs.file patchShadowJar.archivePath
+    inputs.file file('shell-test')
+    inputs.file file('shell-test.conf')
+    inputs.file file('shell-test-diff')
+    inputs.file file('shell-test-ref.txt')
+    outputs.file file('build/shell-test-out.txt')
+
+    commandLine 'bash', 'shell-test-diff'
+
+}
+
+// This task sets the shell test output reference to the current output.
+
+task shellTestSetReference(type:Exec) {
+
+    group 'verification'
+
+    def toolShadowJar = tasks.getByPath(':tool:shadowJar')
+    def sourceJar = tasks.getByPath(':test:source:jar')
+    def patchShadowJar = tasks.getByPath(':test:patch:shadowJar')
+
+    dependsOn toolShadowJar, sourceJar, patchShadowJar
+
+    commandLine 'bash', 'shell-test-set-ref'
+
+}
+
+// Test Selection
+
+check {
+    if (runPortableTest) dependsOn portableTest
+    if (runShellTest) dependsOn shellTest
+}

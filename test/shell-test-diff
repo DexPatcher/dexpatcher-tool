@@ -1,0 +1,23 @@
+#!/bin/bash
+
+mkdir -p build
+
+./shell-test &> build/shell-test-out.txt
+
+diff=$(diff shell-test-ref.txt build/shell-test-out.txt)
+status=$?
+
+set -e
+
+if [[ -n $diff ]]; then
+    echo "error: shell-test: unexpected output"
+    echo
+    echo "======  diff output  ======"
+    echo "$diff"
+    echo
+    echo "======  full output  ======"
+    cat build/shell-test-out.txt
+fi
+
+exit $status
+

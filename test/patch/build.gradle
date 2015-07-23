@@ -1,0 +1,32 @@
+plugins {
+    id 'java'
+    id "com.github.johnrengelman.shadow" version "1.2.1"
+}
+
+dependencies {
+    compile project(':annotation')
+}
+
+jar.enabled = false
+
+shadowJar {
+    dependsOn jar
+    classifier = null
+    from tasks.getByPath(':annotation:jar')
+}
+assemble.dependsOn shadowJar
+
+task dex(type:Exec) {
+
+    dependsOn shadowJar
+    ext.inputFile = shadowJar.archivePath
+    ext.outputFile = file("build/libs/${project.name}.dex")
+
+    inputs.file parent.dxPath
+    inputs.file inputFile
+    outputs.file outputFile
+
+    executable parent.dxPath
+    args '--dex', '--output', outputFile, inputFile
+
+}
