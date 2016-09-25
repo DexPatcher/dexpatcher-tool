@@ -2,12 +2,20 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/annotation/annotation.iml" filepath="$PROJECT_DIR$/annotation/annotation.iml" />
-      <module fileurl="file://$PROJECT_DIR$/dexpatcher-tool.iml" filepath="$PROJECT_DIR$/dexpatcher-tool.iml" />
-      <module fileurl="file://$PROJECT_DIR$/test/patch/patch.iml" filepath="$PROJECT_DIR$/test/patch/patch.iml" />
-      <module fileurl="file://$PROJECT_DIR$/test/source/source.iml" filepath="$PROJECT_DIR$/test/source/source.iml" />
-      <module fileurl="file://$PROJECT_DIR$/test/test.iml" filepath="$PROJECT_DIR$/test/test.iml" />
-      <module fileurl="file://$PROJECT_DIR$/tool/tool.iml" filepath="$PROJECT_DIR$/tool/tool.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/annotation/annotation.iml" filepath="$PROJECT_DIR$/.idea/modules/annotation/annotation.iml" group="annotation" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/annotation/annotation_main.iml" filepath="$PROJECT_DIR$/.idea/modules/annotation/annotation_main.iml" group="annotation" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/annotation/annotation_test.iml" filepath="$PROJECT_DIR$/.idea/modules/annotation/annotation_test.iml" group="annotation" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dexpatcher-tool.iml" filepath="$PROJECT_DIR$/.idea/modules/dexpatcher-tool.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/test/patch/patch.iml" filepath="$PROJECT_DIR$/.idea/modules/test/patch/patch.iml" group="test/patch" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/test/patch/patch_main.iml" filepath="$PROJECT_DIR$/.idea/modules/test/patch/patch_main.iml" group="test/patch" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/test/patch/patch_test.iml" filepath="$PROJECT_DIR$/.idea/modules/test/patch/patch_test.iml" group="test/patch" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/test/source/source.iml" filepath="$PROJECT_DIR$/.idea/modules/test/source/source.iml" group="test/source" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/test/source/source_main.iml" filepath="$PROJECT_DIR$/.idea/modules/test/source/source_main.iml" group="test/source" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/test/source/source_test.iml" filepath="$PROJECT_DIR$/.idea/modules/test/source/source_test.iml" group="test/source" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/test/test.iml" filepath="$PROJECT_DIR$/.idea/modules/test/test.iml" group="test" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/tool/tool.iml" filepath="$PROJECT_DIR$/.idea/modules/tool/tool.iml" group="tool" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/tool/tool_main.iml" filepath="$PROJECT_DIR$/.idea/modules/tool/tool_main.iml" group="tool" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/tool/tool_test.iml" filepath="$PROJECT_DIR$/.idea/modules/tool/tool_test.iml" group="tool" />
     </modules>
   </component>
 </project>
