@@ -22,51 +22,69 @@ import static lanchon.dexpatcher.Logger.Level.*;
 public class Main {
 
 	private static boolean EXPERIMENTAL_OPCODES = false;
-	
+
 	public static void main(String[] args) {
 
 		Locale locale = new Locale("en", "US");
 		Locale.setDefault(locale);
 
-		new Main(args);
+		System.exit(new Main().run(args));
 
 	}
 
-	private final Logger logger;
+	public Logger logger;
 
-	public Main(String[] args) {
+	public int run(String[] args) {
 
-		Options options = getOptions();
 		logger = new BasicLogger(WARN);
 		try {
 
-			CommandLine cl = new PosixParser().parse(options, args);
+			// Parse command line.
 
-			if (cl.hasOption("help")) {
+			String sourceFile;
+			List<String> patchFiles;
+			String patchedFile;
+			int api;
+
+            Options options = getOptions();
+            try {
+
+				CommandLine cl = new PosixParser().parse(options, args);
+
+				if (cl.hasOption("help")) {
+					printUsage(options);
+					return 0;
+				}
+
+				if (cl.hasOption("version")) {
+					System.out.println(getVersion());
+					return 0;
+				}
+
+				if (cl.hasOption("quiet")) logger.setLogLevel(ERROR);
+				if (cl.hasOption("verbose")) logger.setLogLevel(INFO);
+				if (cl.hasOption("debug")) logger.setLogLevel(DEBUG);
+
+				patchedFile = cl.getOptionValue("output");
+				Number apiNumber = (Number) cl.getParsedOptionValue("api-level");
+				api = (apiNumber != null ? apiNumber.intValue() : 14);
+
+                @SuppressWarnings("unchecked")
+                List<String> files = cl.getArgList();
+				if (files.isEmpty()) throw new ParseException("Missing argument: <source-dex-or-apk>");
+				sourceFile = files.remove(0);
+                patchFiles = files;
+
+			} catch (ParseException e) {
+				logger.log(FATAL, e.getMessage());
 				printUsage(options);
-				return;
+				return 1;
 			}
 
-			if (cl.hasOption("version")) {
-				System.out.println(getVersion());
-				return;
-			}
-
-			if (cl.hasOption("quiet")) logger.setLogLevel(ERROR);
-			if (cl.hasOption("verbose")) logger.setLogLevel(INFO);
-			if (cl.hasOption("debug")) logger.setLogLevel(DEBUG);
-
-			String patchedFile = cl.getOptionValue("output");
-			Number apiNumber = (Number) cl.getParsedOptionValue("api-level");
-			int api = (apiNumber != null ? apiNumber.intValue() : 14);
-
-			@SuppressWarnings("unchecked")
-			List<String> files = cl.getArgList();
-			if (files.isEmpty()) throw new ParseException("Missing argument: <source-dex-or-apk>");
-			String sourceFile = files.remove(0);
+			// Process files.
 
 			DexFile dex = loadDex(sourceFile, api);
-			for (String patchFile : files) {
+			for (String patchFile : patchFiles) {
 				DexFile patchDex = loadDex(patchFile, api);
 				dex = new DexPatcher(logger).process(dex, patchDex);
 			}
@@ -76,17 +94,13 @@ public class Main {
 			} else {
 				if (logger.ok()) writeDex(patchedFile, dex);
 			}
-			logger.close();
 
-		} catch (ParseException e) {
-			logger.log(FATAL, e.getMessage());
-			printUsage(options);
-			return;
+			logger.close();
+			return logger.ok() ? 0 : 2;
+
 		} catch (Exception e) {
 			logger.log(FATAL, "exception: " + e);
-			return;
-		} finally {
-			if (!logger.ok()) System.exit(1);
+			return 3;
 		}
 
 	}
