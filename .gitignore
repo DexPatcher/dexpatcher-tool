@@ -1,7 +1,12 @@
-.gradle
-/local.properties
+/.gradle/
 /.idea/workspace.xml
 /.idea/libraries
-.DS_Store
-/build
-/captures
+
+/build/
+/annotation/build/
+/tool/build/
+/test/build/
+/test/source/build/
+/test/patch/build/
+
+/local.properties
