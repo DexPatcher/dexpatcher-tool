@@ -24,108 +24,81 @@ public class Main {
 	private static boolean EXPERIMENTAL_OPCODES = false;
 
 	public static void main(String[] args) {
-
 		Locale locale = new Locale("en", "US");
 		Locale.setDefault(locale);
-
-		System.exit(new Main().run(args));
-
+		int value = new Main().run(args);
+		System.exit(value);
 	}
 
 	public Logger logger;
 
-	public int run(String[] args) {
+    private String sourceFile;
+    private List<String> patchFiles;
+    private String patchedFile;
+    private int apiLevel;
 
+    public int run(String[] args) {
 		logger = new BasicLogger(WARN);
 		try {
-
-			// Parse command line.
-
-			String sourceFile;
-			List<String> patchFiles;
-			String patchedFile;
-			int api;
-
-            Options options = getOptions();
-            try {
-
-				CommandLine cl = new PosixParser().parse(options, args);
-
-				if (cl.hasOption("help")) {
-					printUsage(options);
-					return 0;
-				}
-
-				if (cl.hasOption("version")) {
-					System.out.println(getVersion());
-					return 0;
-				}
-
-				if (cl.hasOption("quiet")) logger.setLogLevel(ERROR);
-				if (cl.hasOption("verbose")) logger.setLogLevel(INFO);
-				if (cl.hasOption("debug")) logger.setLogLevel(DEBUG);
-
-				patchedFile = cl.getOptionValue("output");
-				Number apiNumber = (Number) cl.getParsedOptionValue("api-level");
-				api = (apiNumber != null ? apiNumber.intValue() : 14);
-
-                @SuppressWarnings("unchecked")
-                List<String> files = cl.getArgList();
-				if (files.isEmpty()) throw new ParseException("Missing argument: <source-dex-or-apk>");
-				sourceFile = files.remove(0);
-                patchFiles = files;
-
-			} catch (ParseException e) {
-				logger.log(FATAL, e.getMessage());
-				printUsage(options);
-				return 1;
-			}
-
-			// Process files.
-
-			DexFile dex = loadDex(sourceFile, api);
-			for (String patchFile : patchFiles) {
-				DexFile patchDex = loadDex(patchFile, api);
-				dex = new DexPatcher(logger).process(dex, patchDex);
-			}
-
-			if (patchedFile == null) {
-				logger.log(WARN, "dry run due to missing <patched-dex> output file argument");
-			} else {
-				if (logger.ok()) writeDex(patchedFile, dex);
-			}
-
-			logger.close();
-			return logger.ok() ? 0 : 2;
-
+			int value = parseCommandLine(args);
+			if (value >= 0) return value;
+			return processDexFiles();
 		} catch (Exception e) {
 			logger.log(FATAL, "exception: " + e);
 			return 3;
 		}
-
 	}
 
-	private DexFile loadDex(String name, int api) throws IOException {
-		logger.log(INFO, "load '" + name + "'");
-		DexBackedDexFile dex = DexFileFactory.loadDexFile(new File(name), api, EXPERIMENTAL_OPCODES);
-		if (dex.isOdexFile()) throw new RuntimeException(name + " is an odex file");
-		return dex;
-	}
+	// Parse Command Line
 
-	private void writeDex(String name, DexFile dex) throws IOException {
-		logger.log(INFO, "write '" + name + "'");
-		DexFileFactory.writeDexFile(name, dex);
-	}
+    private int parseCommandLine(String[] args) {
+
+        Options options = getOptions();
+        try {
+
+            CommandLine cl = new PosixParser().parse(options, args);
+
+            if (cl.hasOption("help")) {
+                printUsage(options);
+                return 0;
+            }
+
+            if (cl.hasOption("version")) {
+                System.out.println(getVersion());
+                return 0;
+            }
+
+            if (cl.hasOption("quiet")) logger.setLogLevel(ERROR);
+            if (cl.hasOption("verbose")) logger.setLogLevel(INFO);
+            if (cl.hasOption("debug")) logger.setLogLevel(DEBUG);
+
+            @SuppressWarnings("unchecked")
+            List<String> files = cl.getArgList();
+            if (files.isEmpty()) throw new ParseException("Missing argument: <source-dex-or-apk>");
+            sourceFile = files.remove(0);
+            patchFiles = files;
+			patchedFile = cl.getOptionValue("output");
+
+			Number apiNumber = (Number) cl.getParsedOptionValue("api-level");
+			apiLevel = (apiNumber != null ? apiNumber.intValue() : 14);
+
+            return -1;
+
+        } catch (ParseException e) {
+            logger.log(FATAL, e.getMessage());
+            printUsage(options);
+            return 1;
+        }
+
+    }
 
 	private static Options getOptions() {
 		Options options = new Options();
 		Option o;
-		o = new Option("a", "api-level", true,
-				"api level of dex files (defaults to 14)\n" +
-				"(needed for android 3 and earlier dex files)");
-		o.setArgName("n"); o.setType(Number.class); options.addOption(o);
 		o = new Option("o", "output", true, "name of patched dex file to write");
 		o.setArgName("patched-dex"); options.addOption(o);
+		o = new Option("a", "api-level", true, "api level of dex files (defaults to 14)");
+		o.setArgName("n"); o.setType(Number.class); options.addOption(o);
 		options.addOption(new Option("q", "quiet", false, "do not output warnings"));
 		options.addOption(new Option("v", "verbose", false, "output extra information"));
 		options.addOption(new Option(null, "debug", false, "output debugging information"));
@@ -149,6 +122,40 @@ public class Main {
 		System.out.println("DexPatcher Version " + getVersion() + " by Lanchon");
 		String usage = "dexpatcher [<option> ...] [--output <patched-dex>] <source-dex-or-apk> [<patch-dex-or-apk> ...]";
 		new HelpFormatter().printHelp(usage, options);
+	}
+
+	// Process Dex Files
+
+	private int processDexFiles() throws IOException {
+
+		DexFile dex = loadDex(sourceFile);
+
+		for (String patchFile : patchFiles) {
+			DexFile patchDex = loadDex(patchFile);
+			dex = new DexPatcher(logger).process(dex, patchDex);
+		}
+
+		if (patchedFile == null) {
+			logger.log(WARN, "dry run due to missing <patched-dex> output file argument");
+		} else {
+			if (logger.ok()) writeDex(patchedFile, dex);
+		}
+
+		logger.close();
+		return logger.ok() ? 0 : 2;
+
+	}
+
+    private DexFile loadDex(String name) throws IOException {
+		logger.log(INFO, "load '" + name + "'");
+		DexBackedDexFile dex = DexFileFactory.loadDexFile(name, apiLevel, EXPERIMENTAL_OPCODES);
+		if (dex.isOdexFile()) throw new RuntimeException(name + " is an odex file");
+		return dex;
+	}
+
+	private void writeDex(String name, DexFile dex) throws IOException {
+		logger.log(INFO, "write '" + name + "'");
+		DexFileFactory.writeDexFile(name, dex);
 	}
 
 }
