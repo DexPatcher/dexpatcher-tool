@@ -15,6 +15,7 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 import org.jf.dexlib2.DexFileFactory;
+import org.jf.dexlib2.Opcodes;
 import org.jf.dexlib2.dexbacked.DexBackedDexFile;
 import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.DexFile;
@@ -170,7 +171,7 @@ public class Main {
 	private static void writeDexWorkaround(String path, DexFile input, int apiLevel, boolean experimental) throws IOException {
 		// TODO: Remove this workaround when dexlib2 gets fixed.
 		// See: https://github.com/JesusFreke/smali/issues/439
-		DexPool dexPool = DexPool.makeDexPool(apiLevel);
+		DexPool dexPool = DexPool.makeDexPool(Opcodes.forApi(apiLevel, experimental));
 		ClassSection classSection;
 		try {
 			Field classSectionField = DexWriter.class.getDeclaredField("classSection");

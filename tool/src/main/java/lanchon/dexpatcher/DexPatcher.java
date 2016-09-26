@@ -1,5 +1,6 @@
 package lanchon.dexpatcher;
 
+import java.util.Collection;
 import java.util.Set;
 
 import org.jf.dexlib2.iface.ClassDef;
@@ -15,7 +16,9 @@ public class DexPatcher extends PackagePatcher {
 	public DexFile process(DexFile sourceDex, DexFile patchDex) {
 		Set<? extends ClassDef> sourceClasses = sourceDex.getClasses();
 		Set<? extends ClassDef> patchClasses = patchDex.getClasses();
-		return new ImmutableDexFile(process(sourceClasses, sourceClasses.size(), patchClasses, patchClasses.size()));
+		Collection<ClassDef> patchedClasses =
+				process(sourceClasses, sourceClasses.size(), patchClasses, patchClasses.size());
+		return new ImmutableDexFile(sourceDex.getOpcodes(), patchedClasses);
 	}
 
 }
