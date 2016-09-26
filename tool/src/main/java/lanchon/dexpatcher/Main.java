@@ -1,8 +1,10 @@
 package lanchon.dexpatcher;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Locale;
 
@@ -14,7 +16,13 @@ import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 import org.jf.dexlib2.DexFileFactory;
 import org.jf.dexlib2.dexbacked.DexBackedDexFile;
+import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.DexFile;
+import org.jf.dexlib2.writer.ClassSection;
+import org.jf.dexlib2.writer.DexWriter;
+import org.jf.dexlib2.writer.io.FileDataStore;
+import org.jf.dexlib2.writer.pool.ClassPool;
+import org.jf.dexlib2.writer.pool.DexPool;
 
 import static lanchon.dexpatcher.Logger.Level.*;
 
@@ -155,7 +163,27 @@ public class Main {
 
 	private void writeDex(String name, DexFile dex) throws IOException {
 		logger.log(INFO, "write '" + name + "'");
-		DexFileFactory.writeDexFile(name, dex);
+		//DexFileFactory.writeDexFile(name, dex, apiLevel, experimental);
+		writeDexWorkaround(name, dex, apiLevel, experimental);
+	}
+
+	private static void writeDexWorkaround(String path, DexFile input, int apiLevel, boolean experimental) throws IOException {
+		// TODO: Remove this workaround when dexlib2 gets fixed.
+		// See: https://github.com/JesusFreke/smali/issues/439
+		DexPool dexPool = DexPool.makeDexPool(apiLevel);
+		ClassSection classSection;
+		try {
+			Field classSectionField = DexWriter.class.getDeclaredField("classSection");
+			classSectionField.setAccessible(true);
+			classSection = (ClassSection) classSectionField.get(dexPool);
+		} catch (ReflectiveOperationException e) {
+			throw new Error(e);
+		}
+		ClassPool classPool = (ClassPool) classSection;
+		for (ClassDef classDef: input.getClasses()) {
+			classPool.intern(classDef);
+		}
+		dexPool.writeTo(new FileDataStore(new File(path)));
 	}
 
 }
