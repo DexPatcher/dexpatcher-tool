@@ -8,12 +8,12 @@ usage: dexpatcher [<option> ...] [--output <patched-dex>]
                   <source-dex-or-apk> [<patch-dex-or-apk> ...]
  -?,--help                   print this help message and exit
  -a,--api-level <n>          api level of dex files (defaults to 14)
-                             (needed for android 3 and earlier dex files)
     --debug                  output debugging information
  -o,--output <patched-dex>   name of patched dex file to write
  -q,--quiet                  do not output warnings
  -v,--verbose                output extra information
     --version                print version information and exit
+ -X,--experimental           enable support for experimental opcodes
 
 $ dexpatcher build/source.dex build/patch.dex --output build/patched.dex --verbose
 info: load 'build/source.dex'
