@@ -1,7 +1,6 @@
 package lanchon.dexpatcher;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
@@ -21,8 +20,6 @@ import static lanchon.dexpatcher.Logger.Level.*;
 
 public class Main {
 
-	private static boolean EXPERIMENTAL_OPCODES = false;
-
 	public static void main(String[] args) {
 		Locale locale = new Locale("en", "US");
 		Locale.setDefault(locale);
@@ -35,7 +32,8 @@ public class Main {
     private String sourceFile;
     private List<String> patchFiles;
     private String patchedFile;
-    private int apiLevel;
+	private int apiLevel;
+	private boolean experimental;
 
     public int run(String[] args) {
 		logger = new BasicLogger(WARN);
@@ -81,6 +79,7 @@ public class Main {
 
 			Number apiNumber = (Number) cl.getParsedOptionValue("api-level");
 			apiLevel = (apiNumber != null ? apiNumber.intValue() : 14);
+			experimental = cl.hasOption("experimental");
 
             return -1;
 
@@ -99,6 +98,7 @@ public class Main {
 		o.setArgName("patched-dex"); options.addOption(o);
 		o = new Option("a", "api-level", true, "api level of dex files (defaults to 14)");
 		o.setArgName("n"); o.setType(Number.class); options.addOption(o);
+		options.addOption(new Option("X", "experimental", false, "enable support for experimental opcodes"));
 		options.addOption(new Option("q", "quiet", false, "do not output warnings"));
 		options.addOption(new Option("v", "verbose", false, "output extra information"));
 		options.addOption(new Option(null, "debug", false, "output debugging information"));
@@ -148,7 +148,7 @@ public class Main {
 
     private DexFile loadDex(String name) throws IOException {
 		logger.log(INFO, "load '" + name + "'");
-		DexBackedDexFile dex = DexFileFactory.loadDexFile(name, apiLevel, EXPERIMENTAL_OPCODES);
+		DexBackedDexFile dex = DexFileFactory.loadDexFile(name, apiLevel, experimental);
 		if (dex.isOdexFile()) throw new RuntimeException(name + " is an odex file");
 		return dex;
 	}
