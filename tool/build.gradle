@@ -15,6 +15,10 @@ dependencies {
     compile 'commons-cli:commons-cli:1.2'
 }
 
+compileJava {
+    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+}
+
 task writeVersionFile {
     ext.version = version
     ext.outputFile = file('build/classes/main/lanchon/dexpatcher/version');
