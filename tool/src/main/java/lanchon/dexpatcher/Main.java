@@ -29,13 +29,13 @@ public class Main {
 
 	public Logger logger;
 
-    private String sourceFile;
-    private List<String> patchFiles;
-    private String patchedFile;
+	private String sourceFile;
+	private List<String> patchFiles;
+	private String patchedFile;
 	private int apiLevel;
 	private boolean experimental;
 
-    public int run(String[] args) {
+	public int run(String[] args) {
 		logger = new BasicLogger(WARN);
 		try {
 			int value = parseCommandLine(args);
@@ -49,47 +49,47 @@ public class Main {
 
 	// Parse Command Line
 
-    private int parseCommandLine(String[] args) {
+	private int parseCommandLine(String[] args) {
 
-        Options options = getOptions();
-        try {
+		Options options = getOptions();
+		try {
 
-            CommandLine cl = new PosixParser().parse(options, args);
+			CommandLine cl = new PosixParser().parse(options, args);
 
-            if (cl.hasOption("help")) {
-                printUsage(options);
-                return 0;
-            }
+			if (cl.hasOption("help")) {
+				printUsage(options);
+				return 0;
+			}
 
-            if (cl.hasOption("version")) {
-                System.out.println(getVersion());
-                return 0;
-            }
+			if (cl.hasOption("version")) {
+				System.out.println(getVersion());
+				return 0;
+			}
 
-            if (cl.hasOption("quiet")) logger.setLogLevel(ERROR);
-            if (cl.hasOption("verbose")) logger.setLogLevel(INFO);
-            if (cl.hasOption("debug")) logger.setLogLevel(DEBUG);
+			if (cl.hasOption("quiet")) logger.setLogLevel(ERROR);
+			if (cl.hasOption("verbose")) logger.setLogLevel(INFO);
+			if (cl.hasOption("debug")) logger.setLogLevel(DEBUG);
 
-            @SuppressWarnings("unchecked")
-            List<String> files = cl.getArgList();
-            if (files.isEmpty()) throw new ParseException("Missing argument: <source-dex-or-apk>");
-            sourceFile = files.remove(0);
-            patchFiles = files;
+			@SuppressWarnings("unchecked")
+			List<String> files = cl.getArgList();
+			if (files.isEmpty()) throw new ParseException("Missing argument: <source-dex-or-apk>");
+			sourceFile = files.remove(0);
+			patchFiles = files;
 			patchedFile = cl.getOptionValue("output");
 
 			Number apiNumber = (Number) cl.getParsedOptionValue("api-level");
 			apiLevel = (apiNumber != null ? apiNumber.intValue() : 14);
 			experimental = cl.hasOption("experimental");
 
-            return -1;
+			return -1;
 
-        } catch (ParseException e) {
-            logger.log(FATAL, e.getMessage());
-            printUsage(options);
-            return 1;
-        }
+		} catch (ParseException e) {
+			logger.log(FATAL, e.getMessage());
+			printUsage(options);
+			return 1;
+		}
 
-    }
+	}
 
 	private static Options getOptions() {
 		Options options = new Options();
@@ -146,7 +146,7 @@ public class Main {
 
 	}
 
-    private DexFile loadDex(String name) throws IOException {
+	private DexFile loadDex(String name) throws IOException {
 		logger.log(INFO, "load '" + name + "'");
 		DexBackedDexFile dex = DexFileFactory.loadDexFile(name, apiLevel, experimental);
 		if (dex.isOdexFile()) throw new RuntimeException(name + " is an odex file");
