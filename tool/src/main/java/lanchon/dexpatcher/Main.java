@@ -45,6 +45,8 @@ public class Main {
 	private boolean experimental;
 	private boolean stats;
 
+	private Opcodes opcodes;
+
 	public int run(String[] args) {
 		logger = new BasicLogger(WARN);
 		try {
@@ -141,6 +143,7 @@ public class Main {
 	private int processFiles() throws IOException {
 
 		long time = System.nanoTime();
+		opcodes = Opcodes.forApi(apiLevel, experimental);
 
 		DexFile dex = readDex(sourceFile);
 		int types = dex.getClasses().size();
@@ -173,29 +176,38 @@ public class Main {
 		return patchedDex;
 	}
 
-	private DexFile readDex(String name) throws IOException {
-		logger.log(INFO, "read '" + name + "'");
+	private DexFile readDex(String path) throws IOException {
+		logger.log(INFO, "read '" + path + "'");
 		long time = System.nanoTime();
-		DexBackedDexFile dex = DexFileFactory.loadDexFile(name, apiLevel, experimental);
-		if (dex.isOdexFile()) throw new RuntimeException(name + " is an odex file");
+		DexBackedDexFile dex = DexFileFactory.loadDexFile(new File(path), null, opcodes);
+		if (dex.isOdexFile()) throw new RuntimeException(path + " is an odex file");
 		time = System.nanoTime() - time;
 		logStats("read stats", dex.getClassCount(), time);
 		return dex;
 	}
 
-	private void writeDex(String name, DexFile dex) throws IOException {
-		logger.log(INFO, "write '" + name + "'");
+	private void writeDex(String path, DexFile dex) throws IOException {
+		logger.log(INFO, "write '" + path + "'");
 		long time = System.nanoTime();
-		//DexFileFactory.writeDexFile(name, dex, apiLevel, experimental);
-		writeDexWorkaround(name, dex, apiLevel, experimental);
+		//DexFileFactory.writeDexFile(path, dex);
+		writeDexFileWorkaround(path, dex);
 		time = System.nanoTime() - time;
 		logStats("write stats", dex.getClasses().size(), time);
 	}
 
-	private static void writeDexWorkaround(String path, DexFile input, int apiLevel, boolean experimental) throws IOException {
+	private void logStats(String header, int typeCount, long nanoTime) {
+		if (stats) logger.log(INFO, header + ": " +
+				typeCount + " types, " +
+				((nanoTime + 500000) / 1000000) + " ms, " +
+				(((nanoTime / typeCount) + 500) / 1000) + " us/type");
+
+	}
+
+	private static void writeDexFileWorkaround(String path, DexFile dex) throws IOException {
+		// DexFileFactory.writeDexFile() ignores the value of dex.getOpcodes().
+		// For details, see: https://github.com/JesusFreke/smali/issues/439
 		// TODO: Remove this workaround when dexlib2 gets fixed.
-		// See: https://github.com/JesusFreke/smali/issues/439
-		DexPool dexPool = DexPool.makeDexPool(Opcodes.forApi(apiLevel, experimental));
+		DexPool dexPool = DexPool.makeDexPool(dex.getOpcodes());
 		ClassSection classSection;
 		try {
 			Field classSectionField = DexWriter.class.getDeclaredField("classSection");
@@ -205,18 +217,10 @@ public class Main {
 			throw new Error(e);
 		}
 		ClassPool classPool = (ClassPool) classSection;
-		for (ClassDef classDef: input.getClasses()) {
+		for (ClassDef classDef: dex.getClasses()) {
 			classPool.intern(classDef);
 		}
 		dexPool.writeTo(new FileDataStore(new File(path)));
-	}
-
-	private void logStats(String header, int typeCount, long nanoTime) {
-		if (stats) logger.log(INFO, header + ": " +
-				typeCount + " types, " +
-				((nanoTime + 500000) / 1000000) + " ms, " +
-				(((nanoTime / typeCount) + 500) / 1000) + " us/type");
-
 	}
 
 }
