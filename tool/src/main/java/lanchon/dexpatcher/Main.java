@@ -43,13 +43,14 @@ public class Main {
 	private String patchedFile;
 	private int apiLevel;
 	private boolean experimental;
+	private boolean stats;
 
 	public int run(String[] args) {
 		logger = new BasicLogger(WARN);
 		try {
 			int value = parseCommandLine(args);
 			if (value >= 0) return value;
-			return processDexFiles();
+			return processFiles();
 		} catch (Exception e) {
 			logger.log(FATAL, "exception: " + e);
 			return 3;
@@ -89,6 +90,7 @@ public class Main {
 			Number apiNumber = (Number) cl.getParsedOptionValue("api-level");
 			apiLevel = (apiNumber != null ? apiNumber.intValue() : 14);
 			experimental = cl.hasOption("experimental");
+			stats = !cl.hasOption("no-stats");
 
 			return -1;
 
@@ -111,6 +113,7 @@ public class Main {
 		options.addOption(new Option("q", "quiet", false, "do not output warnings"));
 		options.addOption(new Option("v", "verbose", false, "output extra information"));
 		options.addOption(new Option(null, "debug", false, "output debugging information"));
+		options.addOption(new Option(null, "no-stats", false, "do not output statistics"));
 		options.addOption(new Option(null, "version", false, "print version information and exit"));
 		options.addOption(new Option("?", "help", false, "print this help message and exit"));
 		return options;
@@ -133,15 +136,19 @@ public class Main {
 		new HelpFormatter().printHelp(usage, options);
 	}
 
-	// Process Dex Files
+	// Process Files
 
-	private int processDexFiles() throws IOException {
+	private int processFiles() throws IOException {
+
+		long time = System.nanoTime();
 
 		DexFile dex = readDex(sourceFile);
+		int types = dex.getClasses().size();
 
 		for (String patchFile : patchFiles) {
 			DexFile patchDex = readDex(patchFile);
-			dex = new DexPatcher(logger).process(dex, patchDex);
+			types += patchDex.getClasses().size();
+			dex = processDex(dex, patchDex);
 		}
 
 		if (patchedFile == null) {
@@ -150,22 +157,39 @@ public class Main {
 			if (logger.ok()) writeDex(patchedFile, dex);
 		}
 
+		time = System.nanoTime() - time;
+		logStats("total stats", types, time);
+
 		logger.close();
 		return logger.ok() ? 0 : 2;
 
 	}
 
+	private DexFile processDex(DexFile sourceDex, DexFile patchDex) {
+		long time = System.nanoTime();
+		DexFile patchedDex = new DexPatcher(logger).process(sourceDex, patchDex);
+		time = System.nanoTime() - time;
+		logStats("process stats", sourceDex.getClasses().size() + patchDex.getClasses().size(), time);
+		return patchedDex;
+	}
+
 	private DexFile readDex(String name) throws IOException {
 		logger.log(INFO, "read '" + name + "'");
+		long time = System.nanoTime();
 		DexBackedDexFile dex = DexFileFactory.loadDexFile(name, apiLevel, experimental);
 		if (dex.isOdexFile()) throw new RuntimeException(name + " is an odex file");
+		time = System.nanoTime() - time;
+		logStats("read stats", dex.getClassCount(), time);
 		return dex;
 	}
 
 	private void writeDex(String name, DexFile dex) throws IOException {
 		logger.log(INFO, "write '" + name + "'");
+		long time = System.nanoTime();
 		//DexFileFactory.writeDexFile(name, dex, apiLevel, experimental);
 		writeDexWorkaround(name, dex, apiLevel, experimental);
+		time = System.nanoTime() - time;
+		logStats("write stats", dex.getClasses().size(), time);
 	}
 
 	private static void writeDexWorkaround(String path, DexFile input, int apiLevel, boolean experimental) throws IOException {
@@ -185,6 +209,14 @@ public class Main {
 			classPool.intern(classDef);
 		}
 		dexPool.writeTo(new FileDataStore(new File(path)));
+	}
+
+	private void logStats(String header, int typeCount, long nanoTime) {
+		if (stats) logger.log(INFO, header + ": " +
+				typeCount + " types, " +
+				((nanoTime + 500000) / 1000000) + " ms, " +
+				(((nanoTime / typeCount) + 500) / 1000) + " us/type");
+
 	}
 
 }

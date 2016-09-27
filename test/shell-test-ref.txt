@@ -9,13 +9,14 @@ usage: dexpatcher [<option> ...] [--output <patched-dex>]
  -?,--help                   print this help message and exit
  -a,--api-level <n>          api level of dex files (defaults to 14)
     --debug                  output debugging information
+    --no-stats               do not output statistics
  -o,--output <patched-dex>   name of patched dex file to write
  -q,--quiet                  do not output warnings
  -v,--verbose                output extra information
     --version                print version information and exit
  -X,--experimental           enable support for experimental opcodes
 
-$ dexpatcher build/source.dex build/patch.dex --output build/patched.dex --verbose
+$ dexpatcher build/source.dex build/patch.dex --output build/patched.dex --verbose --no-stats
 info: read 'build/source.dex'
 info: read 'build/patch.dex'
 info: type 'test.Main$B': instance field 'privateKey:Ljava/lang/String;': 'public' modifier mismatch in original and edited versions
