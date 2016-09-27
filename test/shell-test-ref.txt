@@ -16,8 +16,8 @@ usage: dexpatcher [<option> ...] [--output <patched-dex>]
  -X,--experimental           enable support for experimental opcodes
 
 $ dexpatcher build/source.dex build/patch.dex --output build/patched.dex --verbose
-info: load 'build/source.dex'
-info: load 'build/patch.dex'
+info: read 'build/source.dex'
+info: read 'build/patch.dex'
 info: type 'test.Main$B': instance field 'privateKey:Ljava/lang/String;': 'public' modifier mismatch in original and edited versions
 info: type 'test.Main$B': instance field 'privateKey:Ljava/lang/String;': 'private' modifier mismatch in original and edited versions
 info: type 'test.Main$B': direct method 'privateStaticMethod(I)V': 'public' modifier mismatch in original and edited versions

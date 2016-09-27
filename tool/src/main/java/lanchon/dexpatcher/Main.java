@@ -137,10 +137,10 @@ public class Main {
 
 	private int processDexFiles() throws IOException {
 
-		DexFile dex = loadDex(sourceFile);
+		DexFile dex = readDex(sourceFile);
 
 		for (String patchFile : patchFiles) {
-			DexFile patchDex = loadDex(patchFile);
+			DexFile patchDex = readDex(patchFile);
 			dex = new DexPatcher(logger).process(dex, patchDex);
 		}
 
@@ -155,8 +155,8 @@ public class Main {
 
 	}
 
-	private DexFile loadDex(String name) throws IOException {
-		logger.log(INFO, "load '" + name + "'");
+	private DexFile readDex(String name) throws IOException {
+		logger.log(INFO, "read '" + name + "'");
 		DexBackedDexFile dex = DexFileFactory.loadDexFile(name, apiLevel, experimental);
 		if (dex.isOdexFile()) throw new RuntimeException(name + " is an odex file");
 		return dex;
