@@ -8,10 +8,18 @@ version = parent.version
 
 repositories {
     jcenter()
+
+    flatDir dirs: '../../dexpatcher-tool-dexlib2/dexlib2/build/libs'
+    flatDir dirs: '../../dexpatcher-tool-dexlib2/util/build/libs'
 }
 
 dependencies {
-    compile 'org.smali:dexlib2:2.1.3'
+    //compile 'org.smali:dexlib2:2.1.3'
+
+    compile 'org.smali:dexlib2:2.1.3-dexpatcher'
+    compile 'org.smali:util:2.1.3-dexpatcher'
+    compile 'com.google.guava:guava:18.0'
+
     compile 'commons-cli:commons-cli:1.2'
 }
 
