@@ -189,8 +189,8 @@ public class Main {
 	private void writeDex(String path, DexFile dex) throws IOException {
 		logger.log(INFO, "write '" + path + "'");
 		long time = System.nanoTime();
-		//DexFileFactory.writeDexFile(path, dex);
-		writeDexFileWorkaround(path, dex);
+		DexFileFactory.writeDexFile(path, dex);		// bug fixed in dexlib2-dexpatcher
+		//writeDexFileWorkaround(path, dex);
 		time = System.nanoTime() - time;
 		logStats("write stats", dex.getClasses().size(), time);
 	}
