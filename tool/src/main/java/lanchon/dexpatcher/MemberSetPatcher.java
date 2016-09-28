@@ -6,7 +6,7 @@ import org.jf.dexlib2.iface.Member;
 import static lanchon.dexpatcher.Logger.Level.*;
 import static org.jf.dexlib2.AccessFlags.*;
 
-public abstract class MemberSetPatcher<T extends Member> extends SimplePatcher<T> {
+public abstract class MemberSetPatcher<T extends Member> extends AnnotatableSetPatcher<T> {
 
 	private final String logMemberType;
 	private final Action defaultAction;

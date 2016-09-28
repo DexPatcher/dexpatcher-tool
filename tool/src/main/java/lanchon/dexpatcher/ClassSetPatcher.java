@@ -12,7 +12,7 @@ import static org.jf.dexlib2.AccessFlags.*;
 
 // TODO: Warn about changes in superclass and interfaces.
 
-public class ClassSetPatcher extends SimplePatcher<ClassDef> {
+public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 
 	public ClassSetPatcher(Logger logger) {
 		super(logger, null);
