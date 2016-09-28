@@ -21,12 +21,12 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 	// Adapters
 
 	@Override
-	protected String getId(ClassDef t) {
+	protected final String getId(ClassDef t) {
 		return t.getType();
 	}
 
 	@Override
-	protected String getLogPrefix(String id, ClassDef t) {
+	protected final String getLogPrefix(String id, ClassDef t) {
 		return "type '" + Util.getTypeNameFromDescriptor(id) + "'";
 	}
 

@@ -16,7 +16,7 @@ public class FieldSetPatcher extends MemberSetPatcher<Field> {
 	// Adapters
 
 	@Override
-	protected String getId(Field t) {
+	protected final String getId(Field t) {
 		return Util.getFieldId(t);
 	}
 

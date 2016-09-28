@@ -18,7 +18,7 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 	// Adapters
 
 	@Override
-	protected String getId(Method t) {
+	protected final String getId(Method t) {
 		return Util.getMethodId(t);
 	}
 
