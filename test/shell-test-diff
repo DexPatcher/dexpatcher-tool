@@ -2,7 +2,7 @@
 
 mkdir -p build
 
-./shell-test &> build/shell-test-out.txt
+./shell-test "$@" &> build/shell-test-out.txt
 
 diff=$(diff shell-test-ref.txt build/shell-test-out.txt)
 status=$?

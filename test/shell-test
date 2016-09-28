@@ -5,13 +5,11 @@ set -e
 source shell-test.config
 
 run() {
-    echo "\$ $@"
-    eval "run-$@"
+    echo -n "\$"
+    printf " %q" "$@"
     echo
-}
-
-run-dexpatcher() {
-    run-java -jar ../tool/build/libs/dexpatcher-[0-9]*.jar "$@"
+    "run-$@"
+    echo
 }
 
 dex-jar() {
@@ -36,7 +34,7 @@ dex-jar source
 dex-jar patch
 
 run dexpatcher --help
-run dexpatcher build/source.dex build/patch.dex --output build/patched.dex --debug
+run dexpatcher build/source.dex build/patch.dex --output build/patched.dex --debug "$@"
 
 run dex2jar --force --output build/patched-dex2jar.jar build/patched.dex
 
