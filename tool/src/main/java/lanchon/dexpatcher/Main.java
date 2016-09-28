@@ -57,7 +57,11 @@ public class Main {
 			if (value >= 0) return value;
 			return processFiles();
 		} catch (Exception e) {
-			logger.log(FATAL, "exception: " + e);
+			if (logger.isLogging(DEBUG)) {
+				logger.log(FATAL, "exception:", e);
+			} else {
+				logger.log(FATAL, "exception: " + e);
+			}
 			return 3;
 		}
 	}

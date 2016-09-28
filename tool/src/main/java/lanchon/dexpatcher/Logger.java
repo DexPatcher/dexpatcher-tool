@@ -34,9 +34,13 @@ public abstract class Logger {
 	}
 
 	public final void log(Level level, String message) {
+		log(level, message, null);
+	}
+
+	public final void log(Level level, String message, Throwable throwable) {
 		if (message == null) throw new NullPointerException("message");
 		counts[level.ordinal()]++;
-		if (isLogging(level)) doLog(level, message);
+		if (isLogging(level)) doLog(level, message, throwable);
 	}
 
 	public boolean ok() {
@@ -48,7 +52,7 @@ public abstract class Logger {
 		int errors = getCount(FATAL) + getCount(ERROR);
 		int warnings = getCount(WARN);
 		if (errors != 0 || warnings != 0) {
-			doLog(NONE, errors + " error(s), " + warnings + " warning(s)");
+			log(NONE, errors + " error(s), " + warnings + " warning(s)");
 		}
 	}
 
@@ -68,6 +72,6 @@ public abstract class Logger {
 		return counts[level.ordinal()];
 	}
 
-	protected abstract void doLog(Level level, String message);
+	protected abstract void doLog(Level level, String message, Throwable throwable);
 
 }
