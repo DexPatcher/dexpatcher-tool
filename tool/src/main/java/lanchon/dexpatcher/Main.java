@@ -29,6 +29,8 @@ import static lanchon.dexpatcher.Logger.Level.*;
 
 public class Main {
 
+	public static final int DEFAULT_API_LEVEL = 14;
+
 	public static void main(String[] args) {
 		Locale locale = new Locale("en", "US");
 		Locale.setDefault(locale);
@@ -90,7 +92,7 @@ public class Main {
 			patchedFile = cl.getOptionValue("output");
 
 			Number apiNumber = (Number) cl.getParsedOptionValue("api-level");
-			apiLevel = (apiNumber != null ? apiNumber.intValue() : 14);
+			apiLevel = (apiNumber != null ? apiNumber.intValue() : DEFAULT_API_LEVEL);
 			experimental = cl.hasOption("experimental");
 			stats = cl.hasOption("stats");
 
@@ -109,7 +111,7 @@ public class Main {
 		Option o;
 		o = new Option("o", "output", true, "name of patched dex file to write");
 		o.setArgName("patched-dex"); options.addOption(o);
-		o = new Option("a", "api-level", true, "api level of dex files (defaults to 14)");
+		o = new Option("a", "api-level", true, "api level of dex files (defaults to " + DEFAULT_API_LEVEL + ")");
 		o.setArgName("n"); o.setType(Number.class); options.addOption(o);
 		options.addOption(new Option("X", "experimental", false, "enable support for experimental opcodes"));
 		options.addOption(new Option("q", "quiet", false, "do not output warnings"));
