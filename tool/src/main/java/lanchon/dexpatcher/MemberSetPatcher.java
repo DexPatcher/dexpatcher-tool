@@ -28,14 +28,6 @@ public abstract class MemberSetPatcher<T extends Member> extends AnnotatableSetP
 		return logMemberType + " '" + id + "'";
 	}
 
-	@Override
-	protected String getTargetLogPrefix(String targetId, PatcherAnnotation annotation) {
-		// TODO: Show changes in method arguments even if target is explicit.
-		String target = annotation.getTarget();
-		if (target == null) target = targetId;
-		return "target '" + target + "'";
-	}
-
 	// Handlers
 
 	@Override
@@ -56,6 +48,13 @@ public abstract class MemberSetPatcher<T extends Member> extends AnnotatableSetP
 		if (annotation.getDefaultAction() != null) PatcherAnnotation.throwInvalidElement(Tag.ELEM_DEFAULT_ACTION);
 		if (annotation.getOnlyEditMembers()) PatcherAnnotation.throwInvalidElement(Tag.ELEM_ONLY_EDIT_MEMBERS);
 		if (annotation.getRecursive()) PatcherAnnotation.throwInvalidElement(Tag.ELEM_RECURSIVE);
+	}
+
+	protected final String getTargetLogPrefix(String targetId, PatcherAnnotation annotation) {
+		// TODO: Show changes in method arguments even if target is explicit.
+		String target = annotation.getTarget();
+		if (target == null) target = targetId;
+		return "target '" + target + "'";
 	}
 
 	@Override

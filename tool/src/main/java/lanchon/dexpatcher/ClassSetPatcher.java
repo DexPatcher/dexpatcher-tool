@@ -30,11 +30,6 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 		return "type '" + Util.getTypeNameFromDescriptor(id) + "'";
 	}
 
-	@Override
-	protected String getTargetLogPrefix(String targetId, PatcherAnnotation annotation) {
-		return "target '" + Util.getTypeNameFromDescriptor(targetId) + "'";
-	}
-
 	// Handlers
 
 	@Override
@@ -64,8 +59,12 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 		} else {
 			targetId = patchId;
 		}
-		extendLogPrefix(patchId, targetId, annotation);
+		if (shouldLogTarget(patchId, targetId)) extendLogPrefix(getTargetLogPrefix(targetId, annotation));
 		return targetId;
+	}
+
+	protected final String getTargetLogPrefix(String targetId, PatcherAnnotation annotation) {
+		return "target '" + Util.getTypeNameFromDescriptor(targetId) + "'";
 	}
 
 	@Override

@@ -15,8 +15,8 @@ public abstract class AnnotatableSetPatcher<T extends Annotatable> extends Actio
 		super(parent);
 	}
 
-	protected final void extendLogPrefix(String patchId, String targetId, PatcherAnnotation annotation) {
-		if (!patchId.equals(targetId)) extendLogPrefix(getTargetLogPrefix(targetId, annotation));
+	protected final boolean shouldLogTarget(String patchId, String targetId) {
+		return !patchId.equals(targetId);
 	}
 
 	// Implementation
@@ -33,10 +33,6 @@ public abstract class AnnotatableSetPatcher<T extends Annotatable> extends Actio
 	protected Action getAction(String patchId, T patch, PatcherAnnotation annotation) throws PatchException {
 		return annotation.getAction();
 	}
-
-	// Adapters
-
-	protected abstract String getTargetLogPrefix(String targetId, PatcherAnnotation annotation);
 
 	// Handlers
 
