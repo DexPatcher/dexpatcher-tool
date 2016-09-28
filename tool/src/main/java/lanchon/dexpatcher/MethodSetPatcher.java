@@ -37,7 +37,7 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 		else {
 			targetId = target != null ? Util.getMethodId(patch, target) : patchId;
 		}
-		if (shouldLogTarget(patchId, targetId)) extendLogPrefix(getTargetLogPrefix(targetId, annotation));
+		setTargetLogPrefix(patchId, targetId, annotation);
 		return targetId;
 	}
 

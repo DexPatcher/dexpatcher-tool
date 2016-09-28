@@ -33,7 +33,7 @@ public class FieldSetPatcher extends MemberSetPatcher<Field> {
 	protected String getTargetId(String patchId, Field patch, PatcherAnnotation annotation) {
 		String target = annotation.getTarget();
 		String targetId = target != null ? Util.getFieldId(patch, target) : patchId;
-		if (shouldLogTarget(patchId, targetId)) extendLogPrefix(getTargetLogPrefix(targetId, annotation));
+		setTargetLogPrefix(patchId, targetId, annotation);
 		return targetId;
 
 	}
