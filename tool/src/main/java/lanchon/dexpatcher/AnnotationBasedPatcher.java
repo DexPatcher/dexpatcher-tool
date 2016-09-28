@@ -21,12 +21,6 @@ public abstract class AnnotationBasedPatcher<T extends Annotatable> extends Abst
 		if (!patchId.equals(targetId)) extendLogPrefix(getTargetLogPrefix(targetId, annotation));
 	}
 
-	protected final T setupTargetX(String patchId, String targetId, PatcherAnnotation annotation,
-			boolean editingInPlace) throws PatchException {
-		extendLogPrefix(patchId, targetId, annotation);
-		return findTarget(targetId, editingInPlace);
-	}
-
 	// Implementation
 
 	@Override
