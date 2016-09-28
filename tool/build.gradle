@@ -54,6 +54,7 @@ task shadowBugWorkaround(type: Jar) {
     dependsOn jar
     destinationDir file('build/shadow-bug-workaround')
     baseName = 'dexpatcher-annotation-nested'
+    from jar
     from tasks.getByPath(':annotation:jar')
 }
 
