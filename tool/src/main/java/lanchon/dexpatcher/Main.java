@@ -92,7 +92,7 @@ public class Main {
 			Number apiNumber = (Number) cl.getParsedOptionValue("api-level");
 			apiLevel = (apiNumber != null ? apiNumber.intValue() : 14);
 			experimental = cl.hasOption("experimental");
-			stats = !cl.hasOption("no-stats");
+			stats = cl.hasOption("stats");
 
 			return -1;
 
@@ -115,7 +115,7 @@ public class Main {
 		options.addOption(new Option("q", "quiet", false, "do not output warnings"));
 		options.addOption(new Option("v", "verbose", false, "output extra information"));
 		options.addOption(new Option(null, "debug", false, "output debugging information"));
-		options.addOption(new Option(null, "no-stats", false, "do not output statistics"));
+		options.addOption(new Option(null, "stats", false, "output timing statistics"));
 		options.addOption(new Option(null, "version", false, "print version information and exit"));
 		options.addOption(new Option("?", "help", false, "print this help message and exit"));
 		return options;
