@@ -30,7 +30,10 @@ public abstract class MemberSetPatcher<T extends Member> extends SimplePatcher<T
 
 	@Override
 	protected String getTargetLogPrefix(String targetId, PatcherAnnotation annotation) {
-		return "target '" + annotation.getTarget() + "'";
+		// TODO: Show changes in method arguments even if target is explicit.
+		String target = annotation.getTarget();
+		if (target == null) target = targetId;
+		return "target '" + target + "'";
 	}
 
 	// Handlers

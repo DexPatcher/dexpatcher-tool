@@ -99,8 +99,8 @@ info: type 'test.Main$E': direct method '<clinit>()V': default add
 debug: type 'test.Main$E': direct method '<clinit>()V': add
 debug: type 'test.Main$E': direct method '<init>(Ljava/lang/String;)V': add
 debug: type 'test.Main$E': direct method '<init>(Ljava/lang/String;Llanchon/dexpatcher/annotation/DexTag;)V': edit
-debug: type 'test.Main$E': direct method '<init>(Ljava/lang/String;Llanchon/dexpatcher/annotation/DexTag;)V': target 'null': 'public' modifier mismatch in targeted and edited members
-debug: type 'test.Main$E': direct method '<init>(Ljava/lang/String;Llanchon/dexpatcher/annotation/DexTag;)V': target 'null': 'private' modifier mismatch in targeted and edited members
+debug: type 'test.Main$E': direct method '<init>(Ljava/lang/String;Llanchon/dexpatcher/annotation/DexTag;)V': target '<init>(Ljava/lang/String;)V': 'public' modifier mismatch in targeted and edited members
+debug: type 'test.Main$E': direct method '<init>(Ljava/lang/String;Llanchon/dexpatcher/annotation/DexTag;)V': target '<init>(Ljava/lang/String;)V': 'private' modifier mismatch in targeted and edited members
 debug: type 'test.Main$E': direct method 'source_static()V': edit
 debug: type 'test.Main$E': direct method 'source_static()V': target '<clinit>': 'private' modifier mismatch in targeted and edited members
 debug: type 'test.Main$E': direct method 'source_static()V': target '<clinit>': 'constructor' modifier mismatch in targeted and edited members
