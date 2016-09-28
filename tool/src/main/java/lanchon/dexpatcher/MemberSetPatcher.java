@@ -52,9 +52,13 @@ public abstract class MemberSetPatcher<T extends Member> extends AnnotatableSetP
 
 	protected final void setTargetLogPrefix(String patchId, String targetId, PatcherAnnotation annotation) {
 		if (shouldLogTarget(patchId, targetId)) {
-			// TODO: Show changes in method arguments even if target is explicit.
-			String target = annotation.getTarget();
-			if (target == null) target = targetId;
+			String target = targetId;
+			// Shorten the target log prefix if only the name of the target differs.
+			String shortTarget = annotation.getTarget();
+			if (shortTarget != null && target.startsWith(shortTarget)) {
+				String targetSuffix = target.substring(shortTarget.length());
+				if (patchId.endsWith(targetSuffix)) target = shortTarget;
+			}
 			extendLogPrefix("target '" + target + "'");
 		}
 	}
