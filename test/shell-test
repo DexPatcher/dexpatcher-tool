@@ -36,7 +36,7 @@ dex-jar source
 dex-jar patch
 
 run dexpatcher --help
-run dexpatcher build/source.dex build/patch.dex --output build/patched.dex --verbose
+run dexpatcher build/source.dex build/patch.dex --output build/patched.dex --debug
 
 run dex2jar --force --output build/patched-dex2jar.jar build/patched.dex
 
