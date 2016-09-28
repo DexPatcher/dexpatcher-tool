@@ -17,10 +17,6 @@ public abstract class AnnotationBasedPatcher<T extends Annotatable> extends Abst
 		super(parent);
 	}
 
-	protected final void extendLogPrefix(String patchId, String targetId, PatcherAnnotation annotation) {
-		if (!patchId.equals(targetId)) extendLogPrefix(getTargetLogPrefix(targetId, annotation));
-	}
-
 	// Implementation
 
 	@Override
@@ -55,10 +51,6 @@ public abstract class AnnotationBasedPatcher<T extends Annotatable> extends Abst
 		}
 
 	}
-
-	// Adapters
-
-	protected abstract String getTargetLogPrefix(String targetId, PatcherAnnotation annotation);
 
 	// Handlers
 

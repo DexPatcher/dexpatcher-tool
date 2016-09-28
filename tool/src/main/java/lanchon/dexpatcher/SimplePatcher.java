@@ -12,6 +12,10 @@ public abstract class SimplePatcher<T extends Annotatable> extends AnnotationBas
 		super(parent);
 	}
 
+	protected final void extendLogPrefix(String patchId, String targetId, PatcherAnnotation annotation) {
+		if (!patchId.equals(targetId)) extendLogPrefix(getTargetLogPrefix(targetId, annotation));
+	}
+
 	// Implementation
 
 	@Override
@@ -46,6 +50,10 @@ public abstract class SimplePatcher<T extends Annotatable> extends AnnotationBas
 		T target = findTarget(targetId, false);
 		onSimpleRemove(patch, annotation, target);
 	}
+
+	// Adapters
+
+	protected abstract String getTargetLogPrefix(String targetId, PatcherAnnotation annotation);
 
 	// Handlers
 
