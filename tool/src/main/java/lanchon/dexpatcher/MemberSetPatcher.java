@@ -33,7 +33,7 @@ public abstract class MemberSetPatcher<T extends Member> extends AnnotatableSetP
 	@Override
 	protected Action getDefaultAction(String patchId, T patch) {
 		if (defaultAction != null) {
-			log(INFO, "default " + defaultAction.getLabel());
+			log(INFO, "default " + defaultAction.getMarker().getLabel());
 			return defaultAction;
 		} else {
 			log(ERROR, "no default action defined");
@@ -43,11 +43,11 @@ public abstract class MemberSetPatcher<T extends Member> extends AnnotatableSetP
 
 	@Override
 	protected void onPrepare(String patchId, T patch, PatcherAnnotation annotation) throws PatchException {
-		if (annotation.getTargetClass() != null) PatcherAnnotation.throwInvalidElement(Tag.ELEM_TARGET_CLASS);
-		if (annotation.getStaticConstructorAction() != null) PatcherAnnotation.throwInvalidElement(Tag.ELEM_STATIC_CONSTRUCTOR_ACTION);
-		if (annotation.getDefaultAction() != null) PatcherAnnotation.throwInvalidElement(Tag.ELEM_DEFAULT_ACTION);
-		if (annotation.getOnlyEditMembers()) PatcherAnnotation.throwInvalidElement(Tag.ELEM_ONLY_EDIT_MEMBERS);
-		if (annotation.getRecursive()) PatcherAnnotation.throwInvalidElement(Tag.ELEM_RECURSIVE);
+		if (annotation.getTargetClass() != null) PatcherAnnotation.throwInvalidElement(Marker.ELEM_TARGET_CLASS);
+		if (annotation.getStaticConstructorAction() != null) PatcherAnnotation.throwInvalidElement(Marker.ELEM_STATIC_CONSTRUCTOR_ACTION);
+		if (annotation.getDefaultAction() != null) PatcherAnnotation.throwInvalidElement(Marker.ELEM_DEFAULT_ACTION);
+		if (annotation.getOnlyEditMembers()) PatcherAnnotation.throwInvalidElement(Marker.ELEM_ONLY_EDIT_MEMBERS);
+		if (annotation.getRecursive()) PatcherAnnotation.throwInvalidElement(Marker.ELEM_RECURSIVE);
 	}
 
 	protected final void setTargetLogPrefix(String patchId, String targetId, PatcherAnnotation annotation) {

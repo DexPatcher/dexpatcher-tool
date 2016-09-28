@@ -93,9 +93,9 @@ public abstract class Util {
 	public static int getClassAccessFlags(ClassDef t) {
 		int f = t.getAccessFlags();
 		for (Annotation a : t.getAnnotations()) {
-			if (Tag.TYPE_INNER_CLASS.equals(a.getType())) {
+			if (Marker.TYPE_INNER_CLASS.equals(a.getType())) {
 				for (AnnotationElement e : a.getElements()) {
-					if (Tag.ELEM_ACCESS_FLAGS.equals(e.getName())) {
+					if (Marker.ELEM_ACCESS_FLAGS.equals(e.getName())) {
 						EncodedValue v = e.getValue();
 						if (v instanceof IntEncodedValue) {
 							f |= ((IntEncodedValue) v).getValue();

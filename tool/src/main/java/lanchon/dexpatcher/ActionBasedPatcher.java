@@ -19,7 +19,7 @@ public abstract class ActionBasedPatcher<T, C> extends AbstractPatcher<T> {
 		C context = getContext(patchId, patch);
 		onPrepare(patchId, patch, context);
 		Action action = getAction(patchId, patch, context);
-		if (isLogging(DEBUG)) log(DEBUG, action.getLabel());
+		if (isLogging(DEBUG)) log(DEBUG, action.getMarker().getLabel());
 		switch (action) {
 		case ADD:
 			onAdd(patchId, patch, context);

@@ -30,6 +30,7 @@ import static lanchon.dexpatcher.Logger.Level.*;
 public class Main {
 
 	public static final int DEFAULT_API_LEVEL = 14;
+	public static final String DEFAULT_ANNOTATION_PACKAGE = "lanchon.dexpatcher.annotation";
 
 	public static void main(String[] args) {
 		Locale locale = new Locale("en", "US");
@@ -94,6 +95,7 @@ public class Main {
 			Number apiNumber = (Number) cl.getParsedOptionValue("api-level");
 			apiLevel = (apiNumber != null ? apiNumber.intValue() : DEFAULT_API_LEVEL);
 			experimental = cl.hasOption("experimental");
+			Marker.setPackageName(cl.getOptionValue("annotations", DEFAULT_ANNOTATION_PACKAGE));
 			stats = cl.hasOption("stats");
 
 			return -1;
@@ -111,8 +113,10 @@ public class Main {
 		Option o;
 		o = new Option("o", "output", true, "name of patched dex file to write");
 		o.setArgName("patched-dex"); options.addOption(o);
-		o = new Option("a", "api-level", true, "api level of dex files (defaults to " + DEFAULT_API_LEVEL + ")");
+		o = new Option("a", "api-level", true, "api level of dex files (default: " + DEFAULT_API_LEVEL + ")");
 		o.setArgName("n"); o.setType(Number.class); options.addOption(o);
+		o = new Option(null, "annotations", true, "package name of DexPatcher annotations (default: '" + DEFAULT_ANNOTATION_PACKAGE + "')");
+		o.setArgName("package"); options.addOption(o);
 		options.addOption(new Option("X", "experimental", false, "enable support for experimental opcodes"));
 		options.addOption(new Option("q", "quiet", false, "do not output warnings"));
 		options.addOption(new Option("v", "verbose", false, "output extra information"));

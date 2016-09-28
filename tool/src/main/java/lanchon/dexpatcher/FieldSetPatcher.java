@@ -25,7 +25,7 @@ public class FieldSetPatcher extends MemberSetPatcher<Field> {
 	@Override
 	protected void onPrepare(String patchId, Field patch, PatcherAnnotation annotation) throws PatchException {
 		Action action = annotation.getAction();
-		if (action == Action.REPLACE) PatcherAnnotation.throwInvalidAnnotation(Tag.REPLACE);
+		if (action == Action.REPLACE) PatcherAnnotation.throwInvalidAnnotation(Marker.REPLACE);
 		super.onPrepare(patchId, patch, annotation);
 	}
 

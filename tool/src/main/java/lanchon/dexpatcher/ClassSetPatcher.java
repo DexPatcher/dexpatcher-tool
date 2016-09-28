@@ -39,7 +39,7 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 
 	@Override
 	protected void onPrepare(String patchId, ClassDef patch, PatcherAnnotation annotation) throws PatchException {
-		if (annotation.getRecursive()) PatcherAnnotation.throwInvalidElement(Tag.ELEM_RECURSIVE);
+		if (annotation.getRecursive()) PatcherAnnotation.throwInvalidElement(Marker.ELEM_RECURSIVE);
 	}
 
 	@Override

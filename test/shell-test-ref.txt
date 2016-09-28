@@ -6,15 +6,17 @@ $ dexpatcher --help
 DexPatcher Version 1.0.0 by Lanchon
 usage: dexpatcher [<option> ...] [--output <patched-dex>]
                   <source-dex-or-apk> [<patch-dex-or-apk> ...]
- -?,--help                   print this help message and exit
- -a,--api-level <n>          api level of dex files (defaults to 14)
-    --debug                  output debugging information
- -o,--output <patched-dex>   name of patched dex file to write
- -q,--quiet                  do not output warnings
-    --stats                  output timing statistics
- -v,--verbose                output extra information
-    --version                print version information and exit
- -X,--experimental           enable support for experimental opcodes
+ -?,--help                    print this help message and exit
+ -a,--api-level <n>           api level of dex files (default: 14)
+    --annotations <package>   package name of DexPatcher annotations
+                              (default: 'lanchon.dexpatcher.annotation')
+    --debug                   output debugging information
+ -o,--output <patched-dex>    name of patched dex file to write
+ -q,--quiet                   do not output warnings
+    --stats                   output timing statistics
+ -v,--verbose                 output extra information
+    --version                 print version information and exit
+ -X,--experimental            enable support for experimental opcodes
 
 $ dexpatcher build/source.dex build/patch.dex --output build/patched.dex --debug
 info: read 'build/source.dex'

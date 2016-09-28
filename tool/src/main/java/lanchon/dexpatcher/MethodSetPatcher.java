@@ -45,7 +45,7 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 		List<? extends MethodParameter> parameters = patch.getParameters();
 		int size = parameters.size();
 		if (size == 0) return false;
-		return Tag.TYPE_TAG.equals(parameters.get(size - 1).getType());
+		return Marker.TAG.getTypeDescriptor().equals(parameters.get(size - 1).getType());
 	}
 
 	@Override

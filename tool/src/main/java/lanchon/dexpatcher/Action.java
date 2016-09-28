@@ -5,52 +5,34 @@ import java.util.Map;
 
 public enum Action {
 
-	ADD(Tag.ADD),
-	EDIT(Tag.EDIT),
-	REPLACE(Tag.REPLACE),
-	REMOVE(Tag.REMOVE),
-	IGNORE(Tag.IGNORE);
+	ADD(Marker.ADD),
+	EDIT(Marker.EDIT),
+	REPLACE(Marker.REPLACE),
+	REMOVE(Marker.REMOVE),
+	IGNORE(Marker.IGNORE);
 
-	private static final Map<String, Action> labelMap;
-	private static final Map<String, Action> typeDescriptorMap;
+	private static Map<String, Action> markerTypeDescriptorMap;
 
-	static {
-		labelMap = new HashMap<>();
-		typeDescriptorMap = new HashMap<>();
-		for (Action action: Action.values()) {
-			labelMap.put(action.getLabel(), action);
-			typeDescriptorMap.put(action.getTypeDescriptor(), action);
+	public static void setupTypeDescriptors() {
+		Action[] actions = Action.values();
+		markerTypeDescriptorMap = new HashMap<>(actions.length);
+		for (Action action: actions) {
+			markerTypeDescriptorMap.put(action.getMarker().getTypeDescriptor(), action);
 		}
 	}
 
-	public static Action fromLabel(String label) {
-		return labelMap.get(label);
+	public static Action fromMarkerTypeDescriptor(String markerTypeDescriptor) {
+		return markerTypeDescriptorMap.get(markerTypeDescriptor);
 	}
 
-	public static Action fromAnnotationDescriptor(String annotationDescriptor) {
-		return typeDescriptorMap.get(annotationDescriptor);
+	private final Marker marker;
+
+	Action(Marker marker) {
+		this.marker = marker;
 	}
 
-	private final String label;
-	private final String simpleClassName;
-	private final String typeDescriptor;
-
-	Action(String simpleClassName) {
-		this.label = name().toLowerCase();
-		this.simpleClassName = simpleClassName;
-		this.typeDescriptor = Tag.getTypeDescriptor(simpleClassName);
-	}
-
-	public String getLabel() {
-		return label;
-	}
-
-	public String getSimpleClassName() {
-		return simpleClassName;
-	}
-
-	public String getTypeDescriptor() {
-		return typeDescriptor;
+	public Marker getMarker() {
+		return marker;
 	}
 
 }

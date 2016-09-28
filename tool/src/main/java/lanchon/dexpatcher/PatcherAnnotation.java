@@ -20,11 +20,11 @@ public class PatcherAnnotation {
 		Action action = null;
 		ArrayList<Annotation> filteredAnnotations = new ArrayList<>(annotations.size());
 		for (Annotation an : annotations) {
-			Action ac = Action.fromAnnotationDescriptor(an.getType());
+			Action ac = Action.fromMarkerTypeDescriptor(an.getType());
 			if (ac != null) {
 				if (action != null) {
 					throw new PatchException("conflicting patcher annotations (" +
-							action.getSimpleClassName() + ", " + ac.getSimpleClassName() + ")");
+							action.getMarker().getClassName() + ", " + ac.getMarker().getClassName() + ")");
 				}
 				action = ac;
 				annotation = an;
@@ -45,36 +45,36 @@ public class PatcherAnnotation {
 			String name = element.getName();
 			EncodedValue value = element.getValue();
 			switch (name) {
-			case Tag.ELEM_TARGET: {
+			case Marker.ELEM_TARGET: {
 				if (target != null) break;
 				String s = ((StringEncodedValue) value).getValue();
 				if (s.length() != 0) target = s;
 				continue;
 			}
-			case Tag.ELEM_TARGET_CLASS: {
+			case Marker.ELEM_TARGET_CLASS: {
 				if (targetClass != null) break;
 				String s = ((TypeEncodedValue) value).getValue();
-				if (!Tag.TYPE_VOID.equals(s)) targetClass = s;
+				if (!Marker.TYPE_VOID.equals(s)) targetClass = s;
 				continue;
 			}
-			case Tag.ELEM_STATIC_CONSTRUCTOR_ACTION: {
+			case Marker.ELEM_STATIC_CONSTRUCTOR_ACTION: {
 				if (staticConstructorAction != null) break;
 				String s = ((EnumEncodedValue) value).getValue().getName();
-				staticConstructorAction = Action.fromLabel(s.toLowerCase());
+				staticConstructorAction = Action.valueOf(s);
 				continue;
 			}
-			case Tag.ELEM_DEFAULT_ACTION: {
+			case Marker.ELEM_DEFAULT_ACTION: {
 				if (defaultAction != null) break;
 				String s = ((EnumEncodedValue) value).getValue().getName();
-				defaultAction = Action.fromLabel(s.toLowerCase());
+				defaultAction = Action.valueOf(s);
 				continue;
 			}
-			case Tag.ELEM_ONLY_EDIT_MEMBERS: {
+			case Marker.ELEM_ONLY_EDIT_MEMBERS: {
 				if (onlyEditMembers) break;
 				onlyEditMembers = ((BooleanEncodedValue) value).getValue();
 				continue;
 			}
-			case Tag.ELEM_RECURSIVE: {
+			case Marker.ELEM_RECURSIVE: {
 				if (recursive) break;
 				recursive = ((BooleanEncodedValue) value).getValue();
 				continue;
@@ -87,7 +87,7 @@ public class PatcherAnnotation {
 
 		if (target != null && targetClass != null) {
 			throw new PatchException("conflicting patcher annotation elements (" +
-					Tag.ELEM_TARGET + ", " + Tag.ELEM_TARGET_CLASS + ")");
+					Marker.ELEM_TARGET + ", " + Marker.ELEM_TARGET_CLASS + ")");
 		}
 
 		return new PatcherAnnotation(action, target, targetClass, staticConstructorAction, defaultAction,
@@ -95,8 +95,8 @@ public class PatcherAnnotation {
 
 	}
 
-	public static void throwInvalidAnnotation(String name) throws PatchException {
-		throw new PatchException("invalid patcher annotation (" + name + ")");
+	public static void throwInvalidAnnotation(Marker marker) throws PatchException {
+		throw new PatchException("invalid patcher annotation (" + marker.getClassName() + ")");
 	}
 
 	public static void throwInvalidElement(String name) throws PatchException {
