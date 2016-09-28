@@ -27,15 +27,18 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 	@Override
 	protected String getTargetId(String patchId, Method patch, PatcherAnnotation annotation) {
 		String target = annotation.getTarget();
+		String targetId;
 		if (isTaggedByParameter(patch)) {
 			ArrayList<MethodParameter> parameters = new ArrayList<MethodParameter>(patch.getParameters());
 			parameters.remove(parameters.size() - 1);
 			target = (target != null ? target : patch.getName());
-			return Util.getMethodId(parameters, patch.getReturnType(), target);
+			targetId = Util.getMethodId(parameters, patch.getReturnType(), target);
 		}
 		else {
-			return target != null ? Util.getMethodId(patch, target) : patchId;
+			targetId = target != null ? Util.getMethodId(patch, target) : patchId;
 		}
+		extendLogPrefix(patchId, targetId, annotation);
+		return targetId;
 	}
 
 	private boolean isTaggedByParameter(Method patch) {

@@ -32,7 +32,10 @@ public class FieldSetPatcher extends MemberSetPatcher<Field> {
 	@Override
 	protected String getTargetId(String patchId, Field patch, PatcherAnnotation annotation) {
 		String target = annotation.getTarget();
-		return target != null ? Util.getFieldId(patch, target) : patchId;
+		String targetId = target != null ? Util.getFieldId(patch, target) : patchId;
+		extendLogPrefix(patchId, targetId, annotation);
+		return targetId;
+
 	}
 
 	@Override

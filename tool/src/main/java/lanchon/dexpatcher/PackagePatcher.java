@@ -40,7 +40,6 @@ public class PackagePatcher extends ClassSetPatcher {
 			return;
 		}
 		String targetId = getPackageTargetId(patchId, patch, annotation);
-		extendLogPrefix(patchId, targetId, annotation);
 		boolean recursive = annotation.getRecursive();
 		if (isLogging(DEBUG)) log(DEBUG, recursive ? "replace package recursive" :  "replace package non-recursive");
 		removePackage(targetId, recursive);
@@ -55,7 +54,6 @@ public class PackagePatcher extends ClassSetPatcher {
 			return;
 		}
 		String targetId = getPackageTargetId(patchId, patch, annotation);
-		extendLogPrefix(patchId, targetId, annotation);
 		boolean recursive = annotation.getRecursive();
 		if (isLogging(DEBUG)) log(DEBUG, recursive ? "remove package recursive" :  "remove package non-recursive");
 		removePackage(targetId, recursive);
@@ -75,6 +73,7 @@ public class PackagePatcher extends ClassSetPatcher {
 			targetId = patchId;
 		}
 		if (!isPackage(targetId)) throw new PatchException("target is not a package");
+		extendLogPrefix(patchId, targetId, annotation);
 		return targetId;
 	}
 

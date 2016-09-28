@@ -64,6 +64,7 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 		} else {
 			targetId = patchId;
 		}
+		extendLogPrefix(patchId, targetId, annotation);
 		return targetId;
 	}
 
