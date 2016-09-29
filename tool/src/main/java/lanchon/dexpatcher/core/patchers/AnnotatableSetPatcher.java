@@ -12,8 +12,8 @@ import org.jf.dexlib2.iface.Annotation;
 
 public abstract class AnnotatableSetPatcher<T extends Annotatable> extends ActionBasedPatcher<T, PatcherAnnotation> {
 
-	protected AnnotatableSetPatcher(Logger logger, String baseLogPrefix) {
-		super(logger, baseLogPrefix);
+	protected AnnotatableSetPatcher(Logger logger) {
+		super(logger);
 	}
 
 	protected AnnotatableSetPatcher(AbstractPatcher<?> parent) {

@@ -8,8 +8,8 @@ import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 
 public abstract class ActionBasedPatcher<T, C> extends AbstractPatcher<T> {
 
-	protected ActionBasedPatcher(Logger logger, String baseLogPrefix) {
-		super(logger, baseLogPrefix);
+	protected ActionBasedPatcher(Logger logger) {
+		super(logger);
 	}
 
 	protected ActionBasedPatcher(AbstractPatcher<?> parent) {

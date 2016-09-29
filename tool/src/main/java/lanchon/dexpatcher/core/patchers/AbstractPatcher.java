@@ -23,9 +23,9 @@ public abstract class AbstractPatcher<T> {
 
 	private String logPrefix;
 
-	protected AbstractPatcher(Logger logger, String baseLogPrefix) {
+	protected AbstractPatcher(Logger logger) {
 		this.logger = logger;
-		this.baseLogPrefix = baseLogPrefix != null ? baseLogPrefix : "";
+		this.baseLogPrefix = "";
 	}
 
 	protected AbstractPatcher(AbstractPatcher<?> parent) {

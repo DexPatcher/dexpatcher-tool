@@ -22,7 +22,7 @@ import static org.jf.dexlib2.AccessFlags.*;
 public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 
 	public ClassSetPatcher(Logger logger) {
-		super(logger, null);
+		super(logger);
 	}
 
 	// Adapters
