@@ -1,7 +1,11 @@
-package lanchon.dexpatcher;
+package lanchon.dexpatcher.core.patchers;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import lanchon.dexpatcher.core.Marker;
+import lanchon.dexpatcher.core.PatcherAnnotation;
+import lanchon.dexpatcher.core.Util;
 
 import org.jf.dexlib2.iface.Method;
 import org.jf.dexlib2.iface.MethodImplementation;

@@ -1,6 +1,10 @@
-package lanchon.dexpatcher;
+package lanchon.dexpatcher.core.patchers;
 
-import static lanchon.dexpatcher.Logger.Level.*;
+import lanchon.dexpatcher.core.Action;
+import lanchon.dexpatcher.core.logger.Logger;
+import lanchon.dexpatcher.core.PatchException;
+
+import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 
 public abstract class ActionBasedPatcher<T, C> extends AbstractPatcher<T> {
 

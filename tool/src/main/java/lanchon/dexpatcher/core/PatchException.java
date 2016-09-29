@@ -1,4 +1,4 @@
-package lanchon.dexpatcher;
+package lanchon.dexpatcher.core;
 
 @SuppressWarnings("serial")
 public class PatchException extends Exception {

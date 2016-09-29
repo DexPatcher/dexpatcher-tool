@@ -1,7 +1,9 @@
-package lanchon.dexpatcher;
+package lanchon.dexpatcher.core.patchers;
 
 import java.util.Collection;
 import java.util.Set;
+
+import lanchon.dexpatcher.core.logger.Logger;
 
 import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.DexFile;

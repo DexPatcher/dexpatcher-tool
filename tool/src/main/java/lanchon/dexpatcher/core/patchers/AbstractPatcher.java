@@ -1,13 +1,16 @@
-package lanchon.dexpatcher;
+package lanchon.dexpatcher.core.patchers;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import lanchon.dexpatcher.core.logger.Logger;
+import lanchon.dexpatcher.core.PatchException;
+
 import org.jf.dexlib2.AccessFlags;
 
-import static lanchon.dexpatcher.Logger.Level.*;
+import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 
 public abstract class AbstractPatcher<T> {
 

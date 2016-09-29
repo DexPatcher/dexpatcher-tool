@@ -1,9 +1,14 @@
-package lanchon.dexpatcher;
+package lanchon.dexpatcher.core.patchers;
+
+import lanchon.dexpatcher.core.Action;
+import lanchon.dexpatcher.core.Marker;
+import lanchon.dexpatcher.core.PatchException;
+import lanchon.dexpatcher.core.PatcherAnnotation;
 
 import org.jf.dexlib2.AccessFlags;
 import org.jf.dexlib2.iface.Member;
 
-import static lanchon.dexpatcher.Logger.Level.*;
+import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 import static org.jf.dexlib2.AccessFlags.*;
 
 public abstract class MemberSetPatcher<T extends Member> extends AnnotatableSetPatcher<T> {

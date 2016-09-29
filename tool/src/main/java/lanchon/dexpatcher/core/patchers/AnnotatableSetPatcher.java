@@ -1,6 +1,11 @@
-package lanchon.dexpatcher;
+package lanchon.dexpatcher.core.patchers;
 
 import java.util.Set;
+
+import lanchon.dexpatcher.core.Action;
+import lanchon.dexpatcher.core.logger.Logger;
+import lanchon.dexpatcher.core.PatchException;
+import lanchon.dexpatcher.core.PatcherAnnotation;
 
 import org.jf.dexlib2.iface.Annotatable;
 import org.jf.dexlib2.iface.Annotation;

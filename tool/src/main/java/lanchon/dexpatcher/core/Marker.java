@@ -1,4 +1,4 @@
-package lanchon.dexpatcher;
+package lanchon.dexpatcher.core;
 
 public enum Marker {
 

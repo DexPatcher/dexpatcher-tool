@@ -8,12 +8,18 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Locale;
 
+import lanchon.dexpatcher.core.Marker;
+import lanchon.dexpatcher.core.logger.BasicLogger;
+import lanchon.dexpatcher.core.logger.Logger;
+import lanchon.dexpatcher.core.patchers.DexPatcher;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
+
 import org.jf.dexlib2.DexFileFactory;
 import org.jf.dexlib2.Opcodes;
 import org.jf.dexlib2.dexbacked.DexBackedDexFile;
@@ -25,7 +31,7 @@ import org.jf.dexlib2.writer.io.FileDataStore;
 import org.jf.dexlib2.writer.pool.ClassPool;
 import org.jf.dexlib2.writer.pool.DexPool;
 
-import static lanchon.dexpatcher.Logger.Level.*;
+import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 
 public class Main {
 

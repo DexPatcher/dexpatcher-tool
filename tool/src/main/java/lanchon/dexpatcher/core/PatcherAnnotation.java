@@ -1,4 +1,4 @@
-package lanchon.dexpatcher;
+package lanchon.dexpatcher.core;
 
 import java.util.ArrayList;
 import java.util.Set;

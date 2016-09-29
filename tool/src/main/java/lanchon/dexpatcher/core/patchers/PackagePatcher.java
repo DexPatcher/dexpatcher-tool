@@ -1,10 +1,16 @@
-package lanchon.dexpatcher;
+package lanchon.dexpatcher.core.patchers;
 
 import java.util.regex.Pattern;
 
+import lanchon.dexpatcher.core.logger.Logger;
+import lanchon.dexpatcher.core.Marker;
+import lanchon.dexpatcher.core.PatcherAnnotation;
+import lanchon.dexpatcher.core.PatchException;
+import lanchon.dexpatcher.core.Util;
+
 import org.jf.dexlib2.iface.ClassDef;
 
-import static lanchon.dexpatcher.Logger.Level.*;
+import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 
 public class PackagePatcher extends ClassSetPatcher {
 

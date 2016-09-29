@@ -1,13 +1,20 @@
-package lanchon.dexpatcher;
+package lanchon.dexpatcher.core.patchers;
 
 import java.util.Collection;
+
+import lanchon.dexpatcher.core.Action;
+import lanchon.dexpatcher.core.logger.Logger;
+import lanchon.dexpatcher.core.Marker;
+import lanchon.dexpatcher.core.PatcherAnnotation;
+import lanchon.dexpatcher.core.PatchException;
+import lanchon.dexpatcher.core.Util;
 
 import org.jf.dexlib2.AccessFlags;
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.immutable.ImmutableClassDef;
 
-import static lanchon.dexpatcher.Logger.Level.*;
+import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 import static org.jf.dexlib2.AccessFlags.*;
 
 // TODO: Warn about changes in superclass and interfaces.

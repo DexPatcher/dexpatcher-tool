@@ -1,6 +1,6 @@
-package lanchon.dexpatcher;
+package lanchon.dexpatcher.core.logger;
 
-import static lanchon.dexpatcher.Logger.Level.*;
+import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 
 public abstract class Logger {
 
