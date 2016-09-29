@@ -37,6 +37,7 @@ public class Main {
 
 	public static final int DEFAULT_API_LEVEL = 14;
 	public static final String DEFAULT_ANNOTATION_PACKAGE = "lanchon.dexpatcher.annotation";
+	public static final Logger.Level DEFAULT_LOG_LEVEL = WARN;
 
 	public static void main(String[] args) {
 		Locale locale = new Locale("en", "US");
@@ -45,7 +46,7 @@ public class Main {
 		System.exit(value);
 	}
 
-	public Logger logger;
+	private final Logger logger;
 
 	private String sourceFile;
 	private List<String> patchFiles;
@@ -56,12 +57,22 @@ public class Main {
 
 	private Opcodes opcodes;
 
+	public Main() {
+		this(null);
+	}
+
+	public Main(Logger logger) {
+		if (logger == null) logger = new BasicLogger(DEFAULT_LOG_LEVEL);
+		this.logger = logger;
+	}
+
+	public Logger getLogger() {
+		return logger;
+	}
+
 	public int run(String[] args) {
-		logger = new BasicLogger(WARN);
 		try {
-			int value = parseCommandLine(args);
-			if (value >= 0) return value;
-			return processFiles();
+			return runWithExceptions(args);
 		} catch (Exception e) {
 			if (logger.isLogging(DEBUG)) {
 				logger.log(FATAL, "exception:", e);
@@ -70,6 +81,12 @@ public class Main {
 			}
 			return 3;
 		}
+	}
+
+	public int runWithExceptions(String[] args) throws IOException {
+		int value = parseCommandLine(args);
+		if (value >= 0) return value;
+		return processFiles();
 	}
 
 	// Parse Command Line
