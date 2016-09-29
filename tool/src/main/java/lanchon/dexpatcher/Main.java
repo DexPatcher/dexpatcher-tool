@@ -80,13 +80,19 @@ public class Main {
 				logger.log(FATAL, "exception: " + e);
 			}
 			return 3;
+		} finally {
+			logger.flush();
 		}
 	}
 
 	public int runWithExceptions(String[] args) throws IOException {
-		int value = parseCommandLine(args);
-		if (value >= 0) return value;
-		return processFiles();
+		try {
+			int value = parseCommandLine(args);
+			if (value >= 0) return value;
+			return processFiles();
+		} finally {
+			logger.flush();
+		}
 	}
 
 	// Parse Command Line
@@ -190,14 +196,14 @@ public class Main {
 		if (patchedFile == null) {
 			logger.log(WARN, "dry run due to missing <patched-dex> output file argument");
 		} else {
-			if (logger.ok()) writeDex(patchedFile, dex);
+			if (logger.hasNotloggedErrors()) writeDex(patchedFile, dex);
 		}
 
 		time = System.nanoTime() - time;
 		logStats("total stats", types, time);
 
-		logger.close();
-		return logger.ok() ? 0 : 2;
+		logger.logErrorAndWarningCounts();
+		return logger.hasNotloggedErrors() ? 0 : 2;
 
 	}
 

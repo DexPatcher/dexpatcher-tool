@@ -43,19 +43,6 @@ public abstract class Logger {
 		if (isLogging(level)) doLog(level, message, throwable);
 	}
 
-	public boolean ok() {
-		int errors = getCount(FATAL) + getCount(ERROR);
-		return errors == 0;
-	}
-
-	public void close() {
-		int errors = getCount(FATAL) + getCount(ERROR);
-		int warnings = getCount(WARN);
-		if (errors != 0 || warnings != 0) {
-			log(NONE, errors + " error(s), " + warnings + " warning(s)");
-		}
-	}
-
 	public Level getLogLevel() {
 		return logLevel;
 	}
@@ -68,10 +55,26 @@ public abstract class Logger {
 		return level.ordinal() >= logLevel.ordinal();
 	}
 
-	public final int getCount(Level level) {
+	public final int getMessageCount(Level level) {
 		return counts[level.ordinal()];
 	}
 
+	public boolean hasNotloggedErrors() {
+		int errors = getMessageCount(FATAL) + getMessageCount(ERROR);
+		return errors == 0;
+	}
+
+	public void logErrorAndWarningCounts() {
+		int errors = getMessageCount(FATAL) + getMessageCount(ERROR);
+		int warnings = getMessageCount(WARN);
+		if (errors != 0 || warnings != 0) {
+			log(NONE, errors + " error(s), " + warnings + " warning(s)");
+		}
+	}
+
 	protected abstract void doLog(Level level, String message, Throwable throwable);
+
+	public abstract void flush();
+	public abstract void close();
 
 }
