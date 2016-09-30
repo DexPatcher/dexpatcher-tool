@@ -15,8 +15,8 @@ import org.jf.dexlib2.immutable.ImmutableMethodImplementation;
 
 public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 
-	public MethodSetPatcher(ClassSetPatcher parent, String logMemberType, PatcherAnnotation annotation) {
-		super(parent, logMemberType, annotation);
+	public MethodSetPatcher(ClassSetPatcher parent, PatcherAnnotation annotation) {
+		super(parent, annotation);
 	}
 
 	// Adapters

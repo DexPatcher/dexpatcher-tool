@@ -13,24 +13,15 @@ import static org.jf.dexlib2.AccessFlags.*;
 
 public abstract class MemberSetPatcher<T extends Member> extends AnnotatableSetPatcher<T> {
 
-	private final String logMemberType;
 	private final Action defaultAction;
 	protected final Action staticConstructorAction;
 	protected final Action resolvedStaticConstructorAction;
 
-	public MemberSetPatcher(ClassSetPatcher parent, String logMemberType, PatcherAnnotation annotation) {
+	public MemberSetPatcher(ClassSetPatcher parent, PatcherAnnotation annotation) {
 		super(parent);
-		this.logMemberType = logMemberType;
 		defaultAction = annotation.getDefaultAction();
 		staticConstructorAction = annotation.getStaticConstructorAction();
 		resolvedStaticConstructorAction = (staticConstructorAction != null ? staticConstructorAction : defaultAction);
-	}
-
-	// Adapters
-
-	@Override
-	protected void setupLogPrefix(String id, T patch, T patched) {
-		setupLogPrefix(logMemberType + " '" + id + "'");
 	}
 
 	// Implementation

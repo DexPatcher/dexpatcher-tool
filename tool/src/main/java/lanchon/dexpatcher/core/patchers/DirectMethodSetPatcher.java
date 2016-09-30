@@ -14,8 +14,15 @@ public class DirectMethodSetPatcher extends MethodSetPatcher {
 
 	private boolean staticConstructorFound;
 
-	public DirectMethodSetPatcher(ClassSetPatcher parent, String logMemberType, PatcherAnnotation annotation) {
-		super(parent, logMemberType, annotation);
+	public DirectMethodSetPatcher(ClassSetPatcher parent, PatcherAnnotation annotation) {
+		super(parent, annotation);
+	}
+
+	// Adapters
+
+	@Override
+	protected void setupLogPrefix(String id, Method patch, Method patched) {
+		setupLogPrefix("direct method '" + id + "'");
 	}
 
 	// Implementation

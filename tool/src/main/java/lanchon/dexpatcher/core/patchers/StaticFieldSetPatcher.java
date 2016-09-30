@@ -11,8 +11,15 @@ import static org.jf.dexlib2.AccessFlags.*;
 
 public class StaticFieldSetPatcher extends FieldSetPatcher {
 
-	public StaticFieldSetPatcher(ClassSetPatcher parent, String logMemberType, PatcherAnnotation annotation) {
-		super(parent, logMemberType, annotation);
+	public StaticFieldSetPatcher(ClassSetPatcher parent, PatcherAnnotation annotation) {
+		super(parent, annotation);
+	}
+
+	// Adapters
+
+	@Override
+	protected void setupLogPrefix(String id, Field patch, Field patched) {
+		setupLogPrefix("static field '" + id + "'");
 	}
 
 	// Implementation

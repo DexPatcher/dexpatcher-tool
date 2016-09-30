@@ -9,8 +9,15 @@ import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 
 public class InstanceFieldSetPatcher extends FieldSetPatcher {
 
-	public InstanceFieldSetPatcher(ClassSetPatcher parent, String logMemberType, PatcherAnnotation annotation) {
-		super(parent, logMemberType, annotation);
+	public InstanceFieldSetPatcher(ClassSetPatcher parent, PatcherAnnotation annotation) {
+		super(parent, annotation);
+	}
+
+	// Adapters
+
+	@Override
+	protected void setupLogPrefix(String id, Field patch, Field patched) {
+		setupLogPrefix("instance field '" + id + "'");
 	}
 
 	// Implementation

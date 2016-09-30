@@ -10,13 +10,10 @@ import org.jf.dexlib2.iface.Field;
 import org.jf.dexlib2.iface.value.EncodedValue;
 import org.jf.dexlib2.immutable.ImmutableField;
 
-import static lanchon.dexpatcher.core.logger.Logger.Level.*;
-import static org.jf.dexlib2.AccessFlags.*;
-
 public abstract class FieldSetPatcher extends MemberSetPatcher<Field> {
 
-	public FieldSetPatcher(ClassSetPatcher parent, String logMemberType, PatcherAnnotation annotation) {
-		super(parent, logMemberType, annotation);
+	public FieldSetPatcher(ClassSetPatcher parent, PatcherAnnotation annotation) {
+		super(parent, annotation);
 	}
 
 	// Adapters
