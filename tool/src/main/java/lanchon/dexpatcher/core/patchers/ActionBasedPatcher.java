@@ -54,9 +54,9 @@ public abstract class ActionBasedPatcher<T, C> extends AbstractPatcher<T> {
 
 	protected void onEdit(String patchId, T patch, C context) throws PatchException {
 		String targetId = getTargetId(patchId, patch, context);
-		boolean renaming = !patchId.equals(targetId);
-		T target = findTarget(targetId, !renaming);
-		T patched = onSimpleEdit(patch, context, target, renaming);
+		boolean inPlaceEdit = patchId.equals(targetId);
+		T target = findTarget(targetId, inPlaceEdit);
+		T patched = onSimpleEdit(patch, context, target, inPlaceEdit);
 		addPatched(patchId, patch, patched);
 	}
 
@@ -83,7 +83,7 @@ public abstract class ActionBasedPatcher<T, C> extends AbstractPatcher<T> {
 	protected abstract String getTargetId(String patchId, T patch, C context) throws PatchException;
 
 	protected abstract T onSimpleAdd(T patch, C context);
-	protected abstract T onSimpleEdit(T patch, C context, T target, boolean renaming);
+	protected abstract T onSimpleEdit(T patch, C context, T target, boolean inPlaceEdit);
 	protected T onSimpleReplace(T patch, C context, T target) { return onSimpleAdd(patch, context); }
 	protected void onSimpleRemove(T patch, C context, T target) {}
 

@@ -29,7 +29,7 @@ public abstract class MemberSetPatcher<T extends Member> extends AnnotatableSetP
 	// Adapters
 
 	@Override
-	protected final String getLogPrefix(String id, T t) {
+	protected final String getLogPrefix(String id, T patch, T patched) {
 		return logMemberType + " '" + id + "'";
 	}
 
@@ -69,11 +69,11 @@ public abstract class MemberSetPatcher<T extends Member> extends AnnotatableSetP
 	}
 
 	@Override
-	protected T onSimpleEdit(T patch, PatcherAnnotation annotation, T target, boolean renaming) {
+	protected T onSimpleEdit(T patch, PatcherAnnotation annotation, T target, boolean inPlaceEdit) {
 		int flags1 = patch.getAccessFlags();
 		int flags2 = target.getAccessFlags();
 		// Avoid duplicated messages if not renaming.
-		if (renaming) {
+		if (!inPlaceEdit) {
 			String message = "'%s' modifier mismatch in targeted and edited members";
 			if (isLogging(WARN)) checkAccessFlags(WARN, flags1, flags2,
 					new AccessFlags[] { STATIC, VARARGS, NATIVE, ABSTRACT, ENUM, DECLARED_SYNCHRONIZED }, message);
@@ -94,9 +94,9 @@ public abstract class MemberSetPatcher<T extends Member> extends AnnotatableSetP
 	}
 
 	@Override
-	protected void onEffectiveReplacement(String id, T patched, T original, boolean editedInPlace) {
+	protected void onEffectiveReplacement(String id, T patch, T patched, T original, boolean inPlaceEdit) {
 		// Avoid duplicated messages if not renaming.
-		if (!editedInPlace) {
+		if (!inPlaceEdit) {
 			int flags1 = patched.getAccessFlags();
 			int flags2 = original.getAccessFlags();
 			String message = "'%s' modifier mismatch in original and replacement members";

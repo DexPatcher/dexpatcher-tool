@@ -68,7 +68,7 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 	}
 
 	@Override
-	protected Method onSimpleEdit(Method patch, PatcherAnnotation annotation, Method target, boolean renaming) {
+	protected Method onSimpleEdit(Method patch, PatcherAnnotation annotation, Method target, boolean inPlaceEdit) {
 
 		//String message = "updating '%s' modifier in edited member to match its target";
 		//AccessFlags[] flagArray = new AccessFlags[] { CONSTRUCTOR };
@@ -98,7 +98,7 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 				annotation.getFilteredAnnotations(),
 				implementation);
 
-		return super.onSimpleEdit(patched, annotation, target, renaming);
+		return super.onSimpleEdit(patched, annotation, target, inPlaceEdit);
 
 	}
 

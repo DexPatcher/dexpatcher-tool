@@ -33,7 +33,7 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 	}
 
 	@Override
-	protected final String getLogPrefix(String id, ClassDef t) {
+	protected final String getLogPrefix(String id, ClassDef patch, ClassDef patched) {
 		return "type '" + Util.getTypeNameFromDescriptor(id) + "'";
 	}
 
@@ -95,13 +95,13 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 	}
 
 	@Override
-	protected ClassDef onSimpleEdit(ClassDef patch, PatcherAnnotation annotation, ClassDef target, boolean renaming) {
+	protected ClassDef onSimpleEdit(ClassDef patch, PatcherAnnotation annotation, ClassDef target, boolean inPlaceEdit) {
 
 		if (!annotation.getOnlyEditMembers()) {
 			int flags1 = Util.getClassAccessFlags(patch);
 			int flags2 = Util.getClassAccessFlags(target);
 			// Avoid duplicated messages if not renaming.
-			if (renaming) {
+			if (!inPlaceEdit) {
 				String message = "'%s' modifier mismatch in targeted and edited types";
 				if (isLogging(WARN)) checkAccessFlags(WARN, flags1, flags2,
 						new AccessFlags[] { STATIC, FINAL, INTERFACE, ABSTRACT, ANNOTATION, ENUM }, message);
@@ -147,9 +147,9 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 	}
 
 	@Override
-	protected void onEffectiveReplacement(String id, ClassDef patched, ClassDef original, boolean editedInPlace) {
+	protected void onEffectiveReplacement(String id, ClassDef patch, ClassDef patched, ClassDef original, boolean inPlaceEdit) {
 		// Avoid duplicated messages if not renaming.
-		if (!editedInPlace) {
+		if (!inPlaceEdit) {
 			int flags1 = Util.getClassAccessFlags(patched);
 			int flags2 = Util.getClassAccessFlags(original);
 			String message = "'%s' modifier mismatch in original and replacement types";

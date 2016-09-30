@@ -14,12 +14,21 @@ import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 
 public abstract class AbstractPatcher<T> {
 
+	static class PatchedItem<T> {
+		final T patch;
+		final T patched;
+		PatchedItem(T patch, T patched) {
+			this.patch = patch;
+			this.patched = patched;
+		}
+	}
+
 	private final Logger logger;
 	private final String baseLogPrefix;
 
 	private LinkedHashMap<String, T> sourceMap;
-	private LinkedHashMap<String, Boolean> targetMap;
-	private LinkedHashMap<String, T> patchedMap;
+	private LinkedHashMap<String, Boolean> targetedMap;
+	private LinkedHashMap<String, PatchedItem<T>> patchedMap;
 
 	private String logPrefix;
 
@@ -50,7 +59,7 @@ public abstract class AbstractPatcher<T> {
 			Iterable<? extends T> patchSet, int patchSetSizeHint) {
 
 		sourceMap = new LinkedHashMap<>(sourceSetSizeHint + patchSetSizeHint);
-		targetMap = new LinkedHashMap<>();
+		targetedMap = new LinkedHashMap<>();
 		patchedMap = new LinkedHashMap<>(patchSetSizeHint);
 
 		try
@@ -62,7 +71,7 @@ public abstract class AbstractPatcher<T> {
 
 			for (T patch : patchSet) {
 				String patchId = getId(patch);
-				setupLogPrefix(patchId, patch);
+				setupLogPrefix(patchId, patch, null);
 				try {
 					onPatch(patchId, patch);
 				} catch (PatchException e) {
@@ -70,30 +79,33 @@ public abstract class AbstractPatcher<T> {
 				}
 			}
 
-			for (Entry<String, Boolean> entry : targetMap.entrySet()) {
+			for (Entry<String, Boolean> entry : targetedMap.entrySet()) {
 				String id = entry.getKey();
-				boolean editedInPlace = entry.getValue();
-				T patched = patchedMap.get(id);
-				if (patched == null) {
+				boolean inPlaceEdit = entry.getValue();
+				PatchedItem<T> patchedItem = patchedMap.get(id);
+				if (patchedItem == null) {
+					// Source item is being removed.
 					T original = sourceMap.remove(id);
 					if (original == null) throw new AssertionError("Missing target");
 				} else {
+					// Source item is being effectively replaced. Note that it could
+					// have been targeted by an item other than the one replacing it.
 					T original = sourceMap.put(id, null);		// keep ordering stable when replacing items
 					if (original == null) throw new AssertionError("Missing target");
-					setupLogPrefix(id, patched);
+					setupLogPrefix(id, patchedItem.patch, patchedItem.patched);
 					try {
-						onEffectiveReplacement(id, patched, original, editedInPlace);
+						onEffectiveReplacement(id, patchedItem.patch, patchedItem.patched, original, inPlaceEdit);
 					} catch (PatchException e) {
 						log(ERROR, e.getMessage());
 					}
 				}
 			}
 
-			for (Entry<String, T> entry : patchedMap.entrySet()) {
-				String patchedId = entry.getKey();
-				T patched = entry.getValue();
-				if (sourceMap.put(patchedId, patched) != null) {
-					setupLogPrefix(patchedId, patched);
+			for (Entry<String, PatchedItem<T>> entry : patchedMap.entrySet()) {
+				String id = entry.getKey();
+				PatchedItem<T> patchedItem = entry.getValue();
+				if (sourceMap.put(id, patchedItem.patched) != null) {
+					setupLogPrefix(id, patchedItem.patch, patchedItem.patched);
 					log(ERROR, "already exists");
 				}
 			}
@@ -103,7 +115,7 @@ public abstract class AbstractPatcher<T> {
 		} finally {
 
 			sourceMap = null;
-			targetMap = null;
+			targetedMap = null;
 			patchedMap = null;
 			logPrefix = null;
 
@@ -111,8 +123,8 @@ public abstract class AbstractPatcher<T> {
 
 	}
 
-	private final void setupLogPrefix(String id, T t) {
-		logPrefix = baseLogPrefix + getLogPrefix(id, t) + ": ";
+	private final void setupLogPrefix(String id, T patch, T patched) {
+		logPrefix = baseLogPrefix + getLogPrefix(id, patch, patched) + ": ";
 	}
 
 	protected final void extendLogPrefix(String prefixComponent) {
@@ -123,27 +135,22 @@ public abstract class AbstractPatcher<T> {
 		return sourceMap;
 	}
 
-	protected final T findTarget(String targetId, boolean editingInPlace) throws PatchException {
+	protected final T findTarget(String targetId, boolean inPlaceEdit) throws PatchException {
 		T target = sourceMap.get(targetId);
 		if (target == null) throw new PatchException("target not found");
-		addTarget(targetId, editingInPlace);
+		addTarget(targetId, inPlaceEdit);
 		return target;
 	}
 
-	protected final void addTarget(String targetId, boolean editingInPlace) throws PatchException {
-		if (targetMap.put(targetId, editingInPlace) != null) throw new PatchException("already targeted");
+	protected final void addTarget(String targetId, boolean inPlaceEdit) throws PatchException {
+		if (targetedMap.put(targetId, inPlaceEdit) != null) throw new PatchException("already targeted");
 	}
-
-	//private final void addPatched(String patchedId, T patched) throws PatchException {
-	//	if (patchedMap.put(patchedId, patched) != null) throw new PatchException("already added");
-	//}
-
 
 	protected final void addPatched(String patchId, T patch, T patched) {
 		if (patched == null) throw new AssertionError("Null patched");
-		String patchedId = getId(patched);
-		if (!patchId.equals(patchedId)) throw new AssertionError("Changed patchedId");
-		if (patchedMap.put(patchedId, patched) != null) throw new AssertionError("Colliding patchedId");
+		if (!patchId.equals(getId(patched))) throw new AssertionError("Changed patchedId");
+		PatchedItem<T> patchedItem = new PatchedItem<>(patch, patched);
+		if (patchedMap.put(patchId, patchedItem) != null) throw new AssertionError("Colliding patchedId");
 	}
 
 	protected void checkAccessFlags(Logger.Level level, int flags1, int flags2, AccessFlags flags[], String message) {
@@ -157,11 +164,11 @@ public abstract class AbstractPatcher<T> {
 	// Adapters
 
 	protected abstract String getId(T t);
-	protected abstract String getLogPrefix(String id, T t);
+	protected abstract String getLogPrefix(String id, T patch, T patched);
 
 	// Handlers
 
 	protected abstract void onPatch(String patchId, T patch) throws PatchException;
-	protected void onEffectiveReplacement(String id, T patched, T original, boolean editedInPlace) throws PatchException {}
+	protected void onEffectiveReplacement(String id, T patch, T patched, T original, boolean inPlaceEdit) throws PatchException {}
 
 }
