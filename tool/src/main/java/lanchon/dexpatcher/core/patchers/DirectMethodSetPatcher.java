@@ -23,6 +23,7 @@ public class DirectMethodSetPatcher extends MethodSetPatcher {
 	@Override
 	protected void setupLogPrefix(String id, Method patch, Method patched) {
 		setupLogPrefix("direct method '" + id + "'");
+		setSourceFileMethod(patch);
 	}
 
 	// Implementation

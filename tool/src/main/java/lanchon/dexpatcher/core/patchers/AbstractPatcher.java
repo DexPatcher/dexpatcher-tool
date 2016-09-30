@@ -42,7 +42,7 @@ public abstract class AbstractPatcher<T> {
 		this.baseLogPrefix = parent.logPrefix;
 	}
 
-	protected final void log(Logger.Level level, String message) {
+	protected void log(Logger.Level level, String message) {
 		logger.log(level, logPrefix + message);
 	}
 

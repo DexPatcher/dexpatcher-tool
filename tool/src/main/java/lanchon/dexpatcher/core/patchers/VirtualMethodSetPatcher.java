@@ -15,6 +15,7 @@ public class VirtualMethodSetPatcher extends MethodSetPatcher {
 	@Override
 	protected void setupLogPrefix(String id, Method patch, Method patched) {
 		setupLogPrefix("virtual method '" + id + "'");
+		setSourceFileMethod(patch);
 	}
 
 }

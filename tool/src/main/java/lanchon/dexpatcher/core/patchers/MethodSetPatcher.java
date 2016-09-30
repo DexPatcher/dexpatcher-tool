@@ -10,13 +10,48 @@ import lanchon.dexpatcher.core.Util;
 import org.jf.dexlib2.iface.Method;
 import org.jf.dexlib2.iface.MethodImplementation;
 import org.jf.dexlib2.iface.MethodParameter;
+import org.jf.dexlib2.iface.debug.DebugItem;
+import org.jf.dexlib2.iface.debug.LineNumber;
+import org.jf.dexlib2.iface.debug.SetSourceFile;
 import org.jf.dexlib2.immutable.ImmutableMethod;
 import org.jf.dexlib2.immutable.ImmutableMethodImplementation;
 
 public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 
+	private Method sourceFileMethod;
+	private int sourceFileLine;
+
 	public MethodSetPatcher(ClassSetPatcher parent, PatcherAnnotation annotation) {
 		super(parent, annotation);
+	}
+
+	// Debug Info
+
+	protected void setSourceFileMethod(Method sourceFileMethod) {
+		this.sourceFileMethod = sourceFileMethod;
+		sourceFileLine = 0;
+	}
+
+	@Override
+	protected int getSourceFileLine() {
+		// Parse debug information lazily.
+		if (sourceFileMethod != null) {
+			MethodImplementation mi = sourceFileMethod.getImplementation();
+			if (mi != null) {
+				for (DebugItem di : mi.getDebugItems()) {
+					if (di instanceof LineNumber) {
+						sourceFileLine = ((LineNumber) di).getLineNumber();
+						break;
+					}
+					if (di instanceof SetSourceFile) {
+						// TODO: Support this type of debug item.
+						break;
+					}
+				}
+			}
+			sourceFileMethod = null;
+		}
+		return sourceFileLine;
 	}
 
 	// Adapters
