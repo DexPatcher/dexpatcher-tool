@@ -64,9 +64,7 @@ public class FieldSetPatcher extends MemberSetPatcher<Field> {
 		// This makes behavior predictable across compilers.
 		EncodedValue value = inPlaceEdit ? target.getInitialValue() : null;
 		value = filterInitialValue(patch, value);
-		if (FINAL.isSet(target.getAccessFlags())) {
-			log(WARN, "value of final field might be embedded in code");
-		}
+		onSimpleRemove(patch, annotation, target);
 		Field patched = new ImmutableField(
 				patch.getDefiningClass(),
 				patch.getName(),
@@ -87,7 +85,7 @@ public class FieldSetPatcher extends MemberSetPatcher<Field> {
 			} else if (resolvedStaticConstructorAction == Action.ADD || resolvedStaticConstructorAction == Action.REPLACE) {
 				value = patch.getInitialValue();
 			} else {
-				log(WARN, "field will not be initialized as specified in patch because the static constructor code in patch is being ignored");
+				log(WARN, "static field will not be initialized as specified in patch because the static constructor code in patch is being ignored");
 			}
 		} else {
 			// Instance fields should never have initializer values.
@@ -101,6 +99,14 @@ public class FieldSetPatcher extends MemberSetPatcher<Field> {
 	@Override
 	protected Field onSimpleReplace(Field patch, PatcherAnnotation annotation, Field target) {
 		throw new AssertionError("Replace field");
+	}
+
+	@Override
+	protected void onSimpleRemove(Field patch, PatcherAnnotation annotation, Field target) {
+		int flags = target.getAccessFlags();
+		if (STATIC.isSet(flags) && FINAL.isSet(flags)) {
+			log(WARN, "original value of final static field can be embedded in code");
+		}
 	}
 
 }

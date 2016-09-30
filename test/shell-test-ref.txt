@@ -51,9 +51,9 @@ debug: type 'test.Main$B': virtual method 'virtualMethod(Ljava/lang/String;)V': 
 debug: type 'test.Main$Base': ignore
 debug: type 'test.Main$C': edit
 debug: type 'test.Main$C': static field 'patchStaticField:I': add
-warning: type 'test.Main$C': static field 'patchStaticField:I': field will not be initialized as specified in patch because the static constructor code in patch is being ignored
+warning: type 'test.Main$C': static field 'patchStaticField:I': static field will not be initialized as specified in patch because the static constructor code in patch is being ignored
 debug: type 'test.Main$C': static field 'redefinedSourceStaticField:I': edit
-warning: type 'test.Main$C': static field 'redefinedSourceStaticField:I': field will not be initialized as specified in patch because the static constructor code in patch is being ignored
+warning: type 'test.Main$C': static field 'redefinedSourceStaticField:I': static field will not be initialized as specified in patch because the static constructor code in patch is being ignored
 debug: type 'test.Main$C': instance field 'patchField:I': add
 debug: type 'test.Main$C': instance field 'redefinedSourceField:I': edit
 debug: type 'test.Main$C': direct method '<clinit>()V': ignore
