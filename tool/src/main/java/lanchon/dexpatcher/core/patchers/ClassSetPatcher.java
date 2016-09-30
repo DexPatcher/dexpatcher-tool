@@ -141,7 +141,7 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 						.process(target.getInstanceFields(), patch.getInstanceFields()),
 				new DirectMethodSetPatcher(this, "direct method", annotation)
 						.process(target.getDirectMethods(), patch.getDirectMethods()),
-				new MethodSetPatcher(this, "virtual method", annotation)
+				new VirtualMethodSetPatcher(this, "virtual method", annotation)
 						.process(target.getVirtualMethods(), patch.getVirtualMethods()));
 
 	}

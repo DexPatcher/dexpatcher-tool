@@ -13,7 +13,7 @@ import org.jf.dexlib2.iface.MethodParameter;
 import org.jf.dexlib2.immutable.ImmutableMethod;
 import org.jf.dexlib2.immutable.ImmutableMethodImplementation;
 
-public class MethodSetPatcher extends MemberSetPatcher<Method> {
+public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 
 	public MethodSetPatcher(ClassSetPatcher parent, String logMemberType, PatcherAnnotation annotation) {
 		super(parent, logMemberType, annotation);

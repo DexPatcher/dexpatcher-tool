@@ -18,6 +18,8 @@ public class DirectMethodSetPatcher extends MethodSetPatcher {
 		super(parent, logMemberType, annotation);
 	}
 
+	// Implementation
+
 	@Override
 	public Collection<Method> process(Iterable<? extends Method> sourceSet, int sourceSetSizeHint,
 			Iterable<? extends Method> patchSet, int patchSetSizeHint) {
@@ -28,8 +30,6 @@ public class DirectMethodSetPatcher extends MethodSetPatcher {
 		}
 		return methods;
 	}
-
-	// Implementation
 
 	@Override
 	protected Action getDefaultAction(String patchId, Method patch) {
