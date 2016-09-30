@@ -27,7 +27,7 @@ public class PackagePatcher extends ClassSetPatcher {
 		super(logger);
 	}
 
-	// Handlers
+	// Implementation
 
 	@Override
 	protected void onPrepare(String patchId, ClassDef patch, PatcherAnnotation annotation) throws PatchException {

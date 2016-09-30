@@ -37,7 +37,7 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 		return "type '" + Util.getTypeNameFromDescriptor(id) + "'";
 	}
 
-	// Handlers
+	// Implementation
 
 	@Override
 	protected Action getDefaultAction(String patchId, ClassDef patch) {

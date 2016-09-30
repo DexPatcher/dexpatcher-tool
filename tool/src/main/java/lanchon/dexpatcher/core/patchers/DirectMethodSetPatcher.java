@@ -29,7 +29,7 @@ public class DirectMethodSetPatcher extends MethodSetPatcher {
 		return methods;
 	}
 
-	// Handlers
+	// Implementation
 
 	@Override
 	protected Action getDefaultAction(String patchId, Method patch) {

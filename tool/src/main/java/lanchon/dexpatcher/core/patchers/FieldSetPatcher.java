@@ -26,7 +26,7 @@ public class FieldSetPatcher extends MemberSetPatcher<Field> {
 		return Util.getFieldId(t);
 	}
 
-	// Handlers
+	// Implementation
 
 	@Override
 	protected void onPrepare(String patchId, Field patch, PatcherAnnotation annotation) throws PatchException {

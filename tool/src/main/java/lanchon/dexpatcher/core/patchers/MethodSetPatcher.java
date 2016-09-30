@@ -26,7 +26,7 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 		return Util.getMethodId(t);
 	}
 
-	// Handlers
+	// Implementation
 
 	@Override
 	protected String getTargetId(String patchId, Method patch, PatcherAnnotation annotation) {

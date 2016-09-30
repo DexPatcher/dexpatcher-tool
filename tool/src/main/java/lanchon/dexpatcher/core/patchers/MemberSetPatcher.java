@@ -33,7 +33,7 @@ public abstract class MemberSetPatcher<T extends Member> extends AnnotatableSetP
 		return logMemberType + " '" + id + "'";
 	}
 
-	// Handlers
+	// Implementation
 
 	@Override
 	protected Action getDefaultAction(String patchId, T patch) {
