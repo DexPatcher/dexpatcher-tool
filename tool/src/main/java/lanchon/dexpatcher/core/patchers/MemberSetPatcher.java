@@ -29,8 +29,8 @@ public abstract class MemberSetPatcher<T extends Member> extends AnnotatableSetP
 	// Adapters
 
 	@Override
-	protected final String getLogPrefix(String id, T patch, T patched) {
-		return logMemberType + " '" + id + "'";
+	protected void setupLogPrefix(String id, T patch, T patched) {
+		setupLogPrefix(logMemberType + " '" + id + "'");
 	}
 
 	// Implementation

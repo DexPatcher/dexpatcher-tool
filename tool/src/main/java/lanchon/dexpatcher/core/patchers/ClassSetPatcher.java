@@ -33,8 +33,8 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 	}
 
 	@Override
-	protected final String getLogPrefix(String id, ClassDef patch, ClassDef patched) {
-		return "type '" + Util.getTypeNameFromDescriptor(id) + "'";
+	protected void setupLogPrefix(String id, ClassDef patch, ClassDef patched) {
+		setupLogPrefix("type '" + Util.getTypeNameFromDescriptor(id) + "'");
 	}
 
 	// Implementation

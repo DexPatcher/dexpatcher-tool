@@ -123,8 +123,8 @@ public abstract class AbstractPatcher<T> {
 
 	}
 
-	private final void setupLogPrefix(String id, T patch, T patched) {
-		logPrefix = baseLogPrefix + getLogPrefix(id, patch, patched) + ": ";
+	protected final void setupLogPrefix(String prefix) {
+		logPrefix = baseLogPrefix + prefix + ": ";
 	}
 
 	protected final void extendLogPrefix(String prefixComponent) {
@@ -164,7 +164,7 @@ public abstract class AbstractPatcher<T> {
 	// Adapters
 
 	protected abstract String getId(T t);
-	protected abstract String getLogPrefix(String id, T patch, T patched);
+	protected abstract void setupLogPrefix(String id, T patch, T patched);
 
 	// Handlers
 
