@@ -135,9 +135,9 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 				source.getInterfaces(),
 				source.getSourceFile(),
 				annotations,
-				new FieldSetPatcher(this, "static field", annotation)
+				new StaticFieldSetPatcher(this, "static field", annotation)
 						.process(target.getStaticFields(), patch.getStaticFields()),
-				new FieldSetPatcher(this, "instance field", annotation)
+				new InstanceFieldSetPatcher(this, "instance field", annotation)
 						.process(target.getInstanceFields(), patch.getInstanceFields()),
 				new DirectMethodSetPatcher(this, "direct method", annotation)
 						.process(target.getDirectMethods(), patch.getDirectMethods()),

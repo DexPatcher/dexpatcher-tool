@@ -13,7 +13,7 @@ import org.jf.dexlib2.immutable.ImmutableField;
 import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 import static org.jf.dexlib2.AccessFlags.*;
 
-public class FieldSetPatcher extends MemberSetPatcher<Field> {
+public abstract class FieldSetPatcher extends MemberSetPatcher<Field> {
 
 	public FieldSetPatcher(ClassSetPatcher parent, String logMemberType, PatcherAnnotation annotation) {
 		super(parent, logMemberType, annotation);
@@ -75,38 +75,13 @@ public class FieldSetPatcher extends MemberSetPatcher<Field> {
 		return super.onSimpleEdit(patched, annotation, target, inPlaceEdit);
 	}
 
-	private EncodedValue filterInitialValue(Field patch, EncodedValue value) {
-		if (STATIC.isSet(patch.getAccessFlags())) {
-			// Use the static field initializer values in patch if and
-			// only if the static constructor in patch is being used.
-			// This makes behavior predictable across compilers.
-			if (resolvedStaticConstructorAction == null) {
-				log(ERROR, "must define an action for the static constructor of the class");
-			} else if (resolvedStaticConstructorAction == Action.ADD || resolvedStaticConstructorAction == Action.REPLACE) {
-				value = patch.getInitialValue();
-			} else {
-				log(WARN, "static field will not be initialized as specified in patch because the static constructor code in patch is being ignored");
-			}
-		} else {
-			// Instance fields should never have initializer values.
-			if (patch.getInitialValue() != null) {
-				log(ERROR, "unexpected instance field initializer value in patch");
-			}
-		}
-		return value;
-	}
-
 	@Override
 	protected Field onSimpleReplace(Field patch, PatcherAnnotation annotation, Field target) {
 		throw new AssertionError("Replace field");
 	}
 
-	@Override
-	protected void onSimpleRemove(Field patch, PatcherAnnotation annotation, Field target) {
-		int flags = target.getAccessFlags();
-		if (STATIC.isSet(flags) && FINAL.isSet(flags)) {
-			log(WARN, "original value of final static field can be embedded in code");
-		}
-	}
+	// Handlers
+
+	protected abstract EncodedValue filterInitialValue(Field patch, EncodedValue value);
 
 }
