@@ -74,7 +74,11 @@ public abstract class AbstractPatcher<T> {
 		{
 
 			for (T source : sourceSet) {
-				sourceMap.put(getId(source), source);
+				String sourceId = getId(source);
+				if (sourceMap.put(sourceId, source) != null) {
+					setupLogPrefix(sourceId, null, null);
+					log(ERROR, "duplicate found in source");
+				}
 			}
 
 			for (T patch : patchSet) {
