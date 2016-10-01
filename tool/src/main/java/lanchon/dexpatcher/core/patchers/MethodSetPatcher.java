@@ -75,7 +75,6 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 		if (isTaggedByParameter(patch)) {
 			ArrayList<MethodParameter> parameters = new ArrayList<MethodParameter>(patch.getParameters());
 			parameters.remove(parameters.size() - 1);
-			if (target == null) target = patch.getName();
 			targetId = Util.getMethodId(parameters, patch.getReturnType(), resolvedTarget);
 			targetLabel = Util.getMethodLabel(parameters, patch.getReturnType(), resolvedTarget);
 		}
