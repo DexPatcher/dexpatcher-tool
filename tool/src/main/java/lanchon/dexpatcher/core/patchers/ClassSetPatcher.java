@@ -33,8 +33,13 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 	}
 
 	@Override
+	protected String getSetItemLabel() {
+		return "type";
+	}
+
+	@Override
 	protected void setupLogPrefix(String id, ClassDef patch, ClassDef patched) {
-		setupLogPrefix("type '" + Util.getTypeNameFromDescriptor(id) + "'");
+		setupLogPrefix(getSetItemLabel() + " '" + Util.getTypeNameFromDescriptor(id) + "'");
 		setSourceFileClass(patch);
 	}
 

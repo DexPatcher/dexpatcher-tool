@@ -18,8 +18,8 @@ public class StaticFieldSetPatcher extends FieldSetPatcher {
 	// Implementation
 
 	@Override
-	protected void setupLogPrefix(String id, Field patch, Field patched) {
-		setupLogPrefix("static field '" + id + "'");
+	protected String getSetItemLabel() {
+		return "static field";
 	}
 
 	@Override

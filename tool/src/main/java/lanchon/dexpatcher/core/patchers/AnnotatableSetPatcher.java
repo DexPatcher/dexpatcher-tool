@@ -96,6 +96,7 @@ public abstract class AnnotatableSetPatcher<T extends Annotatable> extends Actio
 
 	// Handlers
 
+	protected abstract String getSetItemLabel();
 	protected abstract Action getDefaultAction(String patchId, T patch) throws PatchException;
 
 }

@@ -16,8 +16,8 @@ public class InstanceFieldSetPatcher extends FieldSetPatcher {
 	// Implementation
 
 	@Override
-	protected void setupLogPrefix(String id, Field patch, Field patched) {
-		setupLogPrefix("instance field '" + id + "'");
+	protected String getSetItemLabel() {
+		return "instance field";
 	}
 
 	@Override

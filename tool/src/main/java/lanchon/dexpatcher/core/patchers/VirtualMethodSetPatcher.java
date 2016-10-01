@@ -2,8 +2,6 @@ package lanchon.dexpatcher.core.patchers;
 
 import lanchon.dexpatcher.core.PatcherAnnotation;
 
-import org.jf.dexlib2.iface.Method;
-
 public class VirtualMethodSetPatcher extends MethodSetPatcher {
 
 	public VirtualMethodSetPatcher(ClassSetPatcher parent, PatcherAnnotation annotation) {
@@ -12,10 +10,9 @@ public class VirtualMethodSetPatcher extends MethodSetPatcher {
 
 	// Implementation
 
-	@Override
-	protected void setupLogPrefix(String id, Method patch, Method patched) {
-		setupLogPrefix("virtual method '" + id + "'");
-		setSourceFileMethod(patch);
-	}
+    @Override
+    protected String getSetItemLabel() {
+        return "virtual method";
+    }
 
 }
