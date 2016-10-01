@@ -6,7 +6,7 @@ import java.lang.reflect.Field;
 
 import lanchon.dexpatcher.core.Marker;
 import lanchon.dexpatcher.core.logger.Logger;
-import lanchon.dexpatcher.core.patchers.DexPatcher;
+import lanchon.dexpatcher.core.DexPatcher;
 
 import org.jf.dexlib2.DexFileFactory;
 import org.jf.dexlib2.Opcodes;
@@ -70,7 +70,7 @@ public class Processor {
 
 	private DexFile processDex(DexFile sourceDex, DexFile patchDex) {
 		long time = System.nanoTime();
-		DexFile patchedDex = new DexPatcher(logger).process(sourceDex, patchDex);
+		DexFile patchedDex = DexPatcher.process(logger, sourceDex, patchDex);
 		time = System.nanoTime() - time;
 		logStats("process stats", sourceDex.getClasses().size() + patchDex.getClasses().size(), time);
 		return patchedDex;
