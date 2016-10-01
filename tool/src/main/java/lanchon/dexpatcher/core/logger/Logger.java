@@ -26,11 +26,11 @@ public abstract class Logger {
 	}
 
 	private Level logLevel;
-	private final int[] counts;
+	private int[] counts;
 
-	public Logger(Level logLevel) {
-		this.logLevel = logLevel;
-		counts = new int[Level.values().length];
+	public Logger() {
+		this.logLevel = DEBUG;
+		clearMessageCounts();
 	}
 
 	public final void log(Level level, String message) {
@@ -55,8 +55,12 @@ public abstract class Logger {
 		return level.ordinal() >= logLevel.ordinal();
 	}
 
-	public final int getMessageCount(Level level) {
+	public int getMessageCount(Level level) {
 		return counts[level.ordinal()];
+	}
+
+	public void clearMessageCounts() {
+		counts = new int[Level.values().length];
 	}
 
 	public boolean hasNotloggedErrors() {

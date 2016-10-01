@@ -8,24 +8,23 @@ public class BasicLogger extends Logger {
 	private final PrintWriter out;
 	private final PrintWriter err;
 
-	public BasicLogger(Level logLevel) {
-		this(logLevel, System.out, System.err);
+	public BasicLogger() {
+		this(System.out, System.err);
 	}
 
-	public BasicLogger(Level logLevel, PrintStream out) {
-		this(logLevel, out, null);
+	public BasicLogger(PrintStream out) {
+		this(out, null);
 	}
 
-	public BasicLogger(Level logLevel, PrintWriter out) {
-		this(logLevel, out, null);
+	public BasicLogger(PrintWriter out) {
+		this(out, null);
 	}
 
-	public BasicLogger(Level logLevel, PrintStream out, PrintStream err) {
-		this(logLevel, new PrintWriter(out, true), err != null ? new PrintWriter(err, true) : null);
+	public BasicLogger(PrintStream out, PrintStream err) {
+		this(new PrintWriter(out, true), err != null ? new PrintWriter(err, true) : null);
 	}
 
-	public BasicLogger(Level logLevel, PrintWriter out, PrintWriter err) {
-		super(logLevel);
+	public BasicLogger(PrintWriter out, PrintWriter err) {
 		this.out = out;
 		this.err = err;
 		flush();
