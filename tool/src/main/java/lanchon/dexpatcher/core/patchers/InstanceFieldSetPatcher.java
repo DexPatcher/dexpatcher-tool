@@ -13,14 +13,12 @@ public class InstanceFieldSetPatcher extends FieldSetPatcher {
 		super(parent, annotation);
 	}
 
-	// Adapters
+	// Implementation
 
 	@Override
 	protected void setupLogPrefix(String id, Field patch, Field patched) {
 		setupLogPrefix("instance field '" + id + "'");
 	}
-
-	// Implementation
 
 	@Override
 	protected EncodedValue filterInitialValue(Field patch, EncodedValue value) {

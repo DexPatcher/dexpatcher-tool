@@ -25,7 +25,7 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 		super(context);
 	}
 
-	// Adapters
+	// Implementation
 
 	@Override
 	protected final String getId(ClassDef t) {
@@ -37,8 +37,6 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 		setupLogPrefix("type '" + Util.getTypeNameFromDescriptor(id) + "'");
 		setSourceFileClass(patch);
 	}
-
-	// Implementation
 
 	@Override
 	protected Action getDefaultAction(String patchId, ClassDef patch) {

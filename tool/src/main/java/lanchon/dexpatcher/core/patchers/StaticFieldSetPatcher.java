@@ -15,14 +15,12 @@ public class StaticFieldSetPatcher extends FieldSetPatcher {
 		super(parent, annotation);
 	}
 
-	// Adapters
+	// Implementation
 
 	@Override
 	protected void setupLogPrefix(String id, Field patch, Field patched) {
 		setupLogPrefix("static field '" + id + "'");
 	}
-
-	// Implementation
 
 	@Override
 	protected void onSimpleRemove(Field patch, PatcherAnnotation annotation, Field target) {

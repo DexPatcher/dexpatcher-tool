@@ -18,15 +18,13 @@ public class DirectMethodSetPatcher extends MethodSetPatcher {
 		super(parent, annotation);
 	}
 
-	// Adapters
+	// Implementation
 
 	@Override
 	protected void setupLogPrefix(String id, Method patch, Method patched) {
 		setupLogPrefix("direct method '" + id + "'");
 		setSourceFileMethod(patch);
 	}
-
-	// Implementation
 
 	@Override
 	public Collection<Method> process(Iterable<? extends Method> sourceSet, int sourceSetSizeHint,

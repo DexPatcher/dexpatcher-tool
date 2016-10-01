@@ -10,7 +10,7 @@ public class VirtualMethodSetPatcher extends MethodSetPatcher {
 		super(parent, annotation);
 	}
 
-	// Adapters
+	// Implementation
 
 	@Override
 	protected void setupLogPrefix(String id, Method patch, Method patched) {

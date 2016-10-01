@@ -16,14 +16,12 @@ public abstract class FieldSetPatcher extends MemberSetPatcher<Field> {
 		super(parent, annotation);
 	}
 
-	// Adapters
+	// Implementation
 
 	@Override
 	protected final String getId(Field t) {
 		return Util.getFieldId(t);
 	}
-
-	// Implementation
 
 	@Override
 	protected void onPrepare(String patchId, Field patch, PatcherAnnotation annotation) throws PatchException {

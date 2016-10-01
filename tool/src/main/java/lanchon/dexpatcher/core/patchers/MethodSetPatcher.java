@@ -53,14 +53,12 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 		return sourceFileLine;
 	}
 
-	// Adapters
+	// Implementation
 
 	@Override
 	protected final String getId(Method t) {
 		return Util.getMethodId(t);
 	}
-
-	// Implementation
 
 	@Override
 	protected String getTargetId(String patchId, Method patch, PatcherAnnotation annotation) {

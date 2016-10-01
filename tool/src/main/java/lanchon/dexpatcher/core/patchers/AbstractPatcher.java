@@ -169,12 +169,10 @@ public abstract class AbstractPatcher<T> {
 		}
 	}
 
-	// Adapters
+	// Handlers
 
 	protected abstract String getId(T t);
 	protected abstract void setupLogPrefix(String id, T patch, T patched);
-
-	// Handlers
 
 	protected abstract void onPatch(String patchId, T patch) throws PatchException;
 	protected void onEffectiveReplacement(String id, T patch, T patched, T original, boolean inPlaceEdit) throws PatchException {}
