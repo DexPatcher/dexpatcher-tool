@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Set;
 
 import lanchon.dexpatcher.core.Action;
+import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.logger.Logger;
 import lanchon.dexpatcher.core.PatchException;
 import lanchon.dexpatcher.core.PatcherAnnotation;
@@ -17,8 +18,8 @@ public abstract class AnnotatableSetPatcher<T extends Annotatable> extends Actio
 	private ClassDef sourceFileClass;
 	private String sourceFileName;
 
-	protected AnnotatableSetPatcher(Logger logger) {
-		super(logger);
+	protected AnnotatableSetPatcher(Context context) {
+		super(context);
 	}
 
 	protected AnnotatableSetPatcher(AnnotatableSetPatcher<?> parent) {

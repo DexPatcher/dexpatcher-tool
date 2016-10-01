@@ -2,7 +2,7 @@ package lanchon.dexpatcher.core.patchers;
 
 import java.util.regex.Pattern;
 
-import lanchon.dexpatcher.core.logger.Logger;
+import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.Marker;
 import lanchon.dexpatcher.core.PatcherAnnotation;
 import lanchon.dexpatcher.core.PatchException;
@@ -23,8 +23,8 @@ public class PackagePatcher extends ClassSetPatcher {
 
 	private boolean processingPackage;
 
-	public PackagePatcher(Logger logger) {
-		super(logger);
+	public PackagePatcher(Context context) {
+		super(context);
 	}
 
 	// Implementation

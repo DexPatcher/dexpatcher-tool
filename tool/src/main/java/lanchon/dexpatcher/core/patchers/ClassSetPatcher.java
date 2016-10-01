@@ -3,7 +3,7 @@ package lanchon.dexpatcher.core.patchers;
 import java.util.Collection;
 
 import lanchon.dexpatcher.core.Action;
-import lanchon.dexpatcher.core.logger.Logger;
+import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.Marker;
 import lanchon.dexpatcher.core.PatcherAnnotation;
 import lanchon.dexpatcher.core.PatchException;
@@ -21,8 +21,8 @@ import static org.jf.dexlib2.AccessFlags.*;
 
 public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 
-	public ClassSetPatcher(Logger logger) {
-		super(logger);
+	public ClassSetPatcher(Context context) {
+		super(context);
 	}
 
 	// Adapters

@@ -1,15 +1,15 @@
 package lanchon.dexpatcher.core.patchers;
 
 import lanchon.dexpatcher.core.Action;
-import lanchon.dexpatcher.core.logger.Logger;
+import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.PatchException;
 
 import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 
 public abstract class ActionBasedPatcher<T, C> extends AbstractPatcher<T> {
 
-	protected ActionBasedPatcher(Logger logger) {
-		super(logger);
+	protected ActionBasedPatcher(Context context) {
+		super(context);
 	}
 
 	protected ActionBasedPatcher(AbstractPatcher<?> parent) {

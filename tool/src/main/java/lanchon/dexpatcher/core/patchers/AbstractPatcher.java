@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.logger.Logger;
 import lanchon.dexpatcher.core.PatchException;
 
@@ -23,6 +24,7 @@ public abstract class AbstractPatcher<T> {
 		}
 	}
 
+	private final Context context;
 	private final Logger logger;
 	private final String baseLogPrefix;
 
@@ -32,14 +34,16 @@ public abstract class AbstractPatcher<T> {
 
 	private String logPrefix;
 
-	protected AbstractPatcher(Logger logger) {
-		this.logger = logger;
-		this.baseLogPrefix = "";
+	protected AbstractPatcher(Context context) {
+		this.context = context;
+		logger = context.getLogger();
+		baseLogPrefix = "";
 	}
 
 	protected AbstractPatcher(AbstractPatcher<?> parent) {
-		this.logger = parent.logger;
-		this.baseLogPrefix = parent.logPrefix;
+		context = parent.context;
+		logger = parent.logger;
+		baseLogPrefix = parent.logPrefix;
 	}
 
 	protected void log(Logger.Level level, String message) {
