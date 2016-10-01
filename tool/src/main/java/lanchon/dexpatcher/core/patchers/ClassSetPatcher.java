@@ -39,7 +39,7 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 
 	@Override
 	protected void setupLogPrefix(String id, ClassDef item, ClassDef patch, ClassDef patched) {
-		setupLogPrefix(getSetItemLabel() + " '" + Util.getTypeNameFromDescriptor(id) + "'");
+		setupLogPrefix(getSetItemLabel() + " '" + Util.getLongTypeNameFromDescriptor(id) + "'");
 		setSourceFileClass(patch);
 	}
 
@@ -59,10 +59,10 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 		String targetClass = annotation.getTargetClass();
 		String targetId;
 		if (target != null) {
-			if (Util.isTypeDescriptor(target)) {
+			if (Util.isLongTypeDescriptor(target)) {
 				targetId = target;
 			} else {
-				String base = Util.getTypeNameFromDescriptor(patchId);
+				String base = Util.getLongTypeNameFromDescriptor(patchId);
 				targetId = Util.getTypeDescriptorFromName(Util.resolveTypeName(target, base));
 			}
 		} else if (targetClass != null) {
@@ -76,7 +76,7 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 
 	protected final void setTargetLogPrefix(String patchId, String targetId) {
 		if (shouldLogTarget(patchId, targetId)) {
-			extendLogPrefix("target '" + Util.getTypeNameFromDescriptor(targetId) + "'");
+			extendLogPrefix("target '" + Util.getLongTypeNameFromDescriptor(targetId) + "'");
 		}
 	}
 

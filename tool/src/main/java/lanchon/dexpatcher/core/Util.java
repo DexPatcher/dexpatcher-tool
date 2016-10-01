@@ -13,7 +13,7 @@ import org.jf.dexlib2.iface.value.IntEncodedValue;
 
 public abstract class Util {
 
-	// Types
+	// Type Descriptors
 
 	public static String getTypeDescriptorFromClass(Class<?> c) {
 		return getTypeDescriptorFromName(c.getName());
@@ -32,23 +32,49 @@ public abstract class Util {
 		return sb.toString();
 	}
 
+	public static boolean isLongTypeDescriptor(String descriptor) {
+		int l = descriptor.length();
+		return l >= 2 && descriptor.charAt(l - 1) == ';' && descriptor.charAt(0) == 'L';
+	}
+
+	// Type Names
+
 	public static String getTypeNameFromDescriptor(String descriptor) {
-		if (!isTypeDescriptor(descriptor)) {
-			throw new RuntimeException("Invalid type descriptor (" + descriptor + ")");
+		// Void is only valid for return types.
+		return "V".equals(descriptor) ? "void" : getFieldTypeNameFromDescriptor(descriptor);
+	}
+
+	public static String getFieldTypeNameFromDescriptor(String descriptor) {
+		// TODO: Catch invalid type descriptor exceptions in client code.
+		if (descriptor.length() == 0) throwInvalidTypeDescriptor(descriptor);
+		switch (descriptor.charAt(0)) {
+			case '[': return getTypeNameFromDescriptor(descriptor.substring(1)) + "[]";
+			case 'L': return getLongTypeNameFromDescriptor(descriptor);
+			case 'Z': return "boolean";
+			case 'B': return "byte";
+			case 'S': return "short";
+			case 'C': return "char";
+			case 'I': return "int";
+			case 'J': return "long";
+			case 'F': return "float";
+			case 'D': return "double";
+			default:  throw throwInvalidTypeDescriptor(descriptor);
 		}
+	}
+
+	public static String getLongTypeNameFromDescriptor(String descriptor) {
+		if (!isLongTypeDescriptor(descriptor)) throwInvalidTypeDescriptor(descriptor);
 		int l = descriptor.length();
 		StringBuilder sb = new StringBuilder(l - 2);
 		for (int i = 1; i < l - 1; i++) {
 			char c = descriptor.charAt(i);
-			if (c == '/') c = '.';
-			sb.append(c);
+			sb.append(c == '/' ? '.' : c);
 		}
 		return sb.toString();
 	}
 
-	public static boolean isTypeDescriptor(String descriptor) {
-		int l = descriptor.length();
-		return l >= 2 && descriptor.charAt(l - 1) == ';' && descriptor.charAt(0) == 'L';
+	private static RuntimeException throwInvalidTypeDescriptor(String descriptor) {
+		throw new RuntimeException("Invalid type descriptor (" + descriptor + ")");
 	}
 
 	public static String resolveTypeName(String name, String base) {

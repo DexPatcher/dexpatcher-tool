@@ -69,7 +69,7 @@ public class PackagePatcher extends ClassSetPatcher {
 		String target = annotation.getTarget();
 		String targetId;
 		if (target != null) {
-			if (Util.isTypeDescriptor(target)) {
+			if (Util.isLongTypeDescriptor(target)) {
 				targetId = target;
 			} else {
 				// Target cannot be an empty string.

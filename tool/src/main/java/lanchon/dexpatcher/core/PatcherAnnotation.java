@@ -95,11 +95,11 @@ public class PatcherAnnotation {
 
 	}
 
-	public static void throwInvalidAnnotation(Marker marker) throws PatchException {
+	public static PatchException throwInvalidAnnotation(Marker marker) throws PatchException {
 		throw new PatchException("invalid patcher annotation (" + marker.getClassName() + ")");
 	}
 
-	public static void throwInvalidElement(String name) throws PatchException {
+	public static PatchException throwInvalidElement(String name) throws PatchException {
 		throw new PatchException("invalid patcher annotation element (" + name + ")");
 	}
 
