@@ -2,6 +2,8 @@ package lanchon.dexpatcher;
 
 import java.util.List;
 
+import lanchon.dexpatcher.core.Context;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
@@ -12,6 +14,8 @@ import org.apache.commons.cli.PosixParser;
 import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 
 public class Parser {
+
+	public static final int DEFAULT_API_LEVEL = 14;
 
 	public static Configuration parseCommandLine(String[] args) throws ParseException {
 
@@ -38,10 +42,10 @@ public class Parser {
 		config.patchedFile = cl.getOptionValue("output");
 
 		Number apiLevel = (Number) cl.getParsedOptionValue("api-level");
-		config.apiLevel = (apiLevel != null ? apiLevel.intValue() : Configuration.DEFAULT_API_LEVEL);
+		config.apiLevel = (apiLevel != null ? apiLevel.intValue() : DEFAULT_API_LEVEL);
 		config.experimental = cl.hasOption("experimental");
 
-		config.annotationPackage = cl.getOptionValue("annotations", Configuration.DEFAULT_ANNOTATION_PACKAGE);
+		config.annotationPackage = cl.getOptionValue("annotations", Context.DEFAULT_ANNOTATION_PACKAGE);
 
 		config.logLevel = WARN;
 		if (cl.hasOption("quiet")) config.logLevel = ERROR;
@@ -70,11 +74,12 @@ public class Parser {
 		o = new Option("o", "output", true, "name of patched dex file to write");
 		o.setArgName("patched-dex"); options.addOption(o);
 
-		o = new Option("a", "api-level", true, "Android API level of files (default: " + Configuration.DEFAULT_API_LEVEL + ")");
+		o = new Option("a", "api-level", true, "Android API level of files (default: " + DEFAULT_API_LEVEL + ")");
 		o.setArgName("n"); o.setType(Number.class); options.addOption(o);
 		options.addOption(new Option("X", "experimental", false, "enable support for experimental opcodes"));
 
-		o = new Option(null, "annotations", true, "package name of DexPatcher annotations (default: '" + Configuration.DEFAULT_ANNOTATION_PACKAGE + "')");
+		o = new Option(null, "annotations", true, "package name of DexPatcher annotations (default: '" +
+				Context.DEFAULT_ANNOTATION_PACKAGE + "')");
 		o.setArgName("package"); options.addOption(o);
 
 		options.addOption(new Option("q", "quiet", false, "do not output warnings"));

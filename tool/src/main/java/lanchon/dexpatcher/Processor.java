@@ -67,15 +67,18 @@ public class Processor {
 
 	}
 
-	private DexFile processDex(DexFile sourceDex, DexFile patchDex) {
-		long time = System.nanoTime();
-		Context context = new Context();
-		context.setLogger(logger);
+	private Context createContext() {
+		Context context = new Context(logger);
 		context.setAnnotationPackage(config.annotationPackage);
 		String root = config.sourceCodeRoot;
 		if (root != null && root.length() > 0 && !root.endsWith(File.separator)) root += File.separator;
 		context.setSourceCodeRoot(root);
-		DexFile patchedDex = DexPatcher.process(context, sourceDex, patchDex);
+		return context;
+	}
+
+	private DexFile processDex(DexFile sourceDex, DexFile patchDex) {
+		long time = System.nanoTime();
+		DexFile patchedDex = DexPatcher.process(createContext(), sourceDex, patchDex);
 		time = System.nanoTime() - time;
 		logStats("process stats", sourceDex.getClasses().size() + patchDex.getClasses().size(), time);
 		return patchedDex;

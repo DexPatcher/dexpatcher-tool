@@ -1,18 +1,38 @@
 package lanchon.dexpatcher.core;
 
+import lanchon.dexpatcher.core.logger.BasicLogger;
 import lanchon.dexpatcher.core.logger.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static lanchon.dexpatcher.core.logger.Logger.Level.*;
+
 public class Context {
 
+	public static final Logger.Level DEFAULT_LOG_LEVEL = WARN;
+	public static final String DEFAULT_ANNOTATION_PACKAGE = "lanchon.dexpatcher.annotation";
+
 	private Logger logger;
-	private String annotationPackage;
+	private String annotationPackage = DEFAULT_ANNOTATION_PACKAGE;
 	private String sourceCodeRoot;
 
 	private Map<String, Action> actionMap;
 	private String tagTypeDescriptor;
+
+	public Context() {
+		this(DEFAULT_LOG_LEVEL);
+	}
+
+	public Context(Logger.Level logLevel) {
+		Logger logger = new BasicLogger();
+		logger.setLogLevel(logLevel);
+		this.logger = logger;
+	}
+
+	public Context(Logger logger) {
+		this.logger = logger;
+	}
 
 	// Properties
 
