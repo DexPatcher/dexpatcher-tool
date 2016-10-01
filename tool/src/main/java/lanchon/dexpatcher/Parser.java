@@ -75,7 +75,7 @@ public class Parser {
 		o = new Option("o", "output", true, "name of patched dex file to write");
 		o.setArgName("patched-dex"); options.addOption(o);
 
-		o = new Option("a", "api-level", true, "Android API level of files (default: " + DEFAULT_API_LEVEL + ")");
+		o = new Option("a", "api-level", true, "android api level of files (default: " + DEFAULT_API_LEVEL + ")");
 		o.setArgName("n"); o.setType(Number.class); options.addOption(o);
 		options.addOption(new Option("X", "experimental", false, "enable support for experimental opcodes"));
 
