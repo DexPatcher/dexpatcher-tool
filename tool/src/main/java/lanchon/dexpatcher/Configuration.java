@@ -15,6 +15,7 @@ public class Configuration {
 	public boolean experimental;
 
 	public String annotationPackage = Context.DEFAULT_ANNOTATION_PACKAGE;
+	public boolean dexTagSupported;
 
 	public Logger.Level logLevel = Context.DEFAULT_LOG_LEVEL;
 

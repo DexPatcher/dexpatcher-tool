@@ -15,6 +15,7 @@ public class Context {
 
 	private Logger logger;
 	private String annotationPackage = DEFAULT_ANNOTATION_PACKAGE;
+	private boolean dexTagSupported;
 	private String sourceCodeRoot;
 
 	private Map<String, Action> actionMap;
@@ -56,6 +57,14 @@ public class Context {
 			actionMap.put(getTypeDescriptor(action.getMarker()), action);
 		}
 		tagTypeDescriptor = getTypeDescriptor(Marker.TAG);
+	}
+
+	public boolean isDexTagSupported() {
+		return dexTagSupported;
+	}
+
+	public void setDexTagSupported(boolean dexTagSupported) {
+		this.dexTagSupported = dexTagSupported;
 	}
 
 	public String getSourceCodeRoot() {

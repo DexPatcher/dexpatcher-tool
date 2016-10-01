@@ -46,7 +46,7 @@ public abstract class AbstractPatcher<T> {
 		baseLogPrefix = parent.logPrefix;
 	}
 
-	protected Context getContext() {
+	protected final Context getContext() {
 		return context;
 	}
 

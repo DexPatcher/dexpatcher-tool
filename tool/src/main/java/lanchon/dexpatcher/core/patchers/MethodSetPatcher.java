@@ -3,9 +3,12 @@ package lanchon.dexpatcher.core.patchers;
 import java.util.ArrayList;
 import java.util.List;
 
+import lanchon.dexpatcher.core.Action;
+import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.PatcherAnnotation;
 import lanchon.dexpatcher.core.Util;
 
+import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.Method;
 import org.jf.dexlib2.iface.MethodImplementation;
 import org.jf.dexlib2.iface.MethodParameter;
@@ -14,6 +17,9 @@ import org.jf.dexlib2.iface.debug.LineNumber;
 import org.jf.dexlib2.iface.debug.SetSourceFile;
 import org.jf.dexlib2.immutable.ImmutableMethod;
 import org.jf.dexlib2.immutable.ImmutableMethodImplementation;
+import org.jf.dexlib2.util.TypeUtils;
+
+import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 
 public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 
@@ -72,7 +78,7 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 		String resolvedTarget = (target != null ? target : patch.getName());
 		String targetId;
 		String targetLabel;
-		if (isTaggedByParameter(patch)) {
+		if (isTaggedByLastParameter(patch, true)) {
 			ArrayList<MethodParameter> parameters = new ArrayList<MethodParameter>(patch.getParameters());
 			parameters.remove(parameters.size() - 1);
 			targetId = Util.getMethodId(parameters, patch.getReturnType(), resolvedTarget);
@@ -88,11 +94,20 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 		return targetId;
 	}
 
-	private boolean isTaggedByParameter(Method patch) {
+	private boolean isTaggedByLastParameter(Method patch, boolean warn) {
 		List<? extends MethodParameter> parameters = patch.getParameters();
 		int size = parameters.size();
 		if (size == 0) return false;
-		return getContext().getTagTypeDescriptor().equals(parameters.get(size - 1).getType());
+		MethodParameter lastParameter = parameters.get(parameters.size() - 1);
+		Context context = getContext();
+		if (context.getTagTypeDescriptor().equals(lastParameter.getType())) {
+			if (context.isDexTagSupported()) return true;
+			if (warn) log(WARN, "use of deprecated DexTag detected (consider enabling DexTag support)");
+		}
+		for (Annotation annotation : lastParameter.getAnnotations()) {
+			if (context.getActionFromTypeDescriptor(annotation.getType()) == Action.IGNORE) return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -124,9 +139,12 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 		int flags = patch.getAccessFlags();
 
 		MethodImplementation implementation = target.getImplementation();
-		if (isTaggedByParameter(patch)) {
+		if (isTaggedByLastParameter(patch, false)) {
+			List<? extends MethodParameter> parameters = patch.getParameters();
+			MethodParameter lastParameter = parameters.get(parameters.size() - 1);
+			int tagRegisterCount = (TypeUtils.isWideType(lastParameter) ? 2 : 1);
 			implementation = new ImmutableMethodImplementation(
-					implementation.getRegisterCount() + 1,
+					implementation.getRegisterCount() + tagRegisterCount,
 					implementation.getInstructions(),
 					implementation.getTryBlocks(),
 					implementation.getDebugItems());

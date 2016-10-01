@@ -46,6 +46,7 @@ public class Parser {
 		config.experimental = cl.hasOption("experimental");
 
 		config.annotationPackage = cl.getOptionValue("annotations", Context.DEFAULT_ANNOTATION_PACKAGE);
+		config.dexTagSupported = cl.hasOption("compat-dextag");
 
 		config.logLevel = WARN;
 		if (cl.hasOption("quiet")) config.logLevel = ERROR;
@@ -81,6 +82,7 @@ public class Parser {
 		o = new Option(null, "annotations", true, "package name of DexPatcher annotations (default: '" +
 				Context.DEFAULT_ANNOTATION_PACKAGE + "')");
 		o.setArgName("package"); options.addOption(o);
+		options.addOption(new Option(null, "compat-dextag", false, "enable support for the deprecated DexTag"));
 
 		options.addOption(new Option("q", "quiet", false, "do not output warnings"));
 		options.addOption(new Option("v", "verbose", false, "output extra information"));

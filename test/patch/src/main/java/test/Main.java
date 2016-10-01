@@ -286,12 +286,17 @@ public class Main {
 		// Extend a constructor:
 		// Part 1: Change the prototype of the source constructor:
 		// Note: Constructors do not have names in Java, so you cannot rename
-		// the source constructor. Instead you can add a tag argument of type
-		// DexTag to distinguish the original and replacing constructors via
-		// overloading. When you invoke the original constructor, the value of
-		// the extra argument is ignored.
+		// the source constructor. Instead you can add a tag argument to
+		// distinguish the original and replacing constructors via overloading.
+		// The argument can be of any type and must be tagged with @DexIgnore.
+		// When you invoke the original constructor, the value of the extra
+		// argument is ignored.
+		// Note: DexPatcher 1.0 used the DexTag type to tag constructor
+		// arguments. This has been deprecated but a backwards compatible mode
+		// can be enabled in newer DexPatcher versions. See older revisions
+		// of this file for more details on DexTag.
 		@DexEdit
-		private E(String data, DexTag tag) {}
+		private E(String data, @DexIgnore Void tag) {}
 		// Part 2: Add a new constructor that invokes the source constructor:
 		// Note: Because this constructor invokes another constructor via the
 		// 'this()' syntax, this constructor does *not* initialize instance
@@ -304,7 +309,7 @@ public class Main {
 			// not initialize any instance fields. The fields are assumed to
 			// be initialized by the invoked constructor. In this case, the
 			// invoked constructor will initialize all source instance fields.
-			this("filtered " + data, DexTag.TAG);
+			this("filtered " + data, (Void) null);
 			p("continuing on replaced E::<init>: " + data);
 		}
 
