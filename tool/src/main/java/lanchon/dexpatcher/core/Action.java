@@ -1,8 +1,5 @@
 package lanchon.dexpatcher.core;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public enum Action {
 
 	ADD(Marker.ADD),
@@ -11,28 +8,20 @@ public enum Action {
 	REMOVE(Marker.REMOVE),
 	IGNORE(Marker.IGNORE);
 
-	private static Map<String, Action> markerTypeDescriptorMap;
-
-	public static void setupTypeDescriptors() {
-		Action[] actions = Action.values();
-		markerTypeDescriptorMap = new HashMap<>(actions.length);
-		for (Action action: actions) {
-			markerTypeDescriptorMap.put(action.getMarker().getTypeDescriptor(), action);
-		}
-	}
-
-	public static Action fromMarkerTypeDescriptor(String markerTypeDescriptor) {
-		return markerTypeDescriptorMap.get(markerTypeDescriptor);
-	}
-
 	private final Marker marker;
+	private final String label;
 
 	Action(Marker marker) {
 		this.marker = marker;
+		label = name().toLowerCase();
 	}
 
 	public Marker getMarker() {
 		return marker;
+	}
+
+	public String getLabel() {
+		return label;
 	}
 
 }

@@ -76,7 +76,7 @@ public abstract class AnnotatableSetPatcher<T extends Annotatable> extends Actio
 	@Override
 	protected PatcherAnnotation getContext(String patchId, T patch) throws PatchException {
 		Set<? extends Annotation> rawAnnotations = patch.getAnnotations();
-		PatcherAnnotation annotation = PatcherAnnotation.parse(rawAnnotations);
+		PatcherAnnotation annotation = PatcherAnnotation.parse(getContext(), rawAnnotations);
 		if (annotation == null) annotation = new PatcherAnnotation(getDefaultAction(patchId, patch), rawAnnotations);
 		return annotation;
 	}

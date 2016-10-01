@@ -46,6 +46,10 @@ public abstract class AbstractPatcher<T> {
 		baseLogPrefix = parent.logPrefix;
 	}
 
+	protected Context getContext() {
+		return context;
+	}
+
 	protected void log(Logger.Level level, String message) {
 		logger.log(level, logPrefix + message);
 	}

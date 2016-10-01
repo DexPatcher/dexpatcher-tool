@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 
 import lanchon.dexpatcher.core.Context;
-import lanchon.dexpatcher.core.Marker;
 import lanchon.dexpatcher.core.logger.Logger;
 import lanchon.dexpatcher.core.DexPatcher;
 
@@ -44,7 +43,6 @@ public class Processor {
 
 		logger.setLogLevel(config.logLevel);
 		opcodes = Opcodes.forApi(config.apiLevel, config.experimental);
-		Marker.setPackageName(config.annotationPackage);
 
 		DexFile dex = readDex(config.sourceFile);
 		int types = dex.getClasses().size();
@@ -73,6 +71,7 @@ public class Processor {
 		long time = System.nanoTime();
 		Context context = new Context();
 		context.setLogger(logger);
+		context.setAnnotationPackageName(config.annotationPackage);
 		DexFile patchedDex = DexPatcher.process(context, sourceDex, patchDex);
 		time = System.nanoTime() - time;
 		logStats("process stats", sourceDex.getClasses().size() + patchDex.getClasses().size(), time);

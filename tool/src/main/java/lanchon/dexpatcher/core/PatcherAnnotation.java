@@ -14,13 +14,13 @@ import org.jf.dexlib2.immutable.ImmutableAnnotation;
 
 public class PatcherAnnotation {
 
-	public static PatcherAnnotation parse(Set<? extends Annotation> annotations) throws PatchException {
+	public static PatcherAnnotation parse(Context context, Set<? extends Annotation> annotations) throws PatchException {
 
 		Annotation annotation = null;
 		Action action = null;
 		ArrayList<Annotation> filteredAnnotations = new ArrayList<>(annotations.size());
 		for (Annotation an : annotations) {
-			Action ac = Action.fromMarkerTypeDescriptor(an.getType());
+			Action ac = context.getActionFromTypeDescriptor(an.getType());
 			if (ac != null) {
 				if (action != null) {
 					throw new PatchException("conflicting patcher annotations (" +

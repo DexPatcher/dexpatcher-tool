@@ -10,45 +10,16 @@ public enum Marker {
 
 	TAG("DexTag");
 
-	// Annotation Package
-
-	private static String packageName;
-
-	public static String getPackageName() {
-		return packageName;
-	}
-
-	public static void setPackageName(String value) {
-		packageName = value;
-		for (Marker marker : Marker.values()) {
-			String className = packageName + "." + marker.className;
-			marker.typeDescriptor = Util.getTypeDescriptorFromName(className);
-		}
-		Action.setupTypeDescriptors();
-	}
-
 	// Annotations
 
 	private final String className;
-	private final String label;
-
-	private String typeDescriptor;
 
 	Marker(String className) {
 		this.className = className;
-		label = name().toLowerCase();
 	}
 
 	public String getClassName() {
 		return className;
-	}
-
-	public String getLabel() {
-		return label;
-	}
-
-	public String getTypeDescriptor() {
-		return typeDescriptor;
 	}
 
 	// Annotation Elements
