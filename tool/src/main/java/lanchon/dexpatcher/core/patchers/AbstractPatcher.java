@@ -175,7 +175,7 @@ public abstract class AbstractPatcher<T> {
 
 	// Handlers
 
-	protected abstract String getId(T t);
+	protected abstract String getId(T item);
 	protected abstract void setupLogPrefix(String id, T patch, T patched);
 
 	protected abstract void onPatch(String patchId, T patch) throws PatchException;

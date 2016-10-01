@@ -28,8 +28,8 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 	// Implementation
 
 	@Override
-	protected final String getId(ClassDef t) {
-		return t.getType();
+	protected final String getId(ClassDef item) {
+		return item.getType();
 	}
 
 	@Override

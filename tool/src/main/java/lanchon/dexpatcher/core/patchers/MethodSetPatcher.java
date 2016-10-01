@@ -56,8 +56,8 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 	// Implementation
 
 	@Override
-	protected final String getId(Method t) {
-		return Util.getMethodId(t);
+	protected final String getId(Method item) {
+		return Util.getMethodId(item);
 	}
 
 	@Override
