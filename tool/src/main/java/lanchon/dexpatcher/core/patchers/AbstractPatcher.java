@@ -76,14 +76,14 @@ public abstract class AbstractPatcher<T> {
 			for (T source : sourceSet) {
 				String sourceId = getId(source);
 				if (sourceMap.put(sourceId, source) != null) {
-					setupLogPrefix(sourceId, null, null);
+					setupLogPrefix(sourceId, source, null, null);
 					log(ERROR, "duplicate found in source");
 				}
 			}
 
 			for (T patch : patchSet) {
 				String patchId = getId(patch);
-				setupLogPrefix(patchId, patch, null);
+				setupLogPrefix(patchId, patch, patch, null);
 				try {
 					onPatch(patchId, patch);
 				} catch (PatchException e) {
@@ -104,7 +104,7 @@ public abstract class AbstractPatcher<T> {
 					// have been targeted by an item other than the one replacing it.
 					T original = sourceMap.put(id, null);		// keep ordering stable when replacing items
 					if (original == null) throw new AssertionError("Missing target");
-					setupLogPrefix(id, patchedItem.patch, patchedItem.patched);
+					setupLogPrefix(id, patchedItem.patch, patchedItem.patch, patchedItem.patched);
 					try {
 						onEffectiveReplacement(id, patchedItem.patch, patchedItem.patched, original, inPlaceEdit);
 					} catch (PatchException e) {
@@ -117,7 +117,7 @@ public abstract class AbstractPatcher<T> {
 				String id = entry.getKey();
 				PatchedItem<T> patchedItem = entry.getValue();
 				if (sourceMap.put(id, patchedItem.patched) != null) {
-					setupLogPrefix(id, patchedItem.patch, patchedItem.patched);
+					setupLogPrefix(id, patchedItem.patch, patchedItem.patch, patchedItem.patched);
 					log(ERROR, "already exists");
 				}
 			}
@@ -176,7 +176,7 @@ public abstract class AbstractPatcher<T> {
 	// Handlers
 
 	protected abstract String getId(T item);
-	protected abstract void setupLogPrefix(String id, T patch, T patched);
+	protected abstract void setupLogPrefix(String id, T item, T patch, T patched);
 
 	protected abstract void onPatch(String patchId, T patch) throws PatchException;
 	protected void onEffectiveReplacement(String id, T patch, T patched, T original, boolean inPlaceEdit) throws PatchException {}

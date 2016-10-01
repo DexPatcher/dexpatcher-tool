@@ -61,8 +61,8 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 	}
 
 	@Override
-	protected void setupLogPrefix(String id, Method patch, Method patched) {
-		super.setupLogPrefix(id, patch, patched);
+	protected void setupLogPrefix(String id, Method item, Method patch, Method patched) {
+		super.setupLogPrefix(id, item, patch, patched);
 		setSourceFileMethod(patch);
 	}
 

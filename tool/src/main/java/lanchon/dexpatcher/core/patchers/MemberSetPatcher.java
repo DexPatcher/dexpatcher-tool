@@ -27,7 +27,7 @@ public abstract class MemberSetPatcher<T extends Member> extends AnnotatableSetP
 	// Implementation
 
 	@Override
-	protected void setupLogPrefix(String id, T patch, T patched) {
+	protected void setupLogPrefix(String id, T item, T patch, T patched) {
 		setupLogPrefix(getSetItemLabel() + " '" + id + "'");
 	}
 
