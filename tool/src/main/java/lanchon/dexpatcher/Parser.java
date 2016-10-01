@@ -47,7 +47,10 @@ public class Parser {
 		if (cl.hasOption("quiet")) config.logLevel = ERROR;
 		if (cl.hasOption("verbose")) config.logLevel = INFO;
 		if (cl.hasOption("debug")) config.logLevel = DEBUG;
-		config.stats = cl.hasOption("stats");
+
+		if (cl.hasOption("path")) config.sourceCodeRoot = "";
+		config.sourceCodeRoot = cl.getOptionValue("path-root", config.sourceCodeRoot);
+		config.timingStats = cl.hasOption("stats");
 
 		return config;
 
@@ -60,22 +63,34 @@ public class Parser {
 	}
 
 	private static Options getOptions() {
+
 		Options options = new Options();
 		Option o;
+
 		o = new Option("o", "output", true, "name of patched dex file to write");
 		o.setArgName("patched-dex"); options.addOption(o);
-		o = new Option("a", "api-level", true, "api level of dex files (default: " + Configuration.DEFAULT_API_LEVEL + ")");
+
+		o = new Option("a", "api-level", true, "Android API level of files (default: " + Configuration.DEFAULT_API_LEVEL + ")");
 		o.setArgName("n"); o.setType(Number.class); options.addOption(o);
+		options.addOption(new Option("X", "experimental", false, "enable support for experimental opcodes"));
+
 		o = new Option(null, "annotations", true, "package name of DexPatcher annotations (default: '" + Configuration.DEFAULT_ANNOTATION_PACKAGE + "')");
 		o.setArgName("package"); options.addOption(o);
-		options.addOption(new Option("X", "experimental", false, "enable support for experimental opcodes"));
+
 		options.addOption(new Option("q", "quiet", false, "do not output warnings"));
 		options.addOption(new Option("v", "verbose", false, "output extra information"));
 		options.addOption(new Option(null, "debug", false, "output debugging information"));
+
+		options.addOption(new Option("p", "path", false, "output relative paths of source code files"));
+		o = new Option(null, "path-root", true, "output absolute paths of source code files");
+		o.setArgName("root"); options.addOption(o);
 		options.addOption(new Option(null, "stats", false, "output timing statistics"));
+
 		options.addOption(new Option(null, "version", false, "print version information and exit"));
 		options.addOption(new Option("?", "help", false, "print this help message and exit"));
+
 		return options;
+
 	}
 
 }

@@ -22,6 +22,8 @@ public class Configuration {
 	public String annotationPackage = DEFAULT_ANNOTATION_PACKAGE;
 
 	public Logger.Level logLevel = DEFAULT_LOG_LEVEL;
-	public boolean stats;
+
+	public String sourceCodeRoot;
+	public boolean timingStats;
 
 }

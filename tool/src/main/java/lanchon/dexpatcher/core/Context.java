@@ -8,12 +8,13 @@ import java.util.Map;
 public class Context {
 
 	private Logger logger;
+	private String annotationPackage;
+	private String sourceCodeRoot;
 
-	private String annotationPackageName;
 	private Map<String, Action> actionMap;
 	private String tagTypeDescriptor;
 
-	// Logger
+	// Properties
 
 	public Logger getLogger() {
 		return logger;
@@ -23,14 +24,12 @@ public class Context {
 		this.logger = logger;
 	}
 
-	// Annotations
-
-	public String getAnnotationPackageName() {
-		return annotationPackageName;
+	public String getAnnotationPackage() {
+		return annotationPackage;
 	}
 
-	public void setAnnotationPackageName(String value) {
-		annotationPackageName = value;
+	public void setAnnotationPackage(String value) {
+		annotationPackage = value;
 		Action[] actions = Action.values();
 		actionMap = new HashMap<>(actions.length);
 		for (Action action: actions) {
@@ -39,8 +38,18 @@ public class Context {
 		tagTypeDescriptor = getTypeDescriptor(Marker.TAG);
 	}
 
+	public String getSourceCodeRoot() {
+		return sourceCodeRoot;
+	}
+
+	public void setSourceCodeRoot(String sourceCodeRoot) {
+		this.sourceCodeRoot = sourceCodeRoot;
+	}
+
+	// Extras
+
 	private String getTypeDescriptor(Marker marker) {
-		return Util.getTypeDescriptorFromName(annotationPackageName + "." + marker.getClassName());
+		return Util.getTypeDescriptorFromName(annotationPackage + "." + marker.getClassName());
 	}
 
 	public Action getActionFromTypeDescriptor(String typeDescriptor) {

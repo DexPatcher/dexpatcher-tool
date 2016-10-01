@@ -39,8 +39,7 @@ public abstract class AnnotatableSetPatcher<T extends Annotatable> extends Actio
 		// Parse debug information lazily.
 		if (sourceFileClass != null) {
 			sourceFileName = sourceFileClass.getSourceFile();
-			final boolean ADD_PATH = false;
-			if (ADD_PATH && sourceFileName != null) {
+			if (sourceFileName != null && getContext().getSourceCodeRoot() != null) {
 				String type = sourceFileClass.getType();
 				int i = type.lastIndexOf('/');
 				if (i >= 1) {
@@ -62,7 +61,16 @@ public abstract class AnnotatableSetPatcher<T extends Annotatable> extends Actio
 	protected void log(Logger.Level level, String message) {
 		if (isLogging(level)) {
 			String name = getSourceFileName();
-			if (name != null) message = "(" + name + ":" + getSourceFileLine() + "): " +  message;
+			if (name != null) {
+				int line = getSourceFileLine();
+				String root = getContext().getSourceCodeRoot();
+				if (root != null) {
+					String ls = System.lineSeparator();
+					message += ls + '\t' + root + name + ":" + line;
+				} else {
+					message = "(" + name + ":" + line + "): " + message;
+				}
+			}
 			super.log(level, message);
 		}
 	}

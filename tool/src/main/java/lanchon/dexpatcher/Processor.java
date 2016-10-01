@@ -71,7 +71,10 @@ public class Processor {
 		long time = System.nanoTime();
 		Context context = new Context();
 		context.setLogger(logger);
-		context.setAnnotationPackageName(config.annotationPackage);
+		context.setAnnotationPackage(config.annotationPackage);
+		String root = config.sourceCodeRoot;
+		if (root != null && root.length() > 0 && !root.endsWith(File.separator)) root += File.separator;
+		context.setSourceCodeRoot(root);
 		DexFile patchedDex = DexPatcher.process(context, sourceDex, patchDex);
 		time = System.nanoTime() - time;
 		logStats("process stats", sourceDex.getClasses().size() + patchDex.getClasses().size(), time);
@@ -98,7 +101,7 @@ public class Processor {
 	}
 
 	private void logStats(String header, int typeCount, long nanoTime) {
-		if (config.stats) logger.log(INFO, header + ": " +
+		if (config.timingStats) logger.log(INFO, header + ": " +
 				typeCount + " types, " +
 				((nanoTime + 500000) / 1000000) + " ms, " +
 				(((nanoTime / typeCount) + 500) / 1000) + " us/type");
