@@ -62,24 +62,30 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 
 	@Override
 	protected void setupLogPrefix(String id, Method item, Method patch, Method patched) {
-		super.setupLogPrefix(id, item, patch, patched);
+		setupLogPrefix(getSetItemLabel() + " '" + Util.getMethodLabel(item) + "'");
 		setSourceFileMethod(patch);
 	}
 
 	@Override
 	protected String getTargetId(String patchId, Method patch, PatcherAnnotation annotation) {
 		String target = annotation.getTarget();
+		String resolvedTarget = (target != null ? target : patch.getName());
 		String targetId;
+		String targetLabel;
 		if (isTaggedByParameter(patch)) {
 			ArrayList<MethodParameter> parameters = new ArrayList<MethodParameter>(patch.getParameters());
 			parameters.remove(parameters.size() - 1);
-			target = (target != null ? target : patch.getName());
-			targetId = Util.getMethodId(parameters, patch.getReturnType(), target);
+			if (target == null) target = patch.getName();
+			targetId = Util.getMethodId(parameters, patch.getReturnType(), resolvedTarget);
+			targetLabel = Util.getMethodLabel(parameters, patch.getReturnType(), resolvedTarget);
 		}
 		else {
-			targetId = target != null ? Util.getMethodId(patch, target) : patchId;
+			targetId = (target != null ? Util.getMethodId(patch, target) : patchId);
+			targetLabel = Util.getMemberShortLabel(resolvedTarget);
 		}
-		setTargetLogPrefix(patchId, targetId, annotation);
+		if (shouldLogTarget(patchId, targetId)) {
+			extendLogPrefixWithTargetLabel(targetLabel);
+		}
 		return targetId;
 	}
 

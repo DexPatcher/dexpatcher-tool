@@ -45,7 +45,6 @@ public abstract class Util {
 	}
 
 	public static String getFieldTypeNameFromDescriptor(String descriptor) {
-		// TODO: Catch invalid type descriptor exceptions in client code.
 		if (descriptor.length() == 0) throwInvalidTypeDescriptor(descriptor);
 		switch (descriptor.charAt(0)) {
 			case '[': return getTypeNameFromDescriptor(descriptor.substring(1)) + "[]";
@@ -63,6 +62,7 @@ public abstract class Util {
 	}
 
 	public static String getLongTypeNameFromDescriptor(String descriptor) {
+		// TODO: Catch invalid type descriptor exceptions in client code.
 		if (!isLongTypeDescriptor(descriptor)) throwInvalidTypeDescriptor(descriptor);
 		int l = descriptor.length();
 		StringBuilder sb = new StringBuilder(l - 2);
@@ -90,6 +90,14 @@ public abstract class Util {
 
 	// IDs
 
+	public static String getTypeId(ClassDef classDef) {
+		return classDef.getType();
+	}
+
+	public static String getTypeIdFromName(String name) {
+		return getTypeDescriptorFromName(name);
+	}
+
 	public static String getFieldId(Field field) {
 		return getFieldId(field, field.getName());
 	}
@@ -111,6 +119,49 @@ public abstract class Util {
 		sb.append(name).append('(');
 		for (MethodParameter p : parameters) sb.append(p.getType());
 		sb.append(')').append(returnType);
+		return sb.toString();
+	}
+
+	// Labels
+
+	public static String getTypeLabel(ClassDef classDef) {
+		return getLongTypeNameFromDescriptor(classDef.getType());
+	}
+
+	public static String getTypeLabelFromId(String id) {
+		return getLongTypeNameFromDescriptor(id);
+	}
+
+	public static String getMemberShortLabel(String name) {
+		return name;
+	}
+
+	public static String getFieldLabel(Field field) {
+		return getFieldLabel(field, field.getName());
+	}
+
+	public static String getFieldLabel(Field field, String name) {
+		return name + ':' + getFieldTypeNameFromDescriptor(field.getType());
+	}
+
+	public static String getMethodLabel(Method method) {
+		return getMethodLabel(method, method.getName());
+	}
+
+	public static String getMethodLabel(Method method, String name) {
+		return getMethodLabel(method.getParameters(), method.getReturnType(), name);
+	}
+
+	public static String getMethodLabel(List<? extends MethodParameter> parameters, String returnType, String name) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(name).append('(');
+		boolean first = true;
+		for (MethodParameter p : parameters) {
+			if (!first) sb.append(", ");
+			sb.append(getFieldTypeNameFromDescriptor(p.getType()));
+			first = false;
+		}
+		sb.append("):").append(getTypeNameFromDescriptor(returnType));
 		return sb.toString();
 	}
 

@@ -24,6 +24,11 @@ public abstract class FieldSetPatcher extends MemberSetPatcher<Field> {
 	}
 
 	@Override
+	protected void setupLogPrefix(String id, Field item, Field patch, Field patched) {
+		setupLogPrefix(getSetItemLabel() + " '" + Util.getFieldLabel(item) + "'");
+	}
+
+	@Override
 	protected void onPrepare(String patchId, Field patch, PatcherAnnotation annotation) throws PatchException {
 		Action action = annotation.getAction();
 		if (action == Action.REPLACE) PatcherAnnotation.throwInvalidAnnotation(Marker.REPLACE);
@@ -33,10 +38,11 @@ public abstract class FieldSetPatcher extends MemberSetPatcher<Field> {
 	@Override
 	protected String getTargetId(String patchId, Field patch, PatcherAnnotation annotation) {
 		String target = annotation.getTarget();
-		String targetId = target != null ? Util.getFieldId(patch, target) : patchId;
-		setTargetLogPrefix(patchId, targetId, annotation);
+		String targetId = (target != null ? Util.getFieldId(patch, target) : patchId);
+		if (shouldLogTarget(patchId, targetId)) {
+			extendLogPrefixWithTargetLabel(Util.getMemberShortLabel(target));
+		}
 		return targetId;
-
 	}
 
 	@Override

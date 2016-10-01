@@ -29,7 +29,7 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 
 	@Override
 	protected final String getId(ClassDef item) {
-		return item.getType();
+		return Util.getTypeId(item);
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 
 	@Override
 	protected void setupLogPrefix(String id, ClassDef item, ClassDef patch, ClassDef patched) {
-		setupLogPrefix(getSetItemLabel() + " '" + Util.getLongTypeNameFromDescriptor(id) + "'");
+		setupLogPrefix(getSetItemLabel() + " '" + Util.getTypeLabel(item) + "'");
 		setSourceFileClass(patch);
 	}
 
@@ -62,22 +62,18 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 			if (Util.isLongTypeDescriptor(target)) {
 				targetId = target;
 			} else {
-				String base = Util.getLongTypeNameFromDescriptor(patchId);
-				targetId = Util.getTypeDescriptorFromName(Util.resolveTypeName(target, base));
+				String base = Util.getLongTypeNameFromDescriptor(patch.getType());
+				targetId = Util.getTypeIdFromName(Util.resolveTypeName(target, base));
 			}
 		} else if (targetClass != null) {
 			targetId = targetClass;
 		} else {
 			targetId = patchId;
 		}
-		setTargetLogPrefix(patchId, targetId);
-		return targetId;
-	}
-
-	protected final void setTargetLogPrefix(String patchId, String targetId) {
 		if (shouldLogTarget(patchId, targetId)) {
-			extendLogPrefix("target '" + Util.getLongTypeNameFromDescriptor(targetId) + "'");
+			extendLogPrefixWithTargetLabel(Util.getTypeLabelFromId(targetId));
 		}
+		return targetId;
 	}
 
 	@Override

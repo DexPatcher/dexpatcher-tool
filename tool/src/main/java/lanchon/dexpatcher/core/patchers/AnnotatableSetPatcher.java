@@ -79,6 +79,10 @@ public abstract class AnnotatableSetPatcher<T extends Annotatable> extends Actio
 		return !patchId.equals(targetId);
 	}
 
+	protected final void extendLogPrefixWithTargetLabel(String targetLabel) {
+		extendLogPrefix("target '" + targetLabel + "'");
+	}
+
 	// Implementation
 
 	@Override

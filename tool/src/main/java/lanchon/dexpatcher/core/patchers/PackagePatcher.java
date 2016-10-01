@@ -79,7 +79,9 @@ public class PackagePatcher extends ClassSetPatcher {
 			targetId = patchId;
 		}
 		if (!isPackage(targetId)) throw new PatchException("target is not a package");
-		setTargetLogPrefix(patchId, targetId);
+		if (shouldLogTarget(patchId, targetId)) {
+			extendLogPrefixWithTargetLabel(Util.getTypeLabelFromId(targetId));
+		}
 		return targetId;
 	}
 

@@ -27,11 +27,6 @@ public abstract class MemberSetPatcher<T extends Member> extends AnnotatableSetP
 	// Implementation
 
 	@Override
-	protected void setupLogPrefix(String id, T item, T patch, T patched) {
-		setupLogPrefix(getSetItemLabel() + " '" + id + "'");
-	}
-
-	@Override
 	protected Action getDefaultAction(String patchId, T patch) {
 		if (defaultAction != null) {
 			log(INFO, "default " + defaultAction.getLabel());
@@ -49,19 +44,6 @@ public abstract class MemberSetPatcher<T extends Member> extends AnnotatableSetP
 		if (annotation.getDefaultAction() != null) PatcherAnnotation.throwInvalidElement(Marker.ELEM_DEFAULT_ACTION);
 		if (annotation.getOnlyEditMembers()) PatcherAnnotation.throwInvalidElement(Marker.ELEM_ONLY_EDIT_MEMBERS);
 		if (annotation.getRecursive()) PatcherAnnotation.throwInvalidElement(Marker.ELEM_RECURSIVE);
-	}
-
-	protected final void setTargetLogPrefix(String patchId, String targetId, PatcherAnnotation annotation) {
-		if (shouldLogTarget(patchId, targetId)) {
-			String target = targetId;
-			// Shorten the target log prefix if only the name of the target differs.
-			String shortTarget = annotation.getTarget();
-			if (shortTarget != null && target.startsWith(shortTarget)) {
-				String targetSuffix = target.substring(shortTarget.length());
-				if (patchId.endsWith(targetSuffix)) target = shortTarget;
-			}
-			extendLogPrefix("target '" + target + "'");
-		}
 	}
 
 	@Override
