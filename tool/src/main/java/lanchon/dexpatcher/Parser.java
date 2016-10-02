@@ -15,6 +15,8 @@ import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 
 public class Parser {
 
+	public static final int DEFAULT_API_LEVEL = 14;
+
 	public static Configuration parseCommandLine(String[] args) throws ParseException {
 
 		Configuration config = new Configuration();
@@ -34,14 +36,13 @@ public class Parser {
 
 		@SuppressWarnings("unchecked")
 		List<String> files = cl.getArgList();
-		if (files.isEmpty()) throw new ParseException("Missing required argument: <source-dex-or-apk>");
+		if (files.isEmpty()) throw new ParseException("Missing argument: <source-dex-or-apk>");
 		config.sourceFile = files.remove(0);
 		config.patchFiles = files;
 		config.patchedFile = cl.getOptionValue("output");
 
 		Number apiLevel = (Number) cl.getParsedOptionValue("api-level");
-		if (apiLevel == null) throw new ParseException("Missing required option: api-level");
-		config.apiLevel = apiLevel.intValue();
+		config.apiLevel = (apiLevel != null ? apiLevel.intValue() : DEFAULT_API_LEVEL);
 		config.experimental = cl.hasOption("experimental");
 
 		config.annotationPackage = cl.getOptionValue("annotations", Context.DEFAULT_ANNOTATION_PACKAGE);
@@ -74,7 +75,7 @@ public class Parser {
 		o = new Option("o", "output", true, "name of patched dex file to write");
 		o.setArgName("patched-dex"); options.addOption(o);
 
-		o = new Option("a", "api-level", true, "android api level of dex files (required)");
+		o = new Option("a", "api-level", true, "android api level of files (default: " + DEFAULT_API_LEVEL + ")");
 		o.setArgName("n"); o.setType(Number.class); options.addOption(o);
 		options.addOption(new Option("X", "experimental", false, "enable support for experimental opcodes"));
 
