@@ -1,5 +1,5 @@
 ********************************************************************
-DexPatcher is Copyright 2015, Rodrigo Balerdi.
+DexPatcher - Copyright 2015, 2016 Rodrigo Balerdi
 (GNU General Public License version 3 or later)
 ********************************************************************
 DexPatcher uses dexlib2 (part of smali) by Ben Gruver (JesusFreke).
@@ -35,5 +35,5 @@ licenses; in order to do that, you need to write a complete
 DexPatcher replacement.)
 
 tl;dr: All DexPatcher *patches* are covered by the GPL; you have to
-make their source code available.
+make their source code available if you distribute them at all.
 ********************************************************************

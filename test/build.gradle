@@ -2,6 +2,16 @@ plugins {
     id 'java-base'
 }
 
+/*
+ * DexPatcher - Copyright 2015, 2016 Rodrigo Balerdi
+ * (GNU General Public License version 3 or later)
+ *
+ * DexPatcher is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
+ */
+
 // This project implements two test tasks:
 // 1) The portable test, that is reduced in scope:
 //    -Produces a patched dex file from test source and patch files.
