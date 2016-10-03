@@ -15,8 +15,8 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 
 import lanchon.dexpatcher.core.Context;
-import lanchon.dexpatcher.core.logger.Logger;
 import lanchon.dexpatcher.core.DexPatcher;
+import lanchon.dexpatcher.core.logger.Logger;
 
 import org.jf.dexlib2.DexFileFactory;
 import org.jf.dexlib2.Opcodes;
@@ -136,7 +136,7 @@ public class Processor {
 			throw new Error(e);
 		}
 		ClassPool classPool = (ClassPool) classSection;
-		for (ClassDef classDef: dex.getClasses()) {
+		for (ClassDef classDef : dex.getClasses()) {
 			classPool.intern(classDef);
 		}
 		dexPool.writeTo(new FileDataStore(new File(path)));

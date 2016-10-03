@@ -22,7 +22,7 @@ import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.Field;
 import org.jf.dexlib2.iface.Method;
 
-public class BasicClassDef extends BaseTypeReference implements ClassDef{
+public class BasicClassDef extends BaseTypeReference implements ClassDef {
 
 	private final String type;
 	private final int accessFlags;

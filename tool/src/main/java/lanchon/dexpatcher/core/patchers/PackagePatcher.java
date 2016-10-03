@@ -14,8 +14,8 @@ import java.util.regex.Pattern;
 
 import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.Marker;
-import lanchon.dexpatcher.core.PatcherAnnotation;
 import lanchon.dexpatcher.core.PatchException;
+import lanchon.dexpatcher.core.PatcherAnnotation;
 import lanchon.dexpatcher.core.Util;
 
 import org.jf.dexlib2.iface.ClassDef;
@@ -57,7 +57,7 @@ public class PackagePatcher extends ClassSetPatcher {
 		}
 		String targetId = getPackageTargetId(patchId, patch, annotation);
 		boolean recursive = annotation.getRecursive();
-		if (isLogging(DEBUG)) log(DEBUG, recursive ? "replace package recursive" :  "replace package non-recursive");
+		if (isLogging(DEBUG)) log(DEBUG, recursive ? "replace package recursive" : "replace package non-recursive");
 		removePackage(targetId, recursive);
 		ClassDef patched = onSimpleAdd(patch, annotation);
 		addPatched(patchId, patch, patched);
@@ -71,7 +71,7 @@ public class PackagePatcher extends ClassSetPatcher {
 		}
 		String targetId = getPackageTargetId(patchId, patch, annotation);
 		boolean recursive = annotation.getRecursive();
-		if (isLogging(DEBUG)) log(DEBUG, recursive ? "remove package recursive" :  "remove package non-recursive");
+		if (isLogging(DEBUG)) log(DEBUG, recursive ? "remove package recursive" : "remove package non-recursive");
 		removePackage(targetId, recursive);
 	}
 
@@ -98,9 +98,9 @@ public class PackagePatcher extends ClassSetPatcher {
 	private void removePackage(String targetId, boolean recursive) throws PatchException {
 		String prefix = targetId.substring(0, targetId.length() - PACKAGE_SUFFIX.length());
 		Pattern pattern = Pattern.compile("(?s)" + Pattern.quote(prefix) + (recursive ? ".*;" : "[^/]*;"));
-		for(String id : getSourceMap().keySet()) {
+		for (String id: getSourceMap().keySet()) {
 			if (id.startsWith(prefix) && pattern.matcher(id).matches()) {
-				try { 
+				try {
 					addTarget(id, false);
 					if (isLogging(DEBUG)) log(DEBUG, "remove type '" + id + "'");
 				} catch (PatchException e) {

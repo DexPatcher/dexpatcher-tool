@@ -10,11 +10,11 @@
 
 package lanchon.dexpatcher.core;
 
-import lanchon.dexpatcher.core.logger.BasicLogger;
-import lanchon.dexpatcher.core.logger.Logger;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import lanchon.dexpatcher.core.logger.BasicLogger;
+import lanchon.dexpatcher.core.logger.Logger;
 
 import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 
@@ -63,7 +63,7 @@ public class Context {
 		annotationPackage = value;
 		Action[] actions = Action.values();
 		actionMap = new HashMap<>(actions.length);
-		for (Action action: actions) {
+		for (Action action : actions) {
 			actionMap.put(getTypeDescriptor(action.getMarker()), action);
 		}
 		tagTypeDescriptor = getTypeDescriptor(Marker.TAG);

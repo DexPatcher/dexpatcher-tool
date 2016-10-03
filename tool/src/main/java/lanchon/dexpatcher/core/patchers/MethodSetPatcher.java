@@ -93,8 +93,7 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 			parameters.remove(parameters.size() - 1);
 			targetId = Util.getMethodId(parameters, patch.getReturnType(), resolvedTarget);
 			targetLabel = Util.getMethodLabel(parameters, patch.getReturnType(), resolvedTarget);
-		}
-		else {
+		} else {
 			targetId = (target != null ? Util.getMethodId(patch, target) : patchId);
 			targetLabel = Util.getMemberShortLabel(resolvedTarget);
 		}

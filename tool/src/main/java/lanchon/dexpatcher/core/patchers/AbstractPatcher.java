@@ -16,8 +16,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import lanchon.dexpatcher.core.Context;
-import lanchon.dexpatcher.core.logger.Logger;
 import lanchon.dexpatcher.core.PatchException;
+import lanchon.dexpatcher.core.logger.Logger;
 
 import org.jf.dexlib2.AccessFlags;
 
@@ -80,8 +80,7 @@ public abstract class AbstractPatcher<T> {
 		targetedMap = new LinkedHashMap<>();
 		patchedMap = new LinkedHashMap<>(patchSetSizeHint);
 
-		try
-		{
+		try {
 
 			for (T source : sourceSet) {
 				String sourceId = getId(source);

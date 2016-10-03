@@ -16,8 +16,8 @@ import java.util.Set;
 import lanchon.dexpatcher.core.Action;
 import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.Marker;
-import lanchon.dexpatcher.core.PatcherAnnotation;
 import lanchon.dexpatcher.core.PatchException;
+import lanchon.dexpatcher.core.PatcherAnnotation;
 import lanchon.dexpatcher.core.Util;
 import lanchon.dexpatcher.core.model.BasicClassDef;
 

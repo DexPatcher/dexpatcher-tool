@@ -10,10 +10,10 @@
 
 package lanchon.dexpatcher;
 
+import java.util.List;
+
 import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.logger.Logger;
-
-import java.util.List;
 
 public class Configuration {
 

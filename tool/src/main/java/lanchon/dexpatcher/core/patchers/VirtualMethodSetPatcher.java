@@ -20,9 +20,9 @@ public class VirtualMethodSetPatcher extends MethodSetPatcher {
 
 	// Implementation
 
-    @Override
-    protected String getSetItemLabel() {
-        return "virtual method";
-    }
+	@Override
+	protected String getSetItemLabel() {
+		return "virtual method";
+	}
 
 }
