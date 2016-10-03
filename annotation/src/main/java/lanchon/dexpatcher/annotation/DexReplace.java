@@ -14,7 +14,12 @@ import java.lang.annotation.*;
 
 @DexIgnore
 @Documented
-@Target({ ElementType.PACKAGE, ElementType.TYPE, ElementType.CONSTRUCTOR, ElementType.METHOD })
+@Target({
+		ElementType.PACKAGE,
+		ElementType.TYPE,
+		ElementType.CONSTRUCTOR,
+		ElementType.METHOD
+})
 public @interface DexReplace {
 	String target() default "";
 	Class<?> targetClass() default Void.class;
