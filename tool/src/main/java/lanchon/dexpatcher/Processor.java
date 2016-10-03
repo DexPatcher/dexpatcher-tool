@@ -98,7 +98,7 @@ public class Processor {
 	private DexFile readDex(String path) throws IOException {
 		logger.log(INFO, "read '" + path + "'");
 		long time = System.nanoTime();
-		DexBackedDexFile dex = DexFileFactory.loadDexFile(new File(path), null, opcodes);
+		DexBackedDexFile dex = DexFileFactory.loadDexFile(path, opcodes);
 		if (dex.isOdexFile()) throw new RuntimeException(path + " is an odex file");
 		time = System.nanoTime() - time;
 		logStats("read stats", dex.getClassCount(), time);
