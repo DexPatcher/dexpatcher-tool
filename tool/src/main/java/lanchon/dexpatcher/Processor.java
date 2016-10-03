@@ -52,7 +52,7 @@ public class Processor {
 		long time = System.nanoTime();
 
 		logger.setLogLevel(config.logLevel);
-		opcodes = Opcodes.forApi(config.apiLevel, config.experimental);
+		opcodes = Opcodes.forApi(config.apiLevel);
 
 		DexFile dex = readDex(config.sourceFile);
 		int types = dex.getClasses().size();

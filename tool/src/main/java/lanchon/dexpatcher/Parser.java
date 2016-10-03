@@ -53,7 +53,6 @@ public class Parser {
 
 		Number apiLevel = (Number) cl.getParsedOptionValue("api-level");
 		config.apiLevel = (apiLevel != null ? apiLevel.intValue() : DEFAULT_API_LEVEL);
-		config.experimental = cl.hasOption("experimental");
 
 		config.annotationPackage = cl.getOptionValue("annotations", Context.DEFAULT_ANNOTATION_PACKAGE);
 		config.dexTagSupported = cl.hasOption("compat-dextag");
@@ -87,7 +86,6 @@ public class Parser {
 
 		o = new Option("a", "api-level", true, "android api level of files (default: " + DEFAULT_API_LEVEL + ")");
 		o.setArgName("n"); o.setType(Number.class); options.addOption(o);
-		options.addOption(new Option("X", "experimental", false, "enable support for experimental opcodes"));
 
 		o = new Option(null, "annotations", true, "package name of DexPatcher annotations (default: '" +
 				Context.DEFAULT_ANNOTATION_PACKAGE + "')");
