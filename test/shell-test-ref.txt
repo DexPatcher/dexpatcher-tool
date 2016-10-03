@@ -3,7 +3,7 @@ $ dx --dex --output build/source.dex source/build/libs/source.jar
 $ dx --dex --output build/patch.dex patch/build/libs/patch.jar
 
 $ dexpatcher --help
-DexPatcher Version 1.1.1 by Lanchon
+DexPatcher Version 1.2.0-beta1 by Lanchon
 usage: dexpatcher [<option> ...] [--output <patched-dex>]
                   <source-dex-or-apk> [<patch-dex-or-apk> ...]
  -?,--help                    print this help message and exit
@@ -19,7 +19,6 @@ usage: dexpatcher [<option> ...] [--output <patched-dex>]
     --stats                   output timing statistics
  -v,--verbose                 output extra information
     --version                 print version information and exit
- -X,--experimental            enable support for experimental opcodes
 
 $ dexpatcher build/source.dex build/patch.dex --output build/patched.dex --debug
 info: read 'build/source.dex'
