@@ -3,7 +3,7 @@ $ dx --dex --output build/source.dex source/build/libs/source.jar
 $ dx --dex --output build/patch.dex patch/build/libs/patch.jar
 
 $ dexpatcher --help
-DexPatcher Version 1.1.0 by Lanchon
+DexPatcher Version 1.1.1 by Lanchon
 usage: dexpatcher [<option> ...] [--output <patched-dex>]
                   <source-dex-or-apk> [<patch-dex-or-apk> ...]
  -?,--help                    print this help message and exit
@@ -39,17 +39,17 @@ debug: type 'test.Main$B': instance field 'instanceField:int': (Main.java:0): ad
 debug: type 'test.Main$B': instance field 'privateKey:java.lang.String': (Main.java:0): edit
 info: type 'test.Main$B': instance field 'privateKey:java.lang.String': (Main.java:0): 'public' modifier mismatch in original and edited versions
 info: type 'test.Main$B': instance field 'privateKey:java.lang.String': (Main.java:0): 'private' modifier mismatch in original and edited versions
-debug: type 'test.Main$B': direct method '<clinit>():void': (Main.java:69): add
-debug: type 'test.Main$B': direct method '<init>():void': (Main.java:90): ignore
-debug: type 'test.Main$B': direct method 'directMethod():void': (Main.java:110): replace
-debug: type 'test.Main$B': direct method 'privateStaticMethod(int):void': (Main.java:105): edit
-info: type 'test.Main$B': direct method 'privateStaticMethod(int):void': (Main.java:105): 'public' modifier mismatch in original and edited versions
-info: type 'test.Main$B': direct method 'privateStaticMethod(int):void': (Main.java:105): 'private' modifier mismatch in original and edited versions
-debug: type 'test.Main$B': virtual method 'addedMethod():void': (Main.java:94): add
-debug: type 'test.Main$B': virtual method 'source_virtualMethod(java.lang.String):void': (Main.java:120): edit
-debug: type 'test.Main$B': virtual method 'source_virtualMethod(java.lang.String):void': target 'virtualMethod': (Main.java:120): 'public' modifier mismatch in targeted and edited members
-debug: type 'test.Main$B': virtual method 'source_virtualMethod(java.lang.String):void': target 'virtualMethod': (Main.java:120): 'protected' modifier mismatch in targeted and edited members
-debug: type 'test.Main$B': virtual method 'virtualMethod(java.lang.String):void': (Main.java:125): add
+debug: type 'test.Main$B': direct method '<clinit>():void': (Main.java:79): add
+debug: type 'test.Main$B': direct method '<init>():void': (Main.java:100): ignore
+debug: type 'test.Main$B': direct method 'directMethod():void': (Main.java:120): replace
+debug: type 'test.Main$B': direct method 'privateStaticMethod(int):void': (Main.java:115): edit
+info: type 'test.Main$B': direct method 'privateStaticMethod(int):void': (Main.java:115): 'public' modifier mismatch in original and edited versions
+info: type 'test.Main$B': direct method 'privateStaticMethod(int):void': (Main.java:115): 'private' modifier mismatch in original and edited versions
+debug: type 'test.Main$B': virtual method 'addedMethod():void': (Main.java:104): add
+debug: type 'test.Main$B': virtual method 'source_virtualMethod(java.lang.String):void': (Main.java:130): edit
+debug: type 'test.Main$B': virtual method 'source_virtualMethod(java.lang.String):void': target 'virtualMethod': (Main.java:130): 'public' modifier mismatch in targeted and edited members
+debug: type 'test.Main$B': virtual method 'source_virtualMethod(java.lang.String):void': target 'virtualMethod': (Main.java:130): 'protected' modifier mismatch in targeted and edited members
+debug: type 'test.Main$B': virtual method 'virtualMethod(java.lang.String):void': (Main.java:135): add
 debug: type 'test.Main$Base': (Main.java:0): ignore
 debug: type 'test.Main$C': (Main.java:0): edit
 debug: type 'test.Main$C': static field 'patchStaticField:int': (Main.java:0): add
@@ -58,60 +58,60 @@ debug: type 'test.Main$C': static field 'redefinedSourceStaticField:int': (Main.
 warning: type 'test.Main$C': static field 'redefinedSourceStaticField:int': (Main.java:0): static field will not be initialized as specified in patch because the static constructor code in patch is being ignored
 debug: type 'test.Main$C': instance field 'patchField:int': (Main.java:0): add
 debug: type 'test.Main$C': instance field 'redefinedSourceField:int': (Main.java:0): edit
-debug: type 'test.Main$C': direct method '<clinit>():void': (Main.java:162): ignore
-debug: type 'test.Main$C': direct method '<init>():void': (Main.java:184): ignore
-debug: type 'test.Main$C': virtual method 'print():void': (Main.java:194): add
-debug: type 'test.Main$C': virtual method 'source_print():void': (Main.java:191): edit
-debug: type 'test.Main$C': virtual method 'source_print():void': target 'print': (Main.java:191): 'public' modifier mismatch in targeted and edited members
-debug: type 'test.Main$C': virtual method 'source_print():void': target 'print': (Main.java:191): 'protected' modifier mismatch in targeted and edited members
+debug: type 'test.Main$C': direct method '<clinit>():void': (Main.java:172): ignore
+debug: type 'test.Main$C': direct method '<init>():void': (Main.java:194): ignore
+debug: type 'test.Main$C': virtual method 'print():void': (Main.java:204): add
+debug: type 'test.Main$C': virtual method 'source_print():void': (Main.java:201): edit
+debug: type 'test.Main$C': virtual method 'source_print():void': target 'print': (Main.java:201): 'public' modifier mismatch in targeted and edited members
+debug: type 'test.Main$C': virtual method 'source_print():void': target 'print': (Main.java:201): 'protected' modifier mismatch in targeted and edited members
 debug: type 'test.Main$Interface': (Main.java:0): ignore
 debug: type 'test.Main$Concrete1': (Main.java:0): edit
-debug: type 'test.Main$Concrete1': direct method '<init>():void': (Main.java:350): ignore
+debug: type 'test.Main$Concrete1': direct method '<init>():void': (Main.java:360): ignore
 debug: type 'test.Main$Concrete1': virtual method 'abstractMethod():void': (Main.java:0): ignore
-debug: type 'test.Main$Concrete1': virtual method 'interfaceMethod():void': (Main.java:359): ignore
-debug: type 'test.Main$Concrete1': virtual method 'method():void': (Main.java:353): replace
+debug: type 'test.Main$Concrete1': virtual method 'interfaceMethod():void': (Main.java:369): ignore
+debug: type 'test.Main$Concrete1': virtual method 'method():void': (Main.java:363): replace
 debug: type 'test.Main$Concrete2': (Main.java:0): edit
-debug: type 'test.Main$Concrete2': direct method '<init>():void': (Main.java:382): ignore
-debug: type 'test.Main$Concrete2': virtual method 'method():void': (Main.java:385): replace
+debug: type 'test.Main$Concrete2': direct method '<init>():void': (Main.java:392): ignore
+debug: type 'test.Main$Concrete2': virtual method 'method():void': (Main.java:395): replace
 debug: type 'test.Main$Concrete3': (Main.java:0): edit
-debug: type 'test.Main$Concrete3': direct method '<init>():void': (Main.java:398): ignore
-debug: type 'test.Main$Concrete3': virtual method 'method():void': (Main.java:401): replace
+debug: type 'test.Main$Concrete3': direct method '<init>():void': (Main.java:408): ignore
+debug: type 'test.Main$Concrete3': virtual method 'method():void': (Main.java:411): replace
 debug: type 'test.Main$D': (Main.java:0): edit
 debug: type 'test.Main$D': static field 'patchStaticField:int': (Main.java:0): add
 debug: type 'test.Main$D': static field 'redefinedSourceStaticField:int': (Main.java:0): edit
 debug: type 'test.Main$D': instance field 'patchField:int': (Main.java:0): add
 debug: type 'test.Main$D': instance field 'redefinedSourceField:int': (Main.java:0): edit
-debug: type 'test.Main$D': direct method '<clinit>():void': (Main.java:209): replace
-debug: type 'test.Main$D': direct method '<init>():void': (Main.java:235): replace
-debug: type 'test.Main$D': virtual method 'print():void': (Main.java:246): add
-debug: type 'test.Main$D': virtual method 'source_print():void': (Main.java:243): edit
-debug: type 'test.Main$D': virtual method 'source_print():void': target 'print': (Main.java:243): 'public' modifier mismatch in targeted and edited members
-debug: type 'test.Main$D': virtual method 'source_print():void': target 'print': (Main.java:243): 'protected' modifier mismatch in targeted and edited members
+debug: type 'test.Main$D': direct method '<clinit>():void': (Main.java:219): replace
+debug: type 'test.Main$D': direct method '<init>():void': (Main.java:245): replace
+debug: type 'test.Main$D': virtual method 'print():void': (Main.java:256): add
+debug: type 'test.Main$D': virtual method 'source_print():void': (Main.java:253): edit
+debug: type 'test.Main$D': virtual method 'source_print():void': target 'print': (Main.java:253): 'public' modifier mismatch in targeted and edited members
+debug: type 'test.Main$D': virtual method 'source_print():void': target 'print': (Main.java:253): 'protected' modifier mismatch in targeted and edited members
 debug: type 'test.Main$Derived': (Main.java:0): edit
-info: type 'test.Main$Derived': direct method '<init>():void': (Main.java:141): default ignore
-debug: type 'test.Main$Derived': direct method '<init>():void': (Main.java:141): ignore
-debug: type 'test.Main$Derived': virtual method 'method():void': (Main.java:150): add
-debug: type 'test.Main$Derived': virtual method 'source_method():void': (Main.java:147): edit
-debug: type 'test.Main$Derived': virtual method 'source_method():void': target 'method': (Main.java:147): 'public' modifier mismatch in targeted and edited members
-debug: type 'test.Main$Derived': virtual method 'source_method():void': target 'method': (Main.java:147): 'protected' modifier mismatch in targeted and edited members
+info: type 'test.Main$Derived': direct method '<init>():void': (Main.java:151): default ignore
+debug: type 'test.Main$Derived': direct method '<init>():void': (Main.java:151): ignore
+debug: type 'test.Main$Derived': virtual method 'method():void': (Main.java:160): add
+debug: type 'test.Main$Derived': virtual method 'source_method():void': (Main.java:157): edit
+debug: type 'test.Main$Derived': virtual method 'source_method():void': target 'method': (Main.java:157): 'public' modifier mismatch in targeted and edited members
+debug: type 'test.Main$Derived': virtual method 'source_method():void': target 'method': (Main.java:157): 'protected' modifier mismatch in targeted and edited members
 debug: type 'test.Main$E': (Main.java:0): edit
 debug: type 'test.Main$E': static field 'patchStaticField:int': (Main.java:0): add
 debug: type 'test.Main$E': static field 'redefinedSourceStaticField:int': (Main.java:0): edit
 debug: type 'test.Main$E': instance field 'patchField:int': (Main.java:0): add
 debug: type 'test.Main$E': instance field 'redefinedSourceField:int': (Main.java:0): edit
-info: type 'test.Main$E': direct method '<clinit>():void': (Main.java:260): default add
-debug: type 'test.Main$E': direct method '<clinit>():void': (Main.java:260): add
-debug: type 'test.Main$E': direct method '<init>(java.lang.String):void': (Main.java:312): add
-debug: type 'test.Main$E': direct method '<init>(java.lang.String, java.lang.Void):void': (Main.java:299): edit
-debug: type 'test.Main$E': direct method '<init>(java.lang.String, java.lang.Void):void': target '<init>(java.lang.String):void': (Main.java:299): 'public' modifier mismatch in targeted and edited members
-debug: type 'test.Main$E': direct method '<init>(java.lang.String, java.lang.Void):void': target '<init>(java.lang.String):void': (Main.java:299): 'private' modifier mismatch in targeted and edited members
-debug: type 'test.Main$E': direct method 'source_static():void': (Main.java:271): edit
-debug: type 'test.Main$E': direct method 'source_static():void': target '<clinit>': (Main.java:271): 'private' modifier mismatch in targeted and edited members
-debug: type 'test.Main$E': direct method 'source_static():void': target '<clinit>': (Main.java:271): 'constructor' modifier mismatch in targeted and edited members
-debug: type 'test.Main$E': virtual method 'print():void': (Main.java:320): add
-debug: type 'test.Main$E': virtual method 'source_print():void': (Main.java:317): edit
-debug: type 'test.Main$E': virtual method 'source_print():void': target 'print': (Main.java:317): 'public' modifier mismatch in targeted and edited members
-debug: type 'test.Main$E': virtual method 'source_print():void': target 'print': (Main.java:317): 'protected' modifier mismatch in targeted and edited members
+info: type 'test.Main$E': direct method '<clinit>():void': (Main.java:270): default add
+debug: type 'test.Main$E': direct method '<clinit>():void': (Main.java:270): add
+debug: type 'test.Main$E': direct method '<init>(java.lang.String):void': (Main.java:322): add
+debug: type 'test.Main$E': direct method '<init>(java.lang.String, java.lang.Void):void': (Main.java:309): edit
+debug: type 'test.Main$E': direct method '<init>(java.lang.String, java.lang.Void):void': target '<init>(java.lang.String):void': (Main.java:309): 'public' modifier mismatch in targeted and edited members
+debug: type 'test.Main$E': direct method '<init>(java.lang.String, java.lang.Void):void': target '<init>(java.lang.String):void': (Main.java:309): 'private' modifier mismatch in targeted and edited members
+debug: type 'test.Main$E': direct method 'source_static():void': (Main.java:281): edit
+debug: type 'test.Main$E': direct method 'source_static():void': target '<clinit>': (Main.java:281): 'private' modifier mismatch in targeted and edited members
+debug: type 'test.Main$E': direct method 'source_static():void': target '<clinit>': (Main.java:281): 'constructor' modifier mismatch in targeted and edited members
+debug: type 'test.Main$E': virtual method 'print():void': (Main.java:330): add
+debug: type 'test.Main$E': virtual method 'source_print():void': (Main.java:327): edit
+debug: type 'test.Main$E': virtual method 'source_print():void': target 'print': (Main.java:327): 'public' modifier mismatch in targeted and edited members
+debug: type 'test.Main$E': virtual method 'source_print():void': target 'print': (Main.java:327): 'protected' modifier mismatch in targeted and edited members
 debug: type 'test.Main': (Main.java:0): ignore
 debug: type 'test.info.package-info': (package-info.java:0): replace
 debug: type 'test.info.package-info': (package-info.java:0): replace package non-recursive
