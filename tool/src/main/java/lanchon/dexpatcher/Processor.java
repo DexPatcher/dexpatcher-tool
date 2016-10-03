@@ -108,8 +108,7 @@ public class Processor {
 	private void writeDex(String path, DexFile dex) throws IOException {
 		logger.log(INFO, "write '" + path + "'");
 		long time = System.nanoTime();
-		DexFileFactory.writeDexFile(path, dex);		// bug fixed in dexlib2-dexpatcher
-		//writeDexFileWorkaround(path, dex);
+		DexFileFactory.writeDexFile(path, dex);
 		time = System.nanoTime() - time;
 		logStats("write stats", dex.getClasses().size(), time);
 	}
@@ -120,26 +119,6 @@ public class Processor {
 				((nanoTime + 500000) / 1000000) + " ms, " +
 				(((nanoTime / typeCount) + 500) / 1000) + " us/type");
 
-	}
-
-	private static void writeDexFileWorkaround(String path, DexFile dex) throws IOException {
-		// DexFileFactory.writeDexFile() ignores the value of dex.getOpcodes().
-		// For details, see: https://github.com/JesusFreke/smali/issues/439
-		// TODO: Remove this workaround when dexlib2 gets fixed.
-		DexPool dexPool = DexPool.makeDexPool(dex.getOpcodes());
-		ClassSection classSection;
-		try {
-			Field classSectionField = DexWriter.class.getDeclaredField("classSection");
-			classSectionField.setAccessible(true);
-			classSection = (ClassSection) classSectionField.get(dexPool);
-		} catch (ReflectiveOperationException e) {
-			throw new Error(e);
-		}
-		ClassPool classPool = (ClassPool) classSection;
-		for (ClassDef classDef : dex.getClasses()) {
-			classPool.intern(classDef);
-		}
-		dexPool.writeTo(new FileDataStore(new File(path)));
 	}
 
 }
