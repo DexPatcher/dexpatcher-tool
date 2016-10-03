@@ -7,6 +7,8 @@ import lanchon.dexpatcher.core.Action;
 import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.PatcherAnnotation;
 import lanchon.dexpatcher.core.Util;
+import lanchon.dexpatcher.core.model.BasicMethod;
+import lanchon.dexpatcher.core.model.BasicMethodImplementation;
 
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.Method;
@@ -15,8 +17,6 @@ import org.jf.dexlib2.iface.MethodParameter;
 import org.jf.dexlib2.iface.debug.DebugItem;
 import org.jf.dexlib2.iface.debug.LineNumber;
 import org.jf.dexlib2.iface.debug.SetSourceFile;
-import org.jf.dexlib2.immutable.ImmutableMethod;
-import org.jf.dexlib2.immutable.ImmutableMethodImplementation;
 import org.jf.dexlib2.util.TypeUtils;
 
 import static lanchon.dexpatcher.core.logger.Logger.Level.*;
@@ -115,7 +115,7 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 		if (patch.getAnnotations() == annotation.getFilteredAnnotations()) {
 			return patch;	// avoid creating a new object unless necessary
 		}
-		return new ImmutableMethod(
+		return new BasicMethod(
 				patch.getDefiningClass(),
 				patch.getName(),
 				patch.getParameters(),
@@ -143,14 +143,14 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 			List<? extends MethodParameter> parameters = patch.getParameters();
 			MethodParameter lastParameter = parameters.get(parameters.size() - 1);
 			int tagRegisterCount = (TypeUtils.isWideType(lastParameter) ? 2 : 1);
-			implementation = new ImmutableMethodImplementation(
+			implementation = new BasicMethodImplementation(
 					implementation.getRegisterCount() + tagRegisterCount,
 					implementation.getInstructions(),
 					implementation.getTryBlocks(),
 					implementation.getDebugItems());
 		}
 
-		Method patched = new ImmutableMethod(
+		Method patched = new BasicMethod(
 				patch.getDefiningClass(),
 				patch.getName(),
 				patch.getParameters(),

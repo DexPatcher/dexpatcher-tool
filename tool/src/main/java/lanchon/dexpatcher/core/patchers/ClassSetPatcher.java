@@ -1,6 +1,7 @@
 package lanchon.dexpatcher.core.patchers;
 
-import java.util.Collection;
+import java.util.Collections;
+import java.util.Set;
 
 import lanchon.dexpatcher.core.Action;
 import lanchon.dexpatcher.core.Context;
@@ -8,11 +9,11 @@ import lanchon.dexpatcher.core.Marker;
 import lanchon.dexpatcher.core.PatcherAnnotation;
 import lanchon.dexpatcher.core.PatchException;
 import lanchon.dexpatcher.core.Util;
+import lanchon.dexpatcher.core.model.BasicClassDef;
 
 import org.jf.dexlib2.AccessFlags;
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.ClassDef;
-import org.jf.dexlib2.immutable.ImmutableClassDef;
 
 import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 import static org.jf.dexlib2.AccessFlags.*;
@@ -81,7 +82,7 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 		if (patch.getAnnotations() == annotation.getFilteredAnnotations()) {
 			return patch;	// avoid creating a new object unless necessary
 		}
-		return new ImmutableClassDef(
+		return new BasicClassDef(
 				patch.getType(),
 				patch.getAccessFlags(),
 				patch.getSuperclass(),
@@ -119,7 +120,7 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 		}
 
 		ClassDef source;
-		Collection<? extends Annotation> annotations;
+		Set<? extends Annotation> annotations;
 		if (annotation.getOnlyEditMembers()) {
 			source = target;
 			annotations = target.getAnnotations();
@@ -128,21 +129,21 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 			annotations = annotation.getFilteredAnnotations();
 		}
 
-		return new ImmutableClassDef(
+		return new BasicClassDef(
 				patch.getType(),
 				source.getAccessFlags(),
 				source.getSuperclass(),
 				source.getInterfaces(),
 				source.getSourceFile(),
 				annotations,
-				new StaticFieldSetPatcher(this, annotation)
-						.process(target.getStaticFields(), patch.getStaticFields()),
-				new InstanceFieldSetPatcher(this, annotation)
-						.process(target.getInstanceFields(), patch.getInstanceFields()),
-				new DirectMethodSetPatcher(this, annotation)
-						.process(target.getDirectMethods(), patch.getDirectMethods()),
-				new VirtualMethodSetPatcher(this, annotation)
-						.process(target.getVirtualMethods(), patch.getVirtualMethods()));
+				Collections.unmodifiableCollection(new StaticFieldSetPatcher(this, annotation)
+						.process(target.getStaticFields(), patch.getStaticFields())),
+				Collections.unmodifiableCollection(new InstanceFieldSetPatcher(this, annotation)
+						.process(target.getInstanceFields(), patch.getInstanceFields())),
+				Collections.unmodifiableCollection(new DirectMethodSetPatcher(this, annotation)
+						.process(target.getDirectMethods(), patch.getDirectMethods())),
+				Collections.unmodifiableCollection(new VirtualMethodSetPatcher(this, annotation)
+						.process(target.getVirtualMethods(), patch.getVirtualMethods())));
 
 	}
 

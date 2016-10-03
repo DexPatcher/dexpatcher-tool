@@ -5,10 +5,10 @@ import lanchon.dexpatcher.core.Marker;
 import lanchon.dexpatcher.core.PatcherAnnotation;
 import lanchon.dexpatcher.core.PatchException;
 import lanchon.dexpatcher.core.Util;
+import lanchon.dexpatcher.core.model.BasicField;
 
 import org.jf.dexlib2.iface.Field;
 import org.jf.dexlib2.iface.value.EncodedValue;
-import org.jf.dexlib2.immutable.ImmutableField;
 
 public abstract class FieldSetPatcher extends MemberSetPatcher<Field> {
 
@@ -48,13 +48,13 @@ public abstract class FieldSetPatcher extends MemberSetPatcher<Field> {
 	@Override
 	protected Field onSimpleAdd(Field patch, PatcherAnnotation annotation) {
 		EncodedValue value = filterInitialValue(patch, null);
-		return new ImmutableField(
-			patch.getDefiningClass(),
-			patch.getName(),
-			patch.getType(),
-			patch.getAccessFlags(),
-			value,
-			annotation.getFilteredAnnotations());
+		return new BasicField(
+				patch.getDefiningClass(),
+				patch.getName(),
+				patch.getType(),
+				patch.getAccessFlags(),
+				value,
+				annotation.getFilteredAnnotations());
 	}
 
 	@Override
@@ -66,7 +66,7 @@ public abstract class FieldSetPatcher extends MemberSetPatcher<Field> {
 		EncodedValue value = inPlaceEdit ? target.getInitialValue() : null;
 		value = filterInitialValue(patch, value);
 		onSimpleRemove(patch, annotation, target);
-		Field patched = new ImmutableField(
+		Field patched = new BasicField(
 				patch.getDefiningClass(),
 				patch.getName(),
 				patch.getType(),

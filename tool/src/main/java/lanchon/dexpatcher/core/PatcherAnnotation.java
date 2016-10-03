@@ -1,6 +1,7 @@
 package lanchon.dexpatcher.core;
 
-import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import org.jf.dexlib2.iface.Annotation;
@@ -10,7 +11,6 @@ import org.jf.dexlib2.iface.value.EncodedValue;
 import org.jf.dexlib2.iface.value.EnumEncodedValue;
 import org.jf.dexlib2.iface.value.StringEncodedValue;
 import org.jf.dexlib2.iface.value.TypeEncodedValue;
-import org.jf.dexlib2.immutable.ImmutableAnnotation;
 
 public class PatcherAnnotation {
 
@@ -18,7 +18,7 @@ public class PatcherAnnotation {
 
 		Annotation annotation = null;
 		Action action = null;
-		ArrayList<Annotation> filteredAnnotations = new ArrayList<>(annotations.size());
+		Set<Annotation> filteredAnnotations = new LinkedHashSet<>(annotations.size());
 		for (Annotation an : annotations) {
 			Action ac = context.getActionFromTypeDescriptor(an.getType());
 			if (ac != null) {
@@ -91,7 +91,7 @@ public class PatcherAnnotation {
 		}
 
 		return new PatcherAnnotation(action, target, targetClass, staticConstructorAction, defaultAction,
-				onlyEditMembers, recursive, ImmutableAnnotation.immutableSetOf(filteredAnnotations));
+				onlyEditMembers, recursive, Collections.unmodifiableSet(filteredAnnotations));
 
 	}
 
