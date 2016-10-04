@@ -10,9 +10,12 @@
 
 package lanchon.dexpatcher.core.logger;
 
+import java.io.Closeable;
+import java.io.Flushable;
+
 import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 
-public abstract class Logger {
+public abstract class Logger implements Flushable, Closeable {
 
 	public enum Level {
 
