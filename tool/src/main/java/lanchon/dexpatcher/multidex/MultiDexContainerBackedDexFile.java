@@ -21,21 +21,23 @@ import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.DexFile;
 import org.jf.dexlib2.iface.MultiDexContainer;
 
-public class MultiDexContainerBackedDexFile<T extends DexFile> implements DexFile {
+public class MultiDexContainerBackedDexFile<T extends /* MultiDexContainer.MultiDexFile */ DexFile> implements DexFile {
 
 	private final Set<? extends ClassDef> classes;
 	private final Opcodes opcodes;
 
 	public MultiDexContainerBackedDexFile(MultiDexContainer<T> container, Opcodes opcodes) throws IOException {
-		List<String> names = container.getDexEntryNames();
-		if (names.size() == 1) {
-			Set<? extends ClassDef> classes = container.getEntry(names.get(0)).getClasses();
-			this.classes = Collections.unmodifiableSet(classes);
+		List<String> entryNames = container.getDexEntryNames();
+		if (entryNames.size() == 1) {
+			String entryName = entryNames.get(0);
+			Set<? extends ClassDef> entryClasses = container.getEntry(entryName).getClasses();
+			this.classes = Collections.unmodifiableSet(entryClasses);
 		} else {
 			LinkedHashSet<ClassDef> classes = new LinkedHashSet<>();
-			for (String name : names) {
-				for (ClassDef classDef : container.getEntry(name).getClasses()) {
-					if (!classes.add(classDef)) throw new DuplicateTypeException(classDef.getType());
+			for (String entryName : entryNames) {
+				Set<? extends ClassDef> entryClasses = container.getEntry(entryName).getClasses();
+				for (ClassDef entryClass : entryClasses) {
+					if (!classes.add(entryClass)) throw new DuplicateTypeException(entryClass.getType());
 				}
 			}
 			this.classes = Collections.unmodifiableSet(classes);

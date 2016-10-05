@@ -97,26 +97,30 @@ public class Processor {
 		String message = "read '" + file + "'";
 		logger.log(INFO, message);
 		long time = System.nanoTime();
-		DexFile dex = MultiDexIO.readDexFile(config.multiDex, file, dexFileNamer, opcodes);
+		DexFile dex = MultiDexIO.readDexFile(config.multiDex, file, dexFileNamer, opcodes, getIOLogger(message));
 		time = System.nanoTime() - time;
 		logStats(message, dex.getClasses().size(), time);
 		return dex;
 	}
 
 	private void writeDex(File file, DexFile dex) throws IOException {
-		final String message = "write '" + file + "'";
+		String message = "write '" + file + "'";
 		logger.log(INFO, message);
 		long time = System.nanoTime();
-		MultiDexIO.WriteDexFileLogger writeLogger = new MultiDexIO.WriteDexFileLogger() {
+		MultiDexIO.writeDexFile(config.multiDex, file, dexFileNamer, dex, getIOLogger(message));
+		time = System.nanoTime() - time;
+		logStats(message, dex.getClasses().size(), time);
+	}
+
+	private MultiDexIO.Logger getIOLogger(final String header) {
+		if (!logger.isLogging(DEBUG)) return null;
+		return new MultiDexIO.Logger() {
 			@Override
 			public void log(boolean multiDex, File file, String entryName, int typeCount) {
-				if (logger.isLogging(DEBUG)) logger.log(DEBUG, message + ": file '" + entryName + "': " +
+				if (logger.isLogging(DEBUG)) logger.log(DEBUG, header + ": file '" + entryName + "': " +
 						typeCount + " types");
 			}
 		};
-		MultiDexIO.writeDexFile(config.multiDex, file, dexFileNamer, dex, writeLogger);
-		time = System.nanoTime() - time;
-		logStats(message, dex.getClasses().size(), time);
 	}
 
 	private void logStats(String header, int typeCount, long nanoTime) {

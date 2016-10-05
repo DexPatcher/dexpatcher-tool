@@ -32,12 +32,25 @@ import org.jf.dexlib2.writer.pool.DexPool;
 
 public class MultiDexIO {
 
+	public interface Logger {
+
+		void log(boolean multiDex, File file, String entryName, int typeCount);
+
+	}
+
 	private MultiDexIO() {}
 
 	// Read
 
-	public static DexFile readDexFile(boolean multiDex, File file, DexFileNamer namer, Opcodes opcodes) throws IOException {
-		return new MultiDexContainerBackedDexFile<>(readMultiDexContainer(multiDex, file, namer, opcodes), opcodes);
+	public static DexFile readDexFile(boolean multiDex, File file, DexFileNamer namer, Opcodes opcodes,
+			MultiDexIO.Logger logger) throws IOException {
+		MultiDexContainer<? extends DexFile> container = readMultiDexContainer(multiDex, file, namer, opcodes);
+		if (logger != null) {
+			for (String name : container.getDexEntryNames()) {
+				logger.log(multiDex, file, name, container.getEntry(name).getClasses().size());
+			}
+		}
+		return new MultiDexContainerBackedDexFile<>(container, opcodes);
 	}
 
 	public static MultiDexContainer<? extends DexFile> readMultiDexContainer(boolean multiDex, File file, DexFileNamer namer, Opcodes opcodes) throws IOException {
@@ -65,14 +78,8 @@ public class MultiDexIO {
 
 	// Write
 
-	public interface WriteDexFileLogger {
-
-		void log(boolean multiDex, File file, String entryName, int typeCount);
-
-	}
-
 	public static void writeDexFile(boolean multiDex, File file, DexFileNamer namer, DexFile dexFile,
-			WriteDexFileLogger logger) throws IOException {
+			MultiDexIO.Logger logger) throws IOException {
 		if (file.isDirectory()) {
 			writeMultiDexDirectory(multiDex, file, namer, dexFile, logger);
 		} else {
@@ -82,7 +89,7 @@ public class MultiDexIO {
 	}
 
 	public static void writeMultiDexDirectory(boolean multiDex, File directory, DexFileNamer namer, DexFile dexFile,
-			WriteDexFileLogger logger) throws IOException {
+			MultiDexIO.Logger logger) throws IOException {
 		purgeMultiDexDirectory(multiDex, directory, namer);
 		Set<? extends ClassDef> classes = dexFile.getClasses();
 		Iterator<? extends ClassDef> classIterator = classes.iterator();
