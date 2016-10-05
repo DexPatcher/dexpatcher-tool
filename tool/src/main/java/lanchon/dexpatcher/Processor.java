@@ -12,22 +12,17 @@ package lanchon.dexpatcher;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Field;
 
 import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.DexPatcher;
 import lanchon.dexpatcher.core.logger.Logger;
+import lanchon.dexpatcher.multidex.BasicDexFileNamer;
+import lanchon.dexpatcher.multidex.DexFileNamer;
+import lanchon.dexpatcher.multidex.MultiDexIO;
 
 import org.jf.dexlib2.DexFileFactory;
 import org.jf.dexlib2.Opcodes;
-import org.jf.dexlib2.dexbacked.DexBackedDexFile;
-import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.DexFile;
-import org.jf.dexlib2.writer.ClassSection;
-import org.jf.dexlib2.writer.DexWriter;
-import org.jf.dexlib2.writer.io.FileDataStore;
-import org.jf.dexlib2.writer.pool.ClassPool;
-import org.jf.dexlib2.writer.pool.DexPool;
 
 import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 
@@ -41,6 +36,7 @@ public class Processor {
 	private final Configuration config;
 
 	private Opcodes opcodes;
+	private DexFileNamer dexFileNamer;
 
 	private Processor(Logger logger, Configuration config) {
 		this.logger = logger;
@@ -53,6 +49,7 @@ public class Processor {
 
 		logger.setLogLevel(config.logLevel);
 		opcodes = Opcodes.forApi(config.apiLevel);
+		dexFileNamer = new BasicDexFileNamer();
 
 		DexFile dex = readDex(config.sourceFile);
 		int types = dex.getClasses().size();
@@ -99,8 +96,7 @@ public class Processor {
 		String message = "read '" + path + "'";
 		logger.log(INFO, message);
 		long time = System.nanoTime();
-		DexBackedDexFile dex = DexFileFactory.loadDexFile(path, opcodes);
-		if (dex.isOdexFile()) throw new RuntimeException(path + " is an odex file");
+		DexFile dex = MultiDexIO.readMultiDexFile(config.multiDex, new File(path), dexFileNamer, opcodes);
 		time = System.nanoTime() - time;
 		logStats(message, dex.getClasses().size(), time);
 		return dex;

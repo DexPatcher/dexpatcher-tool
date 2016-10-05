@@ -22,6 +22,7 @@ public class Configuration {
 	public String patchedFile;
 
 	public int apiLevel;
+	public boolean multiDex;
 
 	public String annotationPackage = Context.DEFAULT_ANNOTATION_PACKAGE;
 	public boolean dexTagSupported;

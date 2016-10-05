@@ -12,6 +12,7 @@ usage: dexpatcher [<option> ...] [--output <patched-dex>]
                               (default: 'lanchon.dexpatcher.annotation')
     --compat-dextag           enable support for the deprecated DexTag
     --debug                   output debugging information
+ -m,--multi-dex               enable multi-dex support
  -o,--output <patched-dex>    name of patched dex file to write
  -p,--path                    output relative paths of source code files
     --path-root <root>        output absolute paths of source code files
