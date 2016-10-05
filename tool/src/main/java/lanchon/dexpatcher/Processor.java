@@ -20,7 +20,6 @@ import lanchon.dexpatcher.multidex.BasicDexFileNamer;
 import lanchon.dexpatcher.multidex.DexFileNamer;
 import lanchon.dexpatcher.multidex.MultiDexIO;
 
-import org.jf.dexlib2.DexFileFactory;
 import org.jf.dexlib2.Opcodes;
 import org.jf.dexlib2.iface.DexFile;
 
@@ -51,11 +50,11 @@ public class Processor {
 		opcodes = Opcodes.forApi(config.apiLevel);
 		dexFileNamer = new BasicDexFileNamer();
 
-		DexFile dex = readDex(config.sourceFile);
+		DexFile dex = readDex(new File(config.sourceFile));
 		int types = dex.getClasses().size();
 
 		for (String patchFile : config.patchFiles) {
-			DexFile patchDex = readDex(patchFile);
+			DexFile patchDex = readDex(new File(patchFile));
 			types += patchDex.getClasses().size();
 			dex = processDex(dex, patchDex);
 		}
@@ -63,7 +62,9 @@ public class Processor {
 		if (config.patchedFile == null) {
 			logger.log(WARN, "dry run due to missing '--output' option");
 		} else {
-			if (logger.hasNotloggedErrors()) writeDex(config.patchedFile, dex);
+			if (logger.hasNotloggedErrors()) {
+				writeDex(new File(config.patchedFile), dex);
+			}
 		}
 
 		time = System.nanoTime() - time;
@@ -92,31 +93,32 @@ public class Processor {
 		return patchedDex;
 	}
 
-	private DexFile readDex(String path) throws IOException {
-		String message = "read '" + path + "'";
+	private DexFile readDex(File file) throws IOException {
+		String message = "read '" + file + "'";
 		logger.log(INFO, message);
 		long time = System.nanoTime();
-		DexFile dex = MultiDexIO.readMultiDexFile(config.multiDex, new File(path), dexFileNamer, opcodes);
+		DexFile dex = MultiDexIO.readDexFile(config.multiDex, file, dexFileNamer, opcodes);
 		time = System.nanoTime() - time;
 		logStats(message, dex.getClasses().size(), time);
 		return dex;
 	}
 
-	private void writeDex(String path, DexFile dex) throws IOException {
-		String message = "write '" + path + "'";
+	private void writeDex(File file, DexFile dex) throws IOException {
+		String message = "write '" + file + "'";
 		logger.log(INFO, message);
 		long time = System.nanoTime();
-		DexFileFactory.writeDexFile(path, dex);
+		MultiDexIO.writeDexFile(config.multiDex, file, dexFileNamer, dex);
 		time = System.nanoTime() - time;
 		logStats(message, dex.getClasses().size(), time);
 	}
 
 	private void logStats(String header, int typeCount, long nanoTime) {
-		if (config.timingStats) logger.log(NONE, "stats: " + header + ": " +
-				typeCount + " types, " +
-				((nanoTime + 500000) / 1000000) + " ms, " +
-				(((nanoTime / typeCount) + 500) / 1000) + " us/type");
-
+		if (config.timingStats) {
+			logger.log(NONE, "stats: " + header + ": " +
+					typeCount + " types, " +
+					((nanoTime + 500000) / 1000000) + " ms, " +
+					(((nanoTime / typeCount) + 500) / 1000) + " us/type");
+		}
 	}
 
 }

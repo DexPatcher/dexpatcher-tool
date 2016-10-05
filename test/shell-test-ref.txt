@@ -4,8 +4,8 @@ $ dx --dex --output build/patch.dex patch/build/libs/patch.jar
 
 $ dexpatcher --help
 DexPatcher Version 1.2.0-beta1 by Lanchon
-usage: dexpatcher [<option> ...] [--output <patched-dex>]
-                  <source-dex-or-apk> [<patch-dex-or-apk> ...]
+usage: dexpatcher [<option> ...] [--output <patched-dex-or-dir>]
+                  <source-dex-apk-or-dir> [<patch-dex-apk-or-dir> ...]
  -?,--help                    print this help message and exit
  -a,--api-level <n>           android api level of dex files (default:
                               21 if multi-dex is enabled, 14 otherwise)
@@ -14,7 +14,7 @@ usage: dexpatcher [<option> ...] [--output <patched-dex>]
     --compat-dextag           enable support for the deprecated DexTag
     --debug                   output debugging information
  -m,--multi-dex               enable multi-dex support
- -o,--output <patched-dex>    name of patched dex file to write
+ -o,--output <dex-or-dir>     name of output file or directory
  -p,--path                    output relative paths of source code files
     --path-root <root>        output absolute paths of source code files
  -q,--quiet                   do not output warnings

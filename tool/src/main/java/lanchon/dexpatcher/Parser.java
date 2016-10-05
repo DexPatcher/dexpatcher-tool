@@ -47,7 +47,7 @@ public class Parser {
 
 		@SuppressWarnings("unchecked")
 		List<String> files = cl.getArgList();
-		if (files.isEmpty()) throw new ParseException("Missing argument: <source-dex-or-apk>");
+		if (files.isEmpty()) throw new ParseException("Missing argument: <source-dex-apk-or-dir>");
 		config.sourceFile = files.remove(0);
 		config.patchFiles = files;
 		config.patchedFile = cl.getOptionValue("output");
@@ -75,7 +75,8 @@ public class Parser {
 
 	public static void printUsage() {
 		System.out.println("DexPatcher Version " + Main.getVersion() + " by Lanchon");
-		String usage = "dexpatcher [<option> ...] [--output <patched-dex>] <source-dex-or-apk> [<patch-dex-or-apk> ...]";
+		String usage = "dexpatcher [<option> ...] [--output <patched-dex-or-dir>] " +
+				"<source-dex-apk-or-dir> [<patch-dex-apk-or-dir> ...]";
 		new HelpFormatter().printHelp(usage, getOptions());
 	}
 
@@ -84,8 +85,8 @@ public class Parser {
 		Options options = new Options();
 		Option o;
 
-		o = new Option("o", "output", true, "name of patched dex file to write");
-		o.setArgName("patched-dex"); options.addOption(o);
+		o = new Option("o", "output", true, "name of output file or directory");
+		o.setArgName("dex-or-dir"); options.addOption(o);
 
 		o = new Option("a", "api-level", true, "android api level of dex files (default:" + System.lineSeparator() +
 				DEFAULT_API_LEVEL_MULTI_DEX + " if multi-dex is enabled, " + DEFAULT_API_LEVEL_UNI_DEX + " otherwise)");

@@ -10,9 +10,9 @@
 
 package lanchon.dexpatcher.multidex;
 
-public class MultiDexDetectedException extends RuntimeException {
+public class DexPoolOverflowException extends RuntimeException {
 
-	public MultiDexDetectedException(String file) {
+	public DexPoolOverflowException(String file) {
 		super(file);
 	}
 
