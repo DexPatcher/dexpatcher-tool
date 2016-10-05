@@ -104,10 +104,17 @@ public class Processor {
 	}
 
 	private void writeDex(File file, DexFile dex) throws IOException {
-		String message = "write '" + file + "'";
+		final String message = "write '" + file + "'";
 		logger.log(INFO, message);
 		long time = System.nanoTime();
-		MultiDexIO.writeDexFile(config.multiDex, file, dexFileNamer, dex);
+		MultiDexIO.WriteDexFileLogger writeLogger = new MultiDexIO.WriteDexFileLogger() {
+			@Override
+			public void log(boolean multiDex, File file, String entryName, int typeCount) {
+				if (logger.isLogging(DEBUG)) logger.log(DEBUG, message + ": file '" + entryName + "': " +
+						typeCount + " types");
+			}
+		};
+		MultiDexIO.writeDexFile(config.multiDex, file, dexFileNamer, dex, writeLogger);
 		time = System.nanoTime() - time;
 		logStats(message, dex.getClasses().size(), time);
 	}

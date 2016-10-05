@@ -65,16 +65,24 @@ public class MultiDexIO {
 
 	// Write
 
-	public static void writeDexFile(boolean multiDex, File file, DexFileNamer namer, DexFile dexFile) throws IOException {
+	public interface WriteDexFileLogger {
+
+		void log(boolean multiDex, File file, String entryName, int typeCount);
+
+	}
+
+	public static void writeDexFile(boolean multiDex, File file, DexFileNamer namer, DexFile dexFile,
+			WriteDexFileLogger logger) throws IOException {
 		if (file.isDirectory()) {
-			writeMultiDexDirectory(multiDex, file, namer, dexFile);
+			writeMultiDexDirectory(multiDex, file, namer, dexFile, logger);
 		} else {
 			if (multiDex) throw new IOException("The output location must be a directory if multi-dex mode is enabled");
 			DexPool.writeTo(new FileDataStore(file), dexFile);
 		}
 	}
 
-	public static void writeMultiDexDirectory(boolean multiDex, File directory, DexFileNamer namer, DexFile dexFile) throws IOException {
+	public static void writeMultiDexDirectory(boolean multiDex, File directory, DexFileNamer namer, DexFile dexFile,
+			WriteDexFileLogger logger) throws IOException {
 		purgeMultiDexDirectory(multiDex, directory, namer);
 		Set<? extends ClassDef> classes = dexFile.getClasses();
 		Iterator<? extends ClassDef> classIterator = classes.iterator();
@@ -98,6 +106,7 @@ public class MultiDexIO {
 				currentClass = (classIterator.hasNext() ? classIterator.next() : null);
 			}
 			String name = namer.getName(fileCount++);
+			if (logger != null) logger.log(multiDex, directory, name, fileClassCount);
 			dexPool.writeTo(new FileDataStore(new File(directory, name)));
 		} while (currentClass != null);
 	}
