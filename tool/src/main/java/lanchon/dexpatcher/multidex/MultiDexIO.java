@@ -84,18 +84,31 @@ public class MultiDexIO {
 			writeMultiDexDirectory(multiDex, file, namer, dexFile, logger);
 		} else {
 			if (multiDex) throw new IOException("The output location must be a directory if multi-dex mode is enabled");
-			DexPool.writeTo(new FileDataStore(file), dexFile);
+			writeRawDexFile(file, dexFile, logger);
 		}
 	}
 
 	public static void writeMultiDexDirectory(boolean multiDex, File directory, DexFileNamer namer, DexFile dexFile,
 			MultiDexIO.Logger logger) throws IOException {
 		purgeMultiDexDirectory(multiDex, directory, namer);
+		String currentName = namer.getName(0);
+		File currentFile = new File(directory, currentName);
+		writeMultiDexCommon(multiDex, directory, namer, currentName, currentFile, dexFile, logger);
+	}
+
+	public static void writeRawDexFile(File file, DexFile dexFile, MultiDexIO.Logger logger) throws IOException {
+		String currentName = file.toString();
+		File currentFile = file;
+		writeMultiDexCommon(false, file, null, currentName, currentFile, dexFile, logger);
+	}
+
+	private static int writeMultiDexCommon(boolean multiDex, File base, DexFileNamer namer,
+			String currentName, File currentFile, DexFile dexFile, MultiDexIO.Logger logger) throws IOException {
 		Set<? extends ClassDef> classes = dexFile.getClasses();
 		Iterator<? extends ClassDef> classIterator = classes.iterator();
 		int fileCount = 0;
 		ClassDef currentClass = (classIterator.hasNext() ? classIterator.next() : null);
-		do {
+		for (;;) {
 			DexPool dexPool = DexPool.makeDexPool(dexFile.getOpcodes());
 			int fileClassCount = 0;
 			while (currentClass != null) {
@@ -112,10 +125,14 @@ public class MultiDexIO {
 				fileClassCount++;
 				currentClass = (classIterator.hasNext() ? classIterator.next() : null);
 			}
-			String name = namer.getName(fileCount++);
-			if (logger != null) logger.log(multiDex, directory, name, fileClassCount);
-			dexPool.writeTo(new FileDataStore(new File(directory, name)));
-		} while (currentClass != null);
+			if (logger != null) logger.log(multiDex, base, currentName, fileClassCount);
+			dexPool.writeTo(new FileDataStore(currentFile));
+			fileCount++;
+			if (currentClass == null) break;
+			currentName = namer.getName(fileCount);
+			currentFile = new File(base, currentName);
+		}
+		return fileCount;
 	}
 
 	public static void purgeMultiDexDirectory(boolean multiDex, File directory, DexFileNamer namer) throws IOException {

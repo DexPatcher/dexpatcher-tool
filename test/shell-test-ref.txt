@@ -24,7 +24,9 @@ usage: dexpatcher [<option> ...] [--output <patched-dex-or-dir>]
 
 $ dexpatcher build/source.dex build/patch.dex --output build/patched.dex --debug
 info: read 'build/source.dex'
+debug: read 'build/source.dex': file 'build/source.dex': 17 types
 info: read 'build/patch.dex'
+debug: read 'build/patch.dex': file 'build/patch.dex': 23 types
 debug: type 'lanchon.dexpatcher.annotation.DexAction': (DexAction.java:0): ignore
 debug: type 'lanchon.dexpatcher.annotation.DexAdd': (DexAdd.java:0): ignore
 debug: type 'lanchon.dexpatcher.annotation.DexEdit': (DexEdit.java:0): ignore
@@ -124,6 +126,7 @@ debug: type 'test.target.package-info': (package-info.java:0): remove
 debug: type 'test.target.package-info': target 'test.nonrec.package-info': (package-info.java:0): remove package non-recursive
 debug: type 'test.target.package-info': target 'test.nonrec.package-info': (package-info.java:0): remove type 'Ltest/nonrec/NonRec;'
 info: write 'build/patched.dex'
+debug: write 'build/patched.dex': file 'build/patched.dex': 15 types
 0 error(s), 2 warning(s)
 
 $ dex2jar --force --output build/patched-dex2jar.jar build/patched.dex
