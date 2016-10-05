@@ -70,7 +70,7 @@ public class Processor {
 		}
 
 		time = System.nanoTime() - time;
-		logStats("total stats", types, time);
+		logStats("total process", types, time);
 
 		logger.logErrorAndWarningCounts();
 		return logger.hasNotloggedErrors();
@@ -91,30 +91,32 @@ public class Processor {
 		long time = System.nanoTime();
 		DexFile patchedDex = DexPatcher.process(createContext(), sourceDex, patchDex);
 		time = System.nanoTime() - time;
-		logStats("process stats", sourceDex.getClasses().size() + patchDex.getClasses().size(), time);
+		logStats("patch process", sourceDex.getClasses().size() + patchDex.getClasses().size(), time);
 		return patchedDex;
 	}
 
 	private DexFile readDex(String path) throws IOException {
-		logger.log(INFO, "read '" + path + "'");
+		String message = "read '" + path + "'";
+		logger.log(INFO, message);
 		long time = System.nanoTime();
 		DexBackedDexFile dex = DexFileFactory.loadDexFile(path, opcodes);
 		if (dex.isOdexFile()) throw new RuntimeException(path + " is an odex file");
 		time = System.nanoTime() - time;
-		logStats("read stats", dex.getClassCount(), time);
+		logStats(message, dex.getClasses().size(), time);
 		return dex;
 	}
 
 	private void writeDex(String path, DexFile dex) throws IOException {
-		logger.log(INFO, "write '" + path + "'");
+		String message = "write '" + path + "'";
+		logger.log(INFO, message);
 		long time = System.nanoTime();
 		DexFileFactory.writeDexFile(path, dex);
 		time = System.nanoTime() - time;
-		logStats("write stats", dex.getClasses().size(), time);
+		logStats(message, dex.getClasses().size(), time);
 	}
 
 	private void logStats(String header, int typeCount, long nanoTime) {
-		if (config.timingStats) logger.log(INFO, header + ": " +
+		if (config.timingStats) logger.log(NONE, "stats: " + header + ": " +
 				typeCount + " types, " +
 				((nanoTime + 500000) / 1000000) + " ms, " +
 				(((nanoTime / typeCount) + 500) / 1000) + " us/type");
