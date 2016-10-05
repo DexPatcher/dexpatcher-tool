@@ -7,7 +7,8 @@ DexPatcher Version 1.2.0-beta1 by Lanchon
 usage: dexpatcher [<option> ...] [--output <patched-dex>]
                   <source-dex-or-apk> [<patch-dex-or-apk> ...]
  -?,--help                    print this help message and exit
- -a,--api-level <n>           android api level of files (default: 14)
+ -a,--api-level <n>           android api level of dex files (default:
+                              21 if multi-dex is enabled, 14 otherwise)
     --annotations <package>   package name of DexPatcher annotations
                               (default: 'lanchon.dexpatcher.annotation')
     --compat-dextag           enable support for the deprecated DexTag

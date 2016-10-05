@@ -25,7 +25,8 @@ import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 
 public class Parser {
 
-	public static final int DEFAULT_API_LEVEL = 14;
+	public static final int DEFAULT_API_LEVEL_UNI_DEX = 14;
+	public static final int DEFAULT_API_LEVEL_MULTI_DEX = 21;
 
 	public static Configuration parseCommandLine(String[] args) throws ParseException {
 
@@ -51,9 +52,10 @@ public class Parser {
 		config.patchFiles = files;
 		config.patchedFile = cl.getOptionValue("output");
 
-		Number apiLevel = (Number) cl.getParsedOptionValue("api-level");
-		config.apiLevel = (apiLevel != null ? apiLevel.intValue() : DEFAULT_API_LEVEL);
 		config.multiDex = cl.hasOption("multi-dex");
+		Number apiLevel = (Number) cl.getParsedOptionValue("api-level");
+		config.apiLevel = (apiLevel != null ? apiLevel.intValue() :
+				(config.multiDex ? DEFAULT_API_LEVEL_MULTI_DEX : DEFAULT_API_LEVEL_UNI_DEX ));
 
 		config.annotationPackage = cl.getOptionValue("annotations", Context.DEFAULT_ANNOTATION_PACKAGE);
 		config.dexTagSupported = cl.hasOption("compat-dextag");
@@ -85,7 +87,8 @@ public class Parser {
 		o = new Option("o", "output", true, "name of patched dex file to write");
 		o.setArgName("patched-dex"); options.addOption(o);
 
-		o = new Option("a", "api-level", true, "android api level of files (default: " + DEFAULT_API_LEVEL + ")");
+		o = new Option("a", "api-level", true, "android api level of dex files (default:" + System.lineSeparator() +
+				DEFAULT_API_LEVEL_MULTI_DEX + " if multi-dex is enabled, " + DEFAULT_API_LEVEL_UNI_DEX + " otherwise)");
 		o.setArgName("n"); o.setType(Number.class); options.addOption(o);
 		options.addOption(new Option("m", "multi-dex", false, "enable multi-dex support"));
 
