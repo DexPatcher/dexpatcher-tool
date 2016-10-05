@@ -84,9 +84,9 @@ public abstract class Logger implements Flushable, Closeable {
 	public void logErrorAndWarningCounts() {
 		int errors = getMessageCount(FATAL) + getMessageCount(ERROR);
 		int warnings = getMessageCount(WARN);
-		if (errors != 0 || warnings != 0) {
+		//if (errors != 0 || warnings != 0) {
 			log(NONE, errors + " error(s), " + warnings + " warning(s)");
-		}
+		//}
 	}
 
 	protected abstract void doLog(Level level, String message, Throwable throwable);
