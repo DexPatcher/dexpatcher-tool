@@ -64,7 +64,7 @@ public class Processor {
 		}
 
 		if (config.patchedFile == null) {
-			logger.log(WARN, "dry run due to missing <patched-dex> output file argument");
+			logger.log(WARN, "dry run due to missing '--output' option");
 		} else {
 			if (logger.hasNotloggedErrors()) writeDex(config.patchedFile, dex);
 		}
