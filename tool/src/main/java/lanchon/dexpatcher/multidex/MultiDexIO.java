@@ -50,7 +50,7 @@ public class MultiDexIO {
 				logger.log(multiDex, file, name, container.getEntry(name).getClasses().size());
 			}
 		}
-		return new MultiDexContainerBackedDexFile<>(container, opcodes);
+		return new MultiDexContainerBackedDexFile<>(container, opcodes, true);
 	}
 
 	public static MultiDexContainer<? extends DexFile> readMultiDexContainer(boolean multiDex, File file, DexFileNamer namer, Opcodes opcodes) throws IOException {

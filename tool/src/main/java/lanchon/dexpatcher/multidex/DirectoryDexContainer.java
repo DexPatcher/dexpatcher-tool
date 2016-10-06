@@ -37,6 +37,7 @@ public class DirectoryDexContainer implements MultiDexContainer<DirectoryDexCont
 	@Override
 	public List<String> getDexEntryNames() throws IOException {
 		String[] names = directory.list();
+		// TODO: Implement a numeric sort.
 		Arrays.sort(names);
 		if (names == null) throw new IOException("Not a directory: " + directory);
 		List<String> entryNames = new ArrayList<>();
