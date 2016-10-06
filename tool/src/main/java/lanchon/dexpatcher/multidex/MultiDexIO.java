@@ -83,7 +83,7 @@ public class MultiDexIO {
 		if (file.isDirectory()) {
 			writeMultiDexDirectory(multiDex, file, namer, dexFile, logger);
 		} else {
-			if (multiDex) throw new IOException("The output location must be a directory if multi-dex mode is enabled");
+			if (multiDex) throw new RuntimeException("Must output to a directory if multi-dex mode is enabled");
 			writeRawDexFile(file, dexFile, logger);
 		}
 	}
