@@ -21,7 +21,7 @@ import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.DexFile;
 import org.jf.dexlib2.iface.MultiDexContainer;
 
-public class MultiDexContainerBackedDexFile<T extends /* MultiDexContainer.MultiDexFile */ DexFile> implements DexFile {
+public class MultiDexContainerBackedDexFile<T extends DexFile> implements DexFile {
 
 	private final Set<? extends ClassDef> classes;
 	private final Opcodes opcodes;
