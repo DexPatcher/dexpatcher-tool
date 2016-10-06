@@ -4,6 +4,7 @@ $ dx --dex --output build/patch.dex patch/build/libs/patch.jar
 
 $ dexpatcher --help
 DexPatcher Version 1.2.0-beta1 by Lanchon
+           https://dexpatcher.github.io/
 usage: dexpatcher [<option> ...] [--output <patched-dex-or-dir>]
                   <source-dex-apk-or-dir> [<patch-dex-apk-or-dir> ...]
  -?,--help                    print this help message and exit
