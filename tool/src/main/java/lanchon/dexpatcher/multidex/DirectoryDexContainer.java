@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -27,28 +28,34 @@ public class DirectoryDexContainer implements MultiDexContainer<DirectoryDexCont
 	private final File directory;
 	private final DexFileNamer namer;
 	private final Opcodes opcodes;
+	private final List<String> dexEntryNames;       // should be Set<String>
 
-	public DirectoryDexContainer(File directory, DexFileNamer namer, Opcodes opcodes) {
+	public DirectoryDexContainer(File directory, DexFileNamer namer, Opcodes opcodes) throws IOException {
 		this.directory = directory;
 		this.namer = namer;
 		this.opcodes = opcodes;
-	}
-
-	@Override
-	public List<String> getDexEntryNames() throws IOException {
 		String[] names = directory.list();
 		if (names == null) throw new IOException("Cannot access directory: " + directory);
 		// TODO: Implement a numeric sort.
 		Arrays.sort(names);
-		List<String> entryNames = new ArrayList<>();
+		List<String> filteredNames = new ArrayList<>();
 		for (String name : names) {
-			if (new File(directory, name).isFile() && namer.isValidName(name)) entryNames.add(name);
+			if (new File(directory, name).isFile() && namer.isValidName(name)) {
+				filteredNames.add(name);
+			}
 		}
-		return entryNames;
+		dexEntryNames = Collections.unmodifiableList(filteredNames);
+	}
+
+	@Override
+	public List<String> getDexEntryNames() {
+		return dexEntryNames;
 	}
 
 	@Override
 	public DirectoryDexFile getEntry(String entryName) throws IOException {
+		// TODO: Change when dexEntryNames becomes a Set.
+		//if (!dexEntryNames.contains(entryName)) return null;
 		if (!(new File(directory, entryName).isFile() && namer.isValidName(entryName))) return null;
 		File file = new File(directory, entryName);
 		DexFile dexFile = MultiDexIO.readRawDexFile(file, opcodes);

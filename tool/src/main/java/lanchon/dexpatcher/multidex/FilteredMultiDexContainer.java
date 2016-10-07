@@ -22,27 +22,29 @@ public class FilteredMultiDexContainer<T extends DexFile> implements MultiDexCon
 
 	private final MultiDexContainer<T> container;
 	private final DexFileNamer namer;
-	private final List<String> dexEntryNames;
+	private final List<String> dexEntryNames;       // should be Set<String>
 
 	public FilteredMultiDexContainer(MultiDexContainer<T> container, DexFileNamer namer) throws IOException {
 		this.container = container;
 		this.namer = namer;
-		List<String> dexEntryNames = new ArrayList<>();
+		List<String> filteredNames = new ArrayList<>();
 		for (String name : container.getDexEntryNames()) {
 			if (namer.isValidName(name)) {
-				dexEntryNames.add(name);
+				filteredNames.add(name);
 			}
 		}
-		this.dexEntryNames = Collections.unmodifiableList(dexEntryNames);
+		dexEntryNames = Collections.unmodifiableList(filteredNames);
 	}
 
 	@Override
-	public List<String> getDexEntryNames() throws IOException {
+	public List<String> getDexEntryNames() {
 		return dexEntryNames;
 	}
 
 	@Override
 	public T getEntry(String entryName) throws IOException {
+		// TODO: Change when dexEntryNames becomes a Set.
+		//if (!dexEntryNames.contains(entryName)) return null;
 		if (!namer.isValidName(entryName)) return null;
 		return container.getEntry(entryName);
 	}
