@@ -105,30 +105,31 @@ public class MultiDexIO {
 	private static int writeMultiDexCommon(boolean multiDex, File base, DexFileNamer namer,
 			String currentName, File currentFile, DexFile dexFile, MultiDexIO.Logger logger) throws IOException {
 		Set<? extends ClassDef> classes = dexFile.getClasses();
-		Iterator<? extends ClassDef> classIterator = classes.iterator();
+		PushBackIterator<? extends ClassDef> classIterator = new PushBackIterator<>(classes.iterator());
 		int fileCount = 0;
-		ClassDef currentClass = (classIterator.hasNext() ? classIterator.next() : null);
 		for (;;) {
 			DexPool dexPool = DexPool.makeDexPool(dexFile.getOpcodes());
 			int fileClassCount = 0;
-			while (currentClass != null) {
+			while (classIterator.hasNext()) {
+				ClassDef currentClass = classIterator.next();
 				dexPool.mark();
 				dexPool.internClass(currentClass);
+				fileClassCount++;
 				if (dexPool.hasOverflowed()) {
 					if (!multiDex) throw new DexPoolOverflowException(
-							"Dex pool overflowed while writing type " + (fileClassCount + 1) + " of " + classes.size());
-					if (fileClassCount == 0) throw new DexPoolOverflowException(
+							"Dex pool overflowed while writing type " + (fileClassCount) + " of " + classes.size());
+					if (fileClassCount == 1) throw new DexPoolOverflowException(
 							"Type too big for dex pool: " + currentClass.getType());
+					classIterator.pushBack();
 					dexPool.reset();
+					fileClassCount--;
 					break;
 				}
-				fileClassCount++;
-				currentClass = (classIterator.hasNext() ? classIterator.next() : null);
 			}
 			if (logger != null) logger.log(multiDex, base, currentName, fileClassCount);
 			dexPool.writeTo(new FileDataStore(currentFile));
 			fileCount++;
-			if (currentClass == null) break;
+			if (!classIterator.hasNext()) break;
 			currentName = namer.getName(fileCount);
 			currentFile = new File(base, currentName);
 		}
