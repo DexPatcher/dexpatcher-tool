@@ -50,7 +50,7 @@ public class MultiDexIO {
 				logger.log(multiDex, file, name, container.getEntry(name).getClasses().size());
 			}
 		}
-		return new MultiDexContainerBackedDexFile<>(container, opcodes, true);
+		return new MultiDexContainerBackedDexFile<>(container, opcodes);
 	}
 
 	public static MultiDexContainer<? extends DexFile> readMultiDexContainer(boolean multiDex, File file, DexFileNamer namer, Opcodes opcodes) throws IOException {
@@ -63,7 +63,7 @@ public class MultiDexIO {
 		if (file.isDirectory()) return new DirectoryDexContainer(file, namer, opcodes);
 		if (!file.isFile()) throw new FileNotFoundException(file.toString());
 		MultiDexContainer<? extends DexFile> container = DexFileFactory.loadDexContainer(file, opcodes);
-		if (container instanceof ZipDexContainer) container = new FilteredMultiDexContainer<>(container, namer);
+		if (container instanceof ZipDexContainer) container = new FilteredMultiDexContainer<>(container, namer, true);
 		return container;
 	}
 

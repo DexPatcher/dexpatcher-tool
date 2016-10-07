@@ -24,7 +24,7 @@ public class FilteredMultiDexContainer<T extends DexFile> implements MultiDexCon
 	private final DexFileNamer namer;
 	private final List<String> dexEntryNames;       // should be Set<String>
 
-	public FilteredMultiDexContainer(MultiDexContainer<T> container, DexFileNamer namer) throws IOException {
+	public FilteredMultiDexContainer(MultiDexContainer<T> container, DexFileNamer namer, boolean sort) throws IOException {
 		this.container = container;
 		this.namer = namer;
 		List<String> filteredNames = new ArrayList<>();
@@ -32,6 +32,10 @@ public class FilteredMultiDexContainer<T extends DexFile> implements MultiDexCon
 			if (namer.isValidName(name)) {
 				filteredNames.add(name);
 			}
+		}
+		if (sort) {
+			// TODO: Implement a numeric sort.
+			Collections.sort(filteredNames);
 		}
 		dexEntryNames = Collections.unmodifiableList(filteredNames);
 	}
