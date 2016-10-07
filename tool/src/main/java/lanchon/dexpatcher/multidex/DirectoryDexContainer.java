@@ -42,14 +42,14 @@ public class DirectoryDexContainer implements MultiDexContainer<DirectoryDexCont
 		Arrays.sort(names);
 		List<String> entryNames = new ArrayList<>();
 		for (String name : names) {
-			if (namer.isValidName(name)) entryNames.add(name);
+			if (new File(directory, name).isFile() && namer.isValidName(name)) entryNames.add(name);
 		}
 		return entryNames;
 	}
 
 	@Override
 	public DirectoryDexFile getEntry(String entryName) throws IOException {
-		if (!namer.isValidName(entryName)) return null;
+		if (!(new File(directory, entryName).isFile() && namer.isValidName(entryName))) return null;
 		File file = new File(directory, entryName);
 		DexFile dexFile = MultiDexIO.readRawDexFile(file, opcodes);
 		return new DirectoryDexFile(dexFile, entryName);
