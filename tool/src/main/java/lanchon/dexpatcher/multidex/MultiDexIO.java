@@ -19,6 +19,7 @@ import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Executors;
 
 import org.jf.dexlib2.DexFileFactory;
 import org.jf.dexlib2.Opcodes;
@@ -34,7 +35,7 @@ public class MultiDexIO {
 
 	public interface Logger {
 
-		void log(boolean multiDex, File file, String entryName, int typeCount);
+		void log(File file, String entryName, int typeCount);
 
 	}
 
@@ -47,19 +48,21 @@ public class MultiDexIO {
 		MultiDexContainer<? extends DexFile> container = readMultiDexContainer(multiDex, file, namer, opcodes);
 		if (logger != null) {
 			for (String name : container.getDexEntryNames()) {
-				logger.log(multiDex, file, name, container.getEntry(name).getClasses().size());
+				logger.log(file, name, container.getEntry(name).getClasses().size());
 			}
 		}
 		return new MultiDexContainerBackedDexFile<>(container, opcodes);
 	}
 
-	public static MultiDexContainer<? extends DexFile> readMultiDexContainer(boolean multiDex, File file, DexFileNamer namer, Opcodes opcodes) throws IOException {
+	public static MultiDexContainer<? extends DexFile> readMultiDexContainer(boolean multiDex, File file,
+			DexFileNamer namer, Opcodes opcodes) throws IOException {
 		MultiDexContainer<? extends DexFile> container = readMultiDexContainer(file, namer, opcodes);
 		if (!multiDex && container.getDexEntryNames().size() != 1) throw new MultiDexDetectedException(file.toString());
 		return container;
 	}
 
-	public static MultiDexContainer<? extends DexFile> readMultiDexContainer(File file, DexFileNamer namer, Opcodes opcodes) throws IOException {
+	public static MultiDexContainer<? extends DexFile> readMultiDexContainer(File file, DexFileNamer namer,
+			Opcodes opcodes) throws IOException {
 		if (file.isDirectory()) return new DirectoryDexContainer(file, namer, opcodes);
 		if (!file.isFile()) throw new FileNotFoundException(file.toString());
 		MultiDexContainer<? extends DexFile> container = DexFileFactory.loadDexContainer(file, opcodes);
@@ -78,13 +81,19 @@ public class MultiDexIO {
 
 	// Write
 
-	public static void writeDexFile(boolean multiDex, File file, DexFileNamer namer, DexFile dexFile,
+	public static int writeDexFile(boolean multiDex, File file, DexFileNamer namer, DexFile dexFile,
 			MultiDexIO.Logger logger) throws IOException {
+		return writeDexFile(multiDex, 1, file, namer, dexFile, logger);
+	}
+
+	public static int writeDexFile(boolean multiDex, int threadCount, File file, DexFileNamer namer,
+			DexFile dexFile, MultiDexIO.Logger logger) throws IOException {
 		if (file.isDirectory()) {
-			writeMultiDexDirectory(multiDex, file, namer, dexFile, logger);
+			return writeMultiDexDirectory(multiDex, threadCount, file, namer, dexFile, logger);
 		} else {
 			if (multiDex) throw new RuntimeException("Must output to a directory if multi-dex mode is enabled");
 			writeRawDexFile(file, dexFile, logger);
+			return 1;
 		}
 	}
 
@@ -118,51 +127,89 @@ public class MultiDexIO {
 
 	}
 
-	public static int writeMultiDexDirectory(boolean multiDex, File directory, DexFileNamer namer, DexFile dexFile,
-			MultiDexIO.Logger logger) throws IOException {
+	public static int writeMultiDexDirectory(boolean multiDex, int threadCount, File directory,
+			DexFileNamer namer, DexFile dexFile, MultiDexIO.Logger logger) throws IOException {
 		purgeMultiDexDirectory(multiDex, directory, namer);
 		NameIterator nameIterator = new NameIterator(namer);
-		String currentName = nameIterator.next();
-		File currentFile = new File(directory, currentName);
-		writeMultiDexCommon(multiDex, directory, nameIterator, currentName, currentFile, dexFile, logger);
+		if (multiDex && threadCount > 1) {
+			writeMultiDexMultiThread(threadCount, directory, nameIterator, dexFile, logger);
+		} else {
+			writeMultiDexSingleThread(multiDex, directory, nameIterator, dexFile, logger);
+		}
 		return nameIterator.getCount();
 	}
 
 	public static void writeRawDexFile(File file, DexFile dexFile, MultiDexIO.Logger logger) throws IOException {
-		String currentName = file.toString();
-		File currentFile = file;
-		writeMultiDexCommon(false, file, null, currentName, currentFile, dexFile, logger);
+		writeCommonSingleThread(false, file, null, file.toString(), file, dexFile, logger);
 	}
 
-	private static void writeMultiDexCommon(boolean multiDex, File base, NameIterator nameIterator,
+	private static void writeMultiDexSingleThread(boolean multiDex, File directory, NameIterator nameIterator,
+			DexFile dexFile, MultiDexIO.Logger logger) throws IOException {
+		writeCommonSingleThread(multiDex, directory, nameIterator, null, null, dexFile, logger);
+	}
+
+	private static void writeCommonSingleThread(boolean multiDex, File base, NameIterator nameIterator,
 			String currentName, File currentFile, DexFile dexFile, MultiDexIO.Logger logger) throws IOException {
 		Set<? extends ClassDef> classes = dexFile.getClasses();
-		PushBackIterator<? extends ClassDef> classIterator = new PushBackIterator<>(classes.iterator());
-		for (;;) {
-			DexPool dexPool = DexPool.makeDexPool(dexFile.getOpcodes());
+		int minMainDexClassCount = (multiDex ? 0 : classes.size());
+		PushBackIterator<ClassDef> classIterator = new PushBackIterator<ClassDef>(classes.iterator());
+		Object lock = new Object();
+		synchronized (lock) {       // avoid multiple synchronizations in single-threaded mode
+			writeMultiDexCommon(minMainDexClassCount, base, nameIterator, currentName, currentFile, classIterator,
+					dexFile.getOpcodes(), logger, lock);
+		}
+	}
+
+	public static void writeMultiDexMultiThread(int threadCount, final File directory, final NameIterator nameIterator,
+			DexFile dexFile, MultiDexIO.Logger logger) throws IOException {
+		throw new UnsupportedOperationException();
+	}
+
+	private static void writeMultiDexCommon(int minMainDexClassCount, File base, NameIterator nameIterator,
+			String currentName, File currentFile, PushBackIterator<ClassDef> classIterator, Opcodes opcodes,
+			MultiDexIO.Logger logger, Object lock) throws IOException {
+		ClassDef currentClass;
+		synchronized (lock) {
+			currentClass = classIterator.hasNext() ? classIterator.next() : null;
+		}
+		do {
+			DexPool dexPool = DexPool.makeDexPool(opcodes);
 			int fileClassCount = 0;
-			while (classIterator.hasNext()) {
-				ClassDef currentClass = classIterator.next();
+			while (currentClass != null) {
 				dexPool.mark();
 				dexPool.internClass(currentClass);
 				fileClassCount++;
 				if (dexPool.hasOverflowed()) {
-					if (!multiDex) throw new DexPoolOverflowException(
-							"Dex pool overflowed while writing type " + (fileClassCount) + " of " + classes.size());
+					if (fileClassCount <= minMainDexClassCount) throw new DexPoolOverflowException(
+							"Dex pool overflowed while writing type " + (fileClassCount) + " of " + minMainDexClassCount);
 					if (fileClassCount == 1) throw new DexPoolOverflowException(
 							"Type too big for dex pool: " + currentClass.getType());
-					classIterator.pushBack();
+					//synchronized (lock) { classIterator.pushBack(currentClass); }
 					dexPool.reset();
 					fileClassCount--;
 					break;
 				}
+				synchronized (lock) {
+					currentClass = classIterator.hasNext() ? classIterator.next() : null;
+				}
 			}
-			if (logger != null) logger.log(multiDex, base, currentName, fileClassCount);
+			synchronized (lock) {
+				if (currentClass != null) {
+					classIterator.pushBack(currentClass);
+				}
+				if (currentFile == null) {
+					currentName = nameIterator.next();
+					currentFile = new File(base, currentName);
+				}
+				if (logger != null) logger.log(base, currentName, fileClassCount);
+			}
 			dexPool.writeTo(new FileDataStore(currentFile));
-			if (!classIterator.hasNext()) break;
-			currentName = nameIterator.next();
-			currentFile = new File(base, currentName);
-		}
+			currentFile = null;
+			minMainDexClassCount = 0;
+			synchronized (lock) {
+				currentClass = classIterator.hasNext() ? classIterator.next() : null;
+			}
+		} while (currentClass != null);
 	}
 
 	public static void purgeMultiDexDirectory(boolean multiDex, File directory, DexFileNamer namer) throws IOException {

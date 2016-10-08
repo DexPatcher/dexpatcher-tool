@@ -14,27 +14,29 @@ import java.util.Iterator;
 
 public final class PushBackIterator<T> implements Iterator<T> {
 
-	private final Iterator<T> iterator;
-	private T lastItem;
-	private boolean pushedBack;
+	private final Iterator<? extends T> iterator;
+	private boolean hasPushBackItem;
+	private T pushBackItem;
 
-	public PushBackIterator(Iterator<T> iterator) {
+	public PushBackIterator(Iterator<? extends T> iterator) {
 		this.iterator = iterator;
 	}
 
 	@Override
 	public boolean hasNext() {
-		return pushedBack || iterator.hasNext();
+		return hasPushBackItem || iterator.hasNext();
 	}
 
 	@Override
 	public T next() {
-		if (pushedBack) {
-			pushedBack = false;
+		if (hasPushBackItem) {
+			T item = pushBackItem;
+			hasPushBackItem = false;
+			pushBackItem = null;
+			return item;
 		} else {
-			lastItem = iterator.next();
+			return iterator.next();
 		}
-		return lastItem;
 	}
 
 	@Override
@@ -42,10 +44,10 @@ public final class PushBackIterator<T> implements Iterator<T> {
 		throw new UnsupportedOperationException();
 	}
 
-	public void pushBack() {
-		// WARNING: Will not detect if no item has ever been read.
-		if (pushedBack) throw new IllegalStateException();
-		pushedBack = true;
+	public void pushBack(T item) {
+		if (hasPushBackItem) throw new IllegalStateException("Pending pushed back item");
+		hasPushBackItem = true;
+		pushBackItem = item;
 	}
 
 }
