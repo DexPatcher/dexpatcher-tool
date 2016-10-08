@@ -13,6 +13,7 @@ package lanchon.dexpatcher;
 import java.util.List;
 
 import lanchon.dexpatcher.core.Context;
+import lanchon.dexpatcher.multidex.MultiDexIO;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;
@@ -53,6 +54,10 @@ public class Parser {
 		config.patchedFile = cl.getOptionValue("output");
 
 		config.multiDex = cl.hasOption("multi-dex");
+		if (cl.hasOption("multi-dex-mt")) { config.multiDex = true; config.multiDexJobs = 0; }
+		Number multiDexJobs = (Number) cl.getParsedOptionValue("multi-dex-jobs");
+		if (multiDexJobs != null) { config.multiDex = true; config.multiDexJobs = multiDexJobs.intValue(); }
+
 		Number apiLevel = (Number) cl.getParsedOptionValue("api-level");
 		config.apiLevel = (apiLevel != null ? apiLevel.intValue() :
 				(config.multiDex ? DEFAULT_API_LEVEL_MULTI_DEX : DEFAULT_API_LEVEL_UNI_DEX ));
@@ -92,7 +97,12 @@ public class Parser {
 		o = new Option("a", "api-level", true, "android api level of dex files (default:" + System.lineSeparator() +
 				DEFAULT_API_LEVEL_MULTI_DEX + " if multi-dex is enabled, " + DEFAULT_API_LEVEL_UNI_DEX + " otherwise)");
 		o.setArgName("n"); o.setType(Number.class); options.addOption(o);
+
 		options.addOption(new Option("m", "multi-dex", false, "enable multi-dex support"));
+		options.addOption(new Option("M", "multi-dex-mt", false, "multi-dex multi-threading (implies: -m)"));
+		o = new Option("J", "multi-dex-jobs", true, "multi-dex thread count (implies: -m -M) (default: available processors up to " +
+				MultiDexIO.DEFAULT_MAX_THREADS + ")");
+		o.setArgName("n"); o.setType(Number.class); options.addOption(o);
 
 		o = new Option(null, "annotations", true, "package name of DexPatcher annotations (default: '" +
 				Context.DEFAULT_ANNOTATION_PACKAGE + "')");

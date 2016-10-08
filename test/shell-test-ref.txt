@@ -14,6 +14,9 @@ usage: dexpatcher [<option> ...] [--output <patched-dex-or-dir>]
                               (default: 'lanchon.dexpatcher.annotation')
     --compat-dextag           enable support for the deprecated DexTag
     --debug                   output debugging information
+ -J,--multi-dex-jobs <n>      multi-dex thread count (implies: -m -M)
+                              (default: available processors up to 4)
+ -M,--multi-dex-mt            multi-dex multi-threading (implies: -m)
  -m,--multi-dex               enable multi-dex support
  -o,--output <dex-or-dir>     name of output file or directory
  -p,--path                    output relative paths of source code files

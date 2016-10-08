@@ -16,10 +16,17 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InterruptedIOException;
+import java.lang.reflect.UndeclaredThrowableException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import org.jf.dexlib2.DexFileFactory;
 import org.jf.dexlib2.Opcodes;
@@ -32,6 +39,8 @@ import org.jf.dexlib2.writer.io.FileDataStore;
 import org.jf.dexlib2.writer.pool.DexPool;
 
 public class MultiDexIO {
+
+	public static final int DEFAULT_MAX_THREADS = 4;
 
 	public interface Logger {
 
@@ -131,6 +140,10 @@ public class MultiDexIO {
 			DexFileNamer namer, DexFile dexFile, MultiDexIO.Logger logger) throws IOException {
 		purgeMultiDexDirectory(multiDex, directory, namer);
 		NameIterator nameIterator = new NameIterator(namer);
+		if (threadCount <= 0) {
+			threadCount = Runtime.getRuntime().availableProcessors();
+			if (threadCount > DEFAULT_MAX_THREADS) threadCount = DEFAULT_MAX_THREADS;
+		}
 		if (multiDex && threadCount > 1) {
 			writeMultiDexMultiThread(threadCount, directory, nameIterator, dexFile, logger);
 		} else {
@@ -161,8 +174,42 @@ public class MultiDexIO {
 	}
 
 	public static void writeMultiDexMultiThread(int threadCount, final File directory, final NameIterator nameIterator,
-			DexFile dexFile, MultiDexIO.Logger logger) throws IOException {
-		throw new UnsupportedOperationException();
+			final DexFile dexFile, final MultiDexIO.Logger logger) throws IOException {
+		Set<? extends ClassDef> classes = dexFile.getClasses();
+		final PushBackIterator<ClassDef> classIterator = new PushBackIterator<ClassDef>(classes.iterator());
+		final Object lock = new Object();
+		List<Callable<Void>> callables = new ArrayList<>(threadCount);
+		for (int i = 0; i < threadCount; i++) {
+			callables.add(new Callable<Void>() {
+				@Override
+				public Void call() throws IOException {
+					writeMultiDexCommon(0, directory, nameIterator, null, null, classIterator,
+							dexFile.getOpcodes(), logger, lock);
+					return null;
+				}
+			});
+		}
+		ExecutorService service = Executors.newFixedThreadPool(threadCount);
+		try {
+			List<Future<Void>> futures = service.invokeAll(callables);
+			for (Future<Void> future : futures) {
+				try {
+					future.get();
+				} catch (ExecutionException e) {
+					Throwable c = e.getCause();
+					if (c instanceof IOException) throw (IOException) c;
+					if (c instanceof RuntimeException) throw (RuntimeException) c;
+					if (c instanceof Error) throw (Error) c;
+					throw new UndeclaredThrowableException(c);
+				}
+			}
+		} catch (InterruptedException e) {
+			InterruptedIOException ioe = new InterruptedIOException();
+			ioe.initCause(e);
+			throw ioe;
+		} finally {
+			service.shutdown();
+		}
 	}
 
 	private static void writeMultiDexCommon(int minMainDexClassCount, File base, NameIterator nameIterator,
