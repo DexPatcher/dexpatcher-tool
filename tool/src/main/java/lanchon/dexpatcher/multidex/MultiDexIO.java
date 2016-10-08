@@ -18,9 +18,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InterruptedIOException;
 import java.lang.reflect.UndeclaredThrowableException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -41,6 +44,8 @@ import org.jf.dexlib2.writer.pool.DexPool;
 public class MultiDexIO {
 
 	public static final int DEFAULT_MAX_THREADS = 4;
+
+	private static final int PER_THREAD_BATCH_SIZE = 100;
 
 	public interface Logger {
 
@@ -165,18 +170,16 @@ public class MultiDexIO {
 			String currentName, File currentFile, DexFile dexFile, MultiDexIO.Logger logger) throws IOException {
 		Set<? extends ClassDef> classes = dexFile.getClasses();
 		int minMainDexClassCount = (multiDex ? 0 : classes.size());
-		PushBackIterator<ClassDef> classIterator = new PushBackIterator<ClassDef>(classes.iterator());
 		Object lock = new Object();
 		synchronized (lock) {       // avoid multiple synchronizations in single-threaded mode
-			writeMultiDexCommon(minMainDexClassCount, base, nameIterator, currentName, currentFile, classIterator,
-					dexFile.getOpcodes(), logger, lock);
+			writeMultiDexCommon(minMainDexClassCount, base, nameIterator, currentName, currentFile,
+					classes.iterator(), dexFile.getOpcodes(), logger, lock);
 		}
 	}
 
 	public static void writeMultiDexMultiThread(int threadCount, final File directory, final NameIterator nameIterator,
 			final DexFile dexFile, final MultiDexIO.Logger logger) throws IOException {
-		Set<? extends ClassDef> classes = dexFile.getClasses();
-		final PushBackIterator<ClassDef> classIterator = new PushBackIterator<ClassDef>(classes.iterator());
+		final Iterator<? extends ClassDef> classIterator = dexFile.getClasses().iterator();
 		final Object lock = new Object();
 		List<Callable<Void>> callables = new ArrayList<>(threadCount);
 		for (int i = 0; i < threadCount; i++) {
@@ -212,13 +215,29 @@ public class MultiDexIO {
 		}
 	}
 
-	private static void writeMultiDexCommon(int minMainDexClassCount, File base, NameIterator nameIterator,
-			String currentName, File currentFile, PushBackIterator<ClassDef> classIterator, Opcodes opcodes,
-			MultiDexIO.Logger logger, Object lock) throws IOException {
-		ClassDef currentClass;
-		synchronized (lock) {
-			currentClass = classIterator.hasNext() ? classIterator.next() : null;
+	private static <T> void fillQueue(Queue<T> queue, Iterator<? extends T> iterator, int targetSize) {
+		for (int i = queue.size(); i < targetSize; i++) {
+			if (!iterator.hasNext()) break;
+			queue.add(iterator.next());
 		}
+	}
+
+	private static <T> T getQueueItem(Queue<T> queue, Iterator<? extends T> iterator, Object lock) {
+		T item = queue.poll();
+		if (item == null) {
+			synchronized (lock) {
+				fillQueue(queue, iterator, PER_THREAD_BATCH_SIZE);
+			}
+			item = queue.poll();
+		}
+		return item;
+	}
+
+	private static void writeMultiDexCommon(int minMainDexClassCount, File base, NameIterator nameIterator,
+			String currentName, File currentFile, Iterator<? extends ClassDef> classIterator, Opcodes opcodes,
+			MultiDexIO.Logger logger, Object lock) throws IOException {
+		Deque<ClassDef> queue = new ArrayDeque<>(PER_THREAD_BATCH_SIZE);
+		ClassDef currentClass = getQueueItem(queue, classIterator, lock);
 		do {
 			DexPool dexPool = DexPool.makeDexPool(opcodes);
 			int fileClassCount = 0;
@@ -231,31 +250,23 @@ public class MultiDexIO {
 							"Dex pool overflowed while writing type " + (fileClassCount) + " of " + minMainDexClassCount);
 					if (fileClassCount == 1) throw new DexPoolOverflowException(
 							"Type too big for dex pool: " + currentClass.getType());
-					//synchronized (lock) { classIterator.pushBack(currentClass); }
 					dexPool.reset();
 					fileClassCount--;
 					break;
 				}
-				synchronized (lock) {
-					currentClass = classIterator.hasNext() ? classIterator.next() : null;
-				}
+				currentClass = getQueueItem(queue, classIterator, lock);
 			}
 			synchronized (lock) {
-				if (currentClass != null) {
-					classIterator.pushBack(currentClass);
-				}
 				if (currentFile == null) {
 					currentName = nameIterator.next();
 					currentFile = new File(base, currentName);
 				}
 				if (logger != null) logger.log(base, currentName, fileClassCount);
+				fillQueue(queue, classIterator, PER_THREAD_BATCH_SIZE - 1);
 			}
 			dexPool.writeTo(new FileDataStore(currentFile));
 			currentFile = null;
 			minMainDexClassCount = 0;
-			synchronized (lock) {
-				currentClass = classIterator.hasNext() ? classIterator.next() : null;
-			}
 		} while (currentClass != null);
 	}
 
