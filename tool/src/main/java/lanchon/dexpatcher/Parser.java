@@ -99,7 +99,7 @@ public class Parser {
 		o.setArgName("n"); o.setType(Number.class); options.addOption(o);
 
 		options.addOption(new Option("m", "multi-dex", false, "enable multi-dex support"));
-		options.addOption(new Option("M", "multi-dex-mt", false, "multi-dex multi-threading (implies: -m)"));
+		options.addOption(new Option("M", "multi-dex-threaded", false, "multi-threaded multi-dex (implies: -m)"));
 		o = new Option("J", "multi-dex-jobs", true, "multi-dex thread count (implies: -m -M) (default: available processors up to " +
 				MultiDexIO.DEFAULT_MAX_THREADS + ")");
 		o.setArgName("n"); o.setType(Number.class); options.addOption(o);
