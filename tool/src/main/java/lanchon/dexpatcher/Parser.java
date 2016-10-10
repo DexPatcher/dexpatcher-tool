@@ -74,6 +74,8 @@ public class Parser {
 		config.sourceCodeRoot = cl.getOptionValue("path-root", config.sourceCodeRoot);
 		config.timingStats = cl.hasOption("stats");
 
+		config.dryRun = cl.hasOption("dry-run");
+
 		return config;
 
 	}
@@ -117,6 +119,8 @@ public class Parser {
 		o = new Option(null, "path-root", true, "output absolute paths of source code files");
 		o.setArgName("root"); options.addOption(o);
 		options.addOption(new Option(null, "stats", false, "output timing statistics"));
+
+		options.addOption(new Option(null, "dry-run", false, "do not write output files (much faster)"));
 
 		options.addOption(new Option(null, "version", false, "print version information and exit"));
 		options.addOption(new Option("?", "help", false, "print this help message and exit"));

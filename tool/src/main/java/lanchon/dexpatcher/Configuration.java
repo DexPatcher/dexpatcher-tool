@@ -34,4 +34,6 @@ public class Configuration {
 	public String sourceCodeRoot;
 	public boolean timingStats;
 
+	public boolean dryRun;
+
 }
