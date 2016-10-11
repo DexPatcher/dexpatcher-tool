@@ -59,13 +59,13 @@ public class Processor {
 			dex = processDex(dex, patchDex);
 		}
 
-		if (config.dryRun) {
-			logger.log(INFO, "dry run due to '--dry-run' option");
-		} else {
-			if (config.patchedFile == null) {
-				logger.log(WARN, "dry run due to missing '--output' option");
+		if (logger.hasNotloggedErrors()) {
+			if (config.dryRun) {
+				logger.log(INFO, "dry run due to '--dry-run' option");
 			} else {
-				if (logger.hasNotloggedErrors()) {
+				if (config.patchedFile == null) {
+					logger.log(WARN, "dry run due to missing '--output' option");
+				} else {
 					writeDex(new File(config.patchedFile), dex);
 				}
 			}
