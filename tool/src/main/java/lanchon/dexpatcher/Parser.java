@@ -54,7 +54,7 @@ public class Parser {
 		config.patchedFile = cl.getOptionValue("output");
 
 		config.multiDex = cl.hasOption("multi-dex");
-		if (cl.hasOption("multi-dex-mt")) { config.multiDex = true; config.multiDexJobs = 0; }
+		if (cl.hasOption("multi-dex-threaded")) { config.multiDex = true; config.multiDexJobs = 0; }
 		Number multiDexJobs = (Number) cl.getParsedOptionValue("multi-dex-jobs");
 		if (multiDexJobs != null) { config.multiDex = true; config.multiDexJobs = multiDexJobs.intValue(); }
 
