@@ -10,11 +10,13 @@
 
 plugins {
     id 'java'
-    id "com.github.johnrengelman.shadow" version "1.2.3"
+    id 'com.github.johnrengelman.shadow' version '1.2.3'
 }
 
 group = parent.group
 version = parent.version
+
+sourceCompatibility = '1.7'
 
 repositories {
     jcenter()
@@ -36,7 +38,7 @@ dependencies {
 }
 
 compileJava {
-    options.compilerArgs << "-Xlint:unchecked" << "-Xlint:deprecation"
+    options.compilerArgs << '-Xlint:unchecked' << '-Xlint:deprecation'
 }
 
 task writeVersionFile {

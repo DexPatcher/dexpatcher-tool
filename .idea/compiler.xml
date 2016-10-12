@@ -19,8 +19,8 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="annotation_main" target="1.7" />
-      <module name="annotation_test" target="1.7" />
+      <module name="annotation_main" target="1.5" />
+      <module name="annotation_test" target="1.5" />
       <module name="patch_main" target="1.7" />
       <module name="patch_test" target="1.7" />
       <module name="source_main" target="1.7" />
