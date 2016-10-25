@@ -14,12 +14,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import org.jf.dexlib2.Opcodes;
+import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.DexFile;
 import org.jf.dexlib2.iface.MultiDexContainer;
 
-public class FilteredMultiDexContainer<T extends DexFile> implements MultiDexContainer<T> {
+public class FilteredMultiDexContainer<T extends DexFile> implements MultiDexContainer<FilteredMultiDexContainer.FilteredMultiDexFile> {
 
 	private final MultiDexContainer<T> container;
 	private final DexFileNamer namer;               // TODO: Remove when dexEntryNames becomes a Set.
@@ -47,16 +49,48 @@ public class FilteredMultiDexContainer<T extends DexFile> implements MultiDexCon
 	}
 
 	@Override
-	public T getEntry(String entryName) throws IOException {
+	public FilteredMultiDexFile getEntry(String entryName) throws IOException {
 		// TODO: Change when dexEntryNames becomes a Set.
 		//if (!dexEntryNames.contains(entryName)) return null;
 		if (!namer.isValidName(entryName)) return null;
-		return container.getEntry(entryName);
+		return new FilteredMultiDexFile(container.getEntry(entryName), entryName);
 	}
 
 	@Override
 	public Opcodes getOpcodes() {
 		return container.getOpcodes();
+	}
+
+	public class FilteredMultiDexFile implements MultiDexContainer.MultiDexFile {
+
+		private final DexFile dexFile;
+		private final String entryName;
+
+		private FilteredMultiDexFile(DexFile dexFile, String entryName) {
+			this.dexFile = dexFile;
+			this.entryName = entryName;
+		}
+
+		@Override
+		public Set<? extends ClassDef> getClasses() {
+			return dexFile.getClasses();
+		}
+
+		@Override
+		public Opcodes getOpcodes() {
+			return dexFile.getOpcodes();
+		}
+
+		@Override
+		public String getEntryName() {
+			return entryName;
+		}
+
+		@Override
+		public FilteredMultiDexContainer<T> getContainer() {
+			return FilteredMultiDexContainer.this;
+		}
+
 	}
 
 }

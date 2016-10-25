@@ -23,14 +23,14 @@ import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.DexFile;
 import org.jf.dexlib2.iface.MultiDexContainer;
 
-public class DirectoryDexContainer implements MultiDexContainer<DirectoryDexContainer.DirectoryDexFile> {
+public class DirectoryMultiDexContainer implements MultiDexContainer<DirectoryMultiDexContainer.DirectoryMultiDexFile> {
 
 	private final File directory;
 	private final DexFileNamer namer;               // TODO: Remove when dexEntryNames becomes a Set.
 	private final Opcodes opcodes;
 	private final List<String> dexEntryNames;       // TODO: Should change to Set<String> upstream.
 
-	public DirectoryDexContainer(File directory, DexFileNamer namer, Opcodes opcodes) throws IOException {
+	public DirectoryMultiDexContainer(File directory, DexFileNamer namer, Opcodes opcodes) throws IOException {
 		this.directory = directory;
 		this.namer = namer;
 		this.opcodes = opcodes;
@@ -53,13 +53,13 @@ public class DirectoryDexContainer implements MultiDexContainer<DirectoryDexCont
 	}
 
 	@Override
-	public DirectoryDexFile getEntry(String entryName) throws IOException {
+	public DirectoryMultiDexFile getEntry(String entryName) throws IOException {
 		// TODO: Change when dexEntryNames becomes a Set.
 		//if (!dexEntryNames.contains(entryName)) return null;
 		if (!(new File(directory, entryName).isFile() && namer.isValidName(entryName))) return null;
 		File file = new File(directory, entryName);
 		DexFile dexFile = MultiDexIO.readRawDexFile(file, opcodes);
-		return new DirectoryDexFile(dexFile, entryName);
+		return new DirectoryMultiDexFile(dexFile, entryName);
 	}
 
 	@Override
@@ -67,12 +67,12 @@ public class DirectoryDexContainer implements MultiDexContainer<DirectoryDexCont
 		return opcodes;
 	}
 
-	public class DirectoryDexFile implements MultiDexContainer.MultiDexFile {
+	public class DirectoryMultiDexFile implements MultiDexContainer.MultiDexFile {
 
 		private final DexFile dexFile;
 		private final String entryName;
 
-		private DirectoryDexFile(DexFile dexFile, String entryName) {
+		private DirectoryMultiDexFile(DexFile dexFile, String entryName) {
 			this.dexFile = dexFile;
 			this.entryName = entryName;
 		}
@@ -93,8 +93,8 @@ public class DirectoryDexContainer implements MultiDexContainer<DirectoryDexCont
 		}
 
 		@Override
-		public MultiDexContainer<DirectoryDexFile> getContainer() {
-			return DirectoryDexContainer.this;
+		public DirectoryMultiDexContainer getContainer() {
+			return DirectoryMultiDexContainer.this;
 		}
 
 	}
