@@ -77,7 +77,7 @@ public class MultiDexIO {
 
 	public static MultiDexContainer<? extends DexFile> readMultiDexContainer(File file, DexFileNamer namer,
 			Opcodes opcodes) throws IOException {
-		if (file.isDirectory()) return new DirectoryMultiDexContainer(file, namer, opcodes);
+		if (file.isDirectory()) return new DirectoryDexContainer(file, namer, opcodes);
 		if (!file.isFile()) throw new FileNotFoundException(file.toString());
 		MultiDexContainer<? extends DexFile> container = DexFileFactory.loadDexContainer(file, opcodes);
 		if (container instanceof ZipDexContainer) container = new FilteredMultiDexContainer<>(container, namer, true);
@@ -271,7 +271,7 @@ public class MultiDexIO {
 	}
 
 	public static void purgeMultiDexDirectory(boolean multiDex, File directory, DexFileNamer namer) throws IOException {
-		List<String> names = new DirectoryMultiDexContainer(directory, namer, null).getDexEntryNames();
+		List<String> names = new DirectoryDexContainer(directory, namer, null).getDexEntryNames();
 		if (!multiDex && names.size() > 1) throw new MultiDexDetectedException(directory.toString());
 		for (String name : names) {
 			File existingFile = new File(directory, name);
