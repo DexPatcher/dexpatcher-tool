@@ -24,34 +24,30 @@ import org.jf.dexlib2.iface.MultiDexContainer;
 public class FilteredMultiDexContainer<T extends DexFile> implements MultiDexContainer<FilteredMultiDexContainer.FilteredMultiDexFile> {
 
 	private final MultiDexContainer<T> container;
-	private final DexFileNamer namer;               // TODO: Remove when dexEntryNames becomes a Set.
-	private final List<String> dexEntryNames;       // TODO: Should change to Set<String> upstream.
+	private final DexFileNamer namer;
+	private final boolean sort;
 
-	public FilteredMultiDexContainer(MultiDexContainer<T> container, DexFileNamer namer, boolean sort) throws IOException {
+	public FilteredMultiDexContainer(MultiDexContainer<T> container, DexFileNamer namer, boolean sort) {
 		this.container = container;
 		this.namer = namer;
+		this.sort = sort;
+	}
+
+	@Override
+	public List<String> getDexEntryNames() throws IOException {
 		List<String> filteredNames = new ArrayList<>();
 		for (String name : container.getDexEntryNames()) {
-			if (namer.isValidName(name)) {
-				filteredNames.add(name);
-			}
+			if (namer.isValidName(name)) filteredNames.add(name);
 		}
 		if (sort) {
 			// TODO: Implement a numeric sort.
 			Collections.sort(filteredNames);
 		}
-		dexEntryNames = Collections.unmodifiableList(filteredNames);
-	}
-
-	@Override
-	public List<String> getDexEntryNames() {
-		return dexEntryNames;
+		return filteredNames;
 	}
 
 	@Override
 	public FilteredMultiDexFile getEntry(String entryName) throws IOException {
-		// TODO: Change when dexEntryNames becomes a Set.
-		//if (!dexEntryNames.contains(entryName)) return null;
 		if (!namer.isValidName(entryName)) return null;
 		return new FilteredMultiDexFile(container.getEntry(entryName), entryName);
 	}

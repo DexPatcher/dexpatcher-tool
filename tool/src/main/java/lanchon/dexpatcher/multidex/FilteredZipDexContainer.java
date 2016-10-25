@@ -25,7 +25,7 @@ public class FilteredZipDexContainer extends ZipDexContainer {
 	private final DexFileNamer namer;
 	private final boolean sort;
 
-	public FilteredZipDexContainer(File zipFilePath, DexFileNamer namer, boolean sort, Opcodes opcodes) throws IOException {
+	public FilteredZipDexContainer(File zipFilePath, DexFileNamer namer, boolean sort, Opcodes opcodes) {
 		super(zipFilePath, opcodes);
 		this.namer = namer;
 		this.sort = sort;
@@ -33,22 +33,24 @@ public class FilteredZipDexContainer extends ZipDexContainer {
 
 	@Override
 	public List<String> getDexEntryNames() throws IOException {
-		List<String> entryNames = super.getDexEntryNames();
+		List<String> filteredNames = super.getDexEntryNames();
 		if (sort) {
 			// TODO: Implement a numeric sort.
-			Collections.sort(entryNames);
+			Collections.sort(filteredNames);
 		}
-		return entryNames;
+		return filteredNames;
 	}
 
 	@Override
 	public ZipDexFile getEntry(String entryName) throws IOException {
-		return namer.isValidName(entryName) ? super.getEntry(entryName) : null;
+		if (!namer.isValidName(entryName)) return null;
+		return super.getEntry(entryName);
 	}
 
 	@Override
 	protected boolean isDex(ZipFile zipFile, ZipEntry zipEntry) throws IOException {
-		return namer.isValidName(zipEntry.getName()) && super.isDex(zipFile, zipEntry);
+		if (!namer.isValidName(zipEntry.getName())) return false;
+		return super.isDex(zipFile, zipEntry);
 	}
 
 }

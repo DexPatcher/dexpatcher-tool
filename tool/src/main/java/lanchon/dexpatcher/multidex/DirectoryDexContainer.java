@@ -13,7 +13,6 @@ package lanchon.dexpatcher.multidex;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -26,36 +25,30 @@ import org.jf.dexlib2.iface.MultiDexContainer;
 public class DirectoryDexContainer implements MultiDexContainer<DirectoryDexContainer.DirectoryDexFile> {
 
 	private final File directory;
-	private final DexFileNamer namer;               // TODO: Remove when dexEntryNames becomes a Set.
+	private final DexFileNamer namer;
 	private final Opcodes opcodes;
-	private final List<String> dexEntryNames;       // TODO: Should change to Set<String> upstream.
 
-	public DirectoryDexContainer(File directory, DexFileNamer namer, Opcodes opcodes) throws IOException {
+	public DirectoryDexContainer(File directory, DexFileNamer namer, Opcodes opcodes) {
 		this.directory = directory;
 		this.namer = namer;
 		this.opcodes = opcodes;
-		String[] names = directory.list();
-		if (names == null) throw new IOException("Cannot access directory: " + directory);
-		// TODO: Implement a numeric sort.
-		Arrays.sort(names);
-		List<String> filteredNames = new ArrayList<>();
-		for (String name : names) {
-			if (new File(directory, name).isFile() && namer.isValidName(name)) {
-				filteredNames.add(name);
-			}
-		}
-		dexEntryNames = Collections.unmodifiableList(filteredNames);
 	}
 
 	@Override
-	public List<String> getDexEntryNames() {
-		return dexEntryNames;
+	public List<String> getDexEntryNames() throws IOException {
+		String[] names = directory.list();
+		if (names == null) throw new IOException("Cannot access directory: " + directory);
+		List<String> filteredNames = new ArrayList<>();
+		for (String name : names) {
+			if (new File(directory, name).isFile() && namer.isValidName(name)) filteredNames.add(name);
+		}
+		// TODO: Implement a numeric sort.
+		Collections.sort(filteredNames);
+		return filteredNames;
 	}
 
 	@Override
 	public DirectoryDexFile getEntry(String entryName) throws IOException {
-		// TODO: Change when dexEntryNames becomes a Set.
-		//if (!dexEntryNames.contains(entryName)) return null;
 		if (!(new File(directory, entryName).isFile() && namer.isValidName(entryName))) return null;
 		File file = new File(directory, entryName);
 		DexFile dexFile = MultiDexIO.readRawDexFile(file, opcodes);
