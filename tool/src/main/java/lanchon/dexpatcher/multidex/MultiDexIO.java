@@ -79,9 +79,9 @@ public class MultiDexIO {
 			Opcodes opcodes) throws IOException {
 		if (file.isDirectory()) return new DirectoryDexContainer(file, namer, opcodes);
 		if (!file.isFile()) throw new FileNotFoundException(file.toString());
-		MultiDexContainer<? extends DexFile> container = DexFileFactory.loadDexContainer(file, opcodes);
-		if (container instanceof ZipDexContainer) container = new FilteredMultiDexContainer<>(container, namer, true);
-		return container;
+		FilteredZipDexContainer zipContainer = new FilteredZipDexContainer(file, namer, true, opcodes);
+		if (zipContainer.isZipFile()) return zipContainer;
+		else return DexFileFactory.loadDexContainer(file, opcodes);
 	}
 
 	public static DexBackedDexFile readRawDexFile(File file, Opcodes opcodes) throws IOException {
