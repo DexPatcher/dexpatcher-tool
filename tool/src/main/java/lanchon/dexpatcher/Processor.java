@@ -121,9 +121,11 @@ public class Processor {
 		return new MultiDexIO.Logger() {
 			@Override
 			public void log(File file, String entryName, int typeCount) {
-				String h = header;
-				if (!entryName.equals(file.toString())) h += ": file '" + entryName + "'";
-				if (logger.isLogging(DEBUG)) logger.log(DEBUG, h + ": " + typeCount + " types");
+				if (logger.isLogging(DEBUG)) {
+					String h = header;
+					if (!entryName.equals(file.toString())) h += ": file '" + entryName + "'";
+					logger.log(DEBUG, h + ": " + typeCount + " types");
+				}
 			}
 		};
 	}
