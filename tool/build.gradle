@@ -28,7 +28,7 @@ repositories {
 }
 
 dependencies {
-    compile 'org.smali:dexlib2:2.2b3'
+    compile 'org.smali:dexlib2:2.2b4'
     compile 'commons-cli:commons-cli:1.2'
 
     // Use local fork of dexlib2:

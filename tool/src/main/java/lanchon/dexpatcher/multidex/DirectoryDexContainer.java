@@ -26,9 +26,9 @@ import org.jf.dexlib2.iface.MultiDexContainer;
 public class DirectoryDexContainer implements MultiDexContainer<DirectoryDexContainer.DirectoryDexFile> {
 
 	private final File directory;
-	private final DexFileNamer namer;
+	private final DexFileNamer namer;               // TODO: Remove when dexEntryNames becomes a Set.
 	private final Opcodes opcodes;
-	private final List<String> dexEntryNames;       // should be Set<String>
+	private final List<String> dexEntryNames;       // TODO: Should change to Set<String> upstream.
 
 	public DirectoryDexContainer(File directory, DexFileNamer namer, Opcodes opcodes) throws IOException {
 		this.directory = directory;
@@ -60,6 +60,11 @@ public class DirectoryDexContainer implements MultiDexContainer<DirectoryDexCont
 		File file = new File(directory, entryName);
 		DexFile dexFile = MultiDexIO.readRawDexFile(file, opcodes);
 		return new DirectoryDexFile(dexFile, entryName);
+	}
+
+	@Override
+	public Opcodes getOpcodes() {
+		return opcodes;
 	}
 
 	public class DirectoryDexFile implements MultiDexContainer.MultiDexFile {

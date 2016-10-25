@@ -15,14 +15,15 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.jf.dexlib2.Opcodes;
 import org.jf.dexlib2.iface.DexFile;
 import org.jf.dexlib2.iface.MultiDexContainer;
 
 public class FilteredMultiDexContainer<T extends DexFile> implements MultiDexContainer<T> {
 
 	private final MultiDexContainer<T> container;
-	private final DexFileNamer namer;
-	private final List<String> dexEntryNames;       // should be Set<String>
+	private final DexFileNamer namer;               // TODO: Remove when dexEntryNames becomes a Set.
+	private final List<String> dexEntryNames;       // TODO: Should change to Set<String> upstream.
 
 	public FilteredMultiDexContainer(MultiDexContainer<T> container, DexFileNamer namer, boolean sort) throws IOException {
 		this.container = container;
@@ -51,6 +52,11 @@ public class FilteredMultiDexContainer<T extends DexFile> implements MultiDexCon
 		//if (!dexEntryNames.contains(entryName)) return null;
 		if (!namer.isValidName(entryName)) return null;
 		return container.getEntry(entryName);
+	}
+
+	@Override
+	public Opcodes getOpcodes() {
+		return container.getOpcodes();
 	}
 
 }

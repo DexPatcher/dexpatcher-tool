@@ -239,7 +239,7 @@ public class MultiDexIO {
 		Deque<ClassDef> queue = new ArrayDeque<>(PER_THREAD_BATCH_SIZE);
 		ClassDef currentClass = getQueueItem(queue, classIterator, lock);
 		do {
-			DexPool dexPool = DexPool.makeDexPool(opcodes);
+			DexPool dexPool = new DexPool(opcodes);
 			int fileClassCount = 0;
 			while (currentClass != null) {
 				dexPool.mark();
