@@ -15,14 +15,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import org.jf.dexlib2.Opcodes;
-import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.DexFile;
 import org.jf.dexlib2.iface.MultiDexContainer;
+import org.jf.dexlib2.iface.MultiDexContainer.MultiDexFile;
 
-public class DirectoryDexContainer implements MultiDexContainer<DirectoryDexContainer.DirectoryDexFile> {
+public class DirectoryDexContainer implements MultiDexContainer<MultiDexFile> {
 
 	private final File directory;
 	private final DexFileNamer namer;
@@ -48,48 +47,16 @@ public class DirectoryDexContainer implements MultiDexContainer<DirectoryDexCont
 	}
 
 	@Override
-	public DirectoryDexFile getEntry(String entryName) throws IOException {
+	public MultiDexFile getEntry(String entryName) throws IOException {
 		if (!(new File(directory, entryName).isFile() && namer.isValidName(entryName))) return null;
 		File file = new File(directory, entryName);
 		DexFile dexFile = MultiDexIO.readRawDexFile(file, opcodes);
-		return new DirectoryDexFile(dexFile, entryName);
+		return new BasicMultiDexFile<>(this, entryName, dexFile);
 	}
 
 	@Override
 	public Opcodes getOpcodes() {
 		return opcodes;
-	}
-
-	public class DirectoryDexFile implements MultiDexContainer.MultiDexFile {
-
-		private final DexFile dexFile;
-		private final String entryName;
-
-		private DirectoryDexFile(DexFile dexFile, String entryName) {
-			this.dexFile = dexFile;
-			this.entryName = entryName;
-		}
-
-		@Override
-		public Set<? extends ClassDef> getClasses() {
-			return dexFile.getClasses();
-		}
-
-		@Override
-		public Opcodes getOpcodes() {
-			return dexFile.getOpcodes();
-		}
-
-		@Override
-		public String getEntryName() {
-			return entryName;
-		}
-
-		@Override
-		public DirectoryDexContainer getContainer() {
-			return DirectoryDexContainer.this;
-		}
-
 	}
 
 }
