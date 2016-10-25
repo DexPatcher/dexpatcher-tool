@@ -65,7 +65,7 @@ public class MultiDexIO {
 				logger.log(file, name, container.getEntry(name).getClasses().size());
 			}
 		}
-		return new MultiDexContainerBackedDexFile<>(container, opcodes);
+		return new MultiDexContainerBackedDexFile<>(container);
 	}
 
 	public static MultiDexContainer<? extends DexFile> readMultiDexContainer(boolean multiDex, File file,

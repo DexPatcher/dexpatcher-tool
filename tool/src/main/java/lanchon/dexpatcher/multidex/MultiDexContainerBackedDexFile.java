@@ -11,7 +11,6 @@
 package lanchon.dexpatcher.multidex;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -27,7 +26,7 @@ public class MultiDexContainerBackedDexFile<T extends DexFile> implements DexFil
 	private final Set<? extends ClassDef> classes;
 	private final Opcodes opcodes;
 
-	public MultiDexContainerBackedDexFile(MultiDexContainer<T> container, Opcodes opcodes) throws IOException {
+	public MultiDexContainerBackedDexFile(MultiDexContainer<T> container) throws IOException {
 		List<String> entryNames = container.getDexEntryNames();
 		if (entryNames.size() == 1) {
 			String entryName = entryNames.get(0);
@@ -43,7 +42,7 @@ public class MultiDexContainerBackedDexFile<T extends DexFile> implements DexFil
 			}
 			this.classes = Collections.unmodifiableSet(classes);
 		}
-		this.opcodes = opcodes;
+		this.opcodes = container.getOpcodes();
 	}
 
 	@Override
