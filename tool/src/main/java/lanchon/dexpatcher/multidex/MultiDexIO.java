@@ -34,7 +34,6 @@ import java.util.concurrent.Future;
 import org.jf.dexlib2.DexFileFactory;
 import org.jf.dexlib2.Opcodes;
 import org.jf.dexlib2.dexbacked.DexBackedDexFile;
-import org.jf.dexlib2.dexbacked.ZipDexContainer;
 import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.DexFile;
 import org.jf.dexlib2.iface.MultiDexContainer;
@@ -71,7 +70,9 @@ public class MultiDexIO {
 	public static MultiDexContainer<? extends DexFile> readMultiDexContainer(boolean multiDex, File file,
 			DexFileNamer namer, Opcodes opcodes) throws IOException {
 		MultiDexContainer<? extends DexFile> container = readMultiDexContainer(file, namer, opcodes);
-		if (!multiDex && container.getDexEntryNames().size() != 1) throw new MultiDexDetectedException(file.toString());
+		int entries = container.getDexEntryNames().size();
+		if (entries == 0) throw new EmptyMultiDexContainerException(file.toString());
+		if (!multiDex && entries > 1) throw new MultiDexDetectedException(file.toString());
 		return container;
 	}
 
@@ -81,7 +82,7 @@ public class MultiDexIO {
 		if (!file.isFile()) throw new FileNotFoundException(file.toString());
 		FilteredZipDexContainer zipContainer = new FilteredZipDexContainer(file, namer, true, opcodes);
 		if (zipContainer.isZipFile()) return zipContainer;
-		else return DexFileFactory.loadDexContainer(file, opcodes);
+		return DexFileFactory.loadDexContainer(file, opcodes);
 	}
 
 	public static DexBackedDexFile readRawDexFile(File file, Opcodes opcodes) throws IOException {
