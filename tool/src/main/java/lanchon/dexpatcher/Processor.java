@@ -19,7 +19,9 @@ import lanchon.dexpatcher.core.logger.Logger;
 import lanchon.dexpatcher.multidex.BasicDexFileNamer;
 import lanchon.dexpatcher.multidex.DexFileNamer;
 import lanchon.dexpatcher.multidex.MultiDexIO;
+import lanchon.dexpatcher.multidex.SingletonDexContainer;
 
+import com.google.common.base.Objects;
 import org.jf.dexlib2.Opcodes;
 import org.jf.dexlib2.iface.DexFile;
 
@@ -123,7 +125,10 @@ public class Processor {
 			public void log(File file, String entryName, int typeCount) {
 				if (logger.isLogging(DEBUG)) {
 					String h = header;
-					if (!entryName.equals(file.toString())) h += ": file '" + entryName + "'";
+					//if (entryName != null && !entryName.equals(file.toString())) {
+					if (!Objects.equal(SingletonDexContainer.UNDEFINED_ENTRY_NAME, entryName)) {
+						h += ": file '" + entryName + "'";
+					}
 					logger.log(DEBUG, h + ": " + typeCount + " types");
 				}
 			}

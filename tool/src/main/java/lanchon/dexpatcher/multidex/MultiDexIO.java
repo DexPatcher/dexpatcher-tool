@@ -31,7 +31,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-import org.jf.dexlib2.DexFileFactory;
 import org.jf.dexlib2.Opcodes;
 import org.jf.dexlib2.dexbacked.DexBackedDexFile;
 import org.jf.dexlib2.iface.ClassDef;
@@ -82,7 +81,7 @@ public class MultiDexIO {
 		if (!file.isFile()) throw new FileNotFoundException(file.toString());
 		FilteredZipDexContainer zipContainer = new FilteredZipDexContainer(file, namer, true, opcodes);
 		if (zipContainer.isZipFile()) return zipContainer;
-		return DexFileFactory.loadDexContainer(file, opcodes);
+		return new SingletonDexContainer(readRawDexFile(file, opcodes));
 	}
 
 	public static DexBackedDexFile readRawDexFile(File file, Opcodes opcodes) throws IOException {
@@ -159,7 +158,7 @@ public class MultiDexIO {
 	}
 
 	public static void writeRawDexFile(File file, DexFile dexFile, MultiDexIO.Logger logger) throws IOException {
-		writeCommonSingleThread(false, file, null, file.toString(), file, dexFile, logger);
+		writeCommonSingleThread(false, file, null, SingletonDexContainer.UNDEFINED_ENTRY_NAME, file, dexFile, logger);
 	}
 
 	private static void writeMultiDexSingleThread(boolean multiDex, File directory, NameIterator nameIterator,
