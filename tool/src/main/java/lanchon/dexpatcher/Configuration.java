@@ -14,6 +14,7 @@ import java.util.List;
 
 import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.logger.Logger;
+import lanchon.dexpatcher.multidex.MultiDexIO;
 
 public class Configuration {
 
@@ -25,6 +26,7 @@ public class Configuration {
 
 	public boolean multiDex;
 	public int multiDexJobs = 1;
+	public int maxDexPoolSize = MultiDexIO.DEFAULT_MAX_DEX_POOL_SIZE;
 
 	public String annotationPackage = Context.DEFAULT_ANNOTATION_PACKAGE;
 	public boolean dexTagSupported;

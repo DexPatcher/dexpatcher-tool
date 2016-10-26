@@ -57,6 +57,8 @@ public class Parser {
 		if (cl.hasOption("multi-dex-threaded")) { config.multiDex = true; config.multiDexJobs = 0; }
 		Number multiDexJobs = (Number) cl.getParsedOptionValue("multi-dex-jobs");
 		if (multiDexJobs != null) { config.multiDex = true; config.multiDexJobs = multiDexJobs.intValue(); }
+		Number maxDexPoolSize = (Number) cl.getParsedOptionValue("max-dex-pool-size");
+		if (maxDexPoolSize != null) config.maxDexPoolSize = maxDexPoolSize.intValue();
 
 		Number apiLevel = (Number) cl.getParsedOptionValue("api-level");
 		config.apiLevel = (apiLevel != null ? apiLevel.intValue() :
@@ -102,8 +104,11 @@ public class Parser {
 
 		options.addOption(new Option("m", "multi-dex", false, "enable multi-dex support"));
 		options.addOption(new Option("M", "multi-dex-threaded", false, "multi-threaded multi-dex (implies: -m)"));
-		o = new Option("J", "multi-dex-jobs", true, "multi-dex thread count (implies: -m -M) (default: available processors up to " +
-				MultiDexIO.DEFAULT_MAX_THREADS + ")");
+		o = new Option("J", "multi-dex-jobs", true, "multi-dex thread count (implies: -m -M) (default: " +
+				"available processors up to " + MultiDexIO.DEFAULT_MAX_THREADS + ")");
+		o.setArgName("n"); o.setType(Number.class); options.addOption(o);
+		o = new Option(null, "max-dex-pool-size", true, "maximum size of dex pools (default: " +
+				MultiDexIO.DEFAULT_MAX_DEX_POOL_SIZE + ")");
 		o.setArgName("n"); o.setType(Number.class); options.addOption(o);
 
 		o = new Option(null, "annotations", true, "package name of DexPatcher annotations (default: '" +

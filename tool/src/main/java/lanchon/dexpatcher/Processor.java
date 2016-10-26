@@ -113,7 +113,8 @@ public class Processor {
 		String message = "write '" + file + "'";
 		logger.log(INFO, message);
 		long time = System.nanoTime();
-		MultiDexIO.writeDexFile(config.multiDex, config.multiDexJobs, file, dexFileNamer, dex, getIOLogger(message));
+		MultiDexIO.writeDexFile(config.maxDexPoolSize, config.multiDex, config.multiDexJobs, file, dexFileNamer,
+				dex, getIOLogger(message));
 		time = System.nanoTime() - time;
 		logStats(message, dex.getClasses().size(), time);
 	}
