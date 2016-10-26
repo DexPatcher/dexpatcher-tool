@@ -41,8 +41,7 @@ public class DirectoryDexContainer implements MultiDexContainer<MultiDexFile> {
 		for (String name : names) {
 			if (new File(directory, name).isFile() && namer.isValidName(name)) filteredNames.add(name);
 		}
-		// TODO: Implement a numeric sort.
-		Collections.sort(filteredNames);
+		Collections.sort(filteredNames, new DexFileNamer.Comparator(namer));
 		return filteredNames;
 	}
 

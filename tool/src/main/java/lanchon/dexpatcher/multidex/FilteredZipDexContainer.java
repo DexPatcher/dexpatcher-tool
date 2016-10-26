@@ -35,8 +35,7 @@ public class FilteredZipDexContainer extends ZipDexContainer {
 	public List<String> getDexEntryNames() throws IOException {
 		List<String> filteredNames = super.getDexEntryNames();
 		if (sort) {
-			// TODO: Implement a numeric sort.
-			Collections.sort(filteredNames);
+			Collections.sort(filteredNames, new DexFileNamer.Comparator(namer));
 		}
 		return filteredNames;
 	}

@@ -41,8 +41,20 @@ public class BasicDexFileNamer implements DexFileNamer {
 	}
 
 	@Override
+	public int getIndex(String name) {
+		if (!(name.startsWith(prefix) && name.endsWith(suffix))) return -1;
+		String s = name.substring(prefix.length(), name.length() - suffix.length());
+		if (s.length() == 0) return 0;
+		int i;
+		try { i = Integer.parseInt(s); }
+		catch (NumberFormatException e) { return -1; }
+		if (i < 2 || !s.equals(String.valueOf(i))) return -1;
+		return i - 1;
+	}
+
+	@Override
 	public boolean isValidName(String name) {
-		return name.startsWith(prefix) && name.endsWith(suffix);
+		return getIndex(name) >= 0;
 	}
 
 }

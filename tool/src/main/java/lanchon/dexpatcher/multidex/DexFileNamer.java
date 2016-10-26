@@ -13,6 +13,28 @@ package lanchon.dexpatcher.multidex;
 public interface DexFileNamer {
 
 	String getName(int index);
+	int getIndex(String name);
 	boolean isValidName(String name);
+
+	class Comparator implements java.util.Comparator<String> {
+
+		private final DexFileNamer namer;
+
+		public Comparator(DexFileNamer namer) {
+			this.namer = namer;
+		}
+
+		@Override
+		public int compare(String l, String r) {
+			int li = namer.getIndex(l);
+			int ri = namer.getIndex(r);
+			boolean lv = (li >= 0);
+			boolean rv = (ri >= 0);
+			if (lv != rv) return lv ? -1 : 1;
+			if (!lv) return l.compareTo(r);
+			return li < ri ? -1 : (li > ri ? 1 : 0);
+		}
+
+	}
 
 }
