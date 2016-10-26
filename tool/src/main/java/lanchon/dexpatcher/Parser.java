@@ -13,6 +13,7 @@ package lanchon.dexpatcher;
 import java.util.List;
 
 import lanchon.dexpatcher.core.Context;
+import lanchon.dexpatcher.multidex.DexIO;
 import lanchon.dexpatcher.multidex.MultiDexIO;
 
 import org.apache.commons.cli.CommandLine;
@@ -108,7 +109,7 @@ public class Parser {
 				"available processors up to " + MultiDexIO.DEFAULT_MAX_THREADS + ")");
 		o.setArgName("n"); o.setType(Number.class); options.addOption(o);
 		o = new Option(null, "max-dex-pool-size", true, "maximum size of dex pools (default: " +
-				MultiDexIO.DEFAULT_MAX_DEX_POOL_SIZE + ")");
+				DexIO.DEFAULT_MAX_DEX_POOL_SIZE + ")");
 		o.setArgName("n"); o.setType(Number.class); options.addOption(o);
 
 		o = new Option(null, "annotations", true, "package name of DexPatcher annotations (default: '" +

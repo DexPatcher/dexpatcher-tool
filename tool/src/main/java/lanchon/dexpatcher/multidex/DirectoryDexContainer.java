@@ -49,7 +49,7 @@ public class DirectoryDexContainer implements MultiDexContainer<MultiDexFile> {
 	public MultiDexFile getEntry(String entryName) throws IOException {
 		if (!(new File(directory, entryName).isFile() && namer.isValidName(entryName))) return null;
 		File file = new File(directory, entryName);
-		DexFile dexFile = MultiDexIO.readRawDexFile(file, opcodes);
+		DexFile dexFile = RawDexIO.readRawDexFile(file, opcodes);
 		return new BasicMultiDexFile<>(this, entryName, dexFile);
 	}
 

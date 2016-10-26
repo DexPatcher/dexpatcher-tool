@@ -10,6 +10,8 @@
 
 package lanchon.dexpatcher.multidex;
 
+import java.util.NoSuchElementException;
+
 public interface DexFileNamer {
 
 	String getName(int index);
@@ -33,6 +35,54 @@ public interface DexFileNamer {
 			if (lv != rv) return lv ? -1 : 1;
 			if (!lv) return l.compareTo(r);
 			return li < ri ? -1 : (li > ri ? 1 : 0);
+		}
+
+	}
+
+	class Iterator implements java.util.Iterator<String> {
+
+		public static int NO_MAX_COUNT = -1;
+
+		private final DexFileNamer namer;
+		private final int maxCount;
+		private int count;
+
+		public Iterator(DexFileNamer namer) {
+			this.namer = namer;
+			this.maxCount = NO_MAX_COUNT;
+		}
+
+		public Iterator(DexFileNamer namer, int maxCount) {
+			this.namer = namer;
+			this.maxCount = maxCount;
+		}
+
+		@Override
+		public boolean hasNext() {
+			return maxCount < 0 || count < maxCount;
+		}
+
+		@Override
+		public String next() {
+			if (!hasNext()) throw new NoSuchElementException();
+			return namer.getName(count++);
+		}
+
+		@Override
+		public void remove() {
+			throw new UnsupportedOperationException();
+		}
+
+		public DexFileNamer getNamer() {
+			return namer;
+		}
+
+		public int getMaxCount() {
+			return maxCount;
+		}
+
+		public int getCount() {
+			return count;
 		}
 
 	}

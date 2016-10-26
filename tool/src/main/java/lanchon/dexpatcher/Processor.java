@@ -17,6 +17,7 @@ import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.DexPatcher;
 import lanchon.dexpatcher.core.logger.Logger;
 import lanchon.dexpatcher.multidex.BasicDexFileNamer;
+import lanchon.dexpatcher.multidex.DexIO;
 import lanchon.dexpatcher.multidex.DexFileNamer;
 import lanchon.dexpatcher.multidex.MultiDexIO;
 import lanchon.dexpatcher.multidex.SingletonDexContainer;
@@ -119,9 +120,9 @@ public class Processor {
 		logStats(message, dex.getClasses().size(), time);
 	}
 
-	private MultiDexIO.Logger getIOLogger(final String header) {
+	private DexIO.Logger getIOLogger(final String header) {
 		if (!logger.isLogging(DEBUG)) return null;
-		return new MultiDexIO.Logger() {
+		return new DexIO.Logger() {
 			@Override
 			public void log(File file, String entryName, int typeCount) {
 				if (logger.isLogging(DEBUG)) {
