@@ -30,7 +30,7 @@ public class PatcherAnnotation {
 		Action action = null;
 		Set<Annotation> filteredAnnotations = new LinkedHashSet<>(annotations.size());
 		for (Annotation an : annotations) {
-			Action ac = context.getActionFromTypeDescriptor(an.getType());
+			Action ac = context.getActionFromMarkerTypeDescriptor(an.getType());
 			if (ac != null) {
 				if (action != null) {
 					throw new PatchException("conflicting patcher annotations (" +

@@ -64,9 +64,9 @@ public class Context {
 		Action[] actions = Action.values();
 		actionMap = new HashMap<>(actions.length);
 		for (Action action : actions) {
-			actionMap.put(getTypeDescriptor(action.getMarker()), action);
+			actionMap.put(getMarkerTypeDescriptor(action.getMarker()), action);
 		}
-		tagTypeDescriptor = getTypeDescriptor(Marker.TAG);
+		tagTypeDescriptor = getMarkerTypeDescriptor(Marker.TAG);
 	}
 
 	public boolean isDexTagSupported() {
@@ -87,11 +87,11 @@ public class Context {
 
 	// Extras
 
-	private String getTypeDescriptor(Marker marker) {
+	private String getMarkerTypeDescriptor(Marker marker) {
 		return Util.getTypeDescriptorFromName(annotationPackage + "." + marker.getClassName());
 	}
 
-	public Action getActionFromTypeDescriptor(String typeDescriptor) {
+	public Action getActionFromMarkerTypeDescriptor(String typeDescriptor) {
 		return actionMap.get(typeDescriptor);
 	}
 

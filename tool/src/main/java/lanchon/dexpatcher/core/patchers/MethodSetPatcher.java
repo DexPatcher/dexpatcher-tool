@@ -114,7 +114,7 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 			if (warn) log(WARN, "use of deprecated DexTag detected (consider enabling DexTag support)");
 		}
 		for (Annotation annotation : lastParameter.getAnnotations()) {
-			if (context.getActionFromTypeDescriptor(annotation.getType()) == Action.IGNORE) return true;
+			if (context.getActionFromMarkerTypeDescriptor(annotation.getType()) == Action.IGNORE) return true;
 		}
 		return false;
 	}
