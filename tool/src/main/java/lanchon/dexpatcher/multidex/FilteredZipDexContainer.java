@@ -21,6 +21,7 @@ import java.util.zip.ZipFile;
 import com.google.common.io.ByteStreamsHack;
 import org.jf.dexlib2.Opcodes;
 import org.jf.dexlib2.dexbacked.ZipDexContainer;
+import org.jf.dexlib2.util.DexUtil;
 
 public class FilteredZipDexContainer extends ZipDexContainer {
 
@@ -60,6 +61,10 @@ public class FilteredZipDexContainer extends ZipDexContainer {
 		try {
 			byte[] buf = ByteStreamsHack.toByteArray(inputStream, zipEntry.getSize());
 			Opcodes opcodes = super.getOpcodes();
+			if (opcodes == null) {
+				DexUtil.verifyDexHeader(buf, 0);
+				opcodes = RawDexIO.getOpcodesFromDexHeader(buf, 0);
+			}
 			return new FilteredZipDexFile(opcodes, buf, zipEntry.getName());
 		} finally {
 			inputStream.close();

@@ -18,7 +18,9 @@ import com.google.common.io.ByteStreamsHack;
 import com.google.common.io.Files;
 import org.jf.dexlib2.Opcodes;
 import org.jf.dexlib2.dexbacked.DexBackedDexFile;
+import org.jf.dexlib2.dexbacked.raw.HeaderItem;
 import org.jf.dexlib2.iface.DexFile;
+import org.jf.dexlib2.util.DexUtil;
 
 public class RawDexIO {
 
@@ -55,7 +57,14 @@ public class RawDexIO {
 	}
 
 	public static DexBackedDexFile readRawDexFile(byte[] buf, int offset, Opcodes opcodes) throws IOException {
-		return new DexBackedDexFile(opcodes, buf);
+		DexUtil.verifyDexHeader(buf, offset);
+		if (opcodes == null) opcodes = getOpcodesFromDexHeader(buf, offset);
+		return new DexBackedDexFile(opcodes, buf, 0);
+	}
+
+	static Opcodes getOpcodesFromDexHeader(byte[] buf, int offset) {
+		int dexVersion = HeaderItem.getVersion(buf, offset);
+		return OpcodeUtils.getOpcodesFromDexVersion(dexVersion);
 	}
 
 	// Write
