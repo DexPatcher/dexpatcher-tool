@@ -27,7 +27,7 @@ public class SingletonDexContainer implements MultiDexContainer<MultiDexFile> {
 	public static final String UNDEFINED_ENTRY_NAME = null;
 
 	private final List<String> entryNames;
-	private final BasicMultiDexFile entry;
+	private final MultiDexFile entry;
 
 	public SingletonDexContainer(DexFile dexFile) {
 		this(UNDEFINED_ENTRY_NAME, dexFile);
