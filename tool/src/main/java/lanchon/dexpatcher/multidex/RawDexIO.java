@@ -10,12 +10,12 @@
 
 package lanchon.dexpatcher.multidex;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import com.google.common.io.ByteStreamsHack;
+import com.google.common.io.Files;
 import org.jf.dexlib2.Opcodes;
 import org.jf.dexlib2.dexbacked.DexBackedDexFile;
 import org.jf.dexlib2.iface.DexFile;
@@ -36,12 +36,26 @@ public class RawDexIO {
 	}
 
 	public static DexBackedDexFile readRawDexFile(File file, Opcodes opcodes) throws IOException {
-		InputStream inputStream = new BufferedInputStream(new FileInputStream(file));
+		/*
+		InputStream inputStream = new FileInputStream(file);
 		try {
-			return DexBackedDexFile.fromInputStream(opcodes, inputStream);
+			return readRawDexFile(inputStream, file.length(), opcodes);
 		} finally {
 			inputStream.close();
 		}
+		*/
+		byte[] buf = Files.toByteArray(file);
+		return readRawDexFile(buf, 0, opcodes);
+	}
+
+	public static DexBackedDexFile readRawDexFile(InputStream inputStream, long expectedSize,
+			Opcodes opcodes) throws IOException {
+		byte[] buf = ByteStreamsHack.toByteArray(inputStream, expectedSize);
+		return readRawDexFile(buf, 0, opcodes);
+	}
+
+	public static DexBackedDexFile readRawDexFile(byte[] buf, int offset, Opcodes opcodes) throws IOException {
+		return new DexBackedDexFile(opcodes, buf);
 	}
 
 	// Write

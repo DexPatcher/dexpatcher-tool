@@ -12,11 +12,13 @@ package lanchon.dexpatcher.multidex;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import com.google.common.io.ByteStreamsHack;
 import org.jf.dexlib2.Opcodes;
 import org.jf.dexlib2.dexbacked.ZipDexContainer;
 
@@ -41,15 +43,40 @@ public class FilteredZipDexContainer extends ZipDexContainer {
 	}
 
 	@Override
-	public ZipDexFile getEntry(String entryName) throws IOException {
+	public FilteredZipDexFile getEntry(String entryName) throws IOException {
 		if (!namer.isValidName(entryName)) return null;
-		return super.getEntry(entryName);
+		return (FilteredZipDexFile) super.getEntry(entryName);
 	}
 
 	@Override
 	protected boolean isDex(ZipFile zipFile, ZipEntry zipEntry) throws IOException {
 		if (!namer.isValidName(zipEntry.getName())) return false;
 		return super.isDex(zipFile, zipEntry);
+	}
+
+	@Override
+	protected FilteredZipDexFile loadEntry(ZipFile zipFile, ZipEntry zipEntry) throws IOException {
+		InputStream inputStream = zipFile.getInputStream(zipEntry);
+		try {
+			byte[] buf = ByteStreamsHack.toByteArray(inputStream, zipEntry.getSize());
+			Opcodes opcodes = super.getOpcodes();
+			return new FilteredZipDexFile(opcodes, buf, zipEntry.getName());
+		} finally {
+			inputStream.close();
+		}
+	}
+
+	public class FilteredZipDexFile extends ZipDexFile {
+
+		protected FilteredZipDexFile(Opcodes opcodes, byte[] buf, String entryName) {
+			super(opcodes, buf, entryName);
+		}
+
+		@Override
+		public FilteredZipDexContainer getContainer() {
+			return FilteredZipDexContainer.this;
+		}
+
 	}
 
 }
