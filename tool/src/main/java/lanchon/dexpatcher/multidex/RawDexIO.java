@@ -58,13 +58,11 @@ public class RawDexIO {
 
 	public static DexBackedDexFile readRawDexFile(byte[] buf, int offset, Opcodes opcodes) throws IOException {
 		DexUtil.verifyDexHeader(buf, offset);
-		if (opcodes == null) opcodes = getOpcodesFromDexHeader(buf, offset);
+		if (opcodes == null) {
+			int dexVersion = HeaderItem.getVersion(buf, offset);
+			opcodes = OpcodeUtils.getOpcodesFromDexVersion(dexVersion);
+		};
 		return new DexBackedDexFile(opcodes, buf, 0);
-	}
-
-	static Opcodes getOpcodesFromDexHeader(byte[] buf, int offset) {
-		int dexVersion = HeaderItem.getVersion(buf, offset);
-		return OpcodeUtils.getOpcodesFromDexVersion(dexVersion);
 	}
 
 	// Write
