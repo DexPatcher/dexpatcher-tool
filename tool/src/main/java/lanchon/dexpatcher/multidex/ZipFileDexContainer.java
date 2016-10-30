@@ -23,21 +23,19 @@ import java.util.zip.ZipFile;
 
 import org.jf.dexlib2.Opcodes;
 import org.jf.dexlib2.iface.DexFile;
-import org.jf.dexlib2.iface.MultiDexContainer;
 import org.jf.dexlib2.iface.MultiDexContainer.MultiDexFile;
 
-public class ZipFileDexContainer implements MultiDexContainer<MultiDexFile> {
+public class ZipFileDexContainer extends AbstractMultiDexContainer<MultiDexFile> {
 
 	private final File zip;
 	private final DexFileNamer namer;
 	private final boolean sort;
-	private final Opcodes opcodes;
 
 	public ZipFileDexContainer(File zip, DexFileNamer namer, boolean sort, Opcodes opcodes) {
+		super(opcodes);
 		this.zip = zip;
 		this.namer = namer;
 		this.sort = sort;
-		this.opcodes = opcodes;
 	}
 
 	public boolean isZipFile() throws IOException {
@@ -89,11 +87,6 @@ public class ZipFileDexContainer implements MultiDexContainer<MultiDexFile> {
 			zipFile.close();
 		}
 		return new BasicMultiDexFile<>(this, entryName, dexFile);
-	}
-
-	@Override
-	public Opcodes getOpcodes() {
-		return opcodes;
 	}
 
 }

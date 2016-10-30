@@ -18,19 +18,17 @@ import java.util.List;
 
 import org.jf.dexlib2.Opcodes;
 import org.jf.dexlib2.iface.DexFile;
-import org.jf.dexlib2.iface.MultiDexContainer;
 import org.jf.dexlib2.iface.MultiDexContainer.MultiDexFile;
 
-public class DirectoryDexContainer implements MultiDexContainer<MultiDexFile> {
+public class DirectoryDexContainer extends AbstractMultiDexContainer<MultiDexFile> {
 
 	private final File directory;
 	private final DexFileNamer namer;
-	private final Opcodes opcodes;
 
 	public DirectoryDexContainer(File directory, DexFileNamer namer, Opcodes opcodes) {
+		super(opcodes);
 		this.directory = directory;
 		this.namer = namer;
-		this.opcodes = opcodes;
 	}
 
 	@Override
@@ -51,11 +49,6 @@ public class DirectoryDexContainer implements MultiDexContainer<MultiDexFile> {
 		File file = new File(directory, entryName);
 		DexFile dexFile = RawDexIO.readRawDexFile(file, opcodes);
 		return new BasicMultiDexFile<>(this, entryName, dexFile);
-	}
-
-	@Override
-	public Opcodes getOpcodes() {
-		return opcodes;
 	}
 
 }
