@@ -37,7 +37,7 @@ public class ZipFileDexContainer extends AbstractMultiDexContainer<MultiDexFile>
 	}
 
 	public ZipFileDexContainer(File zip, DexFileNamer namer, Opcodes opcodes) throws IOException {
-		Map<String, MultiDexFile> entryMap = new TreeMap<>(new DexFileNamer.Comparator(namer));
+		Map<String, MultiDexFile> entryMap = new TreeMap<>(new DexFileNameComparator(namer));
 		ZipFile zipFile = new ZipFile(zip);
 		try {
 			Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();

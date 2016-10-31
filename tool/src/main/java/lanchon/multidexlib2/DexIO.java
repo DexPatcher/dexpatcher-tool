@@ -51,14 +51,14 @@ public class DexIO {
 				maxDexPoolSize, logger);
 	}
 
-	static void writeMultiDexDirectorySingleThread(boolean multiDex, File directory, DexFileNamer.Iterator nameIterator,
+	static void writeMultiDexDirectorySingleThread(boolean multiDex, File directory, DexFileNameIterator nameIterator,
 			DexFile dexFile, int minMainDexClassCount, boolean minimalMainDex, int maxDexPoolSize,
 			DexIO.Logger logger) throws IOException {
 		writeCommonSingleThread(multiDex, directory, nameIterator, null, null, dexFile, minMainDexClassCount,
 				minimalMainDex, maxDexPoolSize, logger);
 	}
 
-	private static void writeCommonSingleThread(boolean multiDex, File base, DexFileNamer.Iterator nameIterator,
+	private static void writeCommonSingleThread(boolean multiDex, File base, DexFileNameIterator nameIterator,
 			String currentName, File currentFile, DexFile dexFile, int minMainDexClassCount, boolean minimalMainDex,
 			int maxDexPoolSize, DexIO.Logger logger) throws IOException {
 		Set<? extends ClassDef> classes = dexFile.getClasses();
@@ -76,7 +76,7 @@ public class DexIO {
 	// Multi-Threaded Write
 
 	static void writeMultiDexDirectoryMultiThread(int threadCount, final File directory,
-			final DexFileNamer.Iterator nameIterator, final DexFile dexFile, final int maxDexPoolSize,
+			final DexFileNameIterator nameIterator, final DexFile dexFile, final int maxDexPoolSize,
 			final DexIO.Logger logger) throws IOException {
 		final Iterator<? extends ClassDef> classIterator = dexFile.getClasses().iterator();
 		final Object lock = new Object();
@@ -118,7 +118,7 @@ public class DexIO {
 
 	private static final int PER_THREAD_BATCH_SIZE = 100;
 
-	private static void writeCommon(File base, DexFileNamer.Iterator nameIterator, String currentName, File currentFile,
+	private static void writeCommon(File base, DexFileNameIterator nameIterator, String currentName, File currentFile,
 			Iterator<? extends ClassDef> classIterator, int minMainDexClassCount, boolean minimalMainDex,
 			Opcodes opcodes, int maxDexPoolSize, DexIO.Logger logger, Object lock) throws IOException {
 		Deque<ClassDef> queue = new ArrayDeque<>(PER_THREAD_BATCH_SIZE);

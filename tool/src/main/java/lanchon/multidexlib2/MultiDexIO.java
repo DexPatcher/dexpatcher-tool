@@ -98,7 +98,7 @@ public class MultiDexIO {
 			DexFile dexFile, int minMainDexClassCount, boolean minimalMainDex, int maxDexPoolSize,
 			DexIO.Logger logger) throws IOException {
 		purgeMultiDexDirectory(multiDex, directory, namer);
-		DexFileNamer.Iterator nameIterator = new DexFileNamer.Iterator(namer);
+		DexFileNameIterator nameIterator = new DexFileNameIterator(namer);
 		if (threadCount <= 0) {
 			threadCount = Runtime.getRuntime().availableProcessors();
 			if (threadCount > DEFAULT_MAX_THREADS) threadCount = DEFAULT_MAX_THREADS;
