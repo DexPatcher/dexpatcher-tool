@@ -88,7 +88,8 @@ public class MultiDexIO {
 			return writeMultiDexDirectory(multiDex, threadCount, file, namer, dexFile, minMainDexClassCount,
 					minimalMainDex, maxDexPoolSize, logger);
 		} else {
-			if (multiDex) throw new RuntimeException("Must output to a directory if multi-dex mode is enabled");
+			if (multiDex) throw new UnsupportedOperationException(
+					"Must output to a directory if multi-dex mode is enabled");
 			RawDexIO.writeRawDexFile(file, dexFile, maxDexPoolSize, logger);
 			return 1;
 		}
