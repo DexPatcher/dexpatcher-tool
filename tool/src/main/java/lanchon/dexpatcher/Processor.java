@@ -99,6 +99,14 @@ public class Processor {
 		if (patchedOpcodes == null) {
 			Opcodes sourceOpcodes = sourceDex.getOpcodes();
 			patchedOpcodes = OpcodeUtils.getNewerNullableOpcodes(sourceOpcodes, patchDex.getOpcodes());
+			if (sourceOpcodes != null && patchedOpcodes != null && sourceOpcodes != patchedOpcodes) {
+				int sourceDexVersion = OpcodeUtils.getDexVersionFromOpcodes(sourceOpcodes);
+				int patchedDexVersion = OpcodeUtils.getDexVersionFromOpcodes(patchedOpcodes);
+				if (sourceDexVersion != patchedDexVersion) {
+					logger.log(INFO, String.format("patch changes dex version from '%03d' to '%03d'",
+							sourceDexVersion, patchedDexVersion));
+				}
+			}
 		}
 		DexFile patchedDex = DexPatcher.process(createContext(), sourceDex, patchDex, patchedOpcodes);
 		time = System.nanoTime() - time;
@@ -112,6 +120,10 @@ public class Processor {
 		long time = System.nanoTime();
 		DexFile dex = MultiDexIO.readDexFile(config.multiDex, file, dexFileNamer, opcodes, getIOLogger(message));
 		time = System.nanoTime() - time;
+		if (logger.isLogging(DEBUG) && opcodes == null && dex.getOpcodes() != null) {
+			int dexVersion = OpcodeUtils.getDexVersionFromOpcodes(dex.getOpcodes());
+			logger.log(DEBUG, String.format(message + ": dex version '%03d'", dexVersion));
+		}
 		logStats(message, dex.getClasses().size(), time);
 		return dex;
 	}
@@ -119,6 +131,10 @@ public class Processor {
 	private void writeDex(File file, DexFile dex) throws IOException {
 		String message = "write '" + file + "'";
 		logger.log(INFO, message);
+		if (logger.isLogging(DEBUG) && dex.getOpcodes() != null) {
+			int dexVersion = OpcodeUtils.getDexVersionFromOpcodes(dex.getOpcodes());
+			logger.log(DEBUG, String.format(message + ": dex version '%03d'", dexVersion));
+		}
 		long time = System.nanoTime();
 		MultiDexIO.writeDexFile(config.maxDexPoolSize, config.multiDex, config.multiDexJobs, file, dexFileNamer,
 				dex, getIOLogger(message));

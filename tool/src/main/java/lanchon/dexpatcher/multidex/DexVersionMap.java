@@ -10,10 +10,13 @@
 
 package lanchon.dexpatcher.multidex;
 
+import org.jf.dexlib2.dexbacked.raw.HeaderItem;
+
 public class DexVersionMap {
 
-	// This should be part of dexlib2.
+	// All this should be part of dexlib2.
 
+	/*
 	public static boolean isSupportedApiLevel(int apiLevel) {
 		return  apiLevel <= 24;
 	}
@@ -21,6 +24,11 @@ public class DexVersionMap {
 	public static int getHighestDexVersionFromApiLevel(int apiLevel) {
 		return  apiLevel <= 23 ? 35 :
 				37;
+	}
+	*/
+
+	public static int getHighestDexVersionFromApiLevel(int apiLevel) {
+		return HeaderItem.getVersion(HeaderItem.getMagicForApi(apiLevel), 0);
 	}
 
 	public static boolean isSupportedDexVersion(int dexVersion) {

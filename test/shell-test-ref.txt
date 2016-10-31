@@ -8,8 +8,7 @@ DexPatcher Version 1.2.0-beta2.1 by Lanchon
 usage: dexpatcher [<option> ...] [--output <patched-dex-or-dir>]
                   <source-dex-apk-or-dir> [<patch-dex-apk-or-dir> ...]
  -?,--help                    print this help message and exit
- -a,--api-level <n>           android api level of dex files (default:
-                              21 if multi-dex is enabled, 14 otherwise)
+ -a,--api-level <n>           android api level (default: auto-detect)
     --annotations <package>   package name of DexPatcher annotations
                               (default: 'lanchon.dexpatcher.annotation')
     --compat-dextag           enable support for the deprecated DexTag
@@ -31,8 +30,10 @@ usage: dexpatcher [<option> ...] [--output <patched-dex-or-dir>]
 $ dexpatcher build/source.dex build/patch.dex --output build/patched.dex --debug
 info: read 'build/source.dex'
 debug: read 'build/source.dex': 17 types
+debug: read 'build/source.dex': dex version '035'
 info: read 'build/patch.dex'
 debug: read 'build/patch.dex': 23 types
+debug: read 'build/patch.dex': dex version '035'
 debug: type 'lanchon.dexpatcher.annotation.DexAction': (DexAction.java:0): ignore
 debug: type 'lanchon.dexpatcher.annotation.DexAdd': (DexAdd.java:0): ignore
 debug: type 'lanchon.dexpatcher.annotation.DexEdit': (DexEdit.java:0): ignore
@@ -132,6 +133,7 @@ debug: type 'test.target.package-info': (package-info.java:0): remove
 debug: type 'test.target.package-info': target 'test.nonrec.package-info': (package-info.java:0): remove package non-recursive
 debug: type 'test.target.package-info': target 'test.nonrec.package-info': (package-info.java:0): remove type 'Ltest/nonrec/NonRec;'
 info: write 'build/patched.dex'
+debug: write 'build/patched.dex': dex version '035'
 debug: write 'build/patched.dex': 15 types
 0 error(s), 2 warning(s)
 
