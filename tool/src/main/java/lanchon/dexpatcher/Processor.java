@@ -20,6 +20,7 @@ import lanchon.dexpatcher.multidex.BasicDexFileNamer;
 import lanchon.dexpatcher.multidex.DexIO;
 import lanchon.dexpatcher.multidex.DexFileNamer;
 import lanchon.dexpatcher.multidex.MultiDexIO;
+import lanchon.dexpatcher.multidex.OpcodeUtils;
 import lanchon.dexpatcher.multidex.SingletonDexContainer;
 
 import com.google.common.base.Objects;
@@ -37,8 +38,8 @@ public class Processor {
 	private final Logger logger;
 	private final Configuration config;
 
-	private Opcodes opcodes;
 	private DexFileNamer dexFileNamer;
+	private Opcodes opcodes;
 
 	private Processor(Logger logger, Configuration config) {
 		this.logger = logger;
@@ -50,8 +51,8 @@ public class Processor {
 		long time = System.nanoTime();
 
 		logger.setLogLevel(config.logLevel);
-		opcodes = Opcodes.forApi(config.apiLevel);
 		dexFileNamer = new BasicDexFileNamer();
+		if (config.apiLevel > 0) opcodes = Opcodes.forApi(config.apiLevel);
 
 		DexFile dex = readDex(new File(config.sourceFile));
 		int types = dex.getClasses().size();
@@ -94,7 +95,12 @@ public class Processor {
 
 	private DexFile processDex(DexFile sourceDex, DexFile patchDex) {
 		long time = System.nanoTime();
-		DexFile patchedDex = DexPatcher.process(createContext(), sourceDex, patchDex);
+		Opcodes patchedOpcodes = opcodes;
+		if (patchedOpcodes == null) {
+			Opcodes sourceOpcodes = sourceDex.getOpcodes();
+			patchedOpcodes = OpcodeUtils.getNewerNullableOpcodes(sourceOpcodes, patchDex.getOpcodes());
+		}
+		DexFile patchedDex = DexPatcher.process(createContext(), sourceDex, patchDex, patchedOpcodes);
 		time = System.nanoTime() - time;
 		logStats("patch process", sourceDex.getClasses().size() + patchDex.getClasses().size(), time);
 		return patchedDex;

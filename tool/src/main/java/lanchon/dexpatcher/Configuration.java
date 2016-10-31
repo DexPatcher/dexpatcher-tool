@@ -26,6 +26,7 @@ public class Configuration {
 
 	public boolean multiDex;
 	public int multiDexJobs = 1;
+
 	public int maxDexPoolSize = DexIO.DEFAULT_MAX_DEX_POOL_SIZE;
 
 	public String annotationPackage = Context.DEFAULT_ANNOTATION_PACKAGE;

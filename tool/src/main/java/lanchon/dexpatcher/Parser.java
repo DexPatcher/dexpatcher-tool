@@ -27,9 +27,6 @@ import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 
 public class Parser {
 
-	public static final int DEFAULT_API_LEVEL_UNI_DEX = 14;
-	public static final int DEFAULT_API_LEVEL_MULTI_DEX = 21;
-
 	public static Configuration parseCommandLine(String[] args) throws ParseException {
 
 		Configuration config = new Configuration();
@@ -54,16 +51,16 @@ public class Parser {
 		config.patchFiles = files;
 		config.patchedFile = cl.getOptionValue("output");
 
+		Number apiLevel = (Number) cl.getParsedOptionValue("api-level");
+		if (apiLevel != null) config.apiLevel = apiLevel.intValue();
+
 		config.multiDex = cl.hasOption("multi-dex");
 		if (cl.hasOption("multi-dex-threaded")) { config.multiDex = true; config.multiDexJobs = 0; }
 		Number multiDexJobs = (Number) cl.getParsedOptionValue("multi-dex-jobs");
 		if (multiDexJobs != null) { config.multiDex = true; config.multiDexJobs = multiDexJobs.intValue(); }
+
 		Number maxDexPoolSize = (Number) cl.getParsedOptionValue("max-dex-pool-size");
 		if (maxDexPoolSize != null) config.maxDexPoolSize = maxDexPoolSize.intValue();
-
-		Number apiLevel = (Number) cl.getParsedOptionValue("api-level");
-		config.apiLevel = (apiLevel != null ? apiLevel.intValue() :
-				(config.multiDex ? DEFAULT_API_LEVEL_MULTI_DEX : DEFAULT_API_LEVEL_UNI_DEX ));
 
 		config.annotationPackage = cl.getOptionValue("annotations", Context.DEFAULT_ANNOTATION_PACKAGE);
 		config.dexTagSupported = cl.hasOption("compat-dextag");
@@ -99,8 +96,7 @@ public class Parser {
 		o = new Option("o", "output", true, "name of output file or directory");
 		o.setArgName("dex-or-dir"); options.addOption(o);
 
-		o = new Option("a", "api-level", true, "android api level of dex files (default:" + System.lineSeparator() +
-				DEFAULT_API_LEVEL_MULTI_DEX + " if multi-dex is enabled, " + DEFAULT_API_LEVEL_UNI_DEX + " otherwise)");
+		o = new Option("a", "api-level", true, "android api level (default: auto-detect)");
 		o.setArgName("n"); o.setType(Number.class); options.addOption(o);
 
 		options.addOption(new Option("m", "multi-dex", false, "enable multi-dex support"));
@@ -108,6 +104,7 @@ public class Parser {
 		o = new Option("J", "multi-dex-jobs", true, "multi-dex thread count (implies: -m -M) (default: " +
 				"available processors up to " + MultiDexIO.DEFAULT_MAX_THREADS + ")");
 		o.setArgName("n"); o.setType(Number.class); options.addOption(o);
+
 		o = new Option(null, "max-dex-pool-size", true, "maximum size of dex pools (default: " +
 				DexIO.DEFAULT_MAX_DEX_POOL_SIZE + ")");
 		o.setArgName("n"); o.setType(Number.class); options.addOption(o);
