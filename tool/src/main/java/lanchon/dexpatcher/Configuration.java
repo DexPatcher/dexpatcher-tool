@@ -14,7 +14,7 @@ import java.util.List;
 
 import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.logger.Logger;
-import lanchon.dexpatcher.multidex.DexIO;
+import lanchon.multidexlib2.DexIO;
 
 public class Configuration {
 

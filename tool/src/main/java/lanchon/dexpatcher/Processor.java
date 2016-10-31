@@ -16,12 +16,12 @@ import java.io.IOException;
 import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.DexPatcher;
 import lanchon.dexpatcher.core.logger.Logger;
-import lanchon.dexpatcher.multidex.BasicDexFileNamer;
-import lanchon.dexpatcher.multidex.DexIO;
-import lanchon.dexpatcher.multidex.DexFileNamer;
-import lanchon.dexpatcher.multidex.MultiDexIO;
-import lanchon.dexpatcher.multidex.OpcodeUtils;
-import lanchon.dexpatcher.multidex.SingletonDexContainer;
+import lanchon.multidexlib2.BasicDexFileNamer;
+import lanchon.multidexlib2.DexIO;
+import lanchon.multidexlib2.DexFileNamer;
+import lanchon.multidexlib2.MultiDexIO;
+import lanchon.multidexlib2.OpcodeUtils;
+import lanchon.multidexlib2.SingletonDexContainer;
 
 import com.google.common.base.Objects;
 import org.jf.dexlib2.Opcodes;

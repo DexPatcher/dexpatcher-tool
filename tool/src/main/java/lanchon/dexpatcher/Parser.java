@@ -13,8 +13,8 @@ package lanchon.dexpatcher;
 import java.util.List;
 
 import lanchon.dexpatcher.core.Context;
-import lanchon.dexpatcher.multidex.DexIO;
-import lanchon.dexpatcher.multidex.MultiDexIO;
+import lanchon.multidexlib2.DexIO;
+import lanchon.multidexlib2.MultiDexIO;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.HelpFormatter;

@@ -8,7 +8,7 @@
  * or (at your option) any later version.
  */
 
-package lanchon.dexpatcher.multidex;
+package lanchon.multidexlib2;
 
 import java.io.File;
 import java.io.FileNotFoundException;

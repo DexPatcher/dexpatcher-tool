@@ -8,12 +8,12 @@
  * or (at your option) any later version.
  */
 
-package lanchon.dexpatcher.multidex;
+package lanchon.multidexlib2;
 
-public class DuplicateTypeException extends RuntimeException {
+public class DexPoolOverflowException extends RuntimeException {
 
-	public DuplicateTypeException(String typeDescriptor) {
-		super(typeDescriptor);
+	public DexPoolOverflowException(String file) {
+		super(file);
 	}
 
 }
