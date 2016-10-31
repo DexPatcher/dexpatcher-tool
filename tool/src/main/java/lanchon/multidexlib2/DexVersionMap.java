@@ -14,7 +14,7 @@ import org.jf.dexlib2.dexbacked.raw.HeaderItem;
 
 public class DexVersionMap {
 
-	// All this should be part of dexlib2.
+	// TODO: Switch to dexlib2's implementation when it gets to support this functionality.
 
 	/*
 	public static boolean isSupportedApiLevel(int apiLevel) {

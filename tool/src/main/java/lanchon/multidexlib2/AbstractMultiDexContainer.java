@@ -36,7 +36,7 @@ public abstract class AbstractMultiDexContainer<T extends DexFile> implements Mu
 		if (opcodes == null) {
 			//opcodes = getNewestOpcodes();
 			for (T entry : entryMap.values()) {
-				opcodes = OpcodeUtils.getNewerNullableOpcodes(opcodes, entry.getOpcodes());
+				opcodes = OpcodeUtils.getNewestOpcodesNullable(opcodes, entry.getOpcodes());
 			}
 			//if (opcodes == null) throwNullOpcodes();
 		}
@@ -63,7 +63,7 @@ public abstract class AbstractMultiDexContainer<T extends DexFile> implements Mu
 	public Opcodes getNewestOpcodes() {
 		Opcodes opcodes = null;
 		for (String entryName : getDexEntryNames()) {
-			opcodes = OpcodeUtils.getNewerNullableOpcodes(opcodes, getEntry(entryName).getOpcodes());
+			opcodes = OpcodeUtils.getNewestOpcodesNullable(opcodes, getEntry(entryName).getOpcodes());
 		}
 	}
 	*/

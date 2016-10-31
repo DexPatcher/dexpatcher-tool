@@ -98,7 +98,7 @@ public class Processor {
 		Opcodes patchedOpcodes = opcodes;
 		if (patchedOpcodes == null) {
 			Opcodes sourceOpcodes = sourceDex.getOpcodes();
-			patchedOpcodes = OpcodeUtils.getNewerNullableOpcodes(sourceOpcodes, patchDex.getOpcodes());
+			patchedOpcodes = OpcodeUtils.getNewestOpcodesNullable(sourceOpcodes, patchDex.getOpcodes());
 			if (sourceOpcodes != null && patchedOpcodes != null && sourceOpcodes != patchedOpcodes) {
 				int sourceDexVersion = OpcodeUtils.getDexVersionFromOpcodes(sourceOpcodes);
 				int patchedDexVersion = OpcodeUtils.getDexVersionFromOpcodes(patchedOpcodes);

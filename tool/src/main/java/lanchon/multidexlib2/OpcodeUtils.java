@@ -24,14 +24,14 @@ public class OpcodeUtils {
 		return DexVersionMap.getHighestDexVersionFromApiLevel(opcodes.api);
 	}
 
-	public static Opcodes getNewerNullableOpcodes(Opcodes o1, Opcodes o2) {
+	public static Opcodes getNewestOpcodesNullable(Opcodes o1, Opcodes o2) {
 		if (o1 == null) return o2;
 		if (o2 == null) return o1;
-		return getNewerOpcodes(o1, o2);
+		return getNewestOpcodes(o1, o2);
 	}
 
-	public static Opcodes getNewerOpcodes(Opcodes o1, Opcodes o2) {
-		if (o1.api == VersionMap.NO_VERSION || o2.api == VersionMap.NO_VERSION) throw throwUndefinedApiLevel();
+	public static Opcodes getNewestOpcodes(Opcodes o1, Opcodes o2) {
+		if (o1.api == VersionMap.NO_VERSION || o2.api == VersionMap.NO_VERSION) throwUndefinedApiLevel();
 		return o1.api >= o2.api ? o1 : o2;
 	}
 
