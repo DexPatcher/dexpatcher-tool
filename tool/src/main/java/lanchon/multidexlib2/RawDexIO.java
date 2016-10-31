@@ -28,8 +28,7 @@ public class RawDexIO {
 
 	// Read
 
-	public static DexBackedDexFile readRawDexFile(File file, Opcodes opcodes,
-			DexIO.Logger logger) throws IOException {
+	public static DexBackedDexFile readRawDexFile(File file, Opcodes opcodes, DexIO.Logger logger) throws IOException {
 		DexBackedDexFile dexFile = readRawDexFile(file, opcodes);
 		if (logger != null) {
 			logger.log(file, SingletonDexContainer.UNDEFINED_ENTRY_NAME, dexFile.getClasses().size());

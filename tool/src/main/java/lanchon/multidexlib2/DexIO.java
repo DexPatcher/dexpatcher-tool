@@ -47,30 +47,35 @@ public class DexIO {
 
 	static void writeRawDexSingleThread(File file, DexFile dexFile, int maxDexPoolSize,
 			DexIO.Logger logger) throws IOException {
-		writeCommonSingleThread(false, file, null, SingletonDexContainer.UNDEFINED_ENTRY_NAME, file, dexFile,
+		writeCommonSingleThread(false, file, null, SingletonDexContainer.UNDEFINED_ENTRY_NAME, file, dexFile, 0, false,
 				maxDexPoolSize, logger);
 	}
 
-	static void writeMultiDexSingleThread(boolean multiDex, File directory, DexFileNamer.Iterator nameIterator,
-			DexFile dexFile, int maxDexPoolSize, DexIO.Logger logger) throws IOException {
-		writeCommonSingleThread(multiDex, directory, nameIterator, null, null, dexFile, maxDexPoolSize, logger);
+	static void writeMultiDexDirectorySingleThread(boolean multiDex, File directory, DexFileNamer.Iterator nameIterator,
+			DexFile dexFile, int minMainDexClassCount, boolean minimalMainDex, int maxDexPoolSize,
+			DexIO.Logger logger) throws IOException {
+		writeCommonSingleThread(multiDex, directory, nameIterator, null, null, dexFile, minMainDexClassCount,
+				minimalMainDex, maxDexPoolSize, logger);
 	}
 
-	static void writeCommonSingleThread(boolean multiDex, File base, DexFileNamer.Iterator nameIterator,
-			String currentName, File currentFile, DexFile dexFile, int maxDexPoolSize,
-			DexIO.Logger logger) throws IOException {
+	private static void writeCommonSingleThread(boolean multiDex, File base, DexFileNamer.Iterator nameIterator,
+			String currentName, File currentFile, DexFile dexFile, int minMainDexClassCount, boolean minimalMainDex,
+			int maxDexPoolSize, DexIO.Logger logger) throws IOException {
 		Set<? extends ClassDef> classes = dexFile.getClasses();
-		int minMainDexClassCount = (multiDex ? 0 : classes.size());
+		if (!multiDex) {
+			minMainDexClassCount = classes.size();
+			minimalMainDex = false;
+		}
 		Object lock = new Object();
 		synchronized (lock) {       // avoid multiple synchronizations in single-threaded mode
-			writeCommon(minMainDexClassCount, base, nameIterator, currentName, currentFile, classes.iterator(),
-					dexFile.getOpcodes(), maxDexPoolSize, logger, lock);
+			writeCommon(base, nameIterator, currentName, currentFile, classes.iterator(), minMainDexClassCount,
+					minimalMainDex, dexFile.getOpcodes(), maxDexPoolSize, logger, lock);
 		}
 	}
 
 	// Multi-Threaded Write
 
-	static void writeMultiDexMultiThread(int threadCount, final File directory,
+	static void writeMultiDexDirectoryMultiThread(int threadCount, final File directory,
 			final DexFileNamer.Iterator nameIterator, final DexFile dexFile, final int maxDexPoolSize,
 			final DexIO.Logger logger) throws IOException {
 		final Iterator<? extends ClassDef> classIterator = dexFile.getClasses().iterator();
@@ -80,7 +85,7 @@ public class DexIO {
 			callables.add(new Callable<Void>() {
 				@Override
 				public Void call() throws IOException {
-					writeCommon(0, directory, nameIterator, null, null, classIterator, dexFile.getOpcodes(),
+					writeCommon(directory, nameIterator, null, null, classIterator, 0, false, dexFile.getOpcodes(),
 							maxDexPoolSize, logger, lock);
 					return null;
 				}
@@ -113,16 +118,16 @@ public class DexIO {
 
 	private static final int PER_THREAD_BATCH_SIZE = 100;
 
-	private static void writeCommon(int minMainDexClassCount, File base, DexFileNamer.Iterator nameIterator,
-			String currentName, File currentFile, Iterator<? extends ClassDef> classIterator, Opcodes opcodes,
-			int maxDexPoolSize, DexIO.Logger logger,
-			Object lock) throws IOException {
+	private static void writeCommon(File base, DexFileNamer.Iterator nameIterator, String currentName, File currentFile,
+			Iterator<? extends ClassDef> classIterator, int minMainDexClassCount, boolean minimalMainDex,
+			Opcodes opcodes, int maxDexPoolSize, DexIO.Logger logger, Object lock) throws IOException {
 		Deque<ClassDef> queue = new ArrayDeque<>(PER_THREAD_BATCH_SIZE);
 		ClassDef currentClass = getQueueItem(queue, classIterator, lock);
 		do {
 			DexPool dexPool = new DexPool(opcodes);
 			int fileClassCount = 0;
 			while (currentClass != null) {
+				if (minimalMainDex && fileClassCount >= minMainDexClassCount) break;
 				dexPool.mark();
 				dexPool.internClass(currentClass);
 				fileClassCount++;
@@ -156,6 +161,7 @@ public class DexIO {
 			dexPool.writeTo(new FileDataStore(currentFile));
 			currentFile = null;
 			minMainDexClassCount = 0;
+			minimalMainDex = false;
 		} while (currentClass != null);
 	}
 
