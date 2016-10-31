@@ -49,8 +49,8 @@ public class RawDexIO {
 		return readRawDexFile(buf, 0, opcodes);
 	}
 
-	public static DexBackedDexFile readRawDexFile(InputStream inputStream, long expectedSize,
-			Opcodes opcodes) throws IOException {
+	public static DexBackedDexFile readRawDexFile(InputStream inputStream, long expectedSize, Opcodes opcodes)
+			throws IOException {
 		byte[] buf = ByteStreamsHack.toByteArray(inputStream, expectedSize);
 		return readRawDexFile(buf, 0, opcodes);
 	}
@@ -66,8 +66,8 @@ public class RawDexIO {
 
 	// Write
 
-	public static void writeRawDexFile(File file, DexFile dexFile, int maxDexPoolSize,
-			DexIO.Logger logger) throws IOException {
+	public static void writeRawDexFile(File file, DexFile dexFile, int maxDexPoolSize, DexIO.Logger logger)
+			throws IOException {
 		DexIO.writeRawDexSingleThread(file, dexFile, maxDexPoolSize, logger);
 	}
 

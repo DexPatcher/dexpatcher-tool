@@ -95,8 +95,8 @@ public class MultiDexIO {
 	}
 
 	public static int writeMultiDexDirectory(boolean multiDex, int threadCount, File directory, DexFileNamer namer,
-			DexFile dexFile, int minMainDexClassCount, boolean minimalMainDex, int maxDexPoolSize,
-			DexIO.Logger logger) throws IOException {
+			DexFile dexFile, int minMainDexClassCount, boolean minimalMainDex, int maxDexPoolSize, DexIO.Logger logger)
+			throws IOException {
 		purgeMultiDexDirectory(multiDex, directory, namer);
 		DexFileNameIterator nameIterator = new DexFileNameIterator(namer);
 		if (threadCount <= 0) {

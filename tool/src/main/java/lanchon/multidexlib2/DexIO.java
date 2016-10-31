@@ -45,15 +45,15 @@ public class DexIO {
 
 	// Single-Threaded Write
 
-	static void writeRawDexSingleThread(File file, DexFile dexFile, int maxDexPoolSize,
-			DexIO.Logger logger) throws IOException {
+	static void writeRawDexSingleThread(File file, DexFile dexFile, int maxDexPoolSize, DexIO.Logger logger)
+			throws IOException {
 		writeCommonSingleThread(false, file, null, SingletonDexContainer.UNDEFINED_ENTRY_NAME, file, dexFile, 0, false,
 				maxDexPoolSize, logger);
 	}
 
 	static void writeMultiDexDirectorySingleThread(boolean multiDex, File directory, DexFileNameIterator nameIterator,
-			DexFile dexFile, int minMainDexClassCount, boolean minimalMainDex, int maxDexPoolSize,
-			DexIO.Logger logger) throws IOException {
+			DexFile dexFile, int minMainDexClassCount, boolean minimalMainDex, int maxDexPoolSize, DexIO.Logger logger)
+			throws IOException {
 		writeCommonSingleThread(multiDex, directory, nameIterator, null, null, dexFile, minMainDexClassCount,
 				minimalMainDex, maxDexPoolSize, logger);
 	}
