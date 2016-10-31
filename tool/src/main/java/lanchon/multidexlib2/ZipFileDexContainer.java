@@ -13,12 +13,10 @@ package lanchon.multidexlib2;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Enumeration;
-import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
 
 import org.jf.dexlib2.Opcodes;
@@ -27,66 +25,41 @@ import org.jf.dexlib2.iface.MultiDexContainer.MultiDexFile;
 
 public class ZipFileDexContainer extends AbstractMultiDexContainer<MultiDexFile> {
 
-	private final File zip;
-	private final DexFileNamer namer;
-	private final boolean sort;
-
-	public ZipFileDexContainer(File zip, DexFileNamer namer, boolean sort, Opcodes opcodes) {
-		super(opcodes);
-		this.zip = zip;
-		this.namer = namer;
-		this.sort = sort;
-	}
-
-	public boolean isZipFile() throws IOException {
+	public static boolean isZipFile(File zip) {
 		if (!zip.isFile()) return false;
 		try {
 			ZipFile zipFile = new ZipFile(zip);
 			zipFile.close();
 			return true;
-		} catch (ZipException e) {
+		} catch (IOException e) {
 			return false;
 		}
 	}
 
-	@Override
-	public List<String> getDexEntryNames() throws IOException {
-		List<String> filteredNames = new ArrayList<>();
+	public ZipFileDexContainer(File zip, DexFileNamer namer, Opcodes opcodes) throws IOException {
+		Map<String, MultiDexFile> entryMap = new TreeMap<>(new DexFileNamer.Comparator(namer));
 		ZipFile zipFile = new ZipFile(zip);
 		try {
 			Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();
 			while (zipEntries.hasMoreElements()) {
 				ZipEntry zipEntry = zipEntries.nextElement();
-				String name = zipEntry.getName();
-				if (namer.isValidName(name)) filteredNames.add(name);
+				String entryName = zipEntry.getName();
+				if (namer.isValidName(entryName)) {
+					DexFile dexFile;
+					InputStream inputStream = zipFile.getInputStream(zipEntry);
+					try {
+						dexFile = RawDexIO.readRawDexFile(inputStream, zipEntry.getSize(), opcodes);
+					} finally {
+						inputStream.close();
+					}
+					MultiDexFile multiDexFile = new BasicMultiDexFile<>(this, entryName, dexFile);
+					entryMap.put(entryName, multiDexFile);
+				}
 			}
 		} finally {
 			zipFile.close();
 		}
-		if (sort) {
-			Collections.sort(filteredNames, new DexFileNamer.Comparator(namer));
-		}
-		return filteredNames;
-	}
-
-	@Override
-	public MultiDexFile getEntry(String entryName) throws IOException {
-		if (!namer.isValidName(entryName)) return null;
-		DexFile dexFile;
-		ZipFile zipFile = new ZipFile(zip);
-		try {
-			ZipEntry zipEntry = zipFile.getEntry(entryName);
-			if (zipEntry == null) return null;
-			InputStream inputStream = zipFile.getInputStream(zipEntry);
-			try {
-				dexFile = RawDexIO.readRawDexFile(inputStream, zipEntry.getSize(), opcodes);
-			} finally {
-				inputStream.close();
-			}
-		} finally {
-			zipFile.close();
-		}
-		return new BasicMultiDexFile<>(this, entryName, dexFile);
+		initialize(entryMap, opcodes);
 	}
 
 }

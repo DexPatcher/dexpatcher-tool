@@ -10,48 +10,28 @@
 
 package lanchon.multidexlib2;
 
-import java.io.IOException;
 import java.util.Collections;
-import java.util.List;
+import java.util.Map;
 
-import com.google.common.base.Objects;
 import org.jf.dexlib2.Opcodes;
 import org.jf.dexlib2.iface.DexFile;
-import org.jf.dexlib2.iface.MultiDexContainer;
 import org.jf.dexlib2.iface.MultiDexContainer.MultiDexFile;
 
-public class SingletonDexContainer implements MultiDexContainer<MultiDexFile> {
+public class SingletonDexContainer extends AbstractMultiDexContainer<MultiDexFile> {
 
 	// I insist that some dex container entries do not have names
 	// even though dexlib2 does not allow null entry names.
 	public static final String UNDEFINED_ENTRY_NAME = null;
-
-	private final List<String> entryNames;
-	private final MultiDexFile entry;
 
 	public SingletonDexContainer(DexFile dexFile) {
 		this(UNDEFINED_ENTRY_NAME, dexFile);
 	}
 
 	public SingletonDexContainer(String entryName, DexFile dexFile) {
-		entryNames = Collections.singletonList(entryName);
-		entry = new BasicMultiDexFile<>(this, entryName, dexFile);
-	}
-
-	@Override
-	public List<String> getDexEntryNames() throws IOException {
-		return entryNames;
-	}
-
-	@Override
-	public MultiDexFile getEntry(String entryName) throws IOException {
-		if (!Objects.equal(entryName, entry.getEntryName())) return null;
-		return entry;
-	}
-
-	@Override
-	public Opcodes getOpcodes() {
-		return entry.getOpcodes();
+		Opcodes opcodes = dexFile.getOpcodes();
+		MultiDexFile multiDexFile = new BasicMultiDexFile<>(this, entryName, dexFile);
+		Map<String, MultiDexFile> entryMap = Collections.singletonMap(entryName, multiDexFile);
+		initialize(entryMap, opcodes);
 	}
 
 }

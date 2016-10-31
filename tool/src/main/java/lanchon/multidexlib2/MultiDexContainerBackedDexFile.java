@@ -27,29 +27,25 @@ public class MultiDexContainerBackedDexFile<T extends DexFile> implements DexFil
 	private final Opcodes opcodes;
 
 	public MultiDexContainerBackedDexFile(MultiDexContainer<T> container) throws IOException {
-		List<String> entryNames = container.getDexEntryNames();
 		Set<? extends ClassDef> classes;
-		Opcodes opcodes = container.getOpcodes();
-		boolean resolveOpcodes = (opcodes == null);
+		List<String> entryNames = container.getDexEntryNames();
 		if (entryNames.size() == 1) {
 			String entryName = entryNames.get(0);
 			T entry = container.getEntry(entryName);
 			classes = entry.getClasses();
-			if (resolveOpcodes) opcodes = entry.getOpcodes();
 		} else {
 			LinkedHashSet<ClassDef> accumulatedClasses = new LinkedHashSet<>();
-			classes = accumulatedClasses;
 			for (String entryName : entryNames) {
 				T entry = container.getEntry(entryName);
 				Set<? extends ClassDef> entryClasses = entry.getClasses();
 				for (ClassDef entryClass : entryClasses) {
 					if (!accumulatedClasses.add(entryClass)) throw new DuplicateTypeException(entryClass.getType());
 				}
-				if (resolveOpcodes) opcodes = OpcodeUtils.getNewerNullableOpcodes(opcodes, entry.getOpcodes());
 			}
+			classes = accumulatedClasses;
 		}
 		this.classes = Collections.unmodifiableSet(classes);
-		this.opcodes = opcodes;
+		this.opcodes = container.getOpcodes();
 	}
 
 	@Override

@@ -10,7 +10,10 @@
 
 package lanchon.multidexlib2;
 
-import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Map;
+import java.util.List;
 
 import org.jf.dexlib2.Opcodes;
 import org.jf.dexlib2.iface.DexFile;
@@ -18,32 +21,51 @@ import org.jf.dexlib2.iface.MultiDexContainer;
 
 public abstract class AbstractMultiDexContainer<T extends DexFile> implements MultiDexContainer<T> {
 
-	protected final Opcodes opcodes;
+	private Map<String, T> entryMap;
+	private List<String> entryNames;
+	private Opcodes resolvedOpcodes;
 
-	public AbstractMultiDexContainer(Opcodes opcodes) {
-		this.opcodes = opcodes;
+	protected AbstractMultiDexContainer() {}
+
+	protected void initialize(Map<String, T> entryMap, Opcodes opcodes) {
+		if (entryMap == null) throw new NullPointerException("entryMap");
+		if (this.entryMap != null) throw new IllegalStateException("Already initialized");
+		this.entryMap = entryMap;
+		// See: https://github.com/JesusFreke/smali/issues/458
+		entryNames = Collections.unmodifiableList(new ArrayList<>(entryMap.keySet()));
+		if (opcodes == null) {
+			//opcodes = getNewestOpcodes();
+			for (T entry : entryMap.values()) {
+				opcodes = OpcodeUtils.getNewerNullableOpcodes(opcodes, entry.getOpcodes());
+			}
+			//if (opcodes == null) throwNullOpcodes();
+		}
+		resolvedOpcodes = opcodes;
+	}
+
+	@Override
+	public List<String> getDexEntryNames() {
+		return entryNames;
+	}
+
+	@Override
+	public T getEntry(String entryName) {
+		return entryMap.get(entryName);
 	}
 
 	@Override
 	public Opcodes getOpcodes() {
-		/*
-		try {
-			return getResolvedOpcodes();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		*/
-		return opcodes;
+		//if (resolvedOpcodes == null) throwNullOpcodes();
+		return resolvedOpcodes;
 	}
 
-	public Opcodes getResolvedOpcodes() throws IOException {
-		Opcodes value = opcodes;
-		if (value == null) {
-			for (String entryName : getDexEntryNames()) {
-				value = OpcodeUtils.getNewerNullableOpcodes(value, getEntry(entryName).getOpcodes());
-			}
+	/*
+	public Opcodes getNewestOpcodes() {
+		Opcodes opcodes = null;
+		for (String entryName : getDexEntryNames()) {
+			opcodes = OpcodeUtils.getNewerNullableOpcodes(opcodes, getEntry(entryName).getOpcodes());
 		}
-		return value;
 	}
+	*/
 
 }

@@ -12,9 +12,8 @@ package lanchon.multidexlib2;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.jf.dexlib2.Opcodes;
 import org.jf.dexlib2.iface.DexFile;
@@ -22,33 +21,19 @@ import org.jf.dexlib2.iface.MultiDexContainer.MultiDexFile;
 
 public class DirectoryDexContainer extends AbstractMultiDexContainer<MultiDexFile> {
 
-	private final File directory;
-	private final DexFileNamer namer;
-
-	public DirectoryDexContainer(File directory, DexFileNamer namer, Opcodes opcodes) {
-		super(opcodes);
-		this.directory = directory;
-		this.namer = namer;
-	}
-
-	@Override
-	public List<String> getDexEntryNames() throws IOException {
+	public DirectoryDexContainer(File directory, DexFileNamer namer, Opcodes opcodes) throws IOException {
+		Map<String, MultiDexFile> entryMap = new TreeMap<>(new DexFileNamer.Comparator(namer));
 		String[] names = directory.list();
 		if (names == null) throw new IOException("Cannot access directory: " + directory);
-		List<String> filteredNames = new ArrayList<>();
-		for (String name : names) {
-			if (new File(directory, name).isFile() && namer.isValidName(name)) filteredNames.add(name);
+		for (String entryName : names) {
+			File file = new File(directory, entryName);
+			if (file.isFile() && namer.isValidName(entryName)) {
+				DexFile dexFile = RawDexIO.readRawDexFile(file, opcodes);
+				MultiDexFile multiDexFile = new BasicMultiDexFile<>(this, entryName, dexFile);
+				entryMap.put(entryName, multiDexFile);
+			}
 		}
-		Collections.sort(filteredNames, new DexFileNamer.Comparator(namer));
-		return filteredNames;
-	}
-
-	@Override
-	public MultiDexFile getEntry(String entryName) throws IOException {
-		if (!(new File(directory, entryName).isFile() && namer.isValidName(entryName))) return null;
-		File file = new File(directory, entryName);
-		DexFile dexFile = RawDexIO.readRawDexFile(file, opcodes);
-		return new BasicMultiDexFile<>(this, entryName, dexFile);
+		initialize(entryMap, opcodes);
 	}
 
 }
