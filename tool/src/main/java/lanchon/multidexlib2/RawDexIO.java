@@ -51,6 +51,8 @@ public class RawDexIO {
 
 	public static DexBackedDexFile readRawDexFile(InputStream inputStream, long expectedSize, Opcodes opcodes)
 			throws IOException {
+		// TODO: Remove hack when issue is fixed: https://github.com/google/guava/issues/2616
+		//byte[] buf = ByteStreams.toByteArray(inputStream);
 		byte[] buf = ByteStreamsHack.toByteArray(inputStream, expectedSize);
 		return readRawDexFile(buf, 0, opcodes);
 	}

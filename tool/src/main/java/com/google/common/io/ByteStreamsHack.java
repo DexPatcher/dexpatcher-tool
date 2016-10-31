@@ -13,8 +13,7 @@ package com.google.common.io;
 import java.io.IOException;
 import java.io.InputStream;
 
-// TODO: Remove this class when this issue is fixed:
-// https://github.com/google/guava/issues/2616
+// TODO: Remove hack when issue is fixed: https://github.com/google/guava/issues/2616
 
 public class ByteStreamsHack {
 
