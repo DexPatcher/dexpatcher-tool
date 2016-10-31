@@ -67,13 +67,13 @@ public class RawDexIO {
 
 	// Write
 
-	public static void writeRawDexFile(int maxDexPoolSize, File file, DexFile dexFile,
+	public static void writeRawDexFile(File file, DexFile dexFile, int maxDexPoolSize,
 			DexIO.Logger logger) throws IOException {
-		DexIO.writeRawDexSingleThread(maxDexPoolSize, file, dexFile, logger);
+		DexIO.writeRawDexSingleThread(file, dexFile, maxDexPoolSize, logger);
 	}
 
-	public static void writeRawDexFile(int maxDexPoolSize, File file, DexFile dexFile) throws IOException {
-		DexIO.writeRawDexSingleThread(maxDexPoolSize, file, dexFile, null);
+	public static void writeRawDexFile(File file, DexFile dexFile, int maxDexPoolSize) throws IOException {
+		DexIO.writeRawDexSingleThread(file, dexFile, maxDexPoolSize, null);
 	}
 
 }

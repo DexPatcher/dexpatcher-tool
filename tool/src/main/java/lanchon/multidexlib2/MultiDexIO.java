@@ -64,24 +64,24 @@ public class MultiDexIO {
 
 	// Write
 
-	public static int writeDexFile(int maxDexPoolSize, boolean multiDex, File file, DexFileNamer namer,
-			DexFile dexFile, DexIO.Logger logger) throws IOException {
-		return writeDexFile(maxDexPoolSize, multiDex, 1, file, namer, dexFile, logger);
+	public static int writeDexFile(boolean multiDex, File file, DexFileNamer namer, DexFile dexFile,
+			int maxDexPoolSize, DexIO.Logger logger) throws IOException {
+		return writeDexFile(multiDex, 1, file, namer, dexFile, maxDexPoolSize, logger);
 	}
 
-	public static int writeDexFile(int maxDexPoolSize, boolean multiDex, int threadCount, File file,
-			DexFileNamer namer, DexFile dexFile, DexIO.Logger logger) throws IOException {
+	public static int writeDexFile(boolean multiDex, int threadCount, File file, DexFileNamer namer, DexFile dexFile,
+			int maxDexPoolSize, DexIO.Logger logger) throws IOException {
 		if (file.isDirectory()) {
-			return writeMultiDexDirectory(maxDexPoolSize, multiDex, threadCount, file, namer, dexFile, logger);
+			return writeMultiDexDirectory(multiDex, threadCount, file, namer, dexFile, maxDexPoolSize, logger);
 		} else {
 			if (multiDex) throw new RuntimeException("Must output to a directory if multi-dex mode is enabled");
-			RawDexIO.writeRawDexFile(maxDexPoolSize, file, dexFile, logger);
+			RawDexIO.writeRawDexFile(file, dexFile, maxDexPoolSize, logger);
 			return 1;
 		}
 	}
 
-	public static int writeMultiDexDirectory(int maxDexPoolSize, boolean multiDex, int threadCount, File directory,
-			DexFileNamer namer, DexFile dexFile, DexIO.Logger logger) throws IOException {
+	public static int writeMultiDexDirectory(boolean multiDex, int threadCount, File directory, DexFileNamer namer,
+			DexFile dexFile, int maxDexPoolSize, DexIO.Logger logger) throws IOException {
 		purgeMultiDexDirectory(multiDex, directory, namer);
 		DexFileNamer.Iterator nameIterator = new DexFileNamer.Iterator(namer);
 		if (threadCount <= 0) {
@@ -89,9 +89,9 @@ public class MultiDexIO {
 			if (threadCount > DEFAULT_MAX_THREADS) threadCount = DEFAULT_MAX_THREADS;
 		}
 		if (multiDex && threadCount > 1) {
-			DexIO.writeMultiDexMultiThread(maxDexPoolSize, threadCount, directory, nameIterator, dexFile, logger);
+			DexIO.writeMultiDexMultiThread(threadCount, directory, nameIterator, dexFile, maxDexPoolSize, logger);
 		} else {
-			DexIO.writeMultiDexSingleThread(maxDexPoolSize, multiDex, directory, nameIterator, dexFile, logger);
+			DexIO.writeMultiDexSingleThread(multiDex, directory, nameIterator, dexFile, maxDexPoolSize, logger);
 		}
 		return nameIterator.getCount();
 	}
