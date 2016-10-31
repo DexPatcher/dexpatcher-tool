@@ -53,7 +53,7 @@ public class ZipFileDexContainer extends AbstractMultiDexContainer<MultiDexFile>
 						inputStream.close();
 					}
 					MultiDexFile multiDexFile = new BasicMultiDexFile<>(this, entryName, dexFile);
-					entryMap.put(entryName, multiDexFile);
+					if (entryMap.put(entryName, multiDexFile) != null) throwDuplicateEntryName(entryName);
 				}
 			}
 		} finally {

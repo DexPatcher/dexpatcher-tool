@@ -68,4 +68,8 @@ public abstract class AbstractMultiDexContainer<T extends DexFile> implements Mu
 	}
 	*/
 
+	protected DuplicateEntryNameException throwDuplicateEntryName(String entryName) {
+		throw new DuplicateEntryNameException(entryName);
+	}
+
 }

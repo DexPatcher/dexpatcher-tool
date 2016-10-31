@@ -30,7 +30,7 @@ public class DirectoryDexContainer extends AbstractMultiDexContainer<MultiDexFil
 			if (file.isFile() && namer.isValidName(entryName)) {
 				DexFile dexFile = RawDexIO.readRawDexFile(file, opcodes);
 				MultiDexFile multiDexFile = new BasicMultiDexFile<>(this, entryName, dexFile);
-				entryMap.put(entryName, multiDexFile);
+				if (entryMap.put(entryName, multiDexFile) != null) throwDuplicateEntryName(entryName);
 			}
 		}
 		initialize(entryMap, opcodes);
