@@ -28,21 +28,28 @@ public class MultiDexContainerBackedDexFile<T extends DexFile> implements DexFil
 
 	public MultiDexContainerBackedDexFile(MultiDexContainer<T> container) throws IOException {
 		List<String> entryNames = container.getDexEntryNames();
+		Set<? extends ClassDef> classes;
+		Opcodes opcodes = container.getOpcodes();
+		boolean resolveOpcodes = (opcodes == null);
 		if (entryNames.size() == 1) {
 			String entryName = entryNames.get(0);
-			Set<? extends ClassDef> entryClasses = container.getEntry(entryName).getClasses();
-			this.classes = Collections.unmodifiableSet(entryClasses);
+			T entry = container.getEntry(entryName);
+			classes = entry.getClasses();
+			if (resolveOpcodes) opcodes = entry.getOpcodes();
 		} else {
-			LinkedHashSet<ClassDef> classes = new LinkedHashSet<>();
+			LinkedHashSet<ClassDef> accumulatedClasses = new LinkedHashSet<>();
+			classes = accumulatedClasses;
 			for (String entryName : entryNames) {
-				Set<? extends ClassDef> entryClasses = container.getEntry(entryName).getClasses();
+				T entry = container.getEntry(entryName);
+				Set<? extends ClassDef> entryClasses = entry.getClasses();
 				for (ClassDef entryClass : entryClasses) {
-					if (!classes.add(entryClass)) throw new DuplicateTypeException(entryClass.getType());
+					if (!accumulatedClasses.add(entryClass)) throw new DuplicateTypeException(entryClass.getType());
 				}
+				if (resolveOpcodes) opcodes = OpcodeUtils.getNewerNullableOpcodes(opcodes, entry.getOpcodes());
 			}
-			this.classes = Collections.unmodifiableSet(classes);
 		}
-		this.opcodes = container.getOpcodes();
+		this.classes = Collections.unmodifiableSet(classes);
+		this.opcodes = opcodes;
 	}
 
 	@Override

@@ -26,11 +26,14 @@ public abstract class AbstractMultiDexContainer<T extends DexFile> implements Mu
 
 	@Override
 	public Opcodes getOpcodes() {
+		/*
 		try {
 			return getResolvedOpcodes();
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+		*/
+		return opcodes;
 	}
 
 	public Opcodes getResolvedOpcodes() throws IOException {
