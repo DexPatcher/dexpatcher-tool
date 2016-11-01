@@ -52,11 +52,11 @@ public abstract class MemberSetPatcher<T extends Member> extends AnnotatableSetP
 
 	@Override
 	protected void onPrepare(String patchId, T patch, PatcherAnnotation annotation) throws PatchException {
-		if (annotation.getTargetClass() != null) PatcherAnnotation.throwInvalidElement(Marker.ELEM_TARGET_CLASS);
-		if (annotation.getStaticConstructorAction() != null) PatcherAnnotation.throwInvalidElement(Marker.ELEM_STATIC_CONSTRUCTOR_ACTION);
-		if (annotation.getDefaultAction() != null) PatcherAnnotation.throwInvalidElement(Marker.ELEM_DEFAULT_ACTION);
-		if (annotation.getOnlyEditMembers()) PatcherAnnotation.throwInvalidElement(Marker.ELEM_ONLY_EDIT_MEMBERS);
-		if (annotation.getRecursive()) PatcherAnnotation.throwInvalidElement(Marker.ELEM_RECURSIVE);
+		if (annotation.getTargetClass() != null) throw PatcherAnnotation.invalidElement(Marker.ELEM_TARGET_CLASS);
+		if (annotation.getStaticConstructorAction() != null) throw PatcherAnnotation.invalidElement(Marker.ELEM_STATIC_CONSTRUCTOR_ACTION);
+		if (annotation.getDefaultAction() != null) throw PatcherAnnotation.invalidElement(Marker.ELEM_DEFAULT_ACTION);
+		if (annotation.getOnlyEditMembers()) throw PatcherAnnotation.invalidElement(Marker.ELEM_ONLY_EDIT_MEMBERS);
+		if (annotation.getRecursive()) throw PatcherAnnotation.invalidElement(Marker.ELEM_RECURSIVE);
 	}
 
 }

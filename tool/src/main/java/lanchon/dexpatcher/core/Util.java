@@ -55,7 +55,7 @@ public abstract class Util {
 	}
 
 	public static String getFieldTypeNameFromDescriptor(String descriptor) {
-		if (descriptor.length() == 0) throwInvalidTypeDescriptor(descriptor);
+		if (descriptor.length() == 0) throw invalidTypeDescriptor(descriptor);
 		switch (descriptor.charAt(0)) {
 			case '[': return getTypeNameFromDescriptor(descriptor.substring(1)) + "[]";
 			case 'L': return getLongTypeNameFromDescriptor(descriptor);
@@ -67,13 +67,13 @@ public abstract class Util {
 			case 'J': return "long";
 			case 'F': return "float";
 			case 'D': return "double";
-			default:  throw throwInvalidTypeDescriptor(descriptor);
+			default:  throw invalidTypeDescriptor(descriptor);
 		}
 	}
 
 	public static String getLongTypeNameFromDescriptor(String descriptor) {
 		// TODO: Catch invalid type descriptor exceptions in client code.
-		if (!isLongTypeDescriptor(descriptor)) throwInvalidTypeDescriptor(descriptor);
+		if (!isLongTypeDescriptor(descriptor)) throw invalidTypeDescriptor(descriptor);
 		int l = descriptor.length();
 		StringBuilder sb = new StringBuilder(l - 2);
 		for (int i = 1; i < l - 1; i++) {
@@ -83,8 +83,8 @@ public abstract class Util {
 		return sb.toString();
 	}
 
-	private static RuntimeException throwInvalidTypeDescriptor(String descriptor) {
-		throw new RuntimeException("Invalid type descriptor (" + descriptor + ")");
+	private static RuntimeException invalidTypeDescriptor(String descriptor) {
+		return new RuntimeException("Invalid type descriptor (" + descriptor + ")");
 	}
 
 	public static String resolveTypeName(String name, String base) {

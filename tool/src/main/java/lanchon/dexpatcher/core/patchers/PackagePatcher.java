@@ -46,7 +46,7 @@ public class PackagePatcher extends ClassSetPatcher {
 			super.onPrepare(patchId, patch, annotation);
 			return;
 		}
-		if (annotation.getTargetClass() != null) PatcherAnnotation.throwInvalidElement(Marker.ELEM_TARGET_CLASS);
+		if (annotation.getTargetClass() != null) throw PatcherAnnotation.invalidElement(Marker.ELEM_TARGET_CLASS);
 	}
 
 	@Override

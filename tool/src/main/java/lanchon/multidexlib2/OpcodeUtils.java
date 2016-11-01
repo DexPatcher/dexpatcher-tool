@@ -20,7 +20,7 @@ public class OpcodeUtils {
 	}
 
 	public static int getDexVersionFromOpcodes(Opcodes opcodes) {
-		if (opcodes.api == VersionMap.NO_VERSION) throw throwUndefinedApiLevel();
+		if (opcodes.api == VersionMap.NO_VERSION) throw undefinedApiLevel();
 		return DexVersionMap.getHighestDexVersionFromApiLevel(opcodes.api);
 	}
 
@@ -31,12 +31,12 @@ public class OpcodeUtils {
 	}
 
 	public static Opcodes getNewestOpcodes(Opcodes o1, Opcodes o2) {
-		if (o1.api == VersionMap.NO_VERSION || o2.api == VersionMap.NO_VERSION) throwUndefinedApiLevel();
+		if (o1.api == VersionMap.NO_VERSION || o2.api == VersionMap.NO_VERSION) throw undefinedApiLevel();
 		return o1.api >= o2.api ? o1 : o2;
 	}
 
-	private static IllegalArgumentException throwUndefinedApiLevel() {
-		throw new IllegalArgumentException("Opcodes instance has undefined api level");
+	private static IllegalArgumentException undefinedApiLevel() {
+		return new IllegalArgumentException("Opcodes instance has undefined api level");
 	}
 
 	private OpcodeUtils() {}

@@ -92,7 +92,7 @@ public class PatcherAnnotation {
 			default:
 				break;
 			}
-			throwInvalidElement(name);
+			throw invalidElement(name);
 		}
 
 		if (target != null && targetClass != null) {
@@ -105,12 +105,12 @@ public class PatcherAnnotation {
 
 	}
 
-	public static PatchException throwInvalidAnnotation(Marker marker) throws PatchException {
-		throw new PatchException("invalid patcher annotation (" + marker.getClassName() + ")");
+	public static PatchException invalidAnnotation(Marker marker) {
+		return new PatchException("invalid patcher annotation (" + marker.getClassName() + ")");
 	}
 
-	public static PatchException throwInvalidElement(String name) throws PatchException {
-		throw new PatchException("invalid patcher annotation element (" + name + ")");
+	public static PatchException invalidElement(String name) {
+		return new PatchException("invalid patcher annotation element (" + name + ")");
 	}
 
 	private final Action action;
