@@ -120,19 +120,19 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 			int oldFlags = Util.getClassAccessFlags(target);
 			int newFlags = Util.getClassAccessFlags(patch);
 			if (!inPlaceEdit) {
-				String message = "'%s' modifier mismatch in renamed " + getSetItemLabel();
+				String item = "renamed " + getSetItemLabel();
 				if (isLogging(WARN)) logAccessFlags(WARN, oldFlags, newFlags,
-						new AccessFlags[] { STATIC, FINAL, INTERFACE, ABSTRACT, ANNOTATION, ENUM }, message);
+						new AccessFlags[] { STATIC, FINAL, INTERFACE, ABSTRACT, ANNOTATION, ENUM }, item);
 				if (isLogging(DEBUG)) logAccessFlags(DEBUG, oldFlags, newFlags,
-						new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED, SYNTHETIC }, message);
+						new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED, SYNTHETIC }, item);
 			} else {
-				String message = "'%s' modifier mismatch in edited " + getSetItemLabel();
+				String item = "edited " + getSetItemLabel();
 				if (isLogging(WARN)) logAccessFlags(WARN, oldFlags, newFlags,
-						new AccessFlags[] { STATIC, FINAL, INTERFACE, ABSTRACT, ANNOTATION, ENUM }, message);
+						new AccessFlags[] { STATIC, FINAL, INTERFACE, ABSTRACT, ANNOTATION, ENUM }, item);
 				if (isLogging(INFO)) logAccessFlags(INFO, oldFlags, newFlags,
-						new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED }, message);
+						new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED }, item);
 				if (isLogging(DEBUG)) logAccessFlags(DEBUG, oldFlags, newFlags,
-						new AccessFlags[] { SYNTHETIC }, message);
+						new AccessFlags[] { SYNTHETIC }, item);
 			}
 		}
 
@@ -170,13 +170,13 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 		if (!inPlaceEdit) {
 			int oldFlags = Util.getClassAccessFlags(original);
 			int newFlags = Util.getClassAccessFlags(patched);
-			String message = "'%s' modifier mismatch in replaced " + getSetItemLabel();
+			String item = "replaced " + getSetItemLabel();
 			if (isLogging(WARN)) logAccessFlags(WARN, oldFlags, newFlags,
-					new AccessFlags[] { STATIC, FINAL, INTERFACE, ABSTRACT, ANNOTATION, ENUM }, message);
+					new AccessFlags[] { STATIC, FINAL, INTERFACE, ABSTRACT, ANNOTATION, ENUM }, item);
 			if (isLogging(INFO)) logAccessFlags(INFO, oldFlags, newFlags,
-					new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED }, message);
+					new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED }, item);
 			if (isLogging(DEBUG)) logAccessFlags(DEBUG, oldFlags, newFlags,
-					new AccessFlags[] { SYNTHETIC }, message);
+					new AccessFlags[] { SYNTHETIC }, item);
 		}
 	}
 

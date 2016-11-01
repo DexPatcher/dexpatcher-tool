@@ -109,10 +109,11 @@ public abstract class AnnotatableSetPatcher<T extends Annotatable> extends Actio
 		return annotation.getAction();
 	}
 
-	protected void logAccessFlags(Logger.Level level, int oldFlags, int newFlags, AccessFlags flags[], String message) {
+	protected void logAccessFlags(Logger.Level level, int oldFlags, int newFlags, AccessFlags flags[], String item) {
 		for (AccessFlags flag : flags) {
 			if (flag.isSet(oldFlags) != flag.isSet(newFlags)) {
-				log(level, String.format(message, flag.toString()));
+				String action = (flag.isSet(newFlags) ? "added to" : "removed from");
+				log(level, "'" + flag + "' modifier " + action + " " + item);
 			}
 		}
 	}

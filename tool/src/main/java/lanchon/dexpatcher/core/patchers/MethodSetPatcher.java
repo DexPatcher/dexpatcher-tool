@@ -91,6 +91,11 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 	}
 
 	@Override
+	protected String getSetItemShortLabel() {
+		return "method";
+	}
+
+	@Override
 	protected String getTargetId(String patchId, Method patch, PatcherAnnotation annotation) {
 		String target = annotation.getTarget();
 		String resolvedTarget = (target != null ? target : patch.getName());

@@ -61,21 +61,21 @@ public abstract class MemberSetPatcher<T extends Member> extends AnnotatableSetP
 		int oldFlags = target.getAccessFlags();
 		int newFlags = patch.getAccessFlags();
 		if (!inPlaceEdit) {
-			String message = "'%s' modifier mismatch in renamed " + getSetItemLabel();
+			String item = "renamed " + getSetItemShortLabel();
 			if (isLogging(WARN)) logAccessFlags(WARN, oldFlags, newFlags,
-					new AccessFlags[] { STATIC, VARARGS, NATIVE, ABSTRACT, ENUM, DECLARED_SYNCHRONIZED }, message);
+					new AccessFlags[] { STATIC, VARARGS, NATIVE, ABSTRACT, ENUM, DECLARED_SYNCHRONIZED }, item);
 			if (isLogging(INFO)) logAccessFlags(INFO, oldFlags, newFlags,
-					new AccessFlags[] { FINAL, SYNCHRONIZED, VOLATILE, TRANSIENT, STRICTFP }, message);
+					new AccessFlags[] { FINAL, SYNCHRONIZED, VOLATILE, TRANSIENT, STRICTFP }, item);
 			if (isLogging(DEBUG)) logAccessFlags(DEBUG, oldFlags, newFlags,
-					new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED, BRIDGE, SYNTHETIC, CONSTRUCTOR }, message);
+					new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED, BRIDGE, SYNTHETIC, CONSTRUCTOR }, item);
 		} else {
-			String message = "'%s' modifier mismatch in edited " + getSetItemLabel();
+			String item = "edited " + getSetItemShortLabel();
 			if (isLogging(WARN)) logAccessFlags(WARN, oldFlags, newFlags,
-					new AccessFlags[] { STATIC, VARARGS, NATIVE, ABSTRACT, ENUM, CONSTRUCTOR, DECLARED_SYNCHRONIZED }, message);
+					new AccessFlags[] { STATIC, VARARGS, NATIVE, ABSTRACT, ENUM, CONSTRUCTOR, DECLARED_SYNCHRONIZED }, item);
 			if (isLogging(INFO)) logAccessFlags(INFO, oldFlags, newFlags,
-					new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED, FINAL, SYNCHRONIZED, VOLATILE, TRANSIENT, STRICTFP }, message);
+					new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED, FINAL, SYNCHRONIZED, VOLATILE, TRANSIENT, STRICTFP }, item);
 			if (isLogging(DEBUG)) logAccessFlags(DEBUG, oldFlags, newFlags,
-					new AccessFlags[] { BRIDGE, SYNTHETIC }, message);
+					new AccessFlags[] { BRIDGE, SYNTHETIC }, item);
 		}
 		return patch;
 	}
@@ -86,14 +86,18 @@ public abstract class MemberSetPatcher<T extends Member> extends AnnotatableSetP
 		if (!inPlaceEdit) {
 			int oldFlags = original.getAccessFlags();
 			int newFlags = patched.getAccessFlags();
-			String message = "'%s' modifier mismatch in replaced " + getSetItemLabel();
+			String item = "replaced " + getSetItemShortLabel();
 			if (isLogging(WARN)) logAccessFlags(WARN, oldFlags, newFlags,
-					new AccessFlags[] { STATIC,  ABSTRACT, ENUM, CONSTRUCTOR }, message);
+					new AccessFlags[] { STATIC,  ABSTRACT, ENUM, CONSTRUCTOR }, item);
 			if (isLogging(INFO)) logAccessFlags(INFO, oldFlags, newFlags,
-					new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED, FINAL, VOLATILE, TRANSIENT, VARARGS }, message);
+					new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED, FINAL, VOLATILE, TRANSIENT, VARARGS }, item);
 			if (isLogging(DEBUG)) logAccessFlags(DEBUG, oldFlags, newFlags,
-					new AccessFlags[] { SYNCHRONIZED, BRIDGE, NATIVE, STRICTFP, SYNTHETIC, DECLARED_SYNCHRONIZED }, message);
+					new AccessFlags[] { SYNCHRONIZED, BRIDGE, NATIVE, STRICTFP, SYNTHETIC, DECLARED_SYNCHRONIZED }, item);
 		}
 	}
+
+	// Handlers
+
+	protected abstract String getSetItemShortLabel();
 
 }

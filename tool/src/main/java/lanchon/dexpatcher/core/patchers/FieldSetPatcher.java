@@ -41,6 +41,11 @@ public abstract class FieldSetPatcher extends MemberSetPatcher<Field> {
 	}
 
 	@Override
+	protected String getSetItemShortLabel() {
+		return "field";
+	}
+
+	@Override
 	protected void onPrepare(String patchId, Field patch, PatcherAnnotation annotation) throws PatchException {
 		Action action = annotation.getAction();
 		if (action == Action.REPLACE) PatcherAnnotation.throwInvalidAnnotation(Marker.REPLACE);
