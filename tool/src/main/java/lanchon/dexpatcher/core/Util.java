@@ -177,9 +177,9 @@ public abstract class Util {
 
 	// Access Flags
 
-	public static int getClassAccessFlags(ClassDef t) {
-		int f = t.getAccessFlags();
-		for (Annotation a : t.getAnnotations()) {
+	public static int getClassAccessFlags(ClassDef classDef) {
+		int f = classDef.getAccessFlags();
+		for (Annotation a : classDef.getAnnotations()) {
 			if (Marker.TYPE_INNER_CLASS.equals(a.getType())) {
 				for (AnnotationElement e : a.getElements()) {
 					if (Marker.ELEM_ACCESS_FLAGS.equals(e.getName())) {
