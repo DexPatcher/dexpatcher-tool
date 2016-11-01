@@ -15,11 +15,9 @@ import lanchon.dexpatcher.core.Marker;
 import lanchon.dexpatcher.core.PatchException;
 import lanchon.dexpatcher.core.PatcherAnnotation;
 
-import org.jf.dexlib2.AccessFlags;
 import org.jf.dexlib2.iface.Member;
 
 import static lanchon.dexpatcher.core.logger.Logger.Level.*;
-import static org.jf.dexlib2.AccessFlags.*;
 
 public abstract class MemberSetPatcher<T extends Member> extends AnnotatableSetPatcher<T> {
 
@@ -35,6 +33,11 @@ public abstract class MemberSetPatcher<T extends Member> extends AnnotatableSetP
 	}
 
 	// Implementation
+
+	@Override
+	protected int getAccessFlags(T item) {
+		return item.getAccessFlags();
+	}
 
 	@Override
 	protected Action getDefaultAction(String patchId, T patch) {
@@ -55,49 +58,5 @@ public abstract class MemberSetPatcher<T extends Member> extends AnnotatableSetP
 		if (annotation.getOnlyEditMembers()) PatcherAnnotation.throwInvalidElement(Marker.ELEM_ONLY_EDIT_MEMBERS);
 		if (annotation.getRecursive()) PatcherAnnotation.throwInvalidElement(Marker.ELEM_RECURSIVE);
 	}
-
-	@Override
-	protected T onSimpleEdit(T patch, PatcherAnnotation annotation, T target, boolean inPlaceEdit) {
-		int oldFlags = target.getAccessFlags();
-		int newFlags = patch.getAccessFlags();
-		if (!inPlaceEdit) {
-			String item = "renamed " + getSetItemShortLabel();
-			if (isLogging(WARN)) logAccessFlags(WARN, oldFlags, newFlags,
-					new AccessFlags[] { STATIC, VARARGS, NATIVE, ABSTRACT, ENUM, DECLARED_SYNCHRONIZED }, item);
-			if (isLogging(INFO)) logAccessFlags(INFO, oldFlags, newFlags,
-					new AccessFlags[] { FINAL, SYNCHRONIZED, VOLATILE, TRANSIENT, STRICTFP }, item);
-			if (isLogging(DEBUG)) logAccessFlags(DEBUG, oldFlags, newFlags,
-					new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED, BRIDGE, SYNTHETIC, CONSTRUCTOR }, item);
-		} else {
-			String item = "edited " + getSetItemShortLabel();
-			if (isLogging(WARN)) logAccessFlags(WARN, oldFlags, newFlags,
-					new AccessFlags[] { STATIC, VARARGS, NATIVE, ABSTRACT, ENUM, CONSTRUCTOR, DECLARED_SYNCHRONIZED }, item);
-			if (isLogging(INFO)) logAccessFlags(INFO, oldFlags, newFlags,
-					new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED, FINAL, SYNCHRONIZED, VOLATILE, TRANSIENT, STRICTFP }, item);
-			if (isLogging(DEBUG)) logAccessFlags(DEBUG, oldFlags, newFlags,
-					new AccessFlags[] { BRIDGE, SYNTHETIC }, item);
-		}
-		return patch;
-	}
-
-	@Override
-	protected void onEffectiveReplacement(String id, T patch, T patched, T original, boolean inPlaceEdit) {
-		// Avoid duplicated messages if not renaming.
-		if (!inPlaceEdit) {
-			int oldFlags = original.getAccessFlags();
-			int newFlags = patched.getAccessFlags();
-			String item = "replaced " + getSetItemShortLabel();
-			if (isLogging(WARN)) logAccessFlags(WARN, oldFlags, newFlags,
-					new AccessFlags[] { STATIC,  ABSTRACT, ENUM, CONSTRUCTOR }, item);
-			if (isLogging(INFO)) logAccessFlags(INFO, oldFlags, newFlags,
-					new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED, FINAL, VOLATILE, TRANSIENT, VARARGS }, item);
-			if (isLogging(DEBUG)) logAccessFlags(DEBUG, oldFlags, newFlags,
-					new AccessFlags[] { SYNCHRONIZED, BRIDGE, NATIVE, STRICTFP, SYNTHETIC, DECLARED_SYNCHRONIZED }, item);
-		}
-	}
-
-	// Handlers
-
-	protected abstract String getSetItemShortLabel();
 
 }

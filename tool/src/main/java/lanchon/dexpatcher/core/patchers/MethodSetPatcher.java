@@ -134,9 +134,12 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 
 	@Override
 	protected Method onSimpleAdd(Method patch, PatcherAnnotation annotation) {
+
+		// Avoid creating a new object if not necessary.
 		if (patch.getAnnotations() == annotation.getFilteredAnnotations()) {
-			return patch;	// avoid creating a new object unless necessary
+			return patch;
 		}
+
 		return new BasicMethod(
 				patch.getDefiningClass(),
 				patch.getName(),
@@ -145,6 +148,7 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 				patch.getAccessFlags(),
 				annotation.getFilteredAnnotations(),
 				patch.getImplementation());
+
 	}
 
 	@Override
@@ -157,8 +161,6 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 		//int targetFlags = target.getAccessFlags();
 		//checkAccessFlags(INFO, patchFlags, targetFlags, flagArray, message);
 		//int flags = (patchFlags & ~flagMask) | (targetFlags & flagMask); 
-
-		int flags = patch.getAccessFlags();
 
 		MethodImplementation implementation = target.getImplementation();
 		if (isTaggedByLastParameter(patch, false)) {
@@ -177,7 +179,7 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 				patch.getName(),
 				patch.getParameters(),
 				patch.getReturnType(),
-				flags,
+				patch.getAccessFlags(),
 				annotation.getFilteredAnnotations(),
 				implementation);
 

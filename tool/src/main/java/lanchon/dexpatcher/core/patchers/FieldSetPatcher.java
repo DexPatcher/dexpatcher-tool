@@ -64,7 +64,9 @@ public abstract class FieldSetPatcher extends MemberSetPatcher<Field> {
 
 	@Override
 	protected Field onSimpleAdd(Field patch, PatcherAnnotation annotation) {
+
 		EncodedValue value = filterInitialValue(patch, null);
+
 		return new BasicField(
 				patch.getDefiningClass(),
 				patch.getName(),
@@ -72,17 +74,21 @@ public abstract class FieldSetPatcher extends MemberSetPatcher<Field> {
 				patch.getAccessFlags(),
 				value,
 				annotation.getFilteredAnnotations());
+
 	}
 
 	@Override
 	protected Field onSimpleEdit(Field patch, PatcherAnnotation annotation, Field target, boolean inPlaceEdit) {
+
 		// Use the static field initializer value in source only
 		// if not renaming, given that the static constructor in
 		// source would only initialize it if not renamed.
 		// This makes behavior predictable across compilers.
 		EncodedValue value = inPlaceEdit ? target.getInitialValue() : null;
 		value = filterInitialValue(patch, value);
+
 		onSimpleRemove(patch, annotation, target);
+
 		Field patched = new BasicField(
 				patch.getDefiningClass(),
 				patch.getName(),
@@ -90,7 +96,9 @@ public abstract class FieldSetPatcher extends MemberSetPatcher<Field> {
 				patch.getAccessFlags(),
 				value,
 				annotation.getFilteredAnnotations());
+
 		return super.onSimpleEdit(patched, annotation, target, inPlaceEdit);
+
 	}
 
 	@Override

@@ -21,12 +21,8 @@ import lanchon.dexpatcher.core.PatcherAnnotation;
 import lanchon.dexpatcher.core.Util;
 import lanchon.dexpatcher.core.model.BasicClassDef;
 
-import org.jf.dexlib2.AccessFlags;
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.ClassDef;
-
-import static lanchon.dexpatcher.core.logger.Logger.Level.*;
-import static org.jf.dexlib2.AccessFlags.*;
 
 // TODO: Warn about changes in superclass and interfaces.
 
@@ -60,6 +56,11 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 	@Override
 	protected String getSetItemLabel() {
 		return "type";
+	}
+
+	@Override
+	protected int getAccessFlags(ClassDef item) {
+		return Util.getClassAccessFlags(item);
 	}
 
 	@Override
@@ -97,9 +98,12 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 
 	@Override
 	protected ClassDef onSimpleAdd(ClassDef patch, PatcherAnnotation annotation) {
+
+		// Avoid creating a new object if not necessary.
 		if (patch.getAnnotations() == annotation.getFilteredAnnotations()) {
-			return patch;	// avoid creating a new object unless necessary
+			return patch;
 		}
+
 		return new BasicClassDef(
 				patch.getType(),
 				patch.getAccessFlags(),
@@ -111,29 +115,15 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 				patch.getInstanceFields(),
 				patch.getDirectMethods(),
 				patch.getVirtualMethods());
+
 	}
 
 	@Override
 	protected ClassDef onSimpleEdit(ClassDef patch, PatcherAnnotation annotation, ClassDef target, boolean inPlaceEdit) {
 
+		// Log class access flags before processing members.
 		if (!annotation.getOnlyEditMembers()) {
-			int oldFlags = Util.getClassAccessFlags(target);
-			int newFlags = Util.getClassAccessFlags(patch);
-			if (!inPlaceEdit) {
-				String item = "renamed " + getSetItemLabel();
-				if (isLogging(WARN)) logAccessFlags(WARN, oldFlags, newFlags,
-						new AccessFlags[] { STATIC, FINAL, INTERFACE, ABSTRACT, ANNOTATION, ENUM }, item);
-				if (isLogging(DEBUG)) logAccessFlags(DEBUG, oldFlags, newFlags,
-						new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED, SYNTHETIC }, item);
-			} else {
-				String item = "edited " + getSetItemLabel();
-				if (isLogging(WARN)) logAccessFlags(WARN, oldFlags, newFlags,
-						new AccessFlags[] { STATIC, FINAL, INTERFACE, ABSTRACT, ANNOTATION, ENUM }, item);
-				if (isLogging(INFO)) logAccessFlags(INFO, oldFlags, newFlags,
-						new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED }, item);
-				if (isLogging(DEBUG)) logAccessFlags(DEBUG, oldFlags, newFlags,
-						new AccessFlags[] { SYNTHETIC }, item);
-			}
+			super.onSimpleEdit(patch, annotation, target, inPlaceEdit);
 		}
 
 		ClassDef source;
@@ -146,7 +136,7 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 			annotations = annotation.getFilteredAnnotations();
 		}
 
-		return new BasicClassDef(
+		ClassDef patched = new BasicClassDef(
 				patch.getType(),
 				source.getAccessFlags(),
 				source.getSuperclass(),
@@ -162,22 +152,9 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 				Collections.unmodifiableCollection(new VirtualMethodSetPatcher(this, annotation)
 						.process(target.getVirtualMethods(), patch.getVirtualMethods())));
 
-	}
+		//return super.onSimpleEdit(patched, annotation, target, inPlaceEdit);
+		return patched;
 
-	@Override
-	protected void onEffectiveReplacement(String id, ClassDef patch, ClassDef patched, ClassDef original, boolean inPlaceEdit) {
-		// Avoid duplicated messages if not renaming.
-		if (!inPlaceEdit) {
-			int oldFlags = Util.getClassAccessFlags(original);
-			int newFlags = Util.getClassAccessFlags(patched);
-			String item = "replaced " + getSetItemLabel();
-			if (isLogging(WARN)) logAccessFlags(WARN, oldFlags, newFlags,
-					new AccessFlags[] { STATIC, FINAL, INTERFACE, ABSTRACT, ANNOTATION, ENUM }, item);
-			if (isLogging(INFO)) logAccessFlags(INFO, oldFlags, newFlags,
-					new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED }, item);
-			if (isLogging(DEBUG)) logAccessFlags(DEBUG, oldFlags, newFlags,
-					new AccessFlags[] { SYNTHETIC }, item);
-		}
 	}
 
 }
