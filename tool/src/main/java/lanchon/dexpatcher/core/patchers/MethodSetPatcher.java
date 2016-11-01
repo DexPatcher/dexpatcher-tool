@@ -69,17 +69,25 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 		return sourceFileLine;
 	}
 
-	// Implementation
+	// Logging
 
 	@Override
-	protected final String getId(Method item) {
-		return Util.getMethodId(item);
+	protected void clearLogPrefix() {
+		super.clearLogPrefix();
+		setSourceFileMethod(null);
 	}
 
 	@Override
 	protected void setupLogPrefix(String id, Method item, Method patch, Method patched) {
 		setupLogPrefix(getSetItemLabel() + " '" + Util.getMethodLabel(item) + "'");
 		setSourceFileMethod(patch);
+	}
+
+	// Implementation
+
+	@Override
+	protected final String getId(Method item) {
+		return Util.getMethodId(item);
 	}
 
 	@Override

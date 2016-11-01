@@ -38,26 +38,38 @@ public abstract class AbstractPatcher<T> {
 	private final Logger logger;
 	private final String baseLogPrefix;
 
+	private String logPrefix;
+
 	private LinkedHashMap<String, T> sourceMap;
 	private LinkedHashMap<String, Boolean> targetedMap;
 	private LinkedHashMap<String, PatchedItem<T>> patchedMap;
-
-	private String logPrefix;
 
 	protected AbstractPatcher(Context context) {
 		this.context = context;
 		logger = context.getLogger();
 		baseLogPrefix = "";
+		logPrefix = baseLogPrefix;
 	}
 
 	protected AbstractPatcher(AbstractPatcher<?> parent) {
 		context = parent.context;
 		logger = parent.logger;
 		baseLogPrefix = parent.logPrefix;
+		logPrefix = baseLogPrefix;
 	}
 
-	protected final Context getContext() {
-		return context;
+	// Logging
+
+	protected void clearLogPrefix() {
+		logPrefix = baseLogPrefix;
+	}
+
+	protected final void setupLogPrefix(String prefix) {
+		logPrefix = baseLogPrefix + prefix + ": ";
+	}
+
+	protected final void extendLogPrefix(String prefixComponent) {
+		logPrefix += prefixComponent + ": ";
 	}
 
 	protected void log(Logger.Level level, String message) {
@@ -68,7 +80,9 @@ public abstract class AbstractPatcher<T> {
 		return logger.isLogging(level);
 	}
 
-	public Collection<T> process(Iterable<? extends T> sourceSet, Iterable<? extends T> patchSet) {
+	// Implementation
+
+	public final Collection<T> process(Iterable<? extends T> sourceSet, Iterable<? extends T> patchSet) {
 		final int sizeHint = 16;
 		return process(sourceSet, sizeHint, patchSet, sizeHint);
 	}
@@ -138,18 +152,14 @@ public abstract class AbstractPatcher<T> {
 			sourceMap = null;
 			targetedMap = null;
 			patchedMap = null;
-			logPrefix = null;
+			clearLogPrefix();
 
 		}
 
 	}
 
-	protected final void setupLogPrefix(String prefix) {
-		logPrefix = baseLogPrefix + prefix + ": ";
-	}
-
-	protected final void extendLogPrefix(String prefixComponent) {
-		logPrefix += prefixComponent + ": ";
+	protected final Context getContext() {
+		return context;
 	}
 
 	protected final Map<String, T> getSourceMap() {

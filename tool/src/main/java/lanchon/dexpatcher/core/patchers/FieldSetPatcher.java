@@ -26,16 +26,18 @@ public abstract class FieldSetPatcher extends MemberSetPatcher<Field> {
 		super(parent, annotation);
 	}
 
+	// Logging
+
+	@Override
+	protected void setupLogPrefix(String id, Field item, Field patch, Field patched) {
+		setupLogPrefix(getSetItemLabel() + " '" + Util.getFieldLabel(item) + "'");
+	}
+
 	// Implementation
 
 	@Override
 	protected final String getId(Field item) {
 		return Util.getFieldId(item);
-	}
-
-	@Override
-	protected void setupLogPrefix(String id, Field item, Field patch, Field patched) {
-		setupLogPrefix(getSetItemLabel() + " '" + Util.getFieldLabel(item) + "'");
 	}
 
 	@Override
