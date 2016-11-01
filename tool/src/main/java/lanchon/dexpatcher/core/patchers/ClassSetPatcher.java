@@ -117,21 +117,21 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 	protected ClassDef onSimpleEdit(ClassDef patch, PatcherAnnotation annotation, ClassDef target, boolean inPlaceEdit) {
 
 		if (!annotation.getOnlyEditMembers()) {
-			int flags1 = Util.getClassAccessFlags(patch);
-			int flags2 = Util.getClassAccessFlags(target);
+			int oldFlags = Util.getClassAccessFlags(target);
+			int newFlags = Util.getClassAccessFlags(patch);
 			if (!inPlaceEdit) {
 				String message = "'%s' modifier mismatch in renamed " + getSetItemLabel();
-				if (isLogging(WARN)) checkAccessFlags(WARN, flags1, flags2,
+				if (isLogging(WARN)) logAccessFlags(WARN, oldFlags, newFlags,
 						new AccessFlags[] { STATIC, FINAL, INTERFACE, ABSTRACT, ANNOTATION, ENUM }, message);
-				if (isLogging(DEBUG)) checkAccessFlags(DEBUG, flags1, flags2,
+				if (isLogging(DEBUG)) logAccessFlags(DEBUG, oldFlags, newFlags,
 						new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED, SYNTHETIC }, message);
 			} else {
 				String message = "'%s' modifier mismatch in edited " + getSetItemLabel();
-				if (isLogging(WARN)) checkAccessFlags(WARN, flags1, flags2,
+				if (isLogging(WARN)) logAccessFlags(WARN, oldFlags, newFlags,
 						new AccessFlags[] { STATIC, FINAL, INTERFACE, ABSTRACT, ANNOTATION, ENUM }, message);
-				if (isLogging(INFO)) checkAccessFlags(INFO, flags1, flags2,
+				if (isLogging(INFO)) logAccessFlags(INFO, oldFlags, newFlags,
 						new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED }, message);
-				if (isLogging(DEBUG)) checkAccessFlags(DEBUG, flags1, flags2,
+				if (isLogging(DEBUG)) logAccessFlags(DEBUG, oldFlags, newFlags,
 						new AccessFlags[] { SYNTHETIC }, message);
 			}
 		}
@@ -168,14 +168,14 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 	protected void onEffectiveReplacement(String id, ClassDef patch, ClassDef patched, ClassDef original, boolean inPlaceEdit) {
 		// Avoid duplicated messages if not renaming.
 		if (!inPlaceEdit) {
-			int flags1 = Util.getClassAccessFlags(patched);
-			int flags2 = Util.getClassAccessFlags(original);
+			int oldFlags = Util.getClassAccessFlags(original);
+			int newFlags = Util.getClassAccessFlags(patched);
 			String message = "'%s' modifier mismatch in replaced " + getSetItemLabel();
-			if (isLogging(WARN)) checkAccessFlags(WARN, flags1, flags2,
+			if (isLogging(WARN)) logAccessFlags(WARN, oldFlags, newFlags,
 					new AccessFlags[] { STATIC, FINAL, INTERFACE, ABSTRACT, ANNOTATION, ENUM }, message);
-			if (isLogging(INFO)) checkAccessFlags(INFO, flags1, flags2,
+			if (isLogging(INFO)) logAccessFlags(INFO, oldFlags, newFlags,
 					new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED }, message);
-			if (isLogging(DEBUG)) checkAccessFlags(DEBUG, flags1, flags2,
+			if (isLogging(DEBUG)) logAccessFlags(DEBUG, oldFlags, newFlags,
 					new AccessFlags[] { SYNTHETIC }, message);
 		}
 	}

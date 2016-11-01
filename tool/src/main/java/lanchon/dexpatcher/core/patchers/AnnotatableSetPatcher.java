@@ -19,6 +19,7 @@ import lanchon.dexpatcher.core.PatchException;
 import lanchon.dexpatcher.core.PatcherAnnotation;
 import lanchon.dexpatcher.core.logger.Logger;
 
+import org.jf.dexlib2.AccessFlags;
 import org.jf.dexlib2.iface.Annotatable;
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.ClassDef;
@@ -106,6 +107,14 @@ public abstract class AnnotatableSetPatcher<T extends Annotatable> extends Actio
 	@Override
 	protected Action getAction(String patchId, T patch, PatcherAnnotation annotation) throws PatchException {
 		return annotation.getAction();
+	}
+
+	protected void logAccessFlags(Logger.Level level, int oldFlags, int newFlags, AccessFlags flags[], String message) {
+		for (AccessFlags flag : flags) {
+			if (flag.isSet(oldFlags) != flag.isSet(newFlags)) {
+				log(level, String.format(message, flag.toString()));
+			}
+		}
 	}
 
 	// Handlers

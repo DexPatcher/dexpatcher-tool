@@ -19,8 +19,6 @@ import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.PatchException;
 import lanchon.dexpatcher.core.logger.Logger;
 
-import org.jf.dexlib2.AccessFlags;
-
 import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 
 public abstract class AbstractPatcher<T> {
@@ -182,14 +180,6 @@ public abstract class AbstractPatcher<T> {
 		if (!patchId.equals(getId(patched))) throw new AssertionError("Changed patchedId");
 		PatchedItem<T> patchedItem = new PatchedItem<>(patch, patched);
 		if (patchedMap.put(patchId, patchedItem) != null) throw new AssertionError("Colliding patchedId");
-	}
-
-	protected void checkAccessFlags(Logger.Level level, int flags1, int flags2, AccessFlags flags[], String message) {
-		for (AccessFlags flag : flags) {
-			if (flag.isSet(flags1) != flag.isSet(flags2)) {
-				log(level, String.format(message, flag.toString()));
-			}
-		}
 	}
 
 	// Handlers

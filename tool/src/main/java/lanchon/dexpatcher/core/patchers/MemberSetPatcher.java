@@ -58,23 +58,23 @@ public abstract class MemberSetPatcher<T extends Member> extends AnnotatableSetP
 
 	@Override
 	protected T onSimpleEdit(T patch, PatcherAnnotation annotation, T target, boolean inPlaceEdit) {
-		int flags1 = patch.getAccessFlags();
-		int flags2 = target.getAccessFlags();
+		int oldFlags = target.getAccessFlags();
+		int newFlags = patch.getAccessFlags();
 		if (!inPlaceEdit) {
 			String message = "'%s' modifier mismatch in renamed " + getSetItemLabel();
-			if (isLogging(WARN)) checkAccessFlags(WARN, flags1, flags2,
+			if (isLogging(WARN)) logAccessFlags(WARN, oldFlags, newFlags,
 					new AccessFlags[] { STATIC, VARARGS, NATIVE, ABSTRACT, ENUM, DECLARED_SYNCHRONIZED }, message);
-			if (isLogging(INFO)) checkAccessFlags(INFO, flags1, flags2,
+			if (isLogging(INFO)) logAccessFlags(INFO, oldFlags, newFlags,
 					new AccessFlags[] { FINAL, SYNCHRONIZED, VOLATILE, TRANSIENT, STRICTFP }, message);
-			if (isLogging(DEBUG)) checkAccessFlags(DEBUG, flags1, flags2,
+			if (isLogging(DEBUG)) logAccessFlags(DEBUG, oldFlags, newFlags,
 					new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED, BRIDGE, SYNTHETIC, CONSTRUCTOR }, message);
 		} else {
 			String message = "'%s' modifier mismatch in edited " + getSetItemLabel();
-			if (isLogging(WARN)) checkAccessFlags(WARN, flags1, flags2,
+			if (isLogging(WARN)) logAccessFlags(WARN, oldFlags, newFlags,
 					new AccessFlags[] { STATIC, VARARGS, NATIVE, ABSTRACT, ENUM, CONSTRUCTOR, DECLARED_SYNCHRONIZED }, message);
-			if (isLogging(INFO)) checkAccessFlags(INFO, flags1, flags2,
+			if (isLogging(INFO)) logAccessFlags(INFO, oldFlags, newFlags,
 					new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED, FINAL, SYNCHRONIZED, VOLATILE, TRANSIENT, STRICTFP }, message);
-			if (isLogging(DEBUG)) checkAccessFlags(DEBUG, flags1, flags2,
+			if (isLogging(DEBUG)) logAccessFlags(DEBUG, oldFlags, newFlags,
 					new AccessFlags[] { BRIDGE, SYNTHETIC }, message);
 		}
 		return patch;
@@ -84,14 +84,14 @@ public abstract class MemberSetPatcher<T extends Member> extends AnnotatableSetP
 	protected void onEffectiveReplacement(String id, T patch, T patched, T original, boolean inPlaceEdit) {
 		// Avoid duplicated messages if not renaming.
 		if (!inPlaceEdit) {
-			int flags1 = patched.getAccessFlags();
-			int flags2 = original.getAccessFlags();
+			int oldFlags = original.getAccessFlags();
+			int newFlags = patched.getAccessFlags();
 			String message = "'%s' modifier mismatch in replaced " + getSetItemLabel();
-			if (isLogging(WARN)) checkAccessFlags(WARN, flags1, flags2,
+			if (isLogging(WARN)) logAccessFlags(WARN, oldFlags, newFlags,
 					new AccessFlags[] { STATIC,  ABSTRACT, ENUM, CONSTRUCTOR }, message);
-			if (isLogging(INFO)) checkAccessFlags(INFO, flags1, flags2,
+			if (isLogging(INFO)) logAccessFlags(INFO, oldFlags, newFlags,
 					new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED, FINAL, VOLATILE, TRANSIENT, VARARGS }, message);
-			if (isLogging(DEBUG)) checkAccessFlags(DEBUG, flags1, flags2,
+			if (isLogging(DEBUG)) logAccessFlags(DEBUG, oldFlags, newFlags,
 					new AccessFlags[] { SYNCHRONIZED, BRIDGE, NATIVE, STRICTFP, SYNTHETIC, DECLARED_SYNCHRONIZED }, message);
 		}
 	}
