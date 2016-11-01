@@ -13,19 +13,16 @@ package lanchon.dexpatcher.core.patchers;
 import java.io.File;
 import java.util.Set;
 
+import lanchon.dexpatcher.core.AbstractAccessFlagLogger;
 import lanchon.dexpatcher.core.Action;
 import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.PatchException;
 import lanchon.dexpatcher.core.PatcherAnnotation;
 import lanchon.dexpatcher.core.logger.Logger;
 
-import org.jf.dexlib2.AccessFlags;
 import org.jf.dexlib2.iface.Annotatable;
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.ClassDef;
-
-import static lanchon.dexpatcher.core.logger.Logger.Level.*;
-import static org.jf.dexlib2.AccessFlags.*;
 
 public abstract class AnnotatableSetPatcher<T extends Annotatable> extends ActionBasedPatcher<T, PatcherAnnotation> {
 
@@ -116,7 +113,12 @@ public abstract class AnnotatableSetPatcher<T extends Annotatable> extends Actio
 
 	private void logAccessFlags(String item, int oldFlags, int newFlags, boolean keepInterface,
 			boolean keepImplementation) {
-		new AccessFlagLogger(item, oldFlags, newFlags).allFlags(keepInterface, keepImplementation);
+		new AbstractAccessFlagLogger(item, oldFlags, newFlags) {
+			@Override
+			protected void log(Logger.Level level, String message) {
+				AnnotatableSetPatcher.this.log(level, message);
+			}
+		}.allFlags(keepInterface, keepImplementation);
 	}
 
 	@Override
@@ -142,92 +144,6 @@ public abstract class AnnotatableSetPatcher<T extends Annotatable> extends Actio
 			String item = "replaced " + getSetItemShortLabel();
 			logAccessFlags(item, oldFlags, newFlags, true, false);
 		}
-	}
-
-	public final class AccessFlagLogger {
-
-		private String item;
-		private int oldFlags;
-		private int newFlags;
-
-		private AccessFlagLogger(String item, int oldFlags, int newFlags) {
-			this.item = item;
-			this.oldFlags = oldFlags;
-			this.newFlags = newFlags;
-		}
-
-		private void log(Logger.Level level, AccessFlags flag, String message) {
-			AnnotatableSetPatcher.this.log(level, "'" + flag + "' modifier " + message);
-		}
-
-		private void flag(AccessFlags flag, Logger.Level level) {
-			flag(flag, level, level);
-		}
-
-		private void flag(AccessFlags flag, Logger.Level added, Logger.Level removed) {
-			boolean isSet = flag.isSet(newFlags);
-			if (isSet != flag.isSet(oldFlags)) {
-				Logger.Level level = isSet ? added : removed;
-				if (isLogging(level)) log(level, flag, (isSet ? "added to " : "removed from ") + item);
-			}
-		}
-
-		private void scopeFlags(Logger.Level decreased, Logger.Level notDecreased) {
-			AccessFlags newScope = getScope(newFlags);
-			AccessFlags oldScope = getScope(oldFlags);
-			if (oldScope != null && newScope != null) {
-				if (oldScope != newScope) {
-					Logger.Level level = (oldScope == PRIVATE || newScope == PUBLIC) ? notDecreased : decreased;
-					if (isLogging(level)) log(level, oldScope, "changed to '" + newScope + "' in " + item);
-				}
-			} else {
-				flag(PUBLIC, notDecreased, decreased);
-				flag(PRIVATE, decreased, notDecreased);
-				flag(PROTECTED, decreased, decreased);
-			}
-		}
-
-		private AccessFlags getScope(int flags) {
-			boolean isPublic = PUBLIC.isSet(flags);
-			boolean isPrivate = PRIVATE.isSet(flags);
-			boolean isProtected = PROTECTED.isSet(flags);
-			int n = (isPublic ? 1 : 0) + (isPrivate ? 1 : 0) + (isProtected ? 1 : 0);
-			if (n != 1) return null;
-			if (isPublic) return PUBLIC;
-			if (isPrivate) return PRIVATE;
-			if (isProtected) return PROTECTED;
-			throw new AssertionError("Unexpected scope");
-		}
-
-		public void allFlags(boolean keepInterface, boolean keepImplementation) {
-
-			// Interface Dependent
-			scopeFlags(keepInterface ? WARN : DEBUG, keepInterface ? INFO : DEBUG);
-			flag(FINAL, (keepInterface && !PRIVATE.isSet(oldFlags)) ? WARN : INFO, INFO);
-			flag(VOLATILE, INFO, keepInterface ? WARN : INFO);
-			flag(TRANSIENT, keepInterface ? WARN : INFO);
-			flag(VARARGS, INFO);
-			flag(CONSTRUCTOR, keepInterface ? WARN : DEBUG);
-
-			// Interface And Implementation Dependent
-			flag(STATIC, WARN);
-			flag(INTERFACE, WARN);
-			flag(ANNOTATION, WARN);
-			flag(ENUM, WARN);
-
-			// Implementation Dependent
-			flag(SYNCHRONIZED, keepImplementation ? WARN : DEBUG);
-			flag(NATIVE, keepImplementation ? WARN : DEBUG);
-			flag(ABSTRACT, WARN, keepImplementation ? WARN : INFO);
-			flag(STRICTFP, keepImplementation ? WARN : DEBUG);
-			flag(DECLARED_SYNCHRONIZED, keepImplementation ? INFO : DEBUG);
-
-			// Extra
-			flag(BRIDGE, DEBUG);
-			flag(SYNTHETIC, DEBUG);
-
-		}
-
 	}
 
 	// Handlers
