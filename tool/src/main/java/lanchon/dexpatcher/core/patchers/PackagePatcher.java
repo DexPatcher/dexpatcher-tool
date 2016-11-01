@@ -20,6 +20,7 @@ import lanchon.dexpatcher.core.Util;
 
 import org.jf.dexlib2.iface.ClassDef;
 
+import static lanchon.dexpatcher.core.PatcherAnnotation.*;
 import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 
 public class PackagePatcher extends ClassSetPatcher {
@@ -46,7 +47,7 @@ public class PackagePatcher extends ClassSetPatcher {
 			super.onPrepare(patchId, patch, annotation);
 			return;
 		}
-		if (annotation.getTargetClass() != null) throw PatcherAnnotation.invalidElement(Marker.ELEM_TARGET_CLASS);
+		if (annotation.getTargetClass() != null) throw invalidElement(Marker.ELEM_TARGET_CLASS);
 	}
 
 	@Override

@@ -24,6 +24,8 @@ import lanchon.dexpatcher.core.model.BasicClassDef;
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.ClassDef;
 
+import static lanchon.dexpatcher.core.PatcherAnnotation.*;
+
 // TODO: Warn about changes in superclass and interfaces.
 
 public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
@@ -70,7 +72,7 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 
 	@Override
 	protected void onPrepare(String patchId, ClassDef patch, PatcherAnnotation annotation) throws PatchException {
-		if (annotation.getRecursive()) throw PatcherAnnotation.invalidElement(Marker.ELEM_RECURSIVE);
+		if (annotation.getRecursive()) throw invalidElement(Marker.ELEM_RECURSIVE);
 	}
 
 	@Override

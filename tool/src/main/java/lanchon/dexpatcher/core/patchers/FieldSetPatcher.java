@@ -20,6 +20,8 @@ import lanchon.dexpatcher.core.model.BasicField;
 import org.jf.dexlib2.iface.Field;
 import org.jf.dexlib2.iface.value.EncodedValue;
 
+import static lanchon.dexpatcher.core.PatcherAnnotation.*;
+
 public abstract class FieldSetPatcher extends MemberSetPatcher<Field> {
 
 	public FieldSetPatcher(ClassSetPatcher parent, PatcherAnnotation annotation) {
@@ -48,7 +50,7 @@ public abstract class FieldSetPatcher extends MemberSetPatcher<Field> {
 	@Override
 	protected void onPrepare(String patchId, Field patch, PatcherAnnotation annotation) throws PatchException {
 		Action action = annotation.getAction();
-		if (action == Action.REPLACE) throw PatcherAnnotation.invalidAnnotation(Marker.REPLACE);
+		if (action == Action.REPLACE) throw invalidAnnotation(Marker.REPLACE);
 		super.onPrepare(patchId, patch, annotation);
 	}
 

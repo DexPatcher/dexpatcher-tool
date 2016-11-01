@@ -17,6 +17,7 @@ import lanchon.dexpatcher.core.PatcherAnnotation;
 
 import org.jf.dexlib2.iface.Member;
 
+import static lanchon.dexpatcher.core.PatcherAnnotation.*;
 import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 
 public abstract class MemberSetPatcher<T extends Member> extends AnnotatableSetPatcher<T> {
@@ -52,11 +53,11 @@ public abstract class MemberSetPatcher<T extends Member> extends AnnotatableSetP
 
 	@Override
 	protected void onPrepare(String patchId, T patch, PatcherAnnotation annotation) throws PatchException {
-		if (annotation.getTargetClass() != null) throw PatcherAnnotation.invalidElement(Marker.ELEM_TARGET_CLASS);
-		if (annotation.getStaticConstructorAction() != null) throw PatcherAnnotation.invalidElement(Marker.ELEM_STATIC_CONSTRUCTOR_ACTION);
-		if (annotation.getDefaultAction() != null) throw PatcherAnnotation.invalidElement(Marker.ELEM_DEFAULT_ACTION);
-		if (annotation.getOnlyEditMembers()) throw PatcherAnnotation.invalidElement(Marker.ELEM_ONLY_EDIT_MEMBERS);
-		if (annotation.getRecursive()) throw PatcherAnnotation.invalidElement(Marker.ELEM_RECURSIVE);
+		if (annotation.getTargetClass() != null) throw invalidElement(Marker.ELEM_TARGET_CLASS);
+		if (annotation.getStaticConstructorAction() != null) throw invalidElement(Marker.ELEM_STATIC_CONSTRUCTOR_ACTION);
+		if (annotation.getDefaultAction() != null) throw invalidElement(Marker.ELEM_DEFAULT_ACTION);
+		if (annotation.getOnlyEditMembers()) throw invalidElement(Marker.ELEM_ONLY_EDIT_MEMBERS);
+		if (annotation.getRecursive()) throw invalidElement(Marker.ELEM_RECURSIVE);
 	}
 
 }
