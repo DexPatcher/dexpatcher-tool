@@ -60,9 +60,8 @@ public abstract class MemberSetPatcher<T extends Member> extends AnnotatableSetP
 	protected T onSimpleEdit(T patch, PatcherAnnotation annotation, T target, boolean inPlaceEdit) {
 		int flags1 = patch.getAccessFlags();
 		int flags2 = target.getAccessFlags();
-		// Avoid duplicated messages if not renaming.
 		if (!inPlaceEdit) {
-			String message = "'%s' modifier mismatch in targeted and edited members";
+			String message = "'%s' modifier mismatch in renamed " + getSetItemLabel();
 			if (isLogging(WARN)) checkAccessFlags(WARN, flags1, flags2,
 					new AccessFlags[] { STATIC, VARARGS, NATIVE, ABSTRACT, ENUM, DECLARED_SYNCHRONIZED }, message);
 			if (isLogging(INFO)) checkAccessFlags(INFO, flags1, flags2,
@@ -70,7 +69,7 @@ public abstract class MemberSetPatcher<T extends Member> extends AnnotatableSetP
 			if (isLogging(DEBUG)) checkAccessFlags(DEBUG, flags1, flags2,
 					new AccessFlags[] { PUBLIC, PRIVATE, PROTECTED, BRIDGE, SYNTHETIC, CONSTRUCTOR }, message);
 		} else {
-			String message = "'%s' modifier mismatch in original and edited versions";
+			String message = "'%s' modifier mismatch in edited " + getSetItemLabel();
 			if (isLogging(WARN)) checkAccessFlags(WARN, flags1, flags2,
 					new AccessFlags[] { STATIC, VARARGS, NATIVE, ABSTRACT, ENUM, CONSTRUCTOR, DECLARED_SYNCHRONIZED }, message);
 			if (isLogging(INFO)) checkAccessFlags(INFO, flags1, flags2,
@@ -87,7 +86,7 @@ public abstract class MemberSetPatcher<T extends Member> extends AnnotatableSetP
 		if (!inPlaceEdit) {
 			int flags1 = patched.getAccessFlags();
 			int flags2 = original.getAccessFlags();
-			String message = "'%s' modifier mismatch in original and replacement members";
+			String message = "'%s' modifier mismatch in replaced " + getSetItemLabel();
 			if (isLogging(WARN)) checkAccessFlags(WARN, flags1, flags2,
 					new AccessFlags[] { STATIC,  ABSTRACT, ENUM, CONSTRUCTOR }, message);
 			if (isLogging(INFO)) checkAccessFlags(INFO, flags1, flags2,
