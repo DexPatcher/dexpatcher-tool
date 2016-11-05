@@ -60,9 +60,9 @@ debug: type 'test.Main$B': virtual method 'virtualMethod(java.lang.String):void'
 debug: type 'test.Main$Base': (Main.java:0): ignore
 debug: type 'test.Main$C': (Main.java:0): edit
 debug: type 'test.Main$C': static field 'patchStaticField:int': (Main.java:0): add
-warning: type 'test.Main$C': static field 'patchStaticField:int': (Main.java:0): static field will not be initialized as specified in patch because the static constructor code in patch is being ignored
+warning: type 'test.Main$C': static field 'patchStaticField:int': (Main.java:0): static field will not be initialized as specified in patch because static constructor of class is being ignored
 debug: type 'test.Main$C': static field 'redefinedSourceStaticField:int': (Main.java:0): edit
-warning: type 'test.Main$C': static field 'redefinedSourceStaticField:int': (Main.java:0): static field will not be initialized as specified in patch because the static constructor code in patch is being ignored
+warning: type 'test.Main$C': static field 'redefinedSourceStaticField:int': (Main.java:0): static field will not be initialized as specified in patch because static constructor of class is being ignored
 debug: type 'test.Main$C': instance field 'patchField:int': (Main.java:0): add
 debug: type 'test.Main$C': instance field 'redefinedSourceField:int': (Main.java:0): edit
 debug: type 'test.Main$C': direct method '<clinit>():void': (Main.java:172): ignore

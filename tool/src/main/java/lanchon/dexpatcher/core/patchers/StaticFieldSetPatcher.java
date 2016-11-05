@@ -35,7 +35,7 @@ public class StaticFieldSetPatcher extends FieldSetPatcher {
 	@Override
 	protected void onSimpleRemove(Field patch, PatcherAnnotation annotation, Field target) {
 		if (FINAL.isSet(target.getAccessFlags())) {
-			log(WARN, "original value of final static field can be embedded in code");
+			log(WARN, "original value of final static field is likely to be embedded in code");
 		}
 	}
 
@@ -45,11 +45,11 @@ public class StaticFieldSetPatcher extends FieldSetPatcher {
 		// only if the static constructor in patch is being used.
 		// This makes behavior predictable across compilers.
 		if (resolvedStaticConstructorAction == null) {
-			log(ERROR, "must define an action for the static constructor of the class");
+			log(ERROR, "static field requires that an action be defined for static constructor of class");
 		} else if (resolvedStaticConstructorAction == Action.ADD || resolvedStaticConstructorAction == Action.REPLACE) {
 			value = patch.getInitialValue();
 		} else {
-			log(WARN, "static field will not be initialized as specified in patch because the static constructor code in patch is being ignored");
+			log(WARN, "static field will not be initialized as specified in patch because static constructor of class is being ignored");
 		}
 		return value;
 	}
