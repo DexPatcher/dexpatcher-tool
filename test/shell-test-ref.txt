@@ -3,7 +3,7 @@ $ dx --dex --output build/source.dex source/build/libs/source.jar
 $ dx --dex --output build/patch.dex patch/build/libs/patch.jar
 
 $ dexpatcher --help
-DexPatcher Version 1.2.0 by Lanchon
+DexPatcher Version 1.2.1 by Lanchon
            https://dexpatcher.github.io/
 usage: dexpatcher [<option> ...] [--output <patched-dex-or-dir>]
                   <source-dex-apk-or-dir> [<patch-dex-apk-or-dir> ...]
