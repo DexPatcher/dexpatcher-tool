@@ -12,7 +12,7 @@ plugins {
     id 'java'
 }
 
-def dexlib2Version = '2.2b4'
+def dexlib2Version = '2.2.0'
 def multidexlib2VersionSuffix = ''
 
 group = parent.group

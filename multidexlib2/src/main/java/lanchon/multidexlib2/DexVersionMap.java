@@ -18,7 +18,7 @@ public class DexVersionMap {
 
 	/*
 	public static boolean isSupportedApiLevel(int apiLevel) {
-		return  apiLevel <= 24;
+		return  apiLevel <= 25;
 	}
 
 	public static int getHighestDexVersionFromApiLevel(int apiLevel) {
@@ -38,7 +38,7 @@ public class DexVersionMap {
 
 	public static int getHighestApiLevelFromDexVersion(int dexVersion) {
 		return  dexVersion <= 35 ? 23 :
-				dexVersion <= 37 ? 24 :
+				dexVersion <= 37 ? 25 :
 				10000;      // Build.VERSION_CODES.CUR_DEVELOPMENT
 	}
 
