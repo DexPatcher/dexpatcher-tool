@@ -5,6 +5,7 @@
 /build/
 /annotation/build/
 /tool/build/
+/multidexlib2/build/
 /test/build/
 /test/source/build/
 /test/patch/build/

@@ -9,8 +9,9 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Gradle: org.smali:dexlib2:2.2b4" level="project" />
+    <orderEntry type="module" module-name="multidexlib2_main" />
     <orderEntry type="library" name="Gradle: commons-cli:commons-cli:1.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.smali:dexlib2:2.2b4" level="project" />
     <orderEntry type="library" name="Gradle: org.smali:util:2.2b4" level="project" />
     <orderEntry type="library" name="Gradle: com.google.code.findbugs:jsr305:1.3.9" level="project" />
     <orderEntry type="library" name="Gradle: com.google.guava:guava:18.0" level="project" />

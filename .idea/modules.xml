@@ -6,6 +6,9 @@
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/annotation/annotation_main.iml" filepath="$PROJECT_DIR$/.idea/modules/annotation/annotation_main.iml" group="annotation" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/annotation/annotation_test.iml" filepath="$PROJECT_DIR$/.idea/modules/annotation/annotation_test.iml" group="annotation" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/dexpatcher-tool.iml" filepath="$PROJECT_DIR$/.idea/modules/dexpatcher-tool.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/multidexlib2/multidexlib2.iml" filepath="$PROJECT_DIR$/.idea/modules/multidexlib2/multidexlib2.iml" group="multidexlib2" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/multidexlib2/multidexlib2_main.iml" filepath="$PROJECT_DIR$/.idea/modules/multidexlib2/multidexlib2_main.iml" group="multidexlib2" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/multidexlib2/multidexlib2_test.iml" filepath="$PROJECT_DIR$/.idea/modules/multidexlib2/multidexlib2_test.iml" group="multidexlib2" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/test/patch/patch.iml" filepath="$PROJECT_DIR$/.idea/modules/test/patch/patch.iml" group="test/patch" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/test/patch/patch_main.iml" filepath="$PROJECT_DIR$/.idea/modules/test/patch/patch_main.iml" group="test/patch" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/test/patch/patch_test.iml" filepath="$PROJECT_DIR$/.idea/modules/test/patch/patch_test.iml" group="test/patch" />
