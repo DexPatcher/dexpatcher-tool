@@ -55,9 +55,6 @@ jar {
 }
 
 task shadowBugWorkaround(type: Jar) {
-    dependsOn jar
-    dependsOn tasks.getByPath(':annotation:jar')
-    dependsOn tasks.getByPath(':multidexlib2:jar')
     destinationDir file('build/shadow-bug-workaround')
     baseName = 'nested-content'
     from jar
@@ -66,7 +63,6 @@ task shadowBugWorkaround(type: Jar) {
 }
 
 shadowJar {
-    dependsOn shadowBugWorkaround
     baseName = 'dexpatcher'
     classifier = null
     exclude 'META-INF/**'
