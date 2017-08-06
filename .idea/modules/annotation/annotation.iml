@@ -5,6 +5,7 @@
     <content url="file://$MODULE_DIR$/../../../annotation">
       <excludeFolder url="file://$MODULE_DIR$/../../../annotation/.gradle" />
       <excludeFolder url="file://$MODULE_DIR$/../../../annotation/build" />
+      <excludeFolder url="file://$MODULE_DIR$/../../../annotation/out" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

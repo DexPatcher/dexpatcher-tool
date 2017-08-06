@@ -5,6 +5,7 @@
     <content url="file://$MODULE_DIR$/../../../multidexlib2">
       <excludeFolder url="file://$MODULE_DIR$/../../../multidexlib2/.gradle" />
       <excludeFolder url="file://$MODULE_DIR$/../../../multidexlib2/build" />
+      <excludeFolder url="file://$MODULE_DIR$/../../../multidexlib2/out" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
