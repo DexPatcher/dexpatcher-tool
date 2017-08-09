@@ -10,9 +10,9 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Gradle: commons-cli:commons-cli:1.2" level="project" />
-    <orderEntry type="library" name="Gradle: com.github.lanchon.dexpatcher:multidexlib2:2.2.0" level="project" />
-    <orderEntry type="library" name="Gradle: org.smali:dexlib2:2.2.0" level="project" />
-    <orderEntry type="library" name="Gradle: org.smali:util:2.2.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.lanchon.dexpatcher:multidexlib2:2.2.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.smali:dexlib2:2.2.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.smali:util:2.2.1" level="project" />
     <orderEntry type="library" name="Gradle: com.google.code.findbugs:jsr305:1.3.9" level="project" />
     <orderEntry type="library" name="Gradle: com.google.guava:guava:18.0" level="project" />
     <orderEntry type="library" name="Gradle: com.beust:jcommander:1.64" level="project" />
