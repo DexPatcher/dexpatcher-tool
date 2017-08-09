@@ -10,6 +10,7 @@
 
 plugins {
     id 'java'
+    id 'signing'
 }
 
 def dexlib2Version = '2.2.0'
@@ -68,4 +69,8 @@ task javadocJar(type: Jar) {
 artifacts {
     archives sourcesJar
     archives javadocJar
+}
+
+signing {
+    sign configurations.archives
 }

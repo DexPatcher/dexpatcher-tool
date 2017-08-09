@@ -11,3 +11,4 @@
 /test/patch/build/
 
 /local.properties
+/gradle.properties
