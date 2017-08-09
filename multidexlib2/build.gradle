@@ -11,6 +11,7 @@
 plugins {
     id 'java'
     id 'signing'
+    id 'maven'
 }
 
 def dexlib2Version = '2.2.0'
@@ -73,4 +74,46 @@ artifacts {
 
 signing {
     sign configurations.archives
+}
+
+uploadArchives {
+    repositories.mavenDeployer {
+        pom.project {
+            name 'multidexlib2'
+            description 'Multi-dex extensions for dexlib2.'
+            url 'https://github.com/DexPatcher/multidexlib2'
+
+            scm {
+                connection 'scm:git:git://github.com/DexPatcher/dexpatcher-tool.git'
+                developerConnection 'scm:git:ssh://github.com:DexPatcher/dexpatcher-tool.git'
+                url 'https://github.com/DexPatcher/dexpatcher-tool/tree/master/multidexlib2'
+            }
+
+            licenses {
+                license {
+                    name 'GNU General Public License (version 3 or later)'
+                    url 'https://www.gnu.org/licenses/gpl.txt'
+                }
+            }
+
+            developers {
+                developer {
+                    name 'Lanchon'
+                    url 'https://github.com/Lanchon'
+                }
+            }
+        }
+
+        repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+            authentication userName: ossrhUsername, password: ossrhPassword
+        }
+
+        snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+            authentication userName: ossrhUsername, password: ossrhPassword
+        }
+
+        beforeDeployment {
+            signing.signPom(it)
+        }
+    }
 }
