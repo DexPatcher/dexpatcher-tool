@@ -20,11 +20,20 @@ sourceCompatibility = '1.7'
 
 repositories {
     jcenter()
+    // This is the local repo I use for development of multidexlib2:
+    flatDir dirs: '../../multidexlib2/build/libs'
 }
 
+def dexlib2Version = '2.2.0'
+def multidexlib2VersionSuffix = ''
+
+def multidexlib2Version = dexlib2Version + multidexlib2VersionSuffix
+
 dependencies {
-    compile project(':multidexlib2')
     compile 'commons-cli:commons-cli:1.2'
+    compile 'com.github.lanchon.dexpatcher:multidexlib2:' + multidexlib2Version
+    // This is necessary when multidexlib2 is sourced from its local repo:
+    compile 'org.smali:dexlib2:' + dexlib2Version
 }
 
 compileJava {
@@ -59,7 +68,6 @@ task shadowBugWorkaround(type: Jar) {
     baseName = 'nested-content'
     from jar
     from tasks.getByPath(':annotation:jar')
-    from tasks.getByPath(':multidexlib2:jar')
 }
 
 shadowJar {
