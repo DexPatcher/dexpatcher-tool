@@ -42,11 +42,30 @@ compileJava {
     options.compilerArgs << '-Xlint:unchecked' << '-Xlint:deprecation'
 }
 
+Manifest sharedManifest = manifest {
+    attributes(
+            'Implementation-Title': 'multidexlib2',
+            'Implementation-Version': version
+    )
+}
+
 jar {
-    manifest {
-        attributes(
-                'Implementation-Title': 'multidexlib2',
-                'Implementation-Version': version
-        )
-    }
+    manifest.from sharedManifest
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+    manifest.from sharedManifest
+}
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+    manifest.from sharedManifest
+}
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
 }
