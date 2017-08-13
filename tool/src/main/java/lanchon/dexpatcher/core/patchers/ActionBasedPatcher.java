@@ -30,25 +30,25 @@ public abstract class ActionBasedPatcher<T, C> extends AbstractPatcher<T> {
 
 	@Override
 	protected void onPatch(String patchId, T patch) throws PatchException {
-		C context = getContext(patchId, patch);
-		onPrepare(patchId, patch, context);
-		Action action = getAction(patchId, patch, context);
+		C actionContext = getActionContext(patchId, patch);
+		onPrepare(patchId, patch, actionContext);
+		Action action = getAction(patchId, patch, actionContext);
 		if (isLogging(DEBUG)) log(DEBUG, action.getLabel());
 		switch (action) {
 		case ADD:
-			onAdd(patchId, patch, context);
+			onAdd(patchId, patch, actionContext);
 			break;
 		case EDIT:
-			onEdit(patchId, patch, context);
+			onEdit(patchId, patch, actionContext);
 			break;
 		case REPLACE:
-			onReplace(patchId, patch, context);
+			onReplace(patchId, patch, actionContext);
 			break;
 		case REMOVE:
-			onRemove(patchId, patch, context);
+			onRemove(patchId, patch, actionContext);
 			break;
 		case IGNORE:
-			onIgnore(patchId, patch, context);
+			onIgnore(patchId, patch, actionContext);
 			break;
 		default:
 			throw new AssertionError("Unexpected action");
@@ -57,44 +57,44 @@ public abstract class ActionBasedPatcher<T, C> extends AbstractPatcher<T> {
 
 	// Intermediate Handlers
 
-	protected void onAdd(String patchId, T patch, C context) throws PatchException {
-		T patched = onSimpleAdd(patch, context);
+	protected void onAdd(String patchId, T patch, C actionContext) throws PatchException {
+		T patched = onSimpleAdd(patch, actionContext);
 		addPatched(patchId, patch, patched);
 	}
 
-	protected void onEdit(String patchId, T patch, C context) throws PatchException {
-		String targetId = getTargetId(patchId, patch, context);
+	protected void onEdit(String patchId, T patch, C actionContext) throws PatchException {
+		String targetId = getTargetId(patchId, patch, actionContext);
 		boolean inPlaceEdit = patchId.equals(targetId);
 		T target = findTarget(targetId, inPlaceEdit);
-		T patched = onSimpleEdit(patch, context, target, inPlaceEdit);
+		T patched = onSimpleEdit(patch, actionContext, target, inPlaceEdit);
 		addPatched(patchId, patch, patched);
 	}
 
-	protected void onReplace(String patchId, T patch, C context) throws PatchException {
-		String targetId = getTargetId(patchId, patch, context);
+	protected void onReplace(String patchId, T patch, C actionContext) throws PatchException {
+		String targetId = getTargetId(patchId, patch, actionContext);
 		T target = findTarget(targetId, false);
-		T patched = onSimpleReplace(patch, context, target);
+		T patched = onSimpleReplace(patch, actionContext, target);
 		addPatched(patchId, patch, patched);
 	}
 
-	protected void onRemove(String patchId, T patch, C context) throws PatchException {
-		String targetId = getTargetId(patchId, patch, context);
+	protected void onRemove(String patchId, T patch, C actionContext) throws PatchException {
+		String targetId = getTargetId(patchId, patch, actionContext);
 		T target = findTarget(targetId, false);
-		onSimpleRemove(patch, context, target);
+		onSimpleRemove(patch, actionContext, target);
 	}
 
-	protected void onIgnore(String patchId, T patch, C context) throws PatchException {}
+	protected void onIgnore(String patchId, T patch, C actionContext) throws PatchException {}
 
 	// Handlers
 
-	protected abstract C getContext(String patchId, T patch) throws PatchException;
-	protected void onPrepare(String patchId, T patch, C context) throws PatchException {}
-	protected abstract Action getAction(String patchId, T patch, C context) throws PatchException;
-	protected abstract String getTargetId(String patchId, T patch, C context) throws PatchException;
+	protected abstract C getActionContext(String patchId, T patch) throws PatchException;
+	protected void onPrepare(String patchId, T patch, C actionContext) throws PatchException {}
+	protected abstract Action getAction(String patchId, T patch, C actionContext) throws PatchException;
+	protected abstract String getTargetId(String patchId, T patch, C actionContext) throws PatchException;
 
-	protected abstract T onSimpleAdd(T patch, C context);
-	protected abstract T onSimpleEdit(T patch, C context, T target, boolean inPlaceEdit);
-	protected T onSimpleReplace(T patch, C context, T target) { return onSimpleAdd(patch, context); }
-	protected void onSimpleRemove(T patch, C context, T target) {}
+	protected abstract T onSimpleAdd(T patch, C actionContext);
+	protected abstract T onSimpleEdit(T patch, C actionContext, T target, boolean inPlaceEdit);
+	protected T onSimpleReplace(T patch, C actionContext, T target) { return onSimpleAdd(patch, actionContext); }
+	protected void onSimpleRemove(T patch, C actionContext, T target) {}
 
 }
