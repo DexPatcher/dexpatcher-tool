@@ -32,15 +32,8 @@ info: read 'build/source.dex'
 debug: read 'build/source.dex': 17 types
 debug: read 'build/source.dex': dex version '035'
 info: read 'build/patch.dex'
-debug: read 'build/patch.dex': 23 types
+debug: read 'build/patch.dex': 16 types
 debug: read 'build/patch.dex': dex version '035'
-debug: type 'lanchon.dexpatcher.annotation.DexAction': (DexAction.java:0): ignore
-debug: type 'lanchon.dexpatcher.annotation.DexAdd': (DexAdd.java:0): ignore
-debug: type 'lanchon.dexpatcher.annotation.DexEdit': (DexEdit.java:0): ignore
-debug: type 'lanchon.dexpatcher.annotation.DexIgnore': (DexIgnore.java:0): ignore
-debug: type 'lanchon.dexpatcher.annotation.DexRemove': (DexRemove.java:0): ignore
-debug: type 'lanchon.dexpatcher.annotation.DexReplace': (DexReplace.java:0): ignore
-debug: type 'lanchon.dexpatcher.annotation.DexTarget': (DexTarget.java:0): ignore
 debug: type 'test.Main$A': (Main.java:0): replace
 debug: type 'test.Main$Abstract': (Main.java:0): ignore
 debug: type 'test.Main$B': (Main.java:0): edit

@@ -84,13 +84,13 @@ task shellTest(type:Exec) {
 
     def toolShadowJar = tasks.getByPath(':tool:shadowJar')
     def sourceJar = tasks.getByPath(':test:source:jar')
-    def patchShadowJar = tasks.getByPath(':test:patch:shadowJar')
+    def patchJar = tasks.getByPath(':test:patch:jar')
 
-    dependsOn toolShadowJar, sourceJar, patchShadowJar
+    dependsOn toolShadowJar, sourceJar, patchJar
 
     inputs.file toolShadowJar.archivePath
     inputs.file sourceJar.archivePath
-    inputs.file patchShadowJar.archivePath
+    inputs.file patchJar.archivePath
     inputs.file file('shell-test')
     inputs.file file('shell-test.conf')
     inputs.file file('shell-test-diff')
@@ -109,9 +109,9 @@ task shellTestSetReference(type:Exec) {
 
     def toolShadowJar = tasks.getByPath(':tool:shadowJar')
     def sourceJar = tasks.getByPath(':test:source:jar')
-    def patchShadowJar = tasks.getByPath(':test:patch:shadowJar')
+    def patchJar = tasks.getByPath(':test:patch:jar')
 
-    dependsOn toolShadowJar, sourceJar, patchShadowJar
+    dependsOn toolShadowJar, sourceJar, patchJar
 
     commandLine 'bash', 'shell-test-set-ref'
 

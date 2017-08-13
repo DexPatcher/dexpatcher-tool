@@ -10,7 +10,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="patch_main" />
-    <orderEntry type="module" module-name="annotation_main" />
   </component>
   <component name="TestModuleProperties" production-module="patch_main" />
 </module>
