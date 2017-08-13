@@ -14,8 +14,7 @@ plugins {
 
 task dex(type:Exec) {
 
-    dependsOn jar
-    ext.inputFile = jar.archivePath
+    ext.inputFile = jar
     ext.outputFile = file("build/libs/${project.name}.dex")
 
     inputs.file parent.dxPath
