@@ -104,11 +104,6 @@ public abstract class AnnotatableSetPatcher<T extends Annotatable> extends Actio
 		return annotation;
 	}
 
-	@Override
-	protected Action getAction(String patchId, T patch, PatcherAnnotation annotation) throws PatchException {
-		return annotation.getAction();
-	}
-
 	// Access Flags Logging
 
 	private void logAccessFlags(String item, int oldFlags, int newFlags, boolean keepInterface,

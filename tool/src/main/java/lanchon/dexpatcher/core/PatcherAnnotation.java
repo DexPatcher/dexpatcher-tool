@@ -14,6 +14,8 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import lanchon.dexpatcher.core.patchers.ActionBasedPatcher;
+
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.AnnotationElement;
 import org.jf.dexlib2.iface.value.BooleanEncodedValue;
@@ -22,7 +24,7 @@ import org.jf.dexlib2.iface.value.EnumEncodedValue;
 import org.jf.dexlib2.iface.value.StringEncodedValue;
 import org.jf.dexlib2.iface.value.TypeEncodedValue;
 
-public class PatcherAnnotation {
+public class PatcherAnnotation implements ActionBasedPatcher.ActionContext {
 
 	public static PatcherAnnotation parse(Context context, Set<? extends Annotation> annotations) throws PatchException {
 

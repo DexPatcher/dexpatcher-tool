@@ -16,7 +16,11 @@ import lanchon.dexpatcher.core.PatchException;
 
 import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 
-public abstract class ActionBasedPatcher<T, C> extends AbstractPatcher<T> {
+public abstract class ActionBasedPatcher<T, C extends ActionBasedPatcher.ActionContext> extends AbstractPatcher<T> {
+
+	public interface ActionContext {
+		Action getAction();
+	}
 
 	protected ActionBasedPatcher(Context context) {
 		super(context);
@@ -32,7 +36,7 @@ public abstract class ActionBasedPatcher<T, C> extends AbstractPatcher<T> {
 	protected void onPatch(String patchId, T patch) throws PatchException {
 		C actionContext = getActionContext(patchId, patch);
 		onPrepare(patchId, patch, actionContext);
-		Action action = getAction(patchId, patch, actionContext);
+		Action action = actionContext.getAction();
 		if (isLogging(DEBUG)) log(DEBUG, action.getLabel());
 		switch (action) {
 		case ADD:
@@ -89,7 +93,6 @@ public abstract class ActionBasedPatcher<T, C> extends AbstractPatcher<T> {
 
 	protected abstract C getActionContext(String patchId, T patch) throws PatchException;
 	protected void onPrepare(String patchId, T patch, C actionContext) throws PatchException {}
-	protected abstract Action getAction(String patchId, T patch, C actionContext) throws PatchException;
 	protected abstract String getTargetId(String patchId, T patch, C actionContext) throws PatchException;
 
 	protected abstract T onSimpleAdd(T patch, C actionContext);
