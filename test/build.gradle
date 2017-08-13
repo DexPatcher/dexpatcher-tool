@@ -1,7 +1,3 @@
-plugins {
-    id 'java-base'
-}
-
 /*
  * DexPatcher - Copyright 2015-2017 Rodrigo Balerdi
  * (GNU General Public License version 3 or later)
@@ -11,6 +7,10 @@ plugins {
  * by the Free Software Foundation, either version 3 of the License,
  * or (at your option) any later version.
  */
+
+plugins {
+    id 'java-base'
+}
 
 // This project implements two test tasks:
 // 1) The portable test, that is reduced in scope:
