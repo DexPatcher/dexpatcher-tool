@@ -26,6 +26,12 @@ import org.jf.dexlib2.iface.value.TypeEncodedValue;
 
 public class PatcherAnnotation implements ActionBasedPatcher.ActionContext {
 
+	private static Action parseActionEnum(EncodedValue value) {
+		String s = ((EnumEncodedValue) value).getValue().getName();
+		if (Marker.ACTION_UNDEFINED.equals(s)) return null;
+		return Action.valueOf(s);
+	}
+
 	public static PatcherAnnotation parse(Context context, Set<? extends Annotation> annotations) throws PatchException {
 
 		Annotation annotation = null;
@@ -71,14 +77,12 @@ public class PatcherAnnotation implements ActionBasedPatcher.ActionContext {
 			}
 			case Marker.ELEM_STATIC_CONSTRUCTOR_ACTION: {
 				if (staticConstructorAction != null) break;
-				String s = ((EnumEncodedValue) value).getValue().getName();
-				staticConstructorAction = Action.valueOf(s);
+				staticConstructorAction = parseActionEnum(value);
 				continue;
 			}
 			case Marker.ELEM_DEFAULT_ACTION: {
 				if (defaultAction != null) break;
-				String s = ((EnumEncodedValue) value).getValue().getName();
-				defaultAction = Action.valueOf(s);
+				defaultAction = parseActionEnum(value);
 				continue;
 			}
 			case Marker.ELEM_ONLY_EDIT_MEMBERS: {

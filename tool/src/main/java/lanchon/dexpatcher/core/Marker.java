@@ -41,6 +41,8 @@ public enum Marker {
 	public static final String ELEM_ONLY_EDIT_MEMBERS = "onlyEditMembers";
 	public static final String ELEM_RECURSIVE = "recursive";
 
+	public static final String ACTION_UNDEFINED = "UNDEFINED";
+
 	// Dalvik
 
 	public static final String TYPE_VOID = Util.getTypeDescriptorFromClass(Void.class);
