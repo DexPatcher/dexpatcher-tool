@@ -30,7 +30,7 @@ public abstract class MemberSetPatcher<T extends Member> extends AnnotatableSetP
 		super(parent);
 		defaultAction = annotation.getDefaultAction();
 		staticConstructorAction = annotation.getStaticConstructorAction();
-		resolvedStaticConstructorAction = annotation.getResolvedStaticConstructorAction();
+		resolvedStaticConstructorAction = (staticConstructorAction != null ? staticConstructorAction : defaultAction);
 	}
 
 	// Implementation

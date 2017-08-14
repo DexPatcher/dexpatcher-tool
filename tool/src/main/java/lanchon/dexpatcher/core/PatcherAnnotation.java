@@ -162,10 +162,6 @@ public class PatcherAnnotation implements ActionBasedPatcher.ActionContext {
 		return staticConstructorAction;
 	}
 
-	public Action getResolvedStaticConstructorAction() {
-		return staticConstructorAction != null ? staticConstructorAction : defaultAction;
-	}
-
 	public Action getDefaultAction() {
 		return defaultAction;
 	}
