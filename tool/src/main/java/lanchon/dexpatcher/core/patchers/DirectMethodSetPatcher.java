@@ -20,6 +20,7 @@ import lanchon.dexpatcher.core.PatcherAnnotation;
 import org.jf.dexlib2.iface.Method;
 
 import static lanchon.dexpatcher.core.logger.Logger.Level.*;
+import static org.jf.dexlib2.AccessFlags.*;
 
 public class DirectMethodSetPatcher extends MethodSetPatcher {
 
@@ -54,6 +55,16 @@ public class DirectMethodSetPatcher extends MethodSetPatcher {
 			if (staticConstructorAction != null) return staticConstructorAction;
 		}
 		return super.getDefaultAction(patchId, patch);
+	}
+
+	// Wrap
+
+	@Override
+	protected void onWrap(String patchId, Method patch, PatcherAnnotation annotation) throws PatchException {
+		if (Marker.SIGN_STATIC_CONSTRUCTOR.equals(patchId) || CONSTRUCTOR.isSet(patch.getAccessFlags())) {
+			throw Action.WRAP.invalidAction();
+		}
+		super.onWrap(patchId, patch, annotation);
 	}
 
 }

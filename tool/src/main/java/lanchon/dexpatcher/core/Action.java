@@ -16,7 +16,8 @@ public enum Action {
 	EDIT(Marker.EDIT),
 	REPLACE(Marker.REPLACE),
 	REMOVE(Marker.REMOVE),
-	IGNORE(Marker.IGNORE);
+	IGNORE(Marker.IGNORE),
+	WRAP(Marker.WRAP);
 
 	private final Marker marker;
 	private final String label;
@@ -32,6 +33,10 @@ public enum Action {
 
 	public String getLabel() {
 		return label;
+	}
+
+	public PatchException invalidAction() {
+		return new PatchException("invalid action (" + label + ")");
 	}
 
 }

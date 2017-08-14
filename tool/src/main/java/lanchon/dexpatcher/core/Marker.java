@@ -17,6 +17,7 @@ public enum Marker {
 	REPLACE("DexReplace"),
 	REMOVE("DexRemove"),
 	IGNORE("DexIgnore"),
+	WRAP("DexWrap"),
 
 	TAG("DexTag");
 
@@ -42,6 +43,10 @@ public enum Marker {
 	public static final String ELEM_RECURSIVE = "recursive";
 
 	public static final String ACTION_UNDEFINED = "UNDEFINED";
+
+	// Actions
+
+	public static final String WRAP_SOURCE_SUFFIX = "__dxpWrapSource";
 
 	// Dalvik
 

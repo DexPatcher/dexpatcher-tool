@@ -10,13 +10,15 @@
 
 package lanchon.dexpatcher.annotation;
 
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Target;
+
 @DexIgnore
-public enum DexAction {
-	ADD,
-	EDIT,
-	REPLACE,
-	REMOVE,
-	IGNORE,
-	WRAP,
-	UNDEFINED;
+@Documented
+@Target({
+		ElementType.METHOD
+})
+public @interface DexWrap {
+	String target() default "";
 }

@@ -73,6 +73,9 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 	@Override
 	protected void onPrepare(String patchId, ClassDef patch, PatcherAnnotation annotation) throws PatchException {
 		if (annotation.getRecursive()) throw invalidElement(Marker.ELEM_RECURSIVE);
+		if (annotation.getStaticConstructorAction() == Action.WRAP) {
+			throw new PatchException("invalid static constructor action (wrap)");
+		}
 	}
 
 	@Override

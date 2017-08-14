@@ -12,9 +12,12 @@ package lanchon.dexpatcher.core.patchers;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import lanchon.dexpatcher.core.Action;
 import lanchon.dexpatcher.core.Context;
+import lanchon.dexpatcher.core.Marker;
+import lanchon.dexpatcher.core.PatchException;
 import lanchon.dexpatcher.core.PatcherAnnotation;
 import lanchon.dexpatcher.core.Util;
 import lanchon.dexpatcher.core.model.BasicMethod;
@@ -27,9 +30,20 @@ import org.jf.dexlib2.iface.MethodParameter;
 import org.jf.dexlib2.iface.debug.DebugItem;
 import org.jf.dexlib2.iface.debug.LineNumber;
 import org.jf.dexlib2.iface.debug.SetSourceFile;
+import org.jf.dexlib2.iface.instruction.Instruction;
+import org.jf.dexlib2.iface.instruction.ReferenceInstruction;
+import org.jf.dexlib2.iface.instruction.formats.Instruction35c;
+import org.jf.dexlib2.iface.instruction.formats.Instruction3rc;
+import org.jf.dexlib2.iface.reference.Reference;
+import org.jf.dexlib2.rewriter.DexRewriter;
+import org.jf.dexlib2.rewriter.InstructionRewriter;
+import org.jf.dexlib2.rewriter.Rewriter;
+import org.jf.dexlib2.rewriter.RewriterModule;
+import org.jf.dexlib2.rewriter.Rewriters;
 import org.jf.dexlib2.util.TypeUtils;
 
 import static lanchon.dexpatcher.core.logger.Logger.Level.*;
+import static org.jf.dexlib2.AccessFlags.*;
 
 public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 
@@ -156,7 +170,7 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 
 		//String message = "updating '%s' modifier in edited member to match its target";
 		//AccessFlags[] flagArray = new AccessFlags[] { CONSTRUCTOR };
-		//int flagMask = AccessFlags.CONSTRUCTOR.getValue();
+		//int flagMask = CONSTRUCTOR.getValue();
 		//int patchFlags = patch.getAccessFlags();
 		//int targetFlags = target.getAccessFlags();
 		//checkAccessFlags(INFO, patchFlags, targetFlags, flagArray, message);
@@ -184,6 +198,141 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 				implementation);
 
 		return super.onSimpleEdit(patched, annotation, target, inPlaceEdit);
+
+	}
+
+	// Wrap
+
+	protected void onWrap(String patchId, Method patch, PatcherAnnotation annotation) throws PatchException {
+		String targetId = getTargetId(patchId, patch, annotation);
+		Method target = findTarget(targetId, false);
+		Method wrapSource = onSimpleWrapSource(patch, annotation, target);
+		String wrapSourceId = Util.getMethodId(wrapSource);
+		addPatched(wrapSourceId, patch, wrapSource);
+		Method wrapPatch = onSimpleWrapPatch(patch, annotation, wrapSource);
+		addPatched(patchId, patch, wrapPatch);
+	}
+
+	private Method onSimpleWrapSource(Method patch, PatcherAnnotation annotation, Method target) {
+		return new BasicMethod(
+				target.getDefiningClass(),
+				createMethodName(patch, Marker.WRAP_SOURCE_SUFFIX),
+				target.getParameters(),
+				target.getReturnType(),
+				limitMethodAccess(target.getAccessFlags()),
+				target.getAnnotations(),
+				target.getImplementation());
+	}
+
+	private Method onSimpleWrapPatch(final Method patch, PatcherAnnotation annotation, Method wrapSource) {
+		return new BasicMethod(
+				patch.getDefiningClass(),
+				patch.getName(),
+				patch.getParameters(),
+				patch.getReturnType(),
+				patch.getAccessFlags(),
+				annotation.getFilteredAnnotations(),
+				replaceMethodInvocations(patch.getImplementation(), patch, wrapSource));
+	}
+
+	// Helpers
+
+	private String createMethodName(Method base, String suffix) {
+		Map<String, Method> sourceMap = getSourceMap();
+		String baseName = base.getName() + suffix;
+		String name = baseName;
+		int n = 1;
+		for (;;) {
+			if (sourceMap.get(name) == null) return name;
+			name = baseName + (++n);
+		}
+	}
+
+	private int limitMethodAccess(int accessFlags) {
+		if (this instanceof VirtualMethodSetPatcher) {
+			if (!PRIVATE.isSet(accessFlags)) {
+				accessFlags &= ~PUBLIC.getValue();
+				accessFlags |= PROTECTED.getValue();
+			}
+		} else {
+			accessFlags &= ~(PUBLIC.getValue() | PROTECTED.getValue());
+			accessFlags |= PRIVATE.getValue();
+		}
+		return accessFlags;
+	}
+
+	private MethodImplementation replaceMethodInvocations(MethodImplementation implementation,
+			final Method from, final Method to) {
+
+		final boolean virtual = this instanceof VirtualMethodSetPatcher;
+
+		DexRewriter rewriter = new DexRewriter(new RewriterModule() {
+			public Rewriter<Instruction> getInstructionRewriter(Rewriters rewriters) {
+				return new InstructionRewriter(rewriters) {
+
+					@Override
+					public Instruction rewrite(Instruction instruction) {
+						if (instruction instanceof ReferenceInstruction) {
+							Reference reference = ((ReferenceInstruction) instruction).getReference();
+							if (from.equals(reference)) {
+								boolean match;
+								switch (instruction.getOpcode()) {
+									case INVOKE_DIRECT:
+									case INVOKE_DIRECT_RANGE:
+									case INVOKE_STATIC:
+									case INVOKE_STATIC_RANGE:
+										match = !virtual;
+										break;
+									case INVOKE_VIRTUAL:
+									case INVOKE_VIRTUAL_RANGE:
+									//case INVOKE_SUPER:
+									//case INVOKE_SUPER_RANGE:
+									//case INVOKE_INTERFACE:
+									//case INVOKE_INTERFACE_RANGE:
+										match = virtual;
+										break;
+									default:
+										match = false;
+								}
+								if (match) {
+									if (instruction instanceof Instruction35c) {
+										return new RewrittenInstruction35c((Instruction35c) instruction) {
+											//@Override
+											//public Opcode getOpcode() {
+											//	return virtual ? instruction.getOpcode() :
+											//			STATIC.isSet(to.getAccessFlags()) ?
+											//					INVOKE_STATIC : INVOKE_DIRECT;
+											//}
+											@Override
+											public Reference getReference() {
+												return to;
+											}
+										};
+									} else if (instruction instanceof Instruction3rc) {
+										return new RewrittenInstruction3rc((Instruction3rc) instruction) {
+											//@Override
+											//public Opcode getOpcode() {
+											//	return virtual ? instruction.getOpcode() :
+											//			STATIC.isSet(to.getAccessFlags()) ?
+											//					INVOKE_STATIC_RANGE : INVOKE_DIRECT_RANGE;
+											//}
+											@Override
+											public Reference getReference() {
+												return to;
+											}
+										};
+									} else throw new AssertionError("Unexpected instruction");
+								}
+							}
+						}
+						return instruction;
+					}
+
+				};
+			}
+		});
+
+		return rewriter.getMethodImplementationRewriter().rewrite(implementation);
 
 	}
 

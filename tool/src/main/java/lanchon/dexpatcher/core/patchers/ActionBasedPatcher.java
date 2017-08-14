@@ -54,6 +54,9 @@ public abstract class ActionBasedPatcher<T, C extends ActionBasedPatcher.ActionC
 		case IGNORE:
 			onIgnore(patchId, patch, actionContext);
 			break;
+		case WRAP:
+			onWrap(patchId, patch, actionContext);
+			break;
 		default:
 			throw new AssertionError("Unexpected action");
 		}
@@ -88,6 +91,10 @@ public abstract class ActionBasedPatcher<T, C extends ActionBasedPatcher.ActionC
 	}
 
 	protected void onIgnore(String patchId, T patch, C actionContext) throws PatchException {}
+
+	protected void onWrap(String patchId, T patch, C actionContext) throws PatchException {
+		throw Action.WRAP.invalidAction();
+	}
 
 	// Handlers
 
