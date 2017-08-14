@@ -1,0 +1,23 @@
+#!/bin/bash
+
+set -e
+
+run-dex-via-adb() {
+    local dexFile="$1"
+    local mainClass="$2"
+    echo "--- prepare $dexFile ---"
+    rm -rf build/run-via-adb
+    mkdir build/run-via-adb
+    cp "$dexFile" build/run-via-adb/classes.dex
+    cd build/run-via-adb
+    zip run-via-adb.zip classes.dex
+    cd ../..
+    adb push build/run-via-adb/run-via-adb.zip /sdcard/run-via-adb.zip
+    rm -rf build/run-via-adb    
+    echo "--- run $dexFile ---"
+    adb shell dalvikvm -cp /sdcard/run-via-adb.zip "$mainClass"
+    echo "--- end $dexFile ---"
+    echo
+}
+
+run-dex-via-adb "$@"

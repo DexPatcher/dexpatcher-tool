@@ -1,0 +1,2 @@
+#!/bin/bash
+./run-dex-via-adb build/patched.dex test.Main
