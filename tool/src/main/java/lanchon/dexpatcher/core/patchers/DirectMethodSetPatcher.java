@@ -14,6 +14,7 @@ import java.util.Collection;
 
 import lanchon.dexpatcher.core.Action;
 import lanchon.dexpatcher.core.Marker;
+import lanchon.dexpatcher.core.PatchException;
 import lanchon.dexpatcher.core.PatcherAnnotation;
 
 import org.jf.dexlib2.iface.Method;
@@ -47,7 +48,7 @@ public class DirectMethodSetPatcher extends MethodSetPatcher {
 	}
 
 	@Override
-	protected Action getDefaultAction(String patchId, Method patch) {
+	protected Action getDefaultAction(String patchId, Method patch) throws PatchException {
 		if (Marker.SIGN_STATIC_CONSTRUCTOR.equals(patchId)) {
 			staticConstructorFound = true;
 			if (staticConstructorAction != null) return staticConstructorAction;

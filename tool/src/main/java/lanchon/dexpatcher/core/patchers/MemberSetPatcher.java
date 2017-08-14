@@ -41,14 +41,10 @@ public abstract class MemberSetPatcher<T extends Member> extends AnnotatableSetP
 	}
 
 	@Override
-	protected Action getDefaultAction(String patchId, T patch) {
-		if (defaultAction != null) {
-			log(INFO, "default " + defaultAction.getLabel());
-			return defaultAction;
-		} else {
-			log(ERROR, "no default action defined");
-			return Action.IGNORE;
-		}
+	protected Action getDefaultAction(String patchId, T patch) throws PatchException {
+		if (defaultAction == null) throw new PatchException("no default action defined");
+		log(INFO, "default " + defaultAction.getLabel());
+		return defaultAction;
 	}
 
 	@Override
