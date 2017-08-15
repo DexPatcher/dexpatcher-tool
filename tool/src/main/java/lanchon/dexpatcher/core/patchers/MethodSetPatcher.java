@@ -240,11 +240,12 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 	private String createMethodName(Method base, String suffix) {
 		Map<String, Method> sourceMap = getSourceMap();
 		String baseName = base.getName() + suffix;
-		String name = baseName;
 		int n = 1;
+		String name = baseName;
 		for (;;) {
 			if (sourceMap.get(name) == null) return name;
-			name = baseName + (++n);
+			n++;
+			name = baseName + n;
 		}
 	}
 
