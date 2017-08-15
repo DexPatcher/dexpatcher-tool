@@ -12,12 +12,12 @@ package test;
 
 import lanchon.dexpatcher.annotation.*;
 
-// DexPatcher Sample
+// DexPatcher Tool Sample
 
 // A DexPatcher patch is an android dex or apk file that defines modifications
 // to be applied to a source dex or apk file, a.k.a. the original file. A patch
-// file must reference and include the 'dexpatcher-annotation-NNN.jar' library
-// that contains the definitions of the DexPatcher annotations and tags.
+// file must reference the 'dexpatcher-annotation-<version>.jar' library that
+// contains the definitions of the DexPatcher annotations and constants.
 
 // The DexPatcher annotations can be used to tag packages, classes, fields and
 // methods in the patch file. The available annotations are:
@@ -26,9 +26,16 @@ import lanchon.dexpatcher.annotation.*;
 //   @DexReplace: replace the targeted item in the source with this item.
 //   @DexRemove: remove the targeted item from the source.
 //   @DexIgnore: ignore this patch item; do nothing.
+// DexPatcher tool v1.3.0 adds:
+//   @DexWrap: replace the targeted method, invoking the original at will.
 
 // Untagged classes in the patch are added by default to the source, allowing
 // off-the-shelf Java sources and libs to be included in the patch.
+
+// This file is the main piece of the DexPatcher tool test suite, and it also
+// doubles as documentation for the tool. What follows are patching cases and
+// their explanation. Please note that main intent of these cases is exercising
+// the tool rather than showcasing good patch design patterns.
 
 // Ignore the 'Main' class in the patch:
 // Note: Classes at the JVM or DalvikVM level are never nested. Nested/inner
@@ -40,10 +47,15 @@ import lanchon.dexpatcher.annotation.*;
 @DexIgnore
 public class Main {
 
-	// We declare this method here because we want to use it from the patch
-	// code but the real method invoked at runtime will be the one in the source.
-	// Class 'Main' in the patch and all its bytecode members will be ignored.
-	static void p(String msg) {}
+	// We declare this method here because we want to use the source's Main.p()
+	// method from the patch, so the compiler needs the symbol to be present
+	// while building the patch. But the real method invoked at runtime will
+	// be the one in the source. Class 'Main' in the patch and all its bytecode
+	// members will be ignored: they will not be included in the resulting
+	// patched code and will be discarded.
+	// Note: The recommended way to populate unused method bodies in the patch
+	// is with a single 'throw null;' statement.
+	static void p(String msg) { throw null; }
 
 	// Completely replace class 'A' with a new class:
 	// The targeted item must be a class and can be defined in various ways:
@@ -61,7 +73,12 @@ public class Main {
 	// Modify members of class 'B':
 	// Note: By default untagged members of a @DexEdit-tagged patch class will
 	// trigger an error. The default behavior can be changed by adding a
-	// 'defaultAction' element to the @DexEdit tag.
+	// 'defaultAction' element to the @DexEdit tag. The use of 'defaultAction'
+	// is strongly discouraged except in cases where there is no other way to
+	// tag compiler-generated methods.
+	// Note: There is no way to annotate static initializers in Java. This
+	// is why the action to apply to the static constructor of the class
+	// must be specified in the enclosing @DexEdit tag.
 	@DexEdit(staticConstructorAction = DexAction.ADD)
 	public static class B {
 
@@ -97,7 +114,7 @@ public class Main {
 		// being undefined in @DexEdit. Define a constructor and explicitly
 		// ignore it to avoid the problem.
 		@DexIgnore
-		private B() {}
+		private B() { throw null; }
 
 		// Add a method:
 		@DexAdd
@@ -127,7 +144,7 @@ public class Main {
 		// Replace a method, invoking the replaced method at will:
 		// Part 1: Rename the target method, optionally reducing visibility:
 		@DexEdit(target = "virtualMethod")
-		protected void source_virtualMethod(String data) {}
+		protected void source_virtualMethod(String data) { throw null; }
 		// Part 2: Add a new method:
 		// Note: Cannot replace method here, items can be targeted only once.
 		@DexAdd
@@ -154,7 +171,7 @@ public class Main {
 		// Note: The renamed source_method correctly invokes Base::method via
 		// super (not Base::source_method).
 		@DexEdit(target = "method")
-		protected void source_method() {}
+		protected void source_method() { throw null; }
 		@DexAdd
 		public void method() {
 			p("entering replaced Derived::method");
@@ -198,7 +215,7 @@ public class Main {
 		}
 
 		@DexEdit(target = "print")
-		protected void source_print() {}
+		protected void source_print() { throw null; }
 		@DexAdd
 		public void print() {
 			source_print();
@@ -209,9 +226,6 @@ public class Main {
 	}
 
 	// Modify members of class 'D' replacing its static constructor:
-	// Note: There is no way to annotate static initializers in Java. This
-	// is why the action to apply to the static constructor of the class
-	// must be specified in the enclosing @DexEdit tag.
 	@DexEdit(staticConstructorAction = DexAction.REPLACE)
 	public static class D {
 
@@ -250,7 +264,7 @@ public class Main {
 		}
 
 		@DexEdit(target = "print")
-		protected void source_print() {}
+		protected void source_print() { throw null; }
 		@DexAdd
 		public void print() {
 			source_print();
@@ -278,7 +292,7 @@ public class Main {
 		// Replace the static constructor, invoking the replaced item at will:
 		// Part 1: Rename the source static constructor:
 		@DexEdit(target = DexTarget.STATIC_CONSTRUCTOR)
-		private static void source_static() {}
+		private static void source_static() { throw null; }
 		// Part 2: Add a new static constructor:
 		// Note: Cannot replace item here, items can be targeted only once.
 		// The static constructor action in this case is ADD by default.
@@ -301,12 +315,12 @@ public class Main {
 		// The argument can be of any type and must be tagged with @DexIgnore.
 		// When you invoke the original constructor, the value of the extra
 		// argument is ignored.
-		// Note: DexPatcher 1.0 used the DexTag type to tag constructor
+		// Note: DexPatcher tool v1.0 used the DexTag type to tag constructor
 		// arguments. This has been deprecated but a backwards compatible mode
 		// can be enabled in newer DexPatcher versions. See older revisions
 		// of this file for more details on DexTag.
 		@DexEdit
-		private E(String data, @DexIgnore Void tag) {}
+		private E(String data, @DexIgnore Void tag) { throw null; }
 		// Part 2: Add a new constructor that invokes the source constructor:
 		// Note: Because this constructor invokes another constructor via the
 		// 'this()' syntax, this constructor does *not* initialize instance
@@ -324,7 +338,7 @@ public class Main {
 		}
 
 		@DexEdit(target = "print")
-		protected void source_print() {}
+		protected void source_print() { throw null; }
 		@DexAdd
 		public void print() {
 			source_print();
@@ -357,7 +371,7 @@ public class Main {
 	@DexEdit
 	public static class Concrete1 extends Abstract implements Interface {
 		@DexIgnore
-		private Concrete1() {}
+		private Concrete1() { throw null; }
 		@DexReplace
 		public void method() {
 			p("replaced Concrete1::method");
@@ -366,7 +380,7 @@ public class Main {
 		// concrete class compiles.
 		@DexIgnore
 		@Override
-		public void interfaceMethod() {}
+		public void interfaceMethod() { throw null; }
 		// Same case here. We can avoid defining a method body by declaring
 		// the method native, but it is still verbose and annoying.
 		// Note: It is not recommended to use 'native' as an alternative to
@@ -374,7 +388,7 @@ public class Main {
 		// reasons:
 		// 1) It cannot be used in constructors.
 		// 2) The presence of a native method disables IDE warnings that
-		//    depend on class-global analysis (eg: 'unused field' warning).
+		//    depend on class-wide analysis (eg: 'unused field' warnings).
 		@DexIgnore
 		@Override
 		public native void abstractMethod();
@@ -384,28 +398,25 @@ public class Main {
 	// its 'onlyEditMembers' element to true. This gives you several options
 	// for modifying the class so that it compiles without its abstract
 	// methods being implemented, such as declaring the class 'abstract'.
-	// Note that you cannot use the 'abstract' trick if you need to
+	// Keep in mind that you cannot use the 'abstract' trick if you need to
 	// instantiate the class in the patch code.
 	@DexEdit(onlyEditMembers = true)
 	public static abstract class Concrete2 extends Abstract implements Interface {
 		@DexIgnore
-		private Concrete2() {}
+		private Concrete2() { throw null; }
 		@DexReplace
 		public void method() {
 			p("replaced Concrete2::method");
 		}
 	}
 	// Option 3: Stripping out the hierarchy:
-	// Note: You can also strip out interfaces or even the base from the
-	// class, but this has complex implications for the type system and the
-	// constructors of the class.
-	// Note: It is not recommended to strip out the hierarchy because it
-	// cripples IDE's understanding of the code and disables features such
-	// as auto-completion.
+	// Note: You can also strip out interfaces or even the superclass from the
+	// class, but this has complex implications affecting the type system and
+	// the constructors of the class. It is generally not recommended.
 	@DexEdit(onlyEditMembers = true)
 	public static class Concrete3 {
 		@DexIgnore
-		private Concrete3() {}
+		private Concrete3() { throw null; }
 		@DexReplace
 		public void method() {
 			p("replaced Concrete3::method");
