@@ -243,7 +243,8 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 		int n = 1;
 		String name = baseName;
 		for (;;) {
-			if (sourceMap.get(name) == null) return name;
+			String id = Util.getMethodId(base, name);
+			if (sourceMap.get(id) == null) return name;
 			n++;
 			name = baseName + n;
 		}
