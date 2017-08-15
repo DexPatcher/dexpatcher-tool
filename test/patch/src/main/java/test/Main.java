@@ -155,6 +155,25 @@ public class Main {
 			p("exiting replaced B::virtualMethod");
 		}
 
+		// Replace a method, invoking the replaced method at will:
+		// Note: The verbose @DexEdit/@DexAdd idiom presented above is commonly
+		// used to modify methods. DexPatcher tool v1.3.0 introduces @DexWrap,
+		// a more concise alternative to accomplish the same thing. @DexWrap
+		// converts recursive calls in the patch to invocations of the original
+		// source method. (Recursion is not supported; use the @DexEdit/@DexAdd
+		// idiom if recursion is needed.)
+		// Note: @DexWrap cannot be used on instance or static constructors,
+		// as instance constructors cannot recursively call themselves using
+		// the 'this(...)' syntax and static constructors can never be
+		// explicitly invoked.
+		@DexWrap
+		public void anotherMethod(String data) {
+			p("entering wrapper B::anotherMethod: " + data);
+			String filteredData = "filtered " + data;
+			anotherMethod(filteredData);    // invokes the replaced method
+			p("exiting wrapper B::anotherMethod");
+		}
+
 	}
 
 	// Declare class 'Base':
@@ -170,6 +189,7 @@ public class Main {
 		// Replace a method that overrides and invokes a base method via super:
 		// Note: The renamed source_method correctly invokes Base::method via
 		// super (not Base::source_method).
+		// Note: The less verbose @DexWrap could have been used here instead.
 		@DexEdit(target = "method")
 		protected void source_method() { throw null; }
 		@DexAdd
@@ -214,11 +234,9 @@ public class Main {
 			p("THIS CODE IS IGNORED!");
 		}
 
-		@DexEdit(target = "print")
-		protected void source_print() { throw null; }
-		@DexAdd
+		@DexWrap
 		public void print() {
-			source_print();
+			print();
 			p("C::patchStaticField: " + patchStaticField);
 			p("C::patchField: " + patchField);
 		}
@@ -263,11 +281,9 @@ public class Main {
 			p("replaced D::<init>");
 		}
 
-		@DexEdit(target = "print")
-		protected void source_print() { throw null; }
-		@DexAdd
+		@DexWrap
 		public void print() {
-			source_print();
+			print();
 			p("D::patchStaticField: " + patchStaticField);
 			p("D::patchField: " + patchField);
 		}
@@ -337,11 +353,9 @@ public class Main {
 			p("continuing on replaced E::<init>: " + data);
 		}
 
-		@DexEdit(target = "print")
-		protected void source_print() { throw null; }
-		@DexAdd
+		@DexWrap
 		public void print() {
-			source_print();
+			print();
 			p("E::patchStaticField: " + patchStaticField);
 			p("E::patchField: " + patchField);
 		}

@@ -27,6 +27,7 @@ public class Main {
 		B b = new B();
 		b.directMethod();
 		b.virtualMethod("data");
+		b.anotherMethod("data");
 		p();
 		new Derived().method();
 		p();
@@ -54,6 +55,8 @@ public class Main {
 		static private void privateStaticMethod(int i) { p("B::staticMethod: " + i); }
 		private void directMethod() { p("original B::directMethod"); }
 		public void virtualMethod(String data) { p("original B::virtualMethod: " + data); }
+		public void anotherMethod(String data) { p("original B::anotherMethod: " + data); }
+
 	}
 
 	public static class Base {
