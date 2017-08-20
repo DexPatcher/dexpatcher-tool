@@ -61,7 +61,8 @@ public class DirectMethodSetPatcher extends MethodSetPatcher {
 
 	@Override
 	protected void onWrap(String patchId, Method patch, PatcherAnnotation annotation) throws PatchException {
-		if (Marker.SIGN_STATIC_CONSTRUCTOR.equals(patchId) || CONSTRUCTOR.isSet(patch.getAccessFlags())) {
+		if (Marker.SIGN_STATIC_CONSTRUCTOR.equals(patchId) || (CONSTRUCTOR.isSet(patch.getAccessFlags()) &&
+				Marker.NAME_INSTANCE_CONSTRUCTOR.equals(patch.getName()))) {
 			throw Action.WRAP.invalidAction();
 		}
 		super.onWrap(patchId, patch, annotation);

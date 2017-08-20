@@ -54,6 +54,7 @@ public enum Marker {
 	public static final String TYPE_INNER_CLASS = Util.getTypeDescriptorFromName("dalvik.annotation.InnerClass");
 	public static final String ELEM_ACCESS_FLAGS = "accessFlags";
 	public static final String SIGN_STATIC_CONSTRUCTOR = "<clinit>()V";
+	public static final String NAME_INSTANCE_CONSTRUCTOR = "<init>";
 	public static final String PACKAGE_INFO = "package-info";
 
 }
