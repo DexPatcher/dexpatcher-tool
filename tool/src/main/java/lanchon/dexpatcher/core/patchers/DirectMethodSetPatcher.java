@@ -11,13 +11,19 @@
 package lanchon.dexpatcher.core.patchers;
 
 import java.util.Collection;
+import java.util.Iterator;
 
 import lanchon.dexpatcher.core.Action;
 import lanchon.dexpatcher.core.Marker;
 import lanchon.dexpatcher.core.PatchException;
 import lanchon.dexpatcher.core.PatcherAnnotation;
 
+import org.jf.dexlib2.Opcode;
 import org.jf.dexlib2.iface.Method;
+import org.jf.dexlib2.iface.MethodImplementation;
+import org.jf.dexlib2.iface.instruction.Instruction;
+import org.jf.dexlib2.iface.instruction.ReferenceInstruction;
+import org.jf.dexlib2.iface.reference.MethodReference;
 
 import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 import static org.jf.dexlib2.AccessFlags.*;
@@ -53,6 +59,13 @@ public class DirectMethodSetPatcher extends MethodSetPatcher {
 		if (Marker.SIGN_STATIC_CONSTRUCTOR.equals(patchId)) {
 			staticConstructorFound = true;
 			if (staticConstructorAction != null) return staticConstructorAction;
+		} else if (defaultAction == null && (CONSTRUCTOR.isSet(patch.getAccessFlags()) &&
+				Marker.SIGN_DEFAULT_CONSTRUCTOR.equals(patchId))) {
+			if (isTrivialConstructor(patch)) {
+				log(INFO, "implicit ignore of trivial default constructor");
+				return Action.IGNORE;
+			}
+			throw new PatchException("no action defined for non-trivial default constructor");
 		}
 		return super.getDefaultAction(patchId, patch);
 	}
@@ -66,6 +79,29 @@ public class DirectMethodSetPatcher extends MethodSetPatcher {
 			throw Action.WRAP.invalidAction();
 		}
 		super.onWrap(patchId, patch, annotation);
+	}
+
+	// Helpers
+
+	private static boolean isTrivialConstructor(Method method) {
+		MethodImplementation implementation = method.getImplementation();
+		if (implementation.getRegisterCount() != 1 || !implementation.getTryBlocks().isEmpty()) return false;
+		Iterator<? extends Instruction> iterator = implementation.getInstructions().iterator();
+		if (!iterator.hasNext()) return false;
+		{
+			Instruction instruction = iterator.next();
+			if (instruction.getOpcode() != Opcode.INVOKE_DIRECT) return false;
+			MethodReference reference = (MethodReference) ((ReferenceInstruction) instruction).getReference();
+			if (!Marker.NAME_INSTANCE_CONSTRUCTOR.equals(reference.getName())) return false;
+			if (method.getDefiningClass().equals(reference.getDefiningClass())) return false;
+		}
+		if (!iterator.hasNext()) return false;
+		{
+			Instruction instruction = iterator.next();
+			if (instruction.getOpcode() != Opcode.RETURN_VOID) return false;
+		}
+		if (iterator.hasNext()) return false;
+		return true;
 	}
 
 }

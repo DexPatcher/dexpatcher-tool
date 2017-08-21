@@ -22,14 +22,14 @@ import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 
 public abstract class MemberSetPatcher<T extends Member> extends AnnotatableSetPatcher<T> {
 
-	private final Action defaultAction;
 	protected final Action staticConstructorAction;
+	protected final Action defaultAction;
 	protected final Action resolvedStaticConstructorAction;
 
 	public MemberSetPatcher(ClassSetPatcher parent, PatcherAnnotation annotation) {
 		super(parent);
-		defaultAction = annotation.getDefaultAction();
 		staticConstructorAction = annotation.getStaticConstructorAction();
+		defaultAction = annotation.getDefaultAction();
 		resolvedStaticConstructorAction = (staticConstructorAction != null ? staticConstructorAction : defaultAction);
 	}
 
