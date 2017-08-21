@@ -75,7 +75,8 @@ public class Main {
 	// trigger an error. The default behavior can be changed by adding a
 	// 'defaultAction' element to the @DexEdit tag. The use of 'defaultAction'
 	// is strongly discouraged except in cases where there is no other way to
-	// tag compiler-generated methods.
+	// tag compiler-generated members. Explicitly tagging all patch members
+	// is safer than relying on default actions.
 	// Note: There is no way to annotate static initializers in Java. This
 	// is why the action to apply to the static constructor of the class
 	// must be specified in the enclosing @DexEdit tag.
@@ -113,6 +114,15 @@ public class Main {
 		// defined, and that would trigger an error due to 'defaultAction'
 		// being undefined in @DexEdit. Define a constructor and explicitly
 		// ignore it to avoid the problem.
+		// Note: DexPatcher tool v1.3.1 introduces the ability to implicitly
+		// ignore trivial default constructors for which no action is defined.
+		// In this context trivial means that the constructor bears no code
+		// except for a call to the default constructor of the superclass.
+		// This capability automatically takes care of most compiler-generated
+		// default constructors. However, an automatic default constructor
+		// for this class would include code to initialize 'instanceField',
+		// making it non-trivial. Thus, either a constructor with an explicit
+		// action or a default action for the class must be defined.
 		@DexIgnore
 		private B() { throw null; }
 
@@ -181,8 +191,9 @@ public class Main {
 	public static class Base {}
 
 	// Modify members of class 'Derived':
-	// Note: The generated default constructor is implicitly ignored in this
-	// case by specifying a default action.
+	// Note: The generated default constructor of this class is ignored due to
+	// the specified default action. Keep in mind that defining default actions
+	// is not recommended.
 	@DexEdit(defaultAction = DexAction.IGNORE)
 	public static class Derived extends Base {
 
@@ -382,10 +393,11 @@ public class Main {
 	// you do not want to do any such change, and this sometimes forces you to
 	// implement many abstract methods that do not interest you just to make
 	// the patch class compile, as in this example.
+	// Note: The automatically generated default constructor for this class is
+	// trivial and will be implicitly ignored if no default action is defined.
+	// There is no need to explicitly define a constructor and @DexIgnore it.
 	@DexEdit
 	public static class Concrete1 extends Abstract implements Interface {
-		@DexIgnore
-		private Concrete1() { throw null; }
 		@DexReplace
 		public void method() {
 			p("replaced Concrete1::method");
@@ -416,8 +428,6 @@ public class Main {
 	// instantiate the class in the patch code.
 	@DexEdit(onlyEditMembers = true)
 	public static abstract class Concrete2 extends Abstract implements Interface {
-		@DexIgnore
-		private Concrete2() { throw null; }
 		@DexReplace
 		public void method() {
 			p("replaced Concrete2::method");
@@ -429,8 +439,6 @@ public class Main {
 	// the constructors of the class. It is generally not recommended.
 	@DexEdit(onlyEditMembers = true)
 	public static class Concrete3 {
-		@DexIgnore
-		private Concrete3() { throw null; }
 		@DexReplace
 		public void method() {
 			p("replaced Concrete3::method");
