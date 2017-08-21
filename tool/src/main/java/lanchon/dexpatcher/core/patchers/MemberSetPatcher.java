@@ -42,7 +42,7 @@ public abstract class MemberSetPatcher<T extends Member> extends AnnotatableSetP
 
 	@Override
 	protected Action getDefaultAction(String patchId, T patch) throws PatchException {
-		if (defaultAction == null) throw new PatchException("no default action defined");
+		if (defaultAction == null) throw new PatchException("no action defined");
 		log(INFO, "default " + defaultAction.getLabel());
 		return defaultAction;
 	}
