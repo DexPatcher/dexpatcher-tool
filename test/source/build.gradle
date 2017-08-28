@@ -12,8 +12,6 @@ plugins {
     id 'java'
 }
 
-sourceCompatibility = '1.7'
-
 task dex(type:Exec) {
 
     ext.inputFile = jar
