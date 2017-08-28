@@ -205,17 +205,11 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 
 	@Override
 	protected void onWrap(String patchId, Method patch, PatcherAnnotation annotation) throws PatchException {
+
 		String targetId = getTargetId(patchId, patch, annotation);
 		Method target = findTarget(targetId, false);
-		Method wrapSource = onSimpleWrapSource(patch, annotation, target);
-		String wrapSourceId = Util.getMethodId(wrapSource);
-		addPatched(wrapSourceId, patch, wrapSource);
-		Method wrapPatch = onSimpleWrapPatch(patch, annotation, wrapSource);
-		addPatched(patchId, patch, wrapPatch);
-	}
 
-	private Method onSimpleWrapSource(Method patch, PatcherAnnotation annotation, Method target) {
-		return new BasicMethod(
+		Method wrapSource = new BasicMethod(
 				target.getDefiningClass(),
 				createMethodName(patch, Marker.WRAP_SOURCE_SUFFIX),
 				target.getParameters(),
@@ -223,10 +217,9 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 				limitMethodAccess(target.getAccessFlags()),
 				target.getAnnotations(),
 				target.getImplementation());
-	}
+		addPatched(Util.getMethodId(wrapSource), patch, wrapSource);
 
-	private Method onSimpleWrapPatch(Method patch, PatcherAnnotation annotation, Method wrapSource) {
-		return new BasicMethod(
+		Method wrapPatch = new BasicMethod(
 				patch.getDefiningClass(),
 				patch.getName(),
 				patch.getParameters(),
@@ -234,6 +227,8 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 				patch.getAccessFlags(),
 				annotation.getFilteredAnnotations(),
 				replaceMethodInvocations(patch.getImplementation(), patch, wrapSource));
+		addPatched(/* Util.getMethodId(wrapPatch) */ patchId, patch, wrapPatch);
+
 	}
 
 	// Helpers
