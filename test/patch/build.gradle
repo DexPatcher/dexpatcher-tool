@@ -12,6 +12,8 @@ plugins {
     id 'java'
 }
 
+sourceCompatibility = '1.7'
+
 dependencies {
     compileOnly project(':annotation')
 }
