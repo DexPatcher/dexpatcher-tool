@@ -28,7 +28,7 @@ def runShellTest = true
 
 // This test invokes the 'dx' tool from the Android SDK.
 // Either set the path to the 'dx' executable:
-def dxPath = null
+def dxPath = 'dx'
 // Or set the version of the SDK 'build tools' to use:
 def sdkBuildToolVersion = 'current'
 // And the SDK path will be obtained from 'local.properties'.
