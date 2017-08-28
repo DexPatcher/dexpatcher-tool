@@ -35,9 +35,9 @@ def sdkBuildToolVersion = 'current'
 // (For convenience I always have a symbolic link named 'current' in
 // '<sdk-dir>/build-tools/' that aliases the latest build tools.)
 
-if (dxPath == null) {
+if (!dxPath) {
     def localProperties = new Properties()
-    rootProject.file("local.properties").withReader {
+    rootProject.file('local.properties').withReader {
         localProperties.load(it)
     }
     def sdkDir = new File(localProperties.get('sdk.dir'))
