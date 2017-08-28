@@ -206,8 +206,7 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 	@Override
 	protected void onWrap(String patchId, Method patch, PatcherAnnotation annotation) throws PatchException {
 
-		String targetId = getTargetId(patchId, patch, annotation);
-		Method target = findTarget(targetId, false);
+		Method target = findTargetNonNative(patchId, patch, annotation);
 
 		Method wrapSource = new BasicMethod(
 				target.getDefiningClass(),
@@ -232,6 +231,15 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 	}
 
 	// Helpers
+
+	private Method findTargetNonNative(String patchId, Method patch, PatcherAnnotation annotation)
+			throws PatchException {
+		if (NATIVE.isSet(patch.getAccessFlags())) throw new PatchException("patch method is native");
+		String targetId = getTargetId(patchId, patch, annotation);
+		Method target = findTarget(targetId, false);
+		if (NATIVE.isSet(target.getAccessFlags())) throw new PatchException("target method is native");
+		return target;
+	}
 
 	private String createMethodName(Method base, String suffix) {
 		Map<String, Method> sourceMap = getSourceMap();
