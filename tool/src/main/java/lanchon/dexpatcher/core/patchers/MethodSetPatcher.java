@@ -203,6 +203,7 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 
 	// Wrap
 
+	@Override
 	protected void onWrap(String patchId, Method patch, PatcherAnnotation annotation) throws PatchException {
 		String targetId = getTargetId(patchId, patch, annotation);
 		Method target = findTarget(targetId, false);
@@ -224,7 +225,7 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 				target.getImplementation());
 	}
 
-	private Method onSimpleWrapPatch(final Method patch, PatcherAnnotation annotation, Method wrapSource) {
+	private Method onSimpleWrapPatch(Method patch, PatcherAnnotation annotation, Method wrapSource) {
 		return new BasicMethod(
 				patch.getDefiningClass(),
 				patch.getName(),
