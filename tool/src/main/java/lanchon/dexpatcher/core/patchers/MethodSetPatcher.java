@@ -218,7 +218,7 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 				target.getImplementation());
 		addPatched(Util.getMethodId(wrapSource), patch, wrapSource);
 
-		Method wrapPatch = new BasicMethod(
+		Method wrapMain = new BasicMethod(
 				patch.getDefiningClass(),
 				patch.getName(),
 				patch.getParameters(),
@@ -226,7 +226,7 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 				patch.getAccessFlags(),
 				annotation.getFilteredAnnotations(),
 				replaceMethodInvocations(patch.getImplementation(), patch, wrapSource));
-		addPatched(/* Util.getMethodId(wrapPatch) */ patchId, patch, wrapPatch);
+		addPatched(/* Util.getMethodId(wrapMain) */ patchId, patch, wrapMain);
 
 	}
 
