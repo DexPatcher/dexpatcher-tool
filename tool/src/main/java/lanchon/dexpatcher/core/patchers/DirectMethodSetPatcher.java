@@ -81,6 +81,17 @@ public class DirectMethodSetPatcher extends MethodSetPatcher {
 		super.onWrap(patchId, patch, annotation);
 	}
 
+	// Prepend and Append
+
+	@Override
+	protected void onSplice(String patchId, Method patch, PatcherAnnotation annotation, Action action)
+			throws PatchException {
+		if (CONSTRUCTOR.isSet(patch.getAccessFlags()) && Marker.NAME_INSTANCE_CONSTRUCTOR.equals(patch.getName())) {
+			throw action.invalidAction();
+		}
+		super.onSplice(patchId, patch, annotation, action);
+	}
+
 	// Helpers
 
 	private static boolean isTrivialConstructor(Method method) {
