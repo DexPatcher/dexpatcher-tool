@@ -101,6 +101,13 @@ public class Main {
 		// is found and 'staticConstructorAction' is defined.
 		static {}
 
+		// Increase visibility of a private static method:
+		// Note: The actual method code in the source is not modified if you
+		// use @DexEdit; only the prototype is. The unused body of this patch
+		// method would typically consist of a 'throw null;' statement.
+		@DexEdit
+		static public void privateStaticMethod(int i) { p("THIS CODE IS IGNORED!"); }
+
 		// Add an instance field:
 		// Note: Do not use an initializer unless you are also modifying all
 		// the class constructors; the instance initializers are embedded in
@@ -108,6 +115,12 @@ public class Main {
 		// be properly initialized.
 		@DexAdd
 		int instanceField = 100;
+
+		// Increase visibility of a private field:
+		// Note: Instance field initializers are embedded in every constructor.
+		// The constructor in the source still initializes this field properly.
+		@DexEdit
+		public String privateKey;
 
 		// Ignore the constructor of 'B' present in the patch:
 		// Note: The compiler would generate a default constructor if none is
@@ -130,17 +143,6 @@ public class Main {
 		@DexAdd
 		public void addedMethod() { p("B::addedMethod"); }
 
-		// Increase visibility of a private field:
-		// Note: Instance field initializers are embedded in every constructor.
-		@DexEdit
-		public String privateKey;
-
-		// Increase visibility of a private method:
-		// Note: The actual method code in the source is not modified if you
-		// use @DexEdit; only the prototype is.
-		@DexEdit
-		static public void privateStaticMethod(int i) { p("THIS CODE IS IGNORED!"); }
-
 		// Replace an instance direct (ie: non-virtual) method:
 		@DexReplace
 		private void directMethod() {
@@ -148,7 +150,6 @@ public class Main {
 			p("B::staticField: " + staticField + "   <-- initialized");
 			p("B::instanceField: " + instanceField + "   <-- *not* initialized");
 			addedMethod();
-			p("B::privateKey: " + privateKey);
 		}
 
 		// Replace a method, invoking the replaced method at will:
@@ -177,11 +178,11 @@ public class Main {
 		// the 'this(...)' syntax and static constructors can never be
 		// explicitly invoked.
 		@DexWrap
-		public void anotherMethod(String data) {
-			p("entering wrapper B::anotherMethod: " + data);
+		public void wrapTestMethod(String data) {
+			p("entering wrapper B::wrapTestMethod: " + data);
 			String filteredData = "filtered " + data;
-			anotherMethod(filteredData);    // invokes the replaced method
-			p("exiting wrapper B::anotherMethod");
+			wrapTestMethod(filteredData);    // invokes the replaced method
+			p("exiting wrapper B::wrapTestMethod");
 		}
 
 	}

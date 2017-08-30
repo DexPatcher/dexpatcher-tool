@@ -23,11 +23,7 @@ public class Main {
 	public static void main(String args[]) {
 		new A();
 		p();
-		B.privateStaticMethod(42);
-		B b = new B();
-		b.directMethod();
-		b.virtualMethod("data");
-		b.anotherMethod("data");
+		new B().print();
 		p();
 		new Derived().method();
 		p();
@@ -50,13 +46,23 @@ public class Main {
 	}
 
 	public static class B {
+		static private void privateStaticMethod(int i) {
+			try { p("B::privateStaticMethod: " + i + " (" + B.class.getDeclaredMethod("privateStaticMethod", int.class) + ")"); }
+			catch (NoSuchMethodException e) { throw new RuntimeException(e); }
+		}
 		@SuppressWarnings("unused")
 		private String privateKey = "my-key";
-		static private void privateStaticMethod(int i) { p("B::staticMethod: " + i); }
 		private void directMethod() { p("original B::directMethod"); }
 		public void virtualMethod(String data) { p("original B::virtualMethod: " + data); }
-		public void anotherMethod(String data) { p("original B::anotherMethod: " + data); }
-
+		public void wrapTestMethod(String data) { p("original B::wrapTestMethod: " + data); }
+		public void print() {
+			privateStaticMethod(42);
+			try { p("B::privateKey: " + privateKey + " (" + this.getClass().getDeclaredField("privateKey") + ")"); }
+			catch (NoSuchFieldException e) { throw new RuntimeException(e); }
+			directMethod();
+			virtualMethod("data");
+			wrapTestMethod("data");
+		}
 	}
 
 	public static class Base {
