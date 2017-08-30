@@ -17,6 +17,7 @@ import lanchon.dexpatcher.core.Action;
 import lanchon.dexpatcher.core.Marker;
 import lanchon.dexpatcher.core.PatchException;
 import lanchon.dexpatcher.core.PatcherAnnotation;
+import lanchon.dexpatcher.core.Util;
 
 import org.jf.dexlib2.Opcode;
 import org.jf.dexlib2.iface.Method;
@@ -26,7 +27,6 @@ import org.jf.dexlib2.iface.instruction.ReferenceInstruction;
 import org.jf.dexlib2.iface.reference.MethodReference;
 
 import static lanchon.dexpatcher.core.logger.Logger.Level.*;
-import static org.jf.dexlib2.AccessFlags.*;
 
 public class DirectMethodSetPatcher extends MethodSetPatcher {
 
@@ -56,11 +56,10 @@ public class DirectMethodSetPatcher extends MethodSetPatcher {
 
 	@Override
 	protected Action getDefaultAction(String patchId, Method patch) throws PatchException {
-		if (Marker.SIGN_STATIC_CONSTRUCTOR.equals(patchId)) {
+		if (Util.isStaticConstructor(patchId, patch)) {
 			staticConstructorFound = true;
 			if (staticConstructorAction != null) return staticConstructorAction;
-		} else if (defaultAction == null && (CONSTRUCTOR.isSet(patch.getAccessFlags()) &&
-				Marker.SIGN_DEFAULT_CONSTRUCTOR.equals(patchId))) {
+		} else if (defaultAction == null && Util.isDefaultConstructor(patchId, patch)) {
 			if (isTrivialConstructor(patch)) {
 				log(INFO, "implicit ignore of trivial default constructor");
 				return Action.IGNORE;
@@ -74,8 +73,7 @@ public class DirectMethodSetPatcher extends MethodSetPatcher {
 
 	@Override
 	protected void onWrap(String patchId, Method patch, PatcherAnnotation annotation) throws PatchException {
-		if (Marker.SIGN_STATIC_CONSTRUCTOR.equals(patchId) || (CONSTRUCTOR.isSet(patch.getAccessFlags()) &&
-				Marker.NAME_INSTANCE_CONSTRUCTOR.equals(patch.getName()))) {
+		if (Util.isStaticConstructor(patchId, patch) || Util.isInstanceConstructor(patchId, patch)) {
 			throw Action.WRAP.invalidAction();
 		}
 		super.onWrap(patchId, patch, annotation);
@@ -86,7 +84,7 @@ public class DirectMethodSetPatcher extends MethodSetPatcher {
 	@Override
 	protected void onSplice(String patchId, Method patch, PatcherAnnotation annotation, Action action)
 			throws PatchException {
-		if (CONSTRUCTOR.isSet(patch.getAccessFlags()) && Marker.NAME_INSTANCE_CONSTRUCTOR.equals(patch.getName())) {
+		if (Util.isInstanceConstructor(patchId, patch)) {
 			throw action.invalidAction();
 		}
 		super.onSplice(patchId, patch, annotation, action);

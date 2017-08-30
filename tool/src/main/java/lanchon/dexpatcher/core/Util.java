@@ -197,6 +197,20 @@ public abstract class Util {
 		return f;
 	}
 
+	// Constructors
+
+	public static boolean isStaticConstructor(String methodId, Method method) {
+		return Marker.SIGN_STATIC_CONSTRUCTOR.equals(methodId) && STATIC.isSet(method.getAccessFlags());
+	}
+
+	public static boolean isInstanceConstructor(String methodId, Method method) {
+		return Marker.NAME_INSTANCE_CONSTRUCTOR.equals(method.getName()) && CONSTRUCTOR.isSet(method.getAccessFlags());
+	}
+
+	public static boolean isDefaultConstructor(String methodId, Method method) {
+		return Marker.SIGN_DEFAULT_CONSTRUCTOR.equals(methodId) && CONSTRUCTOR.isSet(method.getAccessFlags());
+	}
+
 	// Parameters
 
 	public static int getMethodParameterCount(Method method) {
