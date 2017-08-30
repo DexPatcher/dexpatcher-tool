@@ -18,6 +18,7 @@ public enum Action {
 	REMOVE(Marker.REMOVE),
 	IGNORE(Marker.IGNORE),
 	WRAP(Marker.WRAP),
+	PREPEND(Marker.PREPEND),
 	APPEND(Marker.APPEND);
 
 	private final Marker marker;

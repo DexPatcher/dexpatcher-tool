@@ -236,45 +236,49 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 
 	}
 
-	// Append
+	// Prepend and Append
 
 	@Override
-	protected void onAppend(String patchId, Method patch, PatcherAnnotation annotation) throws PatchException {
+	protected void onSplice(String patchId, Method patch, PatcherAnnotation annotation, Action action)
+			throws PatchException {
 
 		if (!"V".equals(patch.getReturnType())) {
-			throw new PatchException("append action can only be applied to methods that return void");
+			throw new PatchException(action.getLabel() + " action can only be applied to methods that return void");
 		}
+		boolean prepend = (action == Action.PREPEND);
 		Method target = findTargetNonNative(patchId, patch, annotation);
 
-		Method appendSource = new BasicMethod(
+		Method spliceSource = new BasicMethod(
 				target.getDefiningClass(),
-				createMethodName(patch, Marker.APPEND_SOURCE_SUFFIX),
+				createMethodName(patch, prepend ? Marker.PREPEND_SOURCE_SUFFIX : Marker.APPEND_SOURCE_SUFFIX),
 				target.getParameters(),
 				target.getReturnType(),
 				limitMethodAccess(target.getAccessFlags()),
 				target.getAnnotations(),
 				target.getImplementation());
-		addPatched(Util.getMethodId(appendSource), patch, appendSource);
+		addPatched(Util.getMethodId(spliceSource), patch, spliceSource);
 
-		Method appendPatch = new BasicMethod(
+		Method splicePatch = new BasicMethod(
 				patch.getDefiningClass(),
-				createMethodName(patch, Marker.APPEND_PATCH_SUFFIX),
+				createMethodName(patch, prepend ? Marker.PREPEND_PATCH_SUFFIX : Marker.APPEND_PATCH_SUFFIX),
 				patch.getParameters(),
 				patch.getReturnType(),
 				limitMethodAccess(patch.getAccessFlags()),
 				annotation.getFilteredAnnotations(),
 				patch.getImplementation());
-		addPatched(Util.getMethodId(appendPatch), patch, appendPatch);
+		addPatched(Util.getMethodId(splicePatch), patch, splicePatch);
 
-		Method appendMain = new BasicMethod(
+		Method spliceMain = new BasicMethod(
 				patch.getDefiningClass(),
 				patch.getName(),
 				patch.getParameters(),
 				patch.getReturnType(),
 				patch.getAccessFlags(),
 				annotation.getFilteredAnnotations(),
-				createCallSequence(Util.getMethodParameterCount(patch), appendSource, appendPatch));
-		addPatched(/* Util.getMethodId(appendMain) */ patchId, patch, appendMain);
+				createCallSequence(Util.getMethodParameterCount(patch),
+						prepend ? splicePatch : spliceSource,
+						prepend ? spliceSource : splicePatch));
+		addPatched(/* Util.getMethodId(spliceMain) */ patchId, patch, spliceMain);
 
 	}
 

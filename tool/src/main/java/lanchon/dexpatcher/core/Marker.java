@@ -18,6 +18,7 @@ public enum Marker {
 	REMOVE("DexRemove"),
 	IGNORE("DexIgnore"),
 	WRAP("DexWrap"),
+	PREPEND("DexPrepend"),
 	APPEND("DexAppend"),
 
 	TAG("DexTag");
@@ -48,6 +49,8 @@ public enum Marker {
 	// Actions
 
 	public static final String WRAP_SOURCE_SUFFIX = "__dxpWrapSource";
+	public static final String PREPEND_SOURCE_SUFFIX = "__dxpPrependSource";
+	public static final String PREPEND_PATCH_SUFFIX = "__dxpPrependPatch";
 	public static final String APPEND_SOURCE_SUFFIX = "__dxpAppendSource";
 	public static final String APPEND_PATCH_SUFFIX = "__dxpAppendPatch";
 
