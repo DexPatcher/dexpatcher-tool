@@ -20,6 +20,9 @@ import org.jf.dexlib2.iface.Method;
 import org.jf.dexlib2.iface.MethodParameter;
 import org.jf.dexlib2.iface.value.EncodedValue;
 import org.jf.dexlib2.iface.value.IntEncodedValue;
+import org.jf.dexlib2.util.TypeUtils;
+
+import static org.jf.dexlib2.AccessFlags.*;
 
 public abstract class Util {
 
@@ -192,6 +195,17 @@ public abstract class Util {
 			}
 		}
 		return f;
+	}
+
+	// Parameters
+
+	public static int getMethodParameterCount(Method method) {
+		int n = 0;
+		if (!STATIC.isSet(method.getAccessFlags())) n++;
+		for (MethodParameter parameter : method.getParameters()) {
+			n += TypeUtils.isWideType(parameter.getType()) ? 2 : 1;
+		}
+		return n;
 	}
 
 }

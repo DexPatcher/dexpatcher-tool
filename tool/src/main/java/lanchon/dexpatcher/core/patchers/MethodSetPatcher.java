@@ -23,6 +23,7 @@ import lanchon.dexpatcher.core.Util;
 import lanchon.dexpatcher.core.model.BasicMethod;
 import lanchon.dexpatcher.core.model.BasicMethodImplementation;
 
+import org.jf.dexlib2.Opcode;
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.Method;
 import org.jf.dexlib2.iface.MethodImplementation;
@@ -35,6 +36,10 @@ import org.jf.dexlib2.iface.instruction.ReferenceInstruction;
 import org.jf.dexlib2.iface.instruction.formats.Instruction35c;
 import org.jf.dexlib2.iface.instruction.formats.Instruction3rc;
 import org.jf.dexlib2.iface.reference.Reference;
+import org.jf.dexlib2.immutable.ImmutableMethodImplementation;
+import org.jf.dexlib2.immutable.instruction.ImmutableInstruction;
+import org.jf.dexlib2.immutable.instruction.ImmutableInstruction3rc;
+import org.jf.dexlib2.immutable.instruction.ImmutableInstructionFactory;
 import org.jf.dexlib2.rewriter.DexRewriter;
 import org.jf.dexlib2.rewriter.InstructionRewriter;
 import org.jf.dexlib2.rewriter.Rewriter;
@@ -44,6 +49,7 @@ import org.jf.dexlib2.util.TypeUtils;
 
 import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 import static org.jf.dexlib2.AccessFlags.*;
+import static org.jf.dexlib2.Opcode.*;
 
 public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 
@@ -230,6 +236,48 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 
 	}
 
+	// Append
+
+	@Override
+	protected void onAppend(String patchId, Method patch, PatcherAnnotation annotation) throws PatchException {
+
+		if (!"V".equals(patch.getReturnType())) {
+			throw new PatchException("append action can only be applied to methods that return void");
+		}
+		Method target = findTargetNonNative(patchId, patch, annotation);
+
+		Method appendSource = new BasicMethod(
+				target.getDefiningClass(),
+				createMethodName(patch, Marker.APPEND_SOURCE_SUFFIX),
+				target.getParameters(),
+				target.getReturnType(),
+				limitMethodAccess(target.getAccessFlags()),
+				target.getAnnotations(),
+				target.getImplementation());
+		addPatched(Util.getMethodId(appendSource), patch, appendSource);
+
+		Method appendPatch = new BasicMethod(
+				patch.getDefiningClass(),
+				createMethodName(patch, Marker.APPEND_PATCH_SUFFIX),
+				patch.getParameters(),
+				patch.getReturnType(),
+				limitMethodAccess(patch.getAccessFlags()),
+				annotation.getFilteredAnnotations(),
+				patch.getImplementation());
+		addPatched(Util.getMethodId(appendPatch), patch, appendPatch);
+
+		Method appendMain = new BasicMethod(
+				patch.getDefiningClass(),
+				patch.getName(),
+				patch.getParameters(),
+				patch.getReturnType(),
+				patch.getAccessFlags(),
+				annotation.getFilteredAnnotations(),
+				createCallSequence(Util.getMethodParameterCount(patch), appendSource, appendPatch));
+		addPatched(/* Util.getMethodId(appendMain) */ patchId, patch, appendMain);
+
+	}
+
 	// Helpers
 
 	private Method findTargetNonNative(String patchId, Method patch, PatcherAnnotation annotation)
@@ -340,6 +388,32 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 
 		return rewriter.getMethodImplementationRewriter().rewrite(implementation);
 
+	}
+
+	private MethodImplementation createCallSequence(int parameterCount, Method... methods) throws PatchException {
+		ImmutableInstructionFactory factory = ImmutableInstructionFactory.INSTANCE;
+		List<ImmutableInstruction> instructions = new ArrayList<>(methods.length + 1);
+		for (Method method : methods) {
+			instructions.add(createInvokeRangeInstruction(factory, 0, parameterCount, method));
+		}
+		instructions.add(factory.makeInstruction10x(RETURN_VOID));
+		return new ImmutableMethodImplementation(parameterCount, instructions, null, null);
+	}
+
+	private ImmutableInstruction3rc createInvokeRangeInstruction(ImmutableInstructionFactory factory,
+			int baseRegister, int parameterCount, Method method) throws PatchException {
+		Opcode opcode = getInvokeRangeOpcode(method.getAccessFlags());
+		return factory.makeInstruction3rc(opcode, baseRegister, parameterCount, method);
+	}
+
+	private Opcode getInvokeRangeOpcode(int accessFlags) throws PatchException {
+		boolean isStatic = STATIC.isSet(accessFlags);
+		if (this instanceof VirtualMethodSetPatcher) {
+			if (isStatic) throw new PatchException("method cannot be both static and virtual");
+			return INVOKE_VIRTUAL_RANGE;
+		} else {
+			return isStatic ? INVOKE_STATIC_RANGE : INVOKE_DIRECT_RANGE;
+		}
 	}
 
 }

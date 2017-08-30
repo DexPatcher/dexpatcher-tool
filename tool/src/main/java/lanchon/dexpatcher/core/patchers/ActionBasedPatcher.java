@@ -57,6 +57,9 @@ public abstract class ActionBasedPatcher<T, C extends ActionBasedPatcher.ActionC
 		case WRAP:
 			onWrap(patchId, patch, actionContext);
 			break;
+		case APPEND:
+			onAppend(patchId, patch, actionContext);
+			break;
 		default:
 			throw new AssertionError("Unexpected action");
 		}
@@ -94,6 +97,10 @@ public abstract class ActionBasedPatcher<T, C extends ActionBasedPatcher.ActionC
 
 	protected void onWrap(String patchId, T patch, C actionContext) throws PatchException {
 		throw Action.WRAP.invalidAction();
+	}
+
+	protected void onAppend(String patchId, T patch, C actionContext) throws PatchException {
+		throw Action.APPEND.invalidAction();
 	}
 
 	// Handlers

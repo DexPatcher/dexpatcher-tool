@@ -18,6 +18,7 @@ public enum Marker {
 	REMOVE("DexRemove"),
 	IGNORE("DexIgnore"),
 	WRAP("DexWrap"),
+	APPEND("DexAppend"),
 
 	TAG("DexTag");
 
@@ -47,6 +48,8 @@ public enum Marker {
 	// Actions
 
 	public static final String WRAP_SOURCE_SUFFIX = "__dxpWrapSource";
+	public static final String APPEND_SOURCE_SUFFIX = "__dxpAppendSource";
+	public static final String APPEND_PATCH_SUFFIX = "__dxpAppendPatch";
 
 	// Dalvik
 
