@@ -211,15 +211,4 @@ public abstract class Util {
 		return Marker.SIGN_DEFAULT_CONSTRUCTOR.equals(methodId) && CONSTRUCTOR.isSet(method.getAccessFlags());
 	}
 
-	// Parameters
-
-	public static int getMethodParameterCount(Method method) {
-		int n = 0;
-		if (!STATIC.isSet(method.getAccessFlags())) n++;
-		for (MethodParameter parameter : method.getParameters()) {
-			n += TypeUtils.isWideType(parameter.getType()) ? 2 : 1;
-		}
-		return n;
-	}
-
 }

@@ -45,6 +45,7 @@ import org.jf.dexlib2.rewriter.InstructionRewriter;
 import org.jf.dexlib2.rewriter.Rewriter;
 import org.jf.dexlib2.rewriter.RewriterModule;
 import org.jf.dexlib2.rewriter.Rewriters;
+import org.jf.dexlib2.util.MethodUtil;
 import org.jf.dexlib2.util.TypeUtils;
 
 import static lanchon.dexpatcher.core.logger.Logger.Level.*;
@@ -275,7 +276,7 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 				patch.getReturnType(),
 				patch.getAccessFlags(),
 				annotation.getFilteredAnnotations(),
-				createCallSequence(Util.getMethodParameterCount(patch),
+				createCallSequence(MethodUtil.getParameterRegisterCount(patch),
 						prepend ? splicePatch : spliceSource,
 						prepend ? spliceSource : splicePatch));
 		addPatched(/* Util.getMethodId(spliceMain) */ patchId, patch, spliceMain);
