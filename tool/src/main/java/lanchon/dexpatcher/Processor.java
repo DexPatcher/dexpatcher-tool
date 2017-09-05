@@ -149,8 +149,8 @@ public class Processor {
 			public void log(File file, String entryName, int typeCount) {
 				if (logger.isLogging(DEBUG)) {
 					String h = header;
-					//if (entryName != null && !entryName.equals(file.toString())) {
-					if (!Objects.equal(SingletonDexContainer.UNDEFINED_ENTRY_NAME, entryName)) {
+					// See https://github.com/DexPatcher/multidexlib2/commit/177350fbba4d490111d1362810bbeb4521d1803b
+					if (entryName != SingletonDexContainer.UNDEFINED_ENTRY_NAME) {
 						h += ": file '" + entryName + "'";
 					}
 					logger.log(DEBUG, h + ": " + typeCount + " types");
