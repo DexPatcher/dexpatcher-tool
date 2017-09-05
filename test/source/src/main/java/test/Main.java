@@ -55,6 +55,8 @@ public class Main {
 		private void directMethod() { p("original B::directMethod"); }
 		public void virtualMethod(String data) { p("original B::virtualMethod: " + data); }
 		public void wrapTestMethod(String data) { p("original B::wrapTestMethod: " + data); }
+		public void prependTestMethod(String data) { p("original B::prependTestMethod: " + data); }
+		public void appendTestMethod(String data) { p("original B::appendTestMethod: " + data); }
 		public void print() {
 			privateStaticMethod(42);
 			try { p("B::privateKey: " + privateKey + " (" + this.getClass().getDeclaredField("privateKey") + ")"); }
@@ -62,6 +64,8 @@ public class Main {
 			directMethod();
 			virtualMethod("data");
 			wrapTestMethod("data");
+			prependTestMethod("data");
+			appendTestMethod("data");
 		}
 	}
 

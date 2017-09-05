@@ -185,6 +185,27 @@ public class Main {
 			p("exiting wrapper B::wrapTestMethod");
 		}
 
+		// Prepend code to the existing code of a method:
+		// Note: DexPatcher tool v1.4.0 introduces @DexPrepend and @DexAppend,
+		// which are tags that add code to existing methods. These tags can
+		// only be applied to methods that return void. They are a convenient
+		// shorthand when applicable, but the rationale for their existence is
+		// improving the handling of static constructors (on which the use of
+		// @DexWrap is not allowed).
+		// Note: In their present form, @DexPrepend and @DexAppend cannot be
+		// applied to instance constructors. This limitation might be partially
+		// relaxed in the future.
+		@DexPrepend
+		public void prependTestMethod(String data) {
+			p("prepended B::prependTestMethod: " + data);
+		}
+
+		// Append code to the existing code of a method:
+		@DexAppend
+		public void appendTestMethod(String data) {
+			p("appended B::appendTestMethod: " + data);
+		}
+
 	}
 
 	// Declare class 'Base':
