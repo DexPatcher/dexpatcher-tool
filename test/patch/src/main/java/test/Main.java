@@ -350,7 +350,7 @@ public class Main {
 			// already been initialized. Manually invoking the source static
 			// constructor initializes the source static fields. The static
 			// fields that are declared on both classes are initialized twice,
-			// and end up with the vaules set later by the source.
+			// and end up with the values set later by the source.
 			p("entering replaced E::<clinit>");
 			source_static();
 			p("exiting replaced E::<clinit>");
