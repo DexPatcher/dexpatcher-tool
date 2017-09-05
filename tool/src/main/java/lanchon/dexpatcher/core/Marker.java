@@ -54,11 +54,15 @@ public enum Marker {
 	public static final String APPEND_SOURCE_SUFFIX = "__dxpAppendSource";
 	public static final String APPEND_PATCH_SUFFIX = "__dxpAppendPatch";
 
+	public static final String RENAME_STATIC_CONSTRUCTOR = "__clinit";
+	public static final String RENAME_INSTANCE_CONSTRUCTOR = "__init";
+
 	// Dalvik
 
 	public static final String TYPE_VOID = Util.getTypeDescriptorFromClass(Void.class);
 	public static final String TYPE_INNER_CLASS = Util.getTypeDescriptorFromName("dalvik.annotation.InnerClass");
 	public static final String ELEM_ACCESS_FLAGS = "accessFlags";
+	public static final String NAME_STATIC_CONSTRUCTOR = "<clinit>";
 	public static final String SIGN_STATIC_CONSTRUCTOR = "<clinit>()V";
 	public static final String NAME_INSTANCE_CONSTRUCTOR = "<init>";
 	public static final String SIGN_DEFAULT_CONSTRUCTOR = "<init>()V";

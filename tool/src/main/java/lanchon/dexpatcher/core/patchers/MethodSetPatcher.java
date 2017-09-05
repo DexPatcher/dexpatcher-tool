@@ -296,7 +296,16 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 
 	private String createMethodName(Method base, String suffix) {
 		Map<String, Method> sourceMap = getSourceMap();
-		String baseName = base.getName() + suffix;
+		String baseName = base.getName();
+		switch (baseName) {
+			case Marker.NAME_STATIC_CONSTRUCTOR:
+				baseName = Marker.RENAME_STATIC_CONSTRUCTOR;
+				break;
+			case Marker.NAME_INSTANCE_CONSTRUCTOR:
+				baseName = Marker.RENAME_INSTANCE_CONSTRUCTOR;
+				break;
+		}
+		baseName += suffix;
 		int n = 1;
 		String name = baseName;
 		for (;;) {
