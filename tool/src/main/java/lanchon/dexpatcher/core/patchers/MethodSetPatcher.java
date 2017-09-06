@@ -220,7 +220,7 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 				createMethodName(patch, Marker.WRAP_SOURCE_SUFFIX),
 				target.getParameters(),
 				target.getReturnType(),
-				limitMethodAccess(target.getAccessFlags()),
+				createMethodFlags(target),
 				target.getAnnotations(),
 				target.getImplementation());
 		addPatched(Util.getMethodId(wrapSource), patch, wrapSource);
@@ -254,7 +254,7 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 				createMethodName(patch, prepend ? Marker.PREPEND_SOURCE_SUFFIX : Marker.APPEND_SOURCE_SUFFIX),
 				target.getParameters(),
 				target.getReturnType(),
-				limitMethodAccess(target.getAccessFlags()),
+				createMethodFlags(target),
 				target.getAnnotations(),
 				target.getImplementation());
 		addPatched(Util.getMethodId(spliceSource), patch, spliceSource);
@@ -264,7 +264,7 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 				createMethodName(patch, prepend ? Marker.PREPEND_PATCH_SUFFIX : Marker.APPEND_PATCH_SUFFIX),
 				patch.getParameters(),
 				patch.getReturnType(),
-				limitMethodAccess(patch.getAccessFlags()),
+				createMethodFlags(patch),
 				annotation.getFilteredAnnotations(),
 				patch.getImplementation());
 		addPatched(Util.getMethodId(splicePatch), patch, splicePatch);
@@ -316,17 +316,19 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 		}
 	}
 
-	private int limitMethodAccess(int accessFlags) {
+	private int createMethodFlags(Method method) {
+		int flags = method.getAccessFlags();
 		if (this instanceof VirtualMethodSetPatcher) {
-			if (!PRIVATE.isSet(accessFlags)) {
-				accessFlags &= ~PUBLIC.getValue();
-				accessFlags |= PROTECTED.getValue();
+			if (!PRIVATE.isSet(flags)) {
+				flags &= ~PUBLIC.getValue();
+				flags |= PROTECTED.getValue();
 			}
 		} else {
-			accessFlags &= ~(PUBLIC.getValue() | PROTECTED.getValue());
-			accessFlags |= PRIVATE.getValue();
+			flags &= ~(PUBLIC.getValue() | PROTECTED.getValue());
+			flags |= PRIVATE.getValue();
 		}
-		return accessFlags;
+		flags &= ~CONSTRUCTOR.getValue();
+		return flags;
 	}
 
 	private MethodImplementation replaceMethodInvocations(MethodImplementation implementation,
