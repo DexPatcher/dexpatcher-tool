@@ -200,15 +200,19 @@ public abstract class Util {
 	// Constructors
 
 	public static boolean isStaticConstructor(String methodId, Method method) {
-		return Marker.SIGN_STATIC_CONSTRUCTOR.equals(methodId) && STATIC.isSet(method.getAccessFlags());
+		int mask = CONSTRUCTOR.getValue() | STATIC.getValue();
+		return (method.getAccessFlags() & mask) == mask &&
+				Marker.SIGN_STATIC_CONSTRUCTOR.equals(methodId);
 	}
 
 	public static boolean isInstanceConstructor(String methodId, Method method) {
-		return Marker.NAME_INSTANCE_CONSTRUCTOR.equals(method.getName()) && CONSTRUCTOR.isSet(method.getAccessFlags());
+		return CONSTRUCTOR.isSet(method.getAccessFlags()) &&
+				Marker.NAME_INSTANCE_CONSTRUCTOR.equals(method.getName());
 	}
 
 	public static boolean isDefaultConstructor(String methodId, Method method) {
-		return Marker.SIGN_DEFAULT_CONSTRUCTOR.equals(methodId) && CONSTRUCTOR.isSet(method.getAccessFlags());
+		return CONSTRUCTOR.isSet(method.getAccessFlags()) &&
+				Marker.SIGN_DEFAULT_CONSTRUCTOR.equals(methodId);
 	}
 
 }
