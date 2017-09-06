@@ -33,6 +33,8 @@ public class Main {
 		p();
 		new E("data").print();
 		p();
+		new F().print();
+		p();
 		new Concrete1().interfaceMethod();
 		p();
 		new Concrete2().interfaceMethod();
@@ -124,6 +126,21 @@ public class Main {
 			p("E::sourceField: " + sourceField);
 			p("E::redefinedSourceStaticField: " + redefinedSourceStaticField);
 			p("E::redefinedSourceField: " + redefinedSourceField);
+		}
+	}
+
+	public static class F {
+		private static int sourceStaticField = 100;
+		private int sourceField = 100;
+		private static int redefinedSourceStaticField = 100;
+		private int redefinedSourceField = 100;
+		static { p("original F::<clinit>"); }
+		public F() { p("original F::<init>"); }
+		public void print() {
+			p("F::sourceStaticField: " + sourceStaticField);
+			p("F::sourceField: " + sourceField);
+			p("F::redefinedSourceStaticField: " + redefinedSourceStaticField);
+			p("F::redefinedSourceField: " + redefinedSourceField);
 		}
 	}
 

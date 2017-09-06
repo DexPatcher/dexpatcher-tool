@@ -395,6 +395,46 @@ public class Main {
 
 	}
 
+	// Modify members of class 'F' appending code to its static constructor:
+	@DexEdit(staticConstructorAction = DexAction.APPEND)
+	public static class F {
+
+		@DexEdit
+		private static int redefinedSourceStaticField = 200;
+		@DexEdit
+		private int redefinedSourceField = 200;
+		@DexAdd
+		private static int patchStaticField = 200;
+		@DexAdd
+		private int patchField = 200;
+
+		// Append code to the static constructor:
+		static {
+			// The source static constructor runs fully before any part of the
+			// patch static constructor is executed, including its static field
+			// initializers. The static fields that are declared on both source
+			// and patch classes are initialized twice, and end up with the
+			// values set later by the patch.
+			p("appended F::<clinit>");
+		}
+
+		// Ignore the constructor:
+		@DexIgnore
+		public F() {
+			// This constructor that initializes all instance fields declared
+			// in the patch will not execute.
+			throw null;
+		}
+
+		@DexWrap
+		public void print() {
+			print();
+			p("F::patchStaticField: " + patchStaticField);
+			p("F::patchField: " + patchField);
+		}
+
+	}
+
 	// Note: In a proper setup, types like Interface and Abstract would be
 	// imported form the source and be available to the patch at compile time.
 	// But given that this is a simple test mock up we just redefine them here

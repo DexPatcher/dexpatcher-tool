@@ -29,10 +29,10 @@ usage: dexpatcher [<option> ...] [--output <patched-dex-or-dir>]
 
 $ dexpatcher build/source.dex build/patch.dex --output build/patched.dex --debug
 info: read 'build/source.dex'
-debug: read 'build/source.dex': 17 types
+debug: read 'build/source.dex': 18 types
 debug: read 'build/source.dex': dex version '035'
 info: read 'build/patch.dex'
-debug: read 'build/patch.dex': 16 types
+debug: read 'build/patch.dex': 17 types
 debug: read 'build/patch.dex': dex version '035'
 debug: type 'test.Main$A': (Main.java:0): replace
 debug: type 'test.Main$Abstract': (Main.java:0): ignore
@@ -66,19 +66,19 @@ debug: type 'test.Main$C': direct method '<init>():void': (Main.java:264): ignor
 debug: type 'test.Main$C': virtual method 'print():void': (Main.java:272): wrap
 debug: type 'test.Main$Interface': (Main.java:0): ignore
 debug: type 'test.Main$Concrete1': (Main.java:0): edit
-info: type 'test.Main$Concrete1': direct method '<init>():void': (Main.java:422): implicit ignore of trivial default constructor
-debug: type 'test.Main$Concrete1': direct method '<init>():void': (Main.java:422): ignore
+info: type 'test.Main$Concrete1': direct method '<init>():void': (Main.java:462): implicit ignore of trivial default constructor
+debug: type 'test.Main$Concrete1': direct method '<init>():void': (Main.java:462): ignore
 debug: type 'test.Main$Concrete1': virtual method 'abstractMethod():void': (Main.java:0): ignore
-debug: type 'test.Main$Concrete1': virtual method 'interfaceMethod():void': (Main.java:431): ignore
-debug: type 'test.Main$Concrete1': virtual method 'method():void': (Main.java:425): replace
+debug: type 'test.Main$Concrete1': virtual method 'interfaceMethod():void': (Main.java:471): ignore
+debug: type 'test.Main$Concrete1': virtual method 'method():void': (Main.java:465): replace
 debug: type 'test.Main$Concrete2': (Main.java:0): edit
-info: type 'test.Main$Concrete2': direct method '<init>():void': (Main.java:452): implicit ignore of trivial default constructor
-debug: type 'test.Main$Concrete2': direct method '<init>():void': (Main.java:452): ignore
-debug: type 'test.Main$Concrete2': virtual method 'method():void': (Main.java:455): replace
+info: type 'test.Main$Concrete2': direct method '<init>():void': (Main.java:492): implicit ignore of trivial default constructor
+debug: type 'test.Main$Concrete2': direct method '<init>():void': (Main.java:492): ignore
+debug: type 'test.Main$Concrete2': virtual method 'method():void': (Main.java:495): replace
 debug: type 'test.Main$Concrete3': (Main.java:0): edit
-info: type 'test.Main$Concrete3': direct method '<init>():void': (Main.java:463): implicit ignore of trivial default constructor
-debug: type 'test.Main$Concrete3': direct method '<init>():void': (Main.java:463): ignore
-debug: type 'test.Main$Concrete3': virtual method 'method():void': (Main.java:466): replace
+info: type 'test.Main$Concrete3': direct method '<init>():void': (Main.java:503): implicit ignore of trivial default constructor
+debug: type 'test.Main$Concrete3': direct method '<init>():void': (Main.java:503): ignore
+debug: type 'test.Main$Concrete3': virtual method 'method():void': (Main.java:506): replace
 debug: type 'test.Main$D': (Main.java:0): edit
 debug: type 'test.Main$D': static field 'patchStaticField:int': (Main.java:0): add
 debug: type 'test.Main$D': static field 'redefinedSourceStaticField:int': (Main.java:0): edit
@@ -107,6 +107,16 @@ debug: type 'test.Main$E': direct method 'source_static():void': (Main.java:344)
 debug: type 'test.Main$E': direct method 'source_static():void': target '<clinit>': (Main.java:344): 'private' modifier added to renamed method
 debug: type 'test.Main$E': direct method 'source_static():void': target '<clinit>': (Main.java:344): 'constructor' modifier removed from renamed method
 debug: type 'test.Main$E': virtual method 'print():void': (Main.java:391): wrap
+debug: type 'test.Main$F': (Main.java:0): edit
+debug: type 'test.Main$F': static field 'patchStaticField:int': (Main.java:0): add
+warning: type 'test.Main$F': static field 'patchStaticField:int': (Main.java:0): static field will not be initialized as specified in patch because static constructor of class is being ignored
+debug: type 'test.Main$F': static field 'redefinedSourceStaticField:int': (Main.java:0): edit
+warning: type 'test.Main$F': static field 'redefinedSourceStaticField:int': (Main.java:0): static field will not be initialized as specified in patch because static constructor of class is being ignored
+debug: type 'test.Main$F': instance field 'patchField:int': (Main.java:0): add
+debug: type 'test.Main$F': instance field 'redefinedSourceField:int': (Main.java:0): edit
+debug: type 'test.Main$F': direct method '<clinit>():void': (Main.java:403): append
+debug: type 'test.Main$F': direct method '<init>():void': (Main.java:423): ignore
+debug: type 'test.Main$F': virtual method 'print():void': (Main.java:431): wrap
 debug: type 'test.Main': (Main.java:0): ignore
 debug: type 'test.info.package-info': (package-info.java:0): replace
 debug: type 'test.info.package-info': (package-info.java:0): replace package non-recursive
@@ -119,8 +129,8 @@ debug: type 'test.target.package-info': target 'test.nonrec.package-info': (pack
 debug: type 'test.target.package-info': target 'test.nonrec.package-info': (package-info.java:0): remove type 'Ltest/nonrec/NonRec;'
 info: write 'build/patched.dex'
 debug: write 'build/patched.dex': dex version '035'
-debug: write 'build/patched.dex': 15 types
-0 error(s), 2 warning(s)
+debug: write 'build/patched.dex': 16 types
+0 error(s), 4 warning(s)
 
 $ dex2jar --force --output build/patched-dex2jar.jar build/patched.dex
 dex2jar build/patched.dex -> build/patched-dex2jar.jar
@@ -161,6 +171,13 @@ E::sourceStaticField: 100
 E::sourceField: 100
 E::redefinedSourceStaticField: 100
 E::redefinedSourceField: 100
+
+original F::<clinit>
+original F::<init>
+F::sourceStaticField: 100
+F::sourceField: 100
+F::redefinedSourceStaticField: 100
+F::redefinedSourceField: 100
 
 Concrete1::interfaceMethod
 Concrete1::abstractMethod
@@ -231,6 +248,16 @@ E::redefinedSourceStaticField: 100
 E::redefinedSourceField: 100
 E::patchStaticField: 200
 E::patchField: 0
+
+original F::<clinit>
+appended F::<clinit>
+original F::<init>
+F::sourceStaticField: 100
+F::sourceField: 100
+F::redefinedSourceStaticField: 200
+F::redefinedSourceField: 100
+F::patchStaticField: 200
+F::patchField: 0
 
 Concrete1::interfaceMethod
 Concrete1::abstractMethod
