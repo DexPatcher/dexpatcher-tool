@@ -28,6 +28,9 @@ import lanchon.dexpatcher.annotation.*;
 //   @DexIgnore: ignore this patch item; do nothing.
 // DexPatcher tool v1.3.0 adds:
 //   @DexWrap: replace the targeted method, invoking the original at will.
+// DexPatcher tool v1.4.0 adds:
+//   @DexPrepend: prepend code to the targeted method.
+//   @DexAppend: append code to the targeted method.
 
 // Untagged classes in the patch are added by default to the source, allowing
 // off-the-shelf Java sources and libs to be included in the patch.
@@ -267,9 +270,8 @@ public class Main {
 			p("THIS CODE IS IGNORED!");
 		}
 
-		@DexWrap
+		@DexAppend
 		public void print() {
-			print();
 			p("C::patchStaticField: " + patchStaticField);
 			p("C::patchField: " + patchField);
 		}
@@ -314,9 +316,8 @@ public class Main {
 			p("replaced D::<init>");
 		}
 
-		@DexWrap
+		@DexAppend
 		public void print() {
-			print();
 			p("D::patchStaticField: " + patchStaticField);
 			p("D::patchField: " + patchField);
 		}
@@ -386,9 +387,8 @@ public class Main {
 			p("continuing on replaced E::<init>: " + data);
 		}
 
-		@DexWrap
+		@DexAppend
 		public void print() {
-			print();
 			p("E::patchStaticField: " + patchStaticField);
 			p("E::patchField: " + patchField);
 		}
@@ -426,9 +426,8 @@ public class Main {
 			throw null;
 		}
 
-		@DexWrap
+		@DexAppend
 		public void print() {
-			print();
 			p("F::patchStaticField: " + patchStaticField);
 			p("F::patchField: " + patchField);
 		}

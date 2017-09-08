@@ -41,18 +41,18 @@ debug: type 'test.Main$B': static field 'staticField:int': (Main.java:0): add
 debug: type 'test.Main$B': instance field 'instanceField:int': (Main.java:0): add
 debug: type 'test.Main$B': instance field 'privateKey:java.lang.String': (Main.java:0): edit
 info: type 'test.Main$B': instance field 'privateKey:java.lang.String': (Main.java:0): 'private' modifier changed to 'public' in edited field
-debug: type 'test.Main$B': direct method '<clinit>():void': (Main.java:97): add
-debug: type 'test.Main$B': direct method '<init>():void': (Main.java:140): ignore
-debug: type 'test.Main$B': direct method 'directMethod():void': (Main.java:149): replace
-debug: type 'test.Main$B': direct method 'privateStaticMethod(int):void': (Main.java:109): edit
-info: type 'test.Main$B': direct method 'privateStaticMethod(int):void': (Main.java:109): 'private' modifier changed to 'public' in edited method
-debug: type 'test.Main$B': virtual method 'addedMethod():void': (Main.java:144): add
-debug: type 'test.Main$B': virtual method 'appendTestMethod(java.lang.String):void': (Main.java:206): append
-debug: type 'test.Main$B': virtual method 'prependTestMethod(java.lang.String):void': (Main.java:200): prepend
-debug: type 'test.Main$B': virtual method 'source_virtualMethod(java.lang.String):void': (Main.java:158): edit
-debug: type 'test.Main$B': virtual method 'source_virtualMethod(java.lang.String):void': target 'virtualMethod': (Main.java:158): 'public' modifier changed to 'protected' in renamed method
-debug: type 'test.Main$B': virtual method 'virtualMethod(java.lang.String):void': (Main.java:163): add
-debug: type 'test.Main$B': virtual method 'wrapTestMethod(java.lang.String):void': (Main.java:182): wrap
+debug: type 'test.Main$B': direct method '<clinit>():void': (Main.java:100): add
+debug: type 'test.Main$B': direct method '<init>():void': (Main.java:143): ignore
+debug: type 'test.Main$B': direct method 'directMethod():void': (Main.java:152): replace
+debug: type 'test.Main$B': direct method 'privateStaticMethod(int):void': (Main.java:112): edit
+info: type 'test.Main$B': direct method 'privateStaticMethod(int):void': (Main.java:112): 'private' modifier changed to 'public' in edited method
+debug: type 'test.Main$B': virtual method 'addedMethod():void': (Main.java:147): add
+debug: type 'test.Main$B': virtual method 'appendTestMethod(java.lang.String):void': (Main.java:209): append
+debug: type 'test.Main$B': virtual method 'prependTestMethod(java.lang.String):void': (Main.java:203): prepend
+debug: type 'test.Main$B': virtual method 'source_virtualMethod(java.lang.String):void': (Main.java:161): edit
+debug: type 'test.Main$B': virtual method 'source_virtualMethod(java.lang.String):void': target 'virtualMethod': (Main.java:161): 'public' modifier changed to 'protected' in renamed method
+debug: type 'test.Main$B': virtual method 'virtualMethod(java.lang.String):void': (Main.java:166): add
+debug: type 'test.Main$B': virtual method 'wrapTestMethod(java.lang.String):void': (Main.java:185): wrap
 debug: type 'test.Main$Base': (Main.java:0): ignore
 debug: type 'test.Main$C': (Main.java:0): edit
 debug: type 'test.Main$C': static field 'patchStaticField:int': (Main.java:0): add
@@ -61,52 +61,52 @@ debug: type 'test.Main$C': static field 'redefinedSourceStaticField:int': (Main.
 warning: type 'test.Main$C': static field 'redefinedSourceStaticField:int': (Main.java:0): static field will not be initialized as specified in patch because static constructor of class is being ignored
 debug: type 'test.Main$C': instance field 'patchField:int': (Main.java:0): add
 debug: type 'test.Main$C': instance field 'redefinedSourceField:int': (Main.java:0): edit
-debug: type 'test.Main$C': direct method '<clinit>():void': (Main.java:242): ignore
-debug: type 'test.Main$C': direct method '<init>():void': (Main.java:264): ignore
-debug: type 'test.Main$C': virtual method 'print():void': (Main.java:272): wrap
+debug: type 'test.Main$C': direct method '<clinit>():void': (Main.java:245): ignore
+debug: type 'test.Main$C': direct method '<init>():void': (Main.java:267): ignore
+debug: type 'test.Main$C': virtual method 'print():void': (Main.java:275): append
 debug: type 'test.Main$Interface': (Main.java:0): ignore
 debug: type 'test.Main$Concrete1': (Main.java:0): edit
-info: type 'test.Main$Concrete1': direct method '<init>():void': (Main.java:462): implicit ignore of trivial default constructor
-debug: type 'test.Main$Concrete1': direct method '<init>():void': (Main.java:462): ignore
+info: type 'test.Main$Concrete1': direct method '<init>():void': (Main.java:461): implicit ignore of trivial default constructor
+debug: type 'test.Main$Concrete1': direct method '<init>():void': (Main.java:461): ignore
 debug: type 'test.Main$Concrete1': virtual method 'abstractMethod():void': (Main.java:0): ignore
-debug: type 'test.Main$Concrete1': virtual method 'interfaceMethod():void': (Main.java:471): ignore
-debug: type 'test.Main$Concrete1': virtual method 'method():void': (Main.java:465): replace
+debug: type 'test.Main$Concrete1': virtual method 'interfaceMethod():void': (Main.java:470): ignore
+debug: type 'test.Main$Concrete1': virtual method 'method():void': (Main.java:464): replace
 debug: type 'test.Main$Concrete2': (Main.java:0): edit
-info: type 'test.Main$Concrete2': direct method '<init>():void': (Main.java:492): implicit ignore of trivial default constructor
-debug: type 'test.Main$Concrete2': direct method '<init>():void': (Main.java:492): ignore
-debug: type 'test.Main$Concrete2': virtual method 'method():void': (Main.java:495): replace
+info: type 'test.Main$Concrete2': direct method '<init>():void': (Main.java:491): implicit ignore of trivial default constructor
+debug: type 'test.Main$Concrete2': direct method '<init>():void': (Main.java:491): ignore
+debug: type 'test.Main$Concrete2': virtual method 'method():void': (Main.java:494): replace
 debug: type 'test.Main$Concrete3': (Main.java:0): edit
-info: type 'test.Main$Concrete3': direct method '<init>():void': (Main.java:503): implicit ignore of trivial default constructor
-debug: type 'test.Main$Concrete3': direct method '<init>():void': (Main.java:503): ignore
-debug: type 'test.Main$Concrete3': virtual method 'method():void': (Main.java:506): replace
+info: type 'test.Main$Concrete3': direct method '<init>():void': (Main.java:502): implicit ignore of trivial default constructor
+debug: type 'test.Main$Concrete3': direct method '<init>():void': (Main.java:502): ignore
+debug: type 'test.Main$Concrete3': virtual method 'method():void': (Main.java:505): replace
 debug: type 'test.Main$D': (Main.java:0): edit
 debug: type 'test.Main$D': static field 'patchStaticField:int': (Main.java:0): add
 debug: type 'test.Main$D': static field 'redefinedSourceStaticField:int': (Main.java:0): edit
 debug: type 'test.Main$D': instance field 'patchField:int': (Main.java:0): add
 debug: type 'test.Main$D': instance field 'redefinedSourceField:int': (Main.java:0): edit
-debug: type 'test.Main$D': direct method '<clinit>():void': (Main.java:284): replace
-debug: type 'test.Main$D': direct method '<init>():void': (Main.java:310): replace
-debug: type 'test.Main$D': virtual method 'print():void': (Main.java:319): wrap
+debug: type 'test.Main$D': direct method '<clinit>():void': (Main.java:286): replace
+debug: type 'test.Main$D': direct method '<init>():void': (Main.java:312): replace
+debug: type 'test.Main$D': virtual method 'print():void': (Main.java:321): append
 debug: type 'test.Main$Derived': (Main.java:0): edit
-info: type 'test.Main$Derived': direct method '<init>():void': (Main.java:220): default ignore
-debug: type 'test.Main$Derived': direct method '<init>():void': (Main.java:220): ignore
-debug: type 'test.Main$Derived': virtual method 'method():void': (Main.java:230): add
-debug: type 'test.Main$Derived': virtual method 'source_method():void': (Main.java:227): edit
-debug: type 'test.Main$Derived': virtual method 'source_method():void': target 'method': (Main.java:227): 'public' modifier changed to 'protected' in renamed method
+info: type 'test.Main$Derived': direct method '<init>():void': (Main.java:223): default ignore
+debug: type 'test.Main$Derived': direct method '<init>():void': (Main.java:223): ignore
+debug: type 'test.Main$Derived': virtual method 'method():void': (Main.java:233): add
+debug: type 'test.Main$Derived': virtual method 'source_method():void': (Main.java:230): edit
+debug: type 'test.Main$Derived': virtual method 'source_method():void': target 'method': (Main.java:230): 'public' modifier changed to 'protected' in renamed method
 debug: type 'test.Main$E': (Main.java:0): edit
 debug: type 'test.Main$E': static field 'patchStaticField:int': (Main.java:0): add
 debug: type 'test.Main$E': static field 'redefinedSourceStaticField:int': (Main.java:0): edit
 debug: type 'test.Main$E': instance field 'patchField:int': (Main.java:0): add
 debug: type 'test.Main$E': instance field 'redefinedSourceField:int': (Main.java:0): edit
-info: type 'test.Main$E': direct method '<clinit>():void': (Main.java:333): default add
-debug: type 'test.Main$E': direct method '<clinit>():void': (Main.java:333): add
-debug: type 'test.Main$E': direct method '<init>(java.lang.String):void': (Main.java:385): add
-debug: type 'test.Main$E': direct method '<init>(java.lang.String, java.lang.Void):void': (Main.java:372): edit
-debug: type 'test.Main$E': direct method '<init>(java.lang.String, java.lang.Void):void': target '<init>(java.lang.String):void': (Main.java:372): 'public' modifier changed to 'private' in renamed method
-debug: type 'test.Main$E': direct method 'source_static():void': (Main.java:344): edit
-debug: type 'test.Main$E': direct method 'source_static():void': target '<clinit>': (Main.java:344): 'private' modifier added to renamed method
-debug: type 'test.Main$E': direct method 'source_static():void': target '<clinit>': (Main.java:344): 'constructor' modifier removed from renamed method
-debug: type 'test.Main$E': virtual method 'print():void': (Main.java:391): wrap
+info: type 'test.Main$E': direct method '<clinit>():void': (Main.java:334): default add
+debug: type 'test.Main$E': direct method '<clinit>():void': (Main.java:334): add
+debug: type 'test.Main$E': direct method '<init>(java.lang.String):void': (Main.java:386): add
+debug: type 'test.Main$E': direct method '<init>(java.lang.String, java.lang.Void):void': (Main.java:373): edit
+debug: type 'test.Main$E': direct method '<init>(java.lang.String, java.lang.Void):void': target '<init>(java.lang.String):void': (Main.java:373): 'public' modifier changed to 'private' in renamed method
+debug: type 'test.Main$E': direct method 'source_static():void': (Main.java:345): edit
+debug: type 'test.Main$E': direct method 'source_static():void': target '<clinit>': (Main.java:345): 'private' modifier added to renamed method
+debug: type 'test.Main$E': direct method 'source_static():void': target '<clinit>': (Main.java:345): 'constructor' modifier removed from renamed method
+debug: type 'test.Main$E': virtual method 'print():void': (Main.java:392): append
 debug: type 'test.Main$F': (Main.java:0): edit
 debug: type 'test.Main$F': static field 'patchStaticField:int': (Main.java:0): add
 warning: type 'test.Main$F': static field 'patchStaticField:int': (Main.java:0): static field will not be initialized as specified in patch because static constructor of class is being ignored
@@ -116,7 +116,7 @@ debug: type 'test.Main$F': instance field 'patchField:int': (Main.java:0): add
 debug: type 'test.Main$F': instance field 'redefinedSourceField:int': (Main.java:0): edit
 debug: type 'test.Main$F': direct method '<clinit>():void': (Main.java:403): append
 debug: type 'test.Main$F': direct method '<init>():void': (Main.java:423): ignore
-debug: type 'test.Main$F': virtual method 'print():void': (Main.java:431): wrap
+debug: type 'test.Main$F': virtual method 'print():void': (Main.java:431): append
 debug: type 'test.Main': (Main.java:0): ignore
 debug: type 'test.info.package-info': (package-info.java:0): replace
 debug: type 'test.info.package-info': (package-info.java:0): replace package non-recursive
