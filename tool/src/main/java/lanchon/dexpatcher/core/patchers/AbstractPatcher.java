@@ -177,7 +177,7 @@ public abstract class AbstractPatcher<T> {
 
 	protected final void addPatched(String patchId, T patch, T patched) {
 		if (patched == null) throw new AssertionError("Null patched");
-		if (!patchId.equals(getId(patched))) throw new AssertionError("Changed patchedId");
+		if (!patchId.equals(getId(patched))) throw new AssertionError("Unexpected patchedId");
 		PatchedItem<T> patchedItem = new PatchedItem<>(patch, patched);
 		if (patchedMap.put(patchId, patchedItem) != null) throw new AssertionError("Colliding patchedId");
 	}
