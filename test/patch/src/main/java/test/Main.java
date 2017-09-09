@@ -408,7 +408,7 @@ public class Main {
 		@DexAdd
 		private int patchField = 200;
 
-		// Append code to the static constructor:
+		// Append code to the existing static constructor:
 		static {
 			// The source static constructor runs fully before any part of the
 			// patch static constructor is executed, including its static field
@@ -430,6 +430,54 @@ public class Main {
 		public void print() {
 			p("F::patchStaticField: " + patchStaticField);
 			p("F::patchField: " + patchField);
+		}
+
+	}
+
+	// Modify members of class 'G' implicitly handling static constructors:
+	// Note: DexPatcher tool v1.4.0 introduces the ability to implicitly
+	// handle static constructors for which no action is defined. A static
+	// constructor in the patch is appended to the corresponding one in the
+	// source if it exists, or otherwise it is added to the output as is.
+	// This implicit handling guarantees that code in static constructors
+	// will never be discarded and provides a safe default behavior. Prior
+	// to v1.4.0, failure to define actions for static constructors resulted
+	// in errors.
+	@DexEdit
+	public static class G {
+
+		@DexEdit
+		private static int redefinedSourceStaticField = 200;
+		@DexAdd
+		private static int patchStaticField = 200;
+
+		// Implicitly append code to an existing static constructor:
+		static {
+			p("appended G::<clinit>");
+		}
+
+		@DexAppend
+		public void print() {
+			p("G::patchStaticField: " + patchStaticField);
+		}
+
+	}
+
+	// Modify members of class 'H' implicitly handling static constructors:
+	@DexEdit
+	public static class H {
+
+		@DexAdd
+		private static int patchStaticField = 200;
+
+		// Implicitly add a static constructor where none previously existed:
+		static {
+			p("added H::<clinit>");
+		}
+
+		@DexAppend
+		public void print() {
+			p("H::patchStaticField: " + patchStaticField);
 		}
 
 	}
