@@ -59,6 +59,11 @@ public class DirectMethodSetPatcher extends MethodSetPatcher {
 		if (Util.isStaticConstructor(patchId, patch)) {
 			staticConstructorFound = true;
 			if (staticConstructorAction != null) return staticConstructorAction;
+			if (defaultAction == null) {
+				Action action = targetExists(Marker.SIGN_STATIC_CONSTRUCTOR) ? Action.APPEND : Action.ADD;
+				log(INFO, "implicit " + action.getLabel() + " of static constructor");
+				return action;
+			}
 		} else if (defaultAction == null && Util.isDefaultConstructor(patchId, patch)) {
 			if (isTrivialConstructor(patch)) {
 				log(INFO, "implicit ignore of trivial default constructor");

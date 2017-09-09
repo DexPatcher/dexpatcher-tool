@@ -44,14 +44,17 @@ public class StaticFieldSetPatcher extends FieldSetPatcher {
 		// Use the static field initializer values in patch if and
 		// only if the static constructor code in patch is being used.
 		// This makes behavior more predictable across compilers.
-		if (resolvedStaticConstructorAction == null) {
+		Action action = resolvedStaticConstructorAction;
+		if (false && action == null) {
 			log(ERROR, "static field requires that an action be defined for static constructor of class");
-		} else if (resolvedStaticConstructorAction.ignoresCode()) {
-			log(WARN, "static field will not be initialized as specified in patch because code of static constructor of class is being discarded");
-		} else {
-			value = patch.getInitialValue();
+			return value;
 		}
-		return value;
+		if (action == null ? false : action.ignoresCode()) {
+			log(WARN, "static field will not be initialized as specified in patch because code of static constructor of class is being discarded");
+			return value;
+		} else {
+			return patch.getInitialValue();
+		}
 	}
 
 }
