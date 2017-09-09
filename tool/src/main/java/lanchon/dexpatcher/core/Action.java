@@ -12,21 +12,23 @@ package lanchon.dexpatcher.core;
 
 public enum Action {
 
-	ADD(Marker.ADD),
-	EDIT(Marker.EDIT),
-	REPLACE(Marker.REPLACE),
-	REMOVE(Marker.REMOVE),
-	IGNORE(Marker.IGNORE),
-	WRAP(Marker.WRAP),
-	PREPEND(Marker.PREPEND),
-	APPEND(Marker.APPEND);
+	ADD(Marker.ADD, false),
+	EDIT(Marker.EDIT, true),
+	REPLACE(Marker.REPLACE, false),
+	REMOVE(Marker.REMOVE, true),
+	IGNORE(Marker.IGNORE, true),
+	WRAP(Marker.WRAP, false),
+	PREPEND(Marker.PREPEND, false),
+	APPEND(Marker.APPEND, false);
 
 	private final Marker marker;
 	private final String label;
+	private final boolean ignoresCode;
 
-	Action(Marker marker) {
+	Action(Marker marker, boolean ignoresCode) {
 		this.marker = marker;
 		label = name().toLowerCase();
+		this.ignoresCode = ignoresCode;
 	}
 
 	public Marker getMarker() {
@@ -35,6 +37,10 @@ public enum Action {
 
 	public String getLabel() {
 		return label;
+	}
+
+	public boolean ignoresCode() {
+		return ignoresCode;
 	}
 
 	public PatchException invalidAction() {

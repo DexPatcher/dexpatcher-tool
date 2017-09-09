@@ -42,14 +42,14 @@ public class StaticFieldSetPatcher extends FieldSetPatcher {
 	@Override
 	protected EncodedValue filterInitialValue(Field patch, EncodedValue value) {
 		// Use the static field initializer values in patch if and
-		// only if the static constructor in patch is being used.
-		// This makes behavior predictable across compilers.
+		// only if the static constructor code in patch is being used.
+		// This makes behavior more predictable across compilers.
 		if (resolvedStaticConstructorAction == null) {
 			log(ERROR, "static field requires that an action be defined for static constructor of class");
-		} else if (resolvedStaticConstructorAction == Action.ADD || resolvedStaticConstructorAction == Action.REPLACE) {
-			value = patch.getInitialValue();
+		} else if (resolvedStaticConstructorAction.ignoresCode()) {
+			log(WARN, "static field will not be initialized as specified in patch because code of static constructor of class is being discarded");
 		} else {
-			log(WARN, "static field will not be initialized as specified in patch because static constructor of class is being ignored");
+			value = patch.getInitialValue();
 		}
 		return value;
 	}
