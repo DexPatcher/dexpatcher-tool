@@ -295,7 +295,6 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 	}
 
 	private String createMethodName(Method base, String suffix) {
-		Map<String, Method> sourceMap = getSourceMap();
 		String baseName = base.getName();
 		switch (baseName) {
 			case Marker.NAME_STATIC_CONSTRUCTOR:
@@ -309,8 +308,7 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 		int n = 1;
 		String name = baseName;
 		for (;;) {
-			String id = Util.getMethodId(base, name);
-			if (sourceMap.get(id) == null) return name;
+			if (!targetExists(Util.getMethodId(base, name))) return name;
 			n++;
 			name = baseName + n;
 		}

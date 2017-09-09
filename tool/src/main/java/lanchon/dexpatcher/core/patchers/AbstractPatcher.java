@@ -164,6 +164,10 @@ public abstract class AbstractPatcher<T> {
 		return sourceMap;
 	}
 
+	protected final boolean targetExists(String targetId) {
+		return sourceMap.get(targetId) != null;
+	}
+
 	protected final T findTarget(String targetId, boolean inPlaceEdit) throws PatchException {
 		T target = sourceMap.get(targetId);
 		if (target == null) throw new PatchException("target not found");
