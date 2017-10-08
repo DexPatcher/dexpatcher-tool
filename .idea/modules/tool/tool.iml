@@ -1,13 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module external.linked.project.id=":tool" external.linked.project.path="$MODULE_DIR$/../../../tool" external.root.project.path="$MODULE_DIR$/../../.." external.system.id="GRADLE" external.system.module.group="com.github.lanchon.dexpatcher" external.system.module.version="1.4.0" type="JAVA_MODULE" version="4">
-  <component name="NewModuleRootManager" inherit-compiler-output="true">
+  <component name="NewModuleRootManager">
+    <output url="file://$MODULE_DIR$/../../../tool/out/production/classes" />
+    <output-test url="file://$MODULE_DIR$/../../../tool/out/test/classes" />
     <exclude-output />
     <content url="file://$MODULE_DIR$/../../../tool">
+      <sourceFolder url="file://$MODULE_DIR$/../../../tool/src/main/java" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../tool/src/test/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../tool/src/main/resources" type="java-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/../../../tool/src/test/resources" type="java-test-resource" />
       <excludeFolder url="file://$MODULE_DIR$/../../../tool/.gradle" />
       <excludeFolder url="file://$MODULE_DIR$/../../../tool/build" />
       <excludeFolder url="file://$MODULE_DIR$/../../../tool/out" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Gradle: commons-cli:commons-cli:1.2" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.lanchon.dexpatcher:multidexlib2:2.2.1.r2" level="project" />
+    <orderEntry type="library" name="Gradle: org.smali:dexlib2:2.2.1" level="project" />
+    <orderEntry type="library" name="Gradle: org.smali:util:2.2.1" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.code.findbugs:jsr305:1.3.9" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.guava:guava:18.0" level="project" />
+    <orderEntry type="library" name="Gradle: com.beust:jcommander:1.64" level="project" />
   </component>
 </module>

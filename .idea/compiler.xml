@@ -1,34 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="CompilerConfiguration">
-    <resourceExtensions />
-    <wildcardResourcePatterns>
-      <entry name="!?*.java" />
-      <entry name="!?*.form" />
-      <entry name="!?*.class" />
-      <entry name="!?*.groovy" />
-      <entry name="!?*.scala" />
-      <entry name="!?*.flex" />
-      <entry name="!?*.kt" />
-      <entry name="!?*.clj" />
-      <entry name="!?*.aj" />
-    </wildcardResourcePatterns>
-    <annotationProcessing>
-      <profile default="true" name="Default" enabled="false">
-        <processorPath useClasspath="true" />
-      </profile>
-    </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="annotation_main" target="1.5" />
-      <module name="annotation_test" target="1.5" />
-      <module name="multidexlib2_main" target="1.7" />
-      <module name="multidexlib2_test" target="1.7" />
-      <module name="patch_main" target="1.7" />
-      <module name="patch_test" target="1.7" />
-      <module name="source_main" target="1.7" />
-      <module name="source_test" target="1.7" />
-      <module name="tool_main" target="1.7" />
-      <module name="tool_test" target="1.7" />
+      <module name="annotation" target="1.5" />
     </bytecodeTargetLevel>
   </component>
 </project>
