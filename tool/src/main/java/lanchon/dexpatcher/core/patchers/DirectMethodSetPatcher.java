@@ -64,7 +64,8 @@ public class DirectMethodSetPatcher extends MethodSetPatcher {
 				log(INFO, "implicit " + action.getLabel() + " of static constructor");
 				return action;
 			}
-		} else if (defaultAction == null && Util.isDefaultConstructor(patchId, patch)) {
+		} else if (!getContext().isConstructorAutoIgnoreDisabled() && defaultAction == null &&
+				Util.isDefaultConstructor(patchId, patch)) {
 			if (isTrivialConstructor(patch)) {
 				log(INFO, "implicit ignore of trivial default constructor");
 				return Action.IGNORE;

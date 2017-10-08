@@ -63,6 +63,7 @@ public class Parser {
 		if (maxDexPoolSize != null) config.maxDexPoolSize = maxDexPoolSize.intValue();
 
 		config.annotationPackage = cl.getOptionValue("annotations", Context.DEFAULT_ANNOTATION_PACKAGE);
+		config.constructorAutoIgnoreDisabled = cl.hasOption("no-auto-ignore");
 		config.dexTagSupported = cl.hasOption("compat-dextag");
 
 		config.logLevel = WARN;
@@ -112,6 +113,7 @@ public class Parser {
 		o = new Option(null, "annotations", true, "package name of DexPatcher annotations (default: '" +
 				Context.DEFAULT_ANNOTATION_PACKAGE + "')");
 		o.setArgName("package"); options.addOption(o);
+		options.addOption(new Option(null, "no-auto-ignore", false, "no trivial default constructor auto-ignore"));
 		options.addOption(new Option(null, "compat-dextag", false, "enable support for the deprecated DexTag"));
 
 		options.addOption(new Option("q", "quiet", false, "do not output warnings"));

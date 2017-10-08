@@ -30,6 +30,7 @@ public class Configuration {
 	public int maxDexPoolSize = DexIO.DEFAULT_MAX_DEX_POOL_SIZE;
 
 	public String annotationPackage = Context.DEFAULT_ANNOTATION_PACKAGE;
+	public boolean constructorAutoIgnoreDisabled;
 	public boolean dexTagSupported;
 
 	public Logger.Level logLevel = Context.DEFAULT_LOG_LEVEL;

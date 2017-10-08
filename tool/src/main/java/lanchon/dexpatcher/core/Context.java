@@ -25,6 +25,7 @@ public class Context {
 
 	private Logger logger;
 	private String annotationPackage = DEFAULT_ANNOTATION_PACKAGE;
+	private boolean constructorAutoIgnoreDisabled;
 	private boolean dexTagSupported;
 	private String sourceCodeRoot;
 
@@ -67,6 +68,14 @@ public class Context {
 			actionMap.put(getMarkerTypeDescriptor(action.getMarker()), action);
 		}
 		tagTypeDescriptor = getMarkerTypeDescriptor(Marker.TAG);
+	}
+
+	public boolean isConstructorAutoIgnoreDisabled() {
+		return constructorAutoIgnoreDisabled;
+	}
+
+	public void setConstructorAutoIgnoreDisabled(boolean constructorAutoIgnoreDisabled) {
+		this.constructorAutoIgnoreDisabled = constructorAutoIgnoreDisabled;
 	}
 
 	public boolean isDexTagSupported() {

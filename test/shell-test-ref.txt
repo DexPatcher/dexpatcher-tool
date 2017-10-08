@@ -19,6 +19,7 @@ usage: dexpatcher [<option> ...] [--output <patched-dex-or-dir>]
  -M,--multi-dex-threaded      multi-threaded multi-dex (implies: -m)
  -m,--multi-dex               enable multi-dex support
     --max-dex-pool-size <n>   maximum size of dex pools (default: 65536)
+    --no-auto-ignore          no trivial default constructor auto-ignore
  -o,--output <dex-or-dir>     name of output file or directory
  -P,--path-root <root>        output absolute paths of source code files
  -p,--path                    output relative paths of source code files
