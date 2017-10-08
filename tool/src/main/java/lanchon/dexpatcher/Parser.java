@@ -119,7 +119,7 @@ public class Parser {
 		options.addOption(new Option(null, "debug", false, "output debugging information"));
 
 		options.addOption(new Option("p", "path", false, "output relative paths of source code files"));
-		o = new Option(null, "path-root", true, "output absolute paths of source code files");
+		o = new Option("P", "path-root", true, "output absolute paths of source code files");
 		o.setArgName("root"); options.addOption(o);
 		options.addOption(new Option(null, "stats", false, "output timing statistics"));
 
