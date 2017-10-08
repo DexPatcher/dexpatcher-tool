@@ -11,7 +11,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="tool_main" />
     <orderEntry type="library" name="Gradle: commons-cli:commons-cli:1.2" level="project" />
-    <orderEntry type="library" name="Gradle: com.github.lanchon.dexpatcher:multidexlib2:2.2.1" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.lanchon.dexpatcher:multidexlib2:2.2.1.r2" level="project" />
     <orderEntry type="library" name="Gradle: org.smali:dexlib2:2.2.1" level="project" />
     <orderEntry type="library" name="Gradle: org.smali:util:2.2.1" level="project" />
     <orderEntry type="library" name="Gradle: com.google.code.findbugs:jsr305:1.3.9" level="project" />
