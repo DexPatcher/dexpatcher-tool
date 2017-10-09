@@ -61,7 +61,7 @@ public class PackagePatcher extends ClassSetPatcher {
 		if (isLogging(DEBUG)) log(DEBUG, recursive ? "replace package recursive" : "replace package non-recursive");
 		removePackage(targetId, recursive);
 		ClassDef patched = onSimpleAdd(patch, annotation);
-		addPatched(patchId, patch, patched);
+		addPatched(patch, patched);
 	}
 
 	@Override

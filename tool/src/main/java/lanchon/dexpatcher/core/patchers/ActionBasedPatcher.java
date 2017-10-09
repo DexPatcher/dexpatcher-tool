@@ -72,7 +72,7 @@ public abstract class ActionBasedPatcher<T, C extends ActionBasedPatcher.ActionC
 
 	protected void onAdd(String patchId, T patch, C actionContext) throws PatchException {
 		T patched = onSimpleAdd(patch, actionContext);
-		addPatched(patchId, patch, patched);
+		addPatched(patch, patched);
 	}
 
 	protected void onEdit(String patchId, T patch, C actionContext) throws PatchException {
@@ -80,14 +80,14 @@ public abstract class ActionBasedPatcher<T, C extends ActionBasedPatcher.ActionC
 		boolean inPlaceEdit = patchId.equals(targetId);
 		T target = findTarget(targetId, inPlaceEdit);
 		T patched = onSimpleEdit(patch, actionContext, target, inPlaceEdit);
-		addPatched(patchId, patch, patched);
+		addPatched(patch, patched);
 	}
 
 	protected void onReplace(String patchId, T patch, C actionContext) throws PatchException {
 		String targetId = getTargetId(patchId, patch, actionContext);
 		T target = findTarget(targetId, false);
 		T patched = onSimpleReplace(patch, actionContext, target);
-		addPatched(patchId, patch, patched);
+		addPatched(patch, patched);
 	}
 
 	protected void onRemove(String patchId, T patch, C actionContext) throws PatchException {

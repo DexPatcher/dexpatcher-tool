@@ -223,7 +223,7 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 				createMethodFlags(target),
 				target.getAnnotations(),
 				target.getImplementation());
-		addPatched(Util.getMethodId(wrapSource), patch, wrapSource);
+		addPatched(patch, wrapSource);
 
 		Method wrapMain = new BasicMethod(
 				patch.getDefiningClass(),
@@ -233,7 +233,7 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 				patch.getAccessFlags(),
 				annotation.getFilteredAnnotations(),
 				replaceMethodInvocations(patch.getImplementation(), patch, wrapSource));
-		addPatched(/* Util.getMethodId(wrapMain) */ patchId, patch, wrapMain);
+		addPatched(patch, wrapMain);
 
 	}
 
@@ -257,7 +257,7 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 				createMethodFlags(target),
 				target.getAnnotations(),
 				target.getImplementation());
-		addPatched(Util.getMethodId(spliceSource), patch, spliceSource);
+		addPatched(patch, spliceSource);
 
 		Method splicePatch = new BasicMethod(
 				patch.getDefiningClass(),
@@ -267,7 +267,7 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 				createMethodFlags(patch),
 				annotation.getFilteredAnnotations(),
 				patch.getImplementation());
-		addPatched(Util.getMethodId(splicePatch), patch, splicePatch);
+		addPatched(patch, splicePatch);
 
 		Method spliceMain = new BasicMethod(
 				patch.getDefiningClass(),
@@ -279,7 +279,7 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 				createCallSequence(MethodUtil.getParameterRegisterCount(patch),
 						prepend ? splicePatch : spliceSource,
 						prepend ? spliceSource : splicePatch));
-		addPatched(/* Util.getMethodId(spliceMain) */ patchId, patch, spliceMain);
+		addPatched(patch, spliceMain);
 
 	}
 
