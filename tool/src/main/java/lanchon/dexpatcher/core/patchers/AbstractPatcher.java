@@ -179,10 +179,10 @@ public abstract class AbstractPatcher<T> {
 		if (targetedMap.put(targetId, inPlaceEdit) != null) throw new PatchException("already targeted");
 	}
 
-	protected final void addPatched(T patch, T patched) {
+	protected final void addPatched(T patch, T patched) throws PatchException {
 		String id = getId(patched);
 		PatchedItem<T> patchedItem = new PatchedItem<>(patch, patched);
-		if (patchedMap.put(id, patchedItem) != null) throw new AssertionError("Colliding patchedId");
+		if (patchedMap.put(id, patchedItem) != null) throw new PatchException("already injected");
 	}
 
 	// Handlers
