@@ -56,7 +56,6 @@ public class Main {
 			try { p("B::privateStaticMethod: " + i + " (" + B.class.getDeclaredMethod("privateStaticMethod", int.class) + ")"); }
 			catch (NoSuchMethodException e) { throw new RuntimeException(e); }
 		}
-		@SuppressWarnings("unused")
 		private String privateKey = "my-key";
 		private void directMethod() { p("original B::directMethod"); }
 		public void virtualMethod(String data) { p("original B::virtualMethod: " + data); }
