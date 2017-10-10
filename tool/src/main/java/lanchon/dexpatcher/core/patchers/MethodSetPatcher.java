@@ -335,6 +335,7 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 		final boolean virtual = this instanceof VirtualMethodSetPatcher;
 
 		DexRewriter rewriter = new DexRewriter(new RewriterModule() {
+			@Override
 			public Rewriter<Instruction> getInstructionRewriter(Rewriters rewriters) {
 				return new InstructionRewriter(rewriters) {
 
