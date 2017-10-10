@@ -23,6 +23,10 @@ import lanchon.dexpatcher.core.model.BasicClassDef;
 
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.ClassDef;
+import org.jf.dexlib2.rewriter.DexRewriter;
+import org.jf.dexlib2.rewriter.Rewriter;
+import org.jf.dexlib2.rewriter.RewriterModule;
+import org.jf.dexlib2.rewriter.Rewriters;
 
 import static lanchon.dexpatcher.core.PatcherAnnotation.*;
 
@@ -126,14 +130,24 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 	@Override
 	protected ClassDef onSimpleEdit(ClassDef patch, PatcherAnnotation annotation, ClassDef target, boolean inPlaceEdit) {
 
+		boolean onlyEditMembers = annotation.getOnlyEditMembers();
+
 		// Log class access flags before processing members.
-		if (!annotation.getOnlyEditMembers()) {
+		if (!onlyEditMembers) {
 			super.onSimpleEdit(patch, annotation, target, inPlaceEdit);
+		}
+
+		if (!inPlaceEdit) {
+			if (onlyEditMembers) {
+				patch = renameClass(patch, target.getType());
+			} else {
+				target = renameClass(target, patch.getType());
+			}
 		}
 
 		ClassDef source;
 		Set<? extends Annotation> annotations;
-		if (annotation.getOnlyEditMembers()) {
+		if (onlyEditMembers) {
 			source = target;
 			annotations = target.getAnnotations();
 		} else {
@@ -142,7 +156,7 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 		}
 
 		ClassDef patched = new BasicClassDef(
-				patch.getType(),
+				source.getType(),
 				source.getAccessFlags(),
 				source.getSuperclass(),
 				source.getInterfaces(),
@@ -159,6 +173,30 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 
 		//return super.onSimpleEdit(patched, annotation, target, inPlaceEdit);
 		return patched;
+
+	}
+
+	// Helpers
+
+	private static ClassDef renameClass(ClassDef classDef, final String to) {
+
+		final String from = classDef.getType();
+
+		DexRewriter rewriter = new DexRewriter(new RewriterModule() {
+			@Override
+			public Rewriter<String> getTypeRewriter(Rewriters rewriters) {
+				return new Rewriter<String>() {
+
+					@Override
+					public String rewrite(String value) {
+						return from.equals(value) ? to : value;
+					}
+
+				};
+			}
+		});
+
+		return rewriter.getClassDefRewriter().rewrite(classDef);
 
 	}
 
