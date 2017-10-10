@@ -12,7 +12,6 @@ package lanchon.dexpatcher.core.patchers;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import lanchon.dexpatcher.core.Action;
 import lanchon.dexpatcher.core.Context;
