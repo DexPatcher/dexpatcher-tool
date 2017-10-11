@@ -130,32 +130,21 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 	@Override
 	protected ClassDef onSimpleEdit(ClassDef patch, PatcherAnnotation annotation, ClassDef target, boolean inPlace) {
 
-		boolean contentOnly = annotation.getContentOnly();
-
-		// Log class access flags before processing members.
-		if (!contentOnly) {
-			super.onSimpleEdit(patch, annotation, target, inPlace);
-		}
-
-		if (!inPlace) {
-			if (contentOnly) {
-				patch = renameClass(patch, target.getType());
-			} else {
-				target = renameClass(target, patch.getType());
-			}
-		}
-
 		ClassDef source;
 		Set<? extends Annotation> annotations;
-		if (contentOnly) {
+		if (annotation.getContentOnly()) {
 			source = target;
 			annotations = target.getAnnotations();
+			if (!inPlace) patch = renameClass(patch, target.getType());
 		} else {
+			// Log class access flags before processing members.
+			super.onSimpleEdit(patch, annotation, target, inPlace);
 			source = patch;
 			annotations = annotation.getFilteredAnnotations();
+			if (!inPlace) target = renameClass(target, patch.getType());
 		}
 
-		ClassDef patched = new BasicClassDef(
+		return new BasicClassDef(
 				source.getType(),
 				source.getAccessFlags(),
 				source.getSuperclass(),
@@ -170,9 +159,6 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 						.process(target.getDirectMethods(), patch.getDirectMethods())),
 				Collections.unmodifiableCollection(new VirtualMethodSetPatcher(this, annotation)
 						.process(target.getVirtualMethods(), patch.getVirtualMethods())));
-
-		//return super.onSimpleEdit(patched, annotation, target, inPlaceEdit);
-		return patched;
 
 	}
 
