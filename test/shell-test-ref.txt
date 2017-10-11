@@ -30,10 +30,10 @@ usage: dexpatcher [<option> ...] [--output <patched-dex-or-dir>]
 
 $ dexpatcher build/source.dex build/patch.dex --output build/patched.dex --debug
 info: read 'build/source.dex'
-debug: read 'build/source.dex': 20 types
+debug: read 'build/source.dex': 24 types
 debug: read 'build/source.dex': dex version '035'
 info: read 'build/patch.dex'
-debug: read 'build/patch.dex': 19 types
+debug: read 'build/patch.dex': 23 types
 debug: read 'build/patch.dex': dex version '035'
 debug: type 'test.Main$A': (Main.java:0): replace
 debug: type 'test.Main$Abstract': (Main.java:0): ignore
@@ -80,6 +80,15 @@ debug: type 'test.Main$Concrete3': (Main.java:0): edit
 info: type 'test.Main$Concrete3': direct method '<init>():void': (Main.java:550): implicit ignore of trivial default constructor
 debug: type 'test.Main$Concrete3': direct method '<init>():void': (Main.java:550): ignore
 debug: type 'test.Main$Concrete3': virtual method 'method():void': (Main.java:553): replace
+debug: type 'test.Main$CrossClassA': (Main.java:0): add
+debug: type 'test.Main$CrossClassAHelper': (Main.java:0): edit
+info: type 'test.Main$CrossClassAHelper': direct method '<init>():void': (Main.java:577): implicit ignore of trivial default constructor
+debug: type 'test.Main$CrossClassAHelper': direct method '<init>():void': (Main.java:577): ignore
+debug: type 'test.Main$CrossClassAHelper': direct method 'help2(test.Main$source_CrossClassA):void': (Main.java:579): add
+debug: type 'test.Main$CrossClassBPatcher': (Main.java:0): edit
+info: type 'test.Main$CrossClassBPatcher': target 'test.Main$CrossClassB': direct method '<init>():void': (Main.java:609): implicit ignore of trivial default constructor
+debug: type 'test.Main$CrossClassBPatcher': target 'test.Main$CrossClassB': direct method '<init>():void': (Main.java:609): ignore
+debug: type 'test.Main$CrossClassBPatcher': target 'test.Main$CrossClassB': virtual method 'go():void': (Main.java:612): wrap
 debug: type 'test.Main$D': (Main.java:0): edit
 debug: type 'test.Main$D': static field 'patchStaticField:int': (Main.java:0): add
 debug: type 'test.Main$D': static field 'redefinedSourceStaticField:int': (Main.java:0): edit
@@ -131,6 +140,10 @@ debug: type 'test.Main$H': direct method '<clinit>():void': (Main.java:471): add
 info: type 'test.Main$H': direct method '<init>():void': (Main.java:468): implicit ignore of trivial default constructor
 debug: type 'test.Main$H': direct method '<init>():void': (Main.java:468): ignore
 debug: type 'test.Main$H': virtual method 'print():void': (Main.java:480): append
+debug: type 'test.Main$source_CrossClassA': (Main.java:0): edit
+debug: type 'test.Main$source_CrossClassA': target 'test.Main$CrossClassA': (Main.java:0): 'public' modifier removed from renamed type
+debug: type 'test.Main$source_CrossClassA': target 'test.Main$CrossClassA': direct method '<init>(java.lang.String):void': (Main.java:570): ignore
+debug: type 'test.Main$source_CrossClassA': target 'test.Main$CrossClassA': virtual method 'go():void': (Main.java:572): ignore
 debug: type 'test.Main': (Main.java:0): ignore
 debug: type 'test.info.package-info': (package-info.java:0): replace
 debug: type 'test.info.package-info': (package-info.java:0): replace package non-recursive
@@ -143,7 +156,7 @@ debug: type 'test.target.package-info': target 'test.nonrec.package-info': (pack
 debug: type 'test.target.package-info': target 'test.nonrec.package-info': (package-info.java:0): remove type 'Ltest/nonrec/NonRec;'
 info: write 'build/patched.dex'
 debug: write 'build/patched.dex': dex version '035'
-debug: write 'build/patched.dex': 18 types
+debug: write 'build/patched.dex': 23 types
 0 error(s), 2 warning(s)
 
 $ dex2jar --force --output build/patched-dex2jar.jar build/patched.dex
@@ -211,6 +224,12 @@ original Concrete2::method
 Concrete3::interfaceMethod
 Concrete3::abstractMethod
 original Concrete3::method
+
+original CrossClassA::go: data (class test.Main$CrossClassA)
+original CrossClassA::help1 (class test.Main$CrossClassA)
+original CrossClassAHelper::help2(CrossClassA)
+
+original CrossClassB::go: data (class test.Main$CrossClassB)
 --- end source/build/libs/source.jar ---
 
 --- run build/patched-dex2jar.jar ---
@@ -302,5 +321,18 @@ replaced Concrete2::method
 Concrete3::interfaceMethod
 Concrete3::abstractMethod
 replaced Concrete3::method
+
+entering replaced CrossClassA::go (class test.Main$CrossClassA)
+original CrossClassA::go: filtered data for a1 (class test.Main$source_CrossClassA)
+original CrossClassA::help1 (class test.Main$source_CrossClassA)
+added CrossClassAHelper::help2(source_CrossClassA)
+original CrossClassA::go: filtered data for a2 (class test.Main$source_CrossClassA)
+original CrossClassA::help1 (class test.Main$source_CrossClassA)
+added CrossClassAHelper::help2(source_CrossClassA)
+exiting replaced CrossClassA::go
+
+entering wrapper CrossClassBPatcher::go (class test.Main$CrossClassB)
+original CrossClassB::go: data (class test.Main$CrossClassB)
+exiting wrapper CrossClassBPatcher::go
 --- end build/patched-dex2jar.jar ---
 

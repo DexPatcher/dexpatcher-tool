@@ -44,6 +44,10 @@ public class Main {
 		new Concrete2().interfaceMethod();
 		p();
 		new Concrete3().interfaceMethod();
+		p();
+		CrossClassAHelper.print();
+		p();
+		CrossClassBHelper.print();
 	}
 
 	public static class A {
@@ -211,6 +215,30 @@ public class Main {
 			method();
 		}
 		public void method() { p("original Concrete3::method"); }
+	}
+
+	public static class CrossClassA {
+		private String data;
+		public CrossClassA(String data) { this.data = data; }
+		public void go() {
+			p("original CrossClassA::go: " + data + " (" + this.getClass() + ")");
+			help1(this);
+			CrossClassAHelper.help2(this);
+		}
+		public static void help1(CrossClassA a) { p("original CrossClassA::help1 (" + a.getClass() + ")"); }
+	}
+	public static class CrossClassAHelper {
+		public static void print() { new CrossClassA("data").go(); }
+		public static void help2(CrossClassA a) { p("original CrossClassAHelper::help2(CrossClassA)"); }
+	}
+
+	public static class CrossClassB {
+		private String data;
+		public CrossClassB(String data) { this.data = data; }
+		public void go() { p("original CrossClassB::go: " + data + " (" + this.getClass() + ")"); }
+	}
+	public static class CrossClassBHelper {
+		public static void print() { new CrossClassB("data").go(); }
 	}
 
 }

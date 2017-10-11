@@ -554,6 +554,67 @@ public class Main {
 		}
 	}
 
+	// Replace a class, using the replaced class at will:
+	// Part 1: Rename the target class, optionally reducing visibility:
+	// Note: All references to the type of the class within the declarations
+	// and code of the class are rewritten to account for the change of type.
+	// In particular, the 'this' references within the class change type.
+	// Note: DexPatcher tool v1.5.0 introduces the ability to reliably perform
+	// cross-class edits, where the patch and target class names are different.
+	// (Before v1.5.0 these edits were accepted by the tool but the resulting
+	// bytecode was invalid due to intricacies such as the type of the 'this'
+	// references in the code not matching the type of the containing class).
+	@DexEdit(targetClass = CrossClassA.class)
+	static class source_CrossClassA {
+		@DexIgnore
+		public source_CrossClassA(String data) { throw null; }
+		@DexIgnore
+		public void go() { throw null; }
+	}
+	// Part 2: Adapt code outside of the class to the change of type if
+	// self-references (such as 'this') escape the class:
+	@DexEdit
+	public static class CrossClassAHelper {
+		@DexAdd
+		public static void help2(source_CrossClassA a) { p("added CrossClassAHelper::help2(source_CrossClassA)"); }
+	}
+	// Part 3: Add a new class compatible with the one being replaced:
+	// Note: Cannot replace the class here, items can be targeted only once.
+	@DexAdd		// This tag can be omitted, as classes are added by default.
+	public static class CrossClassA {
+		private source_CrossClassA a1;
+		private source_CrossClassA a2;
+		public CrossClassA(String data) {
+			a1 = new source_CrossClassA("filtered " + data + " for a1");
+			a2 = new source_CrossClassA("filtered " + data + " for a2");
+		}
+		public void go() {
+			p("entering replaced CrossClassA::go (" + this.getClass() + ")");
+			a1.go();
+			a2.go();
+			p("exiting replaced CrossClassA::go");
+		}
+	}
+
+	// Modify members of class 'CrossClassB' from a different class:
+	// Note: This can be used to organize code by collecting simple related
+	// changes to a set of classes as static nested classes within a single
+	// patch class (that could itself be added or ignored). It is also useful
+	// to handle name clashes between packages and classes in obfuscated code.
+	// Note: The patch class is renamed to match the target behind the scenes
+	// and all references to the type of the class within the declarations
+	// and code of the class are rewritten to account for the change of type.
+	// In particular, the 'this' references within the patch class change type.
+	@DexEdit(target = "CrossClassB", onlyEditMembers = true)
+	public static class CrossClassBPatcher {
+		@DexWrap
+		public void go() {
+			p("entering wrapper CrossClassBPatcher::go (" + this.getClass() + ")");
+			go();
+			p("exiting wrapper CrossClassBPatcher::go");
+		}
+	}
+
 	// Mini FAQ
 
 	// Q) My IDE outputs classes that clash with classes in my source app
