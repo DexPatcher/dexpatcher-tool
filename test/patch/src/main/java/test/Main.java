@@ -608,7 +608,7 @@ public class Main {
 	// changes to a set of classes as static nested classes within a single
 	// patch class (that could itself be added or ignored). It is also useful
 	// to handle name clashes between packages and classes in obfuscated code.
-	// Note: The patch class is renamed to match the target behind the scenes
+	// Note: The patch class is renamed to match the target behind-the-scenes
 	// and all references to the type of the class within the declarations
 	// and code of the class are rewritten to account for the change of type.
 	// In particular, the 'this' references within the patch class change type.
