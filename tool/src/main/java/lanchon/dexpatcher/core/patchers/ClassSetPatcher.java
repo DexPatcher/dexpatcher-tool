@@ -164,7 +164,31 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 
 	@Override
 	protected ClassDef onSimpleReplace(ClassDef patch, PatcherAnnotation annotation, ClassDef target, boolean inPlace) {
-		return onSimpleAdd(patch, annotation);
+
+		ClassDef source;
+		Set<? extends Annotation> annotations;
+		if (annotation.getContentOnly()) {
+			source = target;
+			annotations = target.getAnnotations();
+			if (!inPlace) patch = renameClass(patch, target.getType());
+		} else {
+			source = patch;
+			annotations = annotation.getFilteredAnnotations();
+			//if (!inPlace) target = renameClass(target, patch.getType());
+		}
+
+		return new BasicClassDef(
+				source.getType(),
+				source.getAccessFlags(),
+				source.getSuperclass(),
+				source.getInterfaces(),
+				source.getSourceFile(),
+				annotations,
+				patch.getStaticFields(),
+				patch.getInstanceFields(),
+				patch.getDirectMethods(),
+				patch.getVirtualMethods());
+
 	}
 
 	// Helpers

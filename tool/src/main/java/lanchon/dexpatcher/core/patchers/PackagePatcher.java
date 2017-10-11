@@ -48,6 +48,7 @@ public class PackagePatcher extends ClassSetPatcher {
 			return;
 		}
 		if (annotation.getTargetClass() != null) throw invalidElement(Marker.ELEM_TARGET_CLASS);
+		if (annotation.getContentOnly()) throw invalidElement(Marker.ELEM_CONTENT_ONLY);
 	}
 
 	@Override

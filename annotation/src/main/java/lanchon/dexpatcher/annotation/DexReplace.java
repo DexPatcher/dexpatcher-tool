@@ -25,5 +25,6 @@ import java.lang.annotation.Target;
 public @interface DexReplace {
 	String target() default "";
 	Class<?> targetClass() default Void.class;
+	boolean contentOnly() default false;
 	boolean recursive() default false;
 }
