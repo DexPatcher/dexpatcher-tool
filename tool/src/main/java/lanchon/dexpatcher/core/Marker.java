@@ -21,7 +21,7 @@ public enum Marker {
 	PREPEND("DexPrepend"),
 	APPEND("DexAppend"),
 
-	TAG("DexTag");
+	TAG("DexTag");                  // deprecated
 
 	// Annotations
 
