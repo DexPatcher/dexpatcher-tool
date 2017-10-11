@@ -104,7 +104,7 @@ public abstract class FieldSetPatcher extends MemberSetPatcher<Field> {
 	}
 
 	@Override
-	protected Field onSimpleReplace(Field patch, PatcherAnnotation annotation, Field target) {
+	protected Field onSimpleReplace(Field patch, PatcherAnnotation annotation, Field target, boolean inPlace) {
 		throw new AssertionError("Replace field");
 	}
 
