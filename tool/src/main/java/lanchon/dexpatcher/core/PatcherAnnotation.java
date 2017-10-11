@@ -57,7 +57,7 @@ public class PatcherAnnotation implements ActionBasedPatcher.ActionContext {
 		String targetClass = null;
 		Action staticConstructorAction = null;
 		Action defaultAction = null;
-		boolean onlyEditMembers = false;
+		boolean contentOnly = false;
 		boolean recursive = false;
 		for (AnnotationElement element : annotation.getElements()) {
 			String name = element.getName();
@@ -85,9 +85,10 @@ public class PatcherAnnotation implements ActionBasedPatcher.ActionContext {
 				defaultAction = parseActionEnum(value);
 				continue;
 			}
-			case Marker.ELEM_ONLY_EDIT_MEMBERS: {
-				if (onlyEditMembers) break;
-				onlyEditMembers = ((BooleanEncodedValue) value).getValue();
+			case Marker.ELEM_ONLY_EDIT_MEMBERS:
+			case Marker.ELEM_CONTENT_ONLY: {
+				if (contentOnly) break;
+				contentOnly = ((BooleanEncodedValue) value).getValue();
 				continue;
 			}
 			case Marker.ELEM_RECURSIVE: {
@@ -107,7 +108,7 @@ public class PatcherAnnotation implements ActionBasedPatcher.ActionContext {
 		}
 
 		return new PatcherAnnotation(action, target, targetClass, staticConstructorAction, defaultAction,
-				onlyEditMembers, recursive, Collections.unmodifiableSet(filteredAnnotations));
+				contentOnly, recursive, Collections.unmodifiableSet(filteredAnnotations));
 
 	}
 
@@ -124,7 +125,7 @@ public class PatcherAnnotation implements ActionBasedPatcher.ActionContext {
 	private final String targetClass;
 	private final Action staticConstructorAction;
 	private final Action defaultAction;
-	private final boolean onlyEditMembers;
+	private final boolean contentOnly;
 	private final boolean recursive;
 	private final Set<? extends Annotation> filteredAnnotations;
 
@@ -133,7 +134,7 @@ public class PatcherAnnotation implements ActionBasedPatcher.ActionContext {
 	}
 
 	public PatcherAnnotation(Action action, String target, String targetClass,
-			Action staticConstructorAction, Action defaultAction, boolean onlyEditMembers,
+			Action staticConstructorAction, Action defaultAction, boolean contentOnly,
 			boolean recursive, Set<? extends Annotation> filteredAnnotations) {
 		if (action == null) throw new AssertionError("Null action");
 		this.action = action;
@@ -141,7 +142,7 @@ public class PatcherAnnotation implements ActionBasedPatcher.ActionContext {
 		this.targetClass = targetClass;
 		this.staticConstructorAction = staticConstructorAction;
 		this.defaultAction = defaultAction;
-		this.onlyEditMembers = onlyEditMembers;
+		this.contentOnly = contentOnly;
 		this.recursive = recursive;
 		this.filteredAnnotations = filteredAnnotations;
 	}
@@ -166,8 +167,8 @@ public class PatcherAnnotation implements ActionBasedPatcher.ActionContext {
 		return defaultAction;
 	}
 
-	public boolean getOnlyEditMembers() {
-		return onlyEditMembers;
+	public boolean getContentOnly() {
+		return contentOnly;
 	}
 
 	public boolean getRecursive() {

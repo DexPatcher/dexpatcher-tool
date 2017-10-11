@@ -52,7 +52,7 @@ public abstract class MemberSetPatcher<T extends Member> extends AnnotatableSetP
 		if (annotation.getTargetClass() != null) throw invalidElement(Marker.ELEM_TARGET_CLASS);
 		if (annotation.getStaticConstructorAction() != null) throw invalidElement(Marker.ELEM_STATIC_CONSTRUCTOR_ACTION);
 		if (annotation.getDefaultAction() != null) throw invalidElement(Marker.ELEM_DEFAULT_ACTION);
-		if (annotation.getOnlyEditMembers()) throw invalidElement(Marker.ELEM_ONLY_EDIT_MEMBERS);
+		if (annotation.getContentOnly()) throw invalidElement(Marker.ELEM_CONTENT_ONLY);
 		if (annotation.getRecursive()) throw invalidElement(Marker.ELEM_RECURSIVE);
 	}
 

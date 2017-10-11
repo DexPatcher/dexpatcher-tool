@@ -41,8 +41,10 @@ public enum Marker {
 	public static final String ELEM_TARGET_CLASS = "targetClass";
 	public static final String ELEM_STATIC_CONSTRUCTOR_ACTION = "staticConstructorAction";
 	public static final String ELEM_DEFAULT_ACTION = "defaultAction";
-	public static final String ELEM_ONLY_EDIT_MEMBERS = "onlyEditMembers";
+	public static final String ELEM_CONTENT_ONLY = "contentOnly";
 	public static final String ELEM_RECURSIVE = "recursive";
+
+	public static final String ELEM_ONLY_EDIT_MEMBERS = "onlyEditMembers";                  // deprecated
 
 	public static final String ACTION_UNDEFINED = "UNDEFINED";
 

@@ -130,15 +130,15 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 	@Override
 	protected ClassDef onSimpleEdit(ClassDef patch, PatcherAnnotation annotation, ClassDef target, boolean inPlaceEdit) {
 
-		boolean onlyEditMembers = annotation.getOnlyEditMembers();
+		boolean contentOnly = annotation.getContentOnly();
 
 		// Log class access flags before processing members.
-		if (!onlyEditMembers) {
+		if (!contentOnly) {
 			super.onSimpleEdit(patch, annotation, target, inPlaceEdit);
 		}
 
 		if (!inPlaceEdit) {
-			if (onlyEditMembers) {
+			if (contentOnly) {
 				patch = renameClass(patch, target.getType());
 			} else {
 				target = renameClass(target, patch.getType());
@@ -147,7 +147,7 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 
 		ClassDef source;
 		Set<? extends Annotation> annotations;
-		if (onlyEditMembers) {
+		if (contentOnly) {
 			source = target;
 			annotations = target.getAnnotations();
 		} else {
