@@ -73,22 +73,22 @@ debug: type 'test.Main$Concrete1': virtual method 'abstractMethod():void': (Main
 debug: type 'test.Main$Concrete1': virtual method 'interfaceMethod():void': (Main.java:518): ignore
 debug: type 'test.Main$Concrete1': virtual method 'method():void': (Main.java:512): replace
 debug: type 'test.Main$Concrete2': (Main.java:0): edit
-info: type 'test.Main$Concrete2': direct method '<init>():void': (Main.java:539): implicit ignore of trivial default constructor
-debug: type 'test.Main$Concrete2': direct method '<init>():void': (Main.java:539): ignore
-debug: type 'test.Main$Concrete2': virtual method 'method():void': (Main.java:542): replace
+info: type 'test.Main$Concrete2': direct method '<init>():void': (Main.java:546): implicit ignore of trivial default constructor
+debug: type 'test.Main$Concrete2': direct method '<init>():void': (Main.java:546): ignore
+debug: type 'test.Main$Concrete2': virtual method 'method():void': (Main.java:549): replace
 debug: type 'test.Main$Concrete3': (Main.java:0): edit
-info: type 'test.Main$Concrete3': direct method '<init>():void': (Main.java:550): implicit ignore of trivial default constructor
-debug: type 'test.Main$Concrete3': direct method '<init>():void': (Main.java:550): ignore
-debug: type 'test.Main$Concrete3': virtual method 'method():void': (Main.java:553): replace
+info: type 'test.Main$Concrete3': direct method '<init>():void': (Main.java:557): implicit ignore of trivial default constructor
+debug: type 'test.Main$Concrete3': direct method '<init>():void': (Main.java:557): ignore
+debug: type 'test.Main$Concrete3': virtual method 'method():void': (Main.java:560): replace
 debug: type 'test.Main$CrossClassA': (Main.java:0): add
 debug: type 'test.Main$CrossClassAHelper': (Main.java:0): edit
-info: type 'test.Main$CrossClassAHelper': direct method '<init>():void': (Main.java:577): implicit ignore of trivial default constructor
-debug: type 'test.Main$CrossClassAHelper': direct method '<init>():void': (Main.java:577): ignore
-debug: type 'test.Main$CrossClassAHelper': direct method 'help2(test.Main$source_CrossClassA):void': (Main.java:579): add
+info: type 'test.Main$CrossClassAHelper': direct method '<init>():void': (Main.java:584): implicit ignore of trivial default constructor
+debug: type 'test.Main$CrossClassAHelper': direct method '<init>():void': (Main.java:584): ignore
+debug: type 'test.Main$CrossClassAHelper': direct method 'help2(test.Main$source_CrossClassA):void': (Main.java:586): add
 debug: type 'test.Main$CrossClassBPatcher': (Main.java:0): edit
-info: type 'test.Main$CrossClassBPatcher': target 'test.Main$CrossClassB': direct method '<init>():void': (Main.java:609): implicit ignore of trivial default constructor
-debug: type 'test.Main$CrossClassBPatcher': target 'test.Main$CrossClassB': direct method '<init>():void': (Main.java:609): ignore
-debug: type 'test.Main$CrossClassBPatcher': target 'test.Main$CrossClassB': virtual method 'go():void': (Main.java:612): wrap
+info: type 'test.Main$CrossClassBPatcher': target 'test.Main$CrossClassB': direct method '<init>():void': (Main.java:616): implicit ignore of trivial default constructor
+debug: type 'test.Main$CrossClassBPatcher': target 'test.Main$CrossClassB': direct method '<init>():void': (Main.java:616): ignore
+debug: type 'test.Main$CrossClassBPatcher': target 'test.Main$CrossClassB': virtual method 'go():void': (Main.java:619): wrap
 debug: type 'test.Main$D': (Main.java:0): edit
 debug: type 'test.Main$D': static field 'patchStaticField:int': (Main.java:0): add
 debug: type 'test.Main$D': static field 'redefinedSourceStaticField:int': (Main.java:0): edit
@@ -142,8 +142,8 @@ debug: type 'test.Main$H': direct method '<init>():void': (Main.java:468): ignor
 debug: type 'test.Main$H': virtual method 'print():void': (Main.java:480): append
 debug: type 'test.Main$source_CrossClassA': (Main.java:0): edit
 debug: type 'test.Main$source_CrossClassA': target 'test.Main$CrossClassA': (Main.java:0): 'public' modifier removed from renamed type
-debug: type 'test.Main$source_CrossClassA': target 'test.Main$CrossClassA': direct method '<init>(java.lang.String):void': (Main.java:570): ignore
-debug: type 'test.Main$source_CrossClassA': target 'test.Main$CrossClassA': virtual method 'go():void': (Main.java:572): ignore
+debug: type 'test.Main$source_CrossClassA': target 'test.Main$CrossClassA': direct method '<init>(java.lang.String):void': (Main.java:577): ignore
+debug: type 'test.Main$source_CrossClassA': target 'test.Main$CrossClassA': virtual method 'go():void': (Main.java:579): ignore
 debug: type 'test.Main': (Main.java:0): ignore
 debug: type 'test.info.package-info': (package-info.java:0): replace
 debug: type 'test.info.package-info': (package-info.java:0): replace package non-recursive

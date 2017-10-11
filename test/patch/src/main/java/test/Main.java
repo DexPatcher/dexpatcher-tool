@@ -530,12 +530,19 @@ public class Main {
 	}
 	// Option 2: Declaring the class 'abstract':
 	// Note: You can make @DexEdit not redefine the target class by setting
-	// its 'onlyEditMembers' element to true. This gives you several options
+	// its 'contentOnly' element to true. This gives you several options
 	// for modifying the class so that it compiles without its abstract
 	// methods being implemented, such as declaring the class 'abstract'.
 	// Keep in mind that you cannot use the 'abstract' trick if you need to
 	// instantiate the class in the patch code.
-	@DexEdit(onlyEditMembers = true)
+	// Note: Before DexPatcher tool v1.5.0, the 'contentOnly' element was
+	// called 'onlyEditMembers'. The name was changed to allow extending the
+	// usage of the element to other tags besides @DexEdit and to other items
+	// besides classes. The new DexPatcher tool accepts both the old and new
+	// names of the element, so binary patches compiled for an older version
+	// of the tool will continue to apply using the new version. However,
+	// recompilation of the patches will require adapting them to the new name.
+	@DexEdit(contentOnly = true)
 	public static abstract class Concrete2 extends Abstract implements Interface {
 		@DexReplace
 		public void method() {
@@ -546,7 +553,7 @@ public class Main {
 	// Note: You can also strip out interfaces or even the superclass from the
 	// class, but this has complex implications affecting the type system and
 	// the constructors of the class. It is generally not recommended.
-	@DexEdit(onlyEditMembers = true)
+	@DexEdit(contentOnly = true)
 	public static class Concrete3 {
 		@DexReplace
 		public void method() {
@@ -605,7 +612,7 @@ public class Main {
 	// and all references to the type of the class within the declarations
 	// and code of the class are rewritten to account for the change of type.
 	// In particular, the 'this' references within the patch class change type.
-	@DexEdit(target = "CrossClassB", onlyEditMembers = true)
+	@DexEdit(target = "CrossClassB", contentOnly = true)
 	public static class CrossClassBPatcher {
 		@DexWrap
 		public void go() {
