@@ -30,10 +30,10 @@ usage: dexpatcher [<option> ...] [--output <patched-dex-or-dir>]
 
 $ dexpatcher build/source.dex build/patch.dex --output build/patched.dex --debug
 info: read 'build/source.dex'
-debug: read 'build/source.dex': 24 types
+debug: read 'build/source.dex': 25 types
 debug: read 'build/source.dex': dex version '035'
 info: read 'build/patch.dex'
-debug: read 'build/patch.dex': 23 types
+debug: read 'build/patch.dex': 24 types
 debug: read 'build/patch.dex': dex version '035'
 debug: type 'test.Main$A': (Main.java:0): replace
 debug: type 'test.Main$Abstract': (Main.java:0): ignore
@@ -89,6 +89,7 @@ debug: type 'test.Main$CrossClassBPatcher': (Main.java:0): edit
 info: type 'test.Main$CrossClassBPatcher': target 'test.Main$CrossClassB': direct method '<init>():void': (Main.java:616): implicit ignore of trivial default constructor
 debug: type 'test.Main$CrossClassBPatcher': target 'test.Main$CrossClassB': direct method '<init>():void': (Main.java:616): ignore
 debug: type 'test.Main$CrossClassBPatcher': target 'test.Main$CrossClassB': virtual method 'go():void': (Main.java:619): wrap
+debug: type 'test.Main$CrossClassCPatcher': (Main.java:0): replace
 debug: type 'test.Main$D': (Main.java:0): edit
 debug: type 'test.Main$D': static field 'patchStaticField:int': (Main.java:0): add
 debug: type 'test.Main$D': static field 'redefinedSourceStaticField:int': (Main.java:0): edit
@@ -156,7 +157,7 @@ debug: type 'test.target.package-info': target 'test.nonrec.package-info': (pack
 debug: type 'test.target.package-info': target 'test.nonrec.package-info': (package-info.java:0): remove type 'Ltest/nonrec/NonRec;'
 info: write 'build/patched.dex'
 debug: write 'build/patched.dex': dex version '035'
-debug: write 'build/patched.dex': 23 types
+debug: write 'build/patched.dex': 24 types
 0 error(s), 2 warning(s)
 
 $ dex2jar --force --output build/patched-dex2jar.jar build/patched.dex
@@ -230,6 +231,9 @@ original CrossClassA::help1 (class test.Main$CrossClassA)
 original CrossClassAHelper::help2(CrossClassA)
 
 original CrossClassB::go: data (class test.Main$CrossClassB)
+
+original CrossClassC::<clinit>
+original CrossClassC::<init>
 --- end source/build/libs/source.jar ---
 
 --- run build/patched-dex2jar.jar ---
@@ -334,5 +338,8 @@ exiting replaced CrossClassA::go
 entering wrapper CrossClassBPatcher::go (class test.Main$CrossClassB)
 original CrossClassB::go: data (class test.Main$CrossClassB)
 exiting wrapper CrossClassBPatcher::go
+
+replaced CrossClassCPatcher::<clinit> (class test.Main$CrossClassC)
+replaced CrossClassCPatcher::<init> (class test.Main$CrossClassC)
 --- end build/patched-dex2jar.jar ---
 

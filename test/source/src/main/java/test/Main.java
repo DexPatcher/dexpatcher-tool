@@ -48,6 +48,8 @@ public class Main {
 		CrossClassAHelper.print();
 		p();
 		CrossClassBHelper.print();
+		p();
+		new CrossClassC();
 	}
 
 	public static class A {
@@ -239,6 +241,11 @@ public class Main {
 	}
 	public static class CrossClassBHelper {
 		public static void print() { new CrossClassB("data").go(); }
+	}
+
+	public static class CrossClassC {
+		static { p("original CrossClassC::<clinit>"); }
+		public CrossClassC() { p("original CrossClassC::<init>"); }
 	}
 
 }

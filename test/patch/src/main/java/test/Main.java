@@ -622,6 +622,17 @@ public class Main {
 		}
 	}
 
+	// Completely replace class 'CrossClassC' from a different class:
+	// Note: The patch class is renamed to match the target behind-the-scenes
+	// and all references to the type of the class within the declarations
+	// and code of the class are rewritten to account for the change of type.
+	// In particular, the 'this' references within the patch class change type.
+	@DexReplace(target = "CrossClassC", contentOnly = true)
+	public static class CrossClassCPatcher {
+		static { p("replaced CrossClassCPatcher::<clinit> (" + CrossClassCPatcher.class + ")"); }
+		public CrossClassCPatcher() { p("replaced CrossClassCPatcher::<init> (" + this.getClass() + ")"); }
+	}
+
 	// Mini FAQ
 
 	// Q) My IDE outputs classes that clash with classes in my source app
