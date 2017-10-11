@@ -80,13 +80,13 @@ public abstract class FieldSetPatcher extends MemberSetPatcher<Field> {
 	}
 
 	@Override
-	protected Field onSimpleEdit(Field patch, PatcherAnnotation annotation, Field target, boolean inPlaceEdit) {
+	protected Field onSimpleEdit(Field patch, PatcherAnnotation annotation, Field target, boolean inPlace) {
 
 		// Use the static field initializer value in source only
 		// if not renaming, given that the static constructor in
 		// source would only initialize it if not renamed.
 		// This makes behavior predictable across compilers.
-		EncodedValue value = inPlaceEdit ? target.getInitialValue() : null;
+		EncodedValue value = inPlace ? target.getInitialValue() : null;
 		value = filterInitialValue(patch, value);
 
 		onSimpleRemove(patch, annotation, target);
@@ -99,7 +99,7 @@ public abstract class FieldSetPatcher extends MemberSetPatcher<Field> {
 				value,
 				annotation.getFilteredAnnotations());
 
-		return super.onSimpleEdit(patched, annotation, target, inPlaceEdit);
+		return super.onSimpleEdit(patched, annotation, target, inPlace);
 
 	}
 

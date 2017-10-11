@@ -117,10 +117,10 @@ public abstract class AnnotatableSetPatcher<T extends Annotatable> extends Actio
 	}
 
 	@Override
-	protected T onSimpleEdit(T patch, PatcherAnnotation annotation, T target, boolean inPlaceEdit) {
+	protected T onSimpleEdit(T patch, PatcherAnnotation annotation, T target, boolean inPlace) {
 		int oldFlags = getAccessFlags(target);
 		int newFlags = getAccessFlags(patch);
-		if (inPlaceEdit) {
+		if (inPlace) {
 			String item = "edited " + getSetItemShortLabel();
 			logAccessFlags(item, oldFlags, newFlags, true, true);
 		} else {

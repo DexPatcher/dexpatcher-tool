@@ -128,16 +128,16 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 	}
 
 	@Override
-	protected ClassDef onSimpleEdit(ClassDef patch, PatcherAnnotation annotation, ClassDef target, boolean inPlaceEdit) {
+	protected ClassDef onSimpleEdit(ClassDef patch, PatcherAnnotation annotation, ClassDef target, boolean inPlace) {
 
 		boolean contentOnly = annotation.getContentOnly();
 
 		// Log class access flags before processing members.
 		if (!contentOnly) {
-			super.onSimpleEdit(patch, annotation, target, inPlaceEdit);
+			super.onSimpleEdit(patch, annotation, target, inPlace);
 		}
 
-		if (!inPlaceEdit) {
+		if (!inPlace) {
 			if (contentOnly) {
 				patch = renameClass(patch, target.getType());
 			} else {
