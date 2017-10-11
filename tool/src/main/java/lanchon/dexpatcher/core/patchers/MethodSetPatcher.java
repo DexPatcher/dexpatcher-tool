@@ -207,6 +207,11 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 
 	}
 
+	@Override
+	protected Method onSimpleReplace(Method patch, PatcherAnnotation annotation, Method target, boolean inPlace) {
+		return onSimpleAdd(patch, annotation);
+	}
+
 	// Wrap
 
 	@Override

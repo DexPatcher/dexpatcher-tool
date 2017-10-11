@@ -176,6 +176,11 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 
 	}
 
+	@Override
+	protected ClassDef onSimpleReplace(ClassDef patch, PatcherAnnotation annotation, ClassDef target, boolean inPlace) {
+		return onSimpleAdd(patch, annotation);
+	}
+
 	// Helpers
 
 	private static ClassDef renameClass(ClassDef classDef, final String to) {

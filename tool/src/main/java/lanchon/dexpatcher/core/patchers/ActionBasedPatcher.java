@@ -115,7 +115,7 @@ public abstract class ActionBasedPatcher<T, C extends ActionBasedPatcher.ActionC
 
 	protected abstract T onSimpleAdd(T patch, C actionContext);
 	protected abstract T onSimpleEdit(T patch, C actionContext, T target, boolean inPlace);
-	protected T onSimpleReplace(T patch, C actionContext, T target, boolean inPlace) { return onSimpleAdd(patch, actionContext); }
+	protected abstract T onSimpleReplace(T patch, C actionContext, T target, boolean inPlace);
 	protected void onSimpleRemove(T patch, C actionContext, T target) {}
 
 }
