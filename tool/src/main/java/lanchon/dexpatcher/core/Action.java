@@ -10,6 +10,8 @@
 
 package lanchon.dexpatcher.core;
 
+import java.util.Locale;
+
 public enum Action {
 
 	ADD(Marker.ADD, false),
@@ -27,7 +29,7 @@ public enum Action {
 
 	Action(Marker marker, boolean ignoresCode) {
 		this.marker = marker;
-		label = name().toLowerCase();
+		label = name().toLowerCase(Locale.ENGLISH);
 		this.ignoresCode = ignoresCode;
 	}
 
