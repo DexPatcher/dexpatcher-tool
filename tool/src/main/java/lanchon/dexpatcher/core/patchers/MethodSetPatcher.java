@@ -21,7 +21,7 @@ import lanchon.dexpatcher.core.PatcherAnnotation;
 import lanchon.dexpatcher.core.Util;
 import lanchon.dexpatcher.core.model.BasicMethod;
 import lanchon.dexpatcher.core.model.BasicMethodImplementation;
-import lanchon.dexpatcher.core.util.Ids;
+import lanchon.dexpatcher.core.util.Id;
 
 import org.jf.dexlib2.Opcode;
 import org.jf.dexlib2.iface.Annotation;
@@ -108,7 +108,7 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 
 	@Override
 	protected final String getId(Method item) {
-		return Ids.getMethodId(item);
+		return Id.ofMethod(item);
 	}
 
 	@Override
@@ -125,10 +125,10 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 		if (isTaggedByLastParameter(patch, true)) {
 			ArrayList<MethodParameter> parameters = new ArrayList<MethodParameter>(patch.getParameters());
 			parameters.remove(parameters.size() - 1);
-			targetId = Ids.getMethodId(parameters, patch.getReturnType(), resolvedTarget);
+			targetId = Id.ofMethod(parameters, patch.getReturnType(), resolvedTarget);
 			targetLabel = Util.getMethodLabel(parameters, patch.getReturnType(), resolvedTarget);
 		} else {
-			targetId = (target != null ? Ids.getMethodId(patch, target) : patchId);
+			targetId = (target != null ? Id.ofMethod(patch, target) : patchId);
 			targetLabel = Util.getMemberShortLabel(resolvedTarget);
 		}
 		if (shouldLogTarget(patchId, targetId)) {
@@ -309,7 +309,7 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 		int n = 1;
 		String name = baseName;
 		for (;;) {
-			if (!targetExists(Ids.getMethodId(base, name))) return name;
+			if (!targetExists(Id.ofMethod(base, name))) return name;
 			n++;
 			name = baseName + n;
 		}

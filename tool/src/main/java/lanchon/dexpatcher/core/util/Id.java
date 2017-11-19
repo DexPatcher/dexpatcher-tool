@@ -19,36 +19,36 @@ import org.jf.dexlib2.iface.Field;
 import org.jf.dexlib2.iface.Method;
 import org.jf.dexlib2.iface.MethodParameter;
 
-public abstract class Ids {
+public abstract class Id {
 
 	public static final String STATIC_CONSTRUCTOR = Marker.NAME_STATIC_CONSTRUCTOR + "..V";
 	public static final String DEFAULT_CONSTRUCTOR = Marker.NAME_INSTANCE_CONSTRUCTOR + "..V";
 
-	public static String getTypeId(ClassDef classDef) {
+	public static String ofType(ClassDef classDef) {
 		return classDef.getType();
 	}
 
-	public static String getTypeIdFromName(String name) {
+	public static String ofType(String name) {
 		return TypeDescriptors.getFromName(name);
 	}
 
-	public static String getFieldId(Field field) {
-		return getFieldId(field, field.getName());
+	public static String ofField(Field field) {
+		return ofField(field, field.getName());
 	}
 
-	public static String getFieldId(Field field, String name) {
+	public static String ofField(Field field, String name) {
 		return name + '.' + field.getType();
 	}
 
-	public static String getMethodId(Method method) {
-		return getMethodId(method, method.getName());
+	public static String ofMethod(Method method) {
+		return ofMethod(method, method.getName());
 	}
 
-	public static String getMethodId(Method method, String name) {
-		return getMethodId(method.getParameters(), method.getReturnType(), name);
+	public static String ofMethod(Method method, String name) {
+		return ofMethod(method.getParameters(), method.getReturnType(), name);
 	}
 
-	public static String getMethodId(List<? extends MethodParameter> parameters, String returnType, String name) {
+	public static String ofMethod(List<? extends MethodParameter> parameters, String returnType, String name) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(name).append('.');
 		for (MethodParameter p : parameters) sb.append(p.getType());

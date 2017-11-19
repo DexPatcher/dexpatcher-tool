@@ -12,7 +12,7 @@ package lanchon.dexpatcher.core;
 
 import java.util.List;
 
-import lanchon.dexpatcher.core.util.Ids;
+import lanchon.dexpatcher.core.util.Id;
 import lanchon.dexpatcher.core.util.TypeDescriptors;
 
 import org.jf.dexlib2.iface.Annotation;
@@ -136,7 +136,7 @@ public abstract class Util {
 		int bits = CONSTRUCTOR.getValue() | STATIC.getValue();
 		int mask = bits;
 		return (method.getAccessFlags() & mask) == bits &&
-				Ids.STATIC_CONSTRUCTOR.equals(methodId);
+				Id.STATIC_CONSTRUCTOR.equals(methodId);
 	}
 
 	public static boolean isInstanceConstructor(String methodId, Method method) {
@@ -150,7 +150,7 @@ public abstract class Util {
 		int bits = CONSTRUCTOR.getValue();
 		int mask = bits | STATIC.getValue();
 		return (method.getAccessFlags() & mask) == bits &&
-				Ids.DEFAULT_CONSTRUCTOR.equals(methodId);
+				Id.DEFAULT_CONSTRUCTOR.equals(methodId);
 	}
 
 }

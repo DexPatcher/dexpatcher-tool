@@ -20,7 +20,7 @@ import lanchon.dexpatcher.core.PatchException;
 import lanchon.dexpatcher.core.PatcherAnnotation;
 import lanchon.dexpatcher.core.Util;
 import lanchon.dexpatcher.core.model.BasicClassDef;
-import lanchon.dexpatcher.core.util.Ids;
+import lanchon.dexpatcher.core.util.Id;
 import lanchon.dexpatcher.core.util.TypeDescriptors;
 
 import org.jf.dexlib2.iface.Annotation;
@@ -58,7 +58,7 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 
 	@Override
 	protected final String getId(ClassDef item) {
-		return Ids.getTypeId(item);
+		return Id.ofType(item);
 	}
 
 	@Override
@@ -94,7 +94,7 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 				targetId = target;
 			} else {
 				String base = Util.getLongTypeNameFromDescriptor(patch.getType());
-				targetId = Ids.getTypeIdFromName(resolveTarget(target, base));
+				targetId = Id.ofType(resolveTarget(target, base));
 			}
 		} else if (targetClass != null) {
 			targetId = targetClass;
