@@ -25,7 +25,7 @@ public class Context {
 	public static final String DEFAULT_ANNOTATION_PACKAGE = "lanchon.dexpatcher.annotation";
 
 	private Logger logger;
-	private String annotationPackage = DEFAULT_ANNOTATION_PACKAGE;
+	private String annotationPackage;
 	private boolean constructorAutoIgnoreDisabled;
 	private boolean dexTagSupported;
 	private String sourceCodeRoot;
@@ -41,6 +41,7 @@ public class Context {
 		Logger logger = new BasicLogger();
 		logger.setLogLevel(logLevel);
 		this.logger = logger;
+		setAnnotationPackage(DEFAULT_ANNOTATION_PACKAGE);
 	}
 
 	public Context(Logger logger) {
@@ -62,6 +63,7 @@ public class Context {
 	}
 
 	public void setAnnotationPackage(String value) {
+		if (value.equals(annotationPackage)) return;
 		annotationPackage = value;
 		Action[] actions = Action.values();
 		actionMap = new HashMap<>(actions.length);
