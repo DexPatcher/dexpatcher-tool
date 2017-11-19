@@ -20,7 +20,6 @@ import org.jf.dexlib2.iface.Method;
 import org.jf.dexlib2.iface.MethodParameter;
 import org.jf.dexlib2.iface.value.EncodedValue;
 import org.jf.dexlib2.iface.value.IntEncodedValue;
-import org.jf.dexlib2.util.TypeUtils;
 
 import static org.jf.dexlib2.AccessFlags.*;
 
@@ -116,7 +115,7 @@ public abstract class Util {
 	}
 
 	public static String getFieldId(Field field, String name) {
-		return name + ':' + field.getType();
+		return name + '.' + field.getType();
 	}
 
 	public static String getMethodId(Method method) {
@@ -129,9 +128,9 @@ public abstract class Util {
 
 	public static String getMethodId(List<? extends MethodParameter> parameters, String returnType, String name) {
 		StringBuilder sb = new StringBuilder();
-		sb.append(name).append('(');
+		sb.append(name).append('.');
 		for (MethodParameter p : parameters) sb.append(p.getType());
-		sb.append(')').append(returnType);
+		sb.append('.').append(returnType);
 		return sb.toString();
 	}
 
