@@ -50,13 +50,15 @@ public enum Marker {
 
 	// Actions
 
-	public static final String WRAP_SOURCE_SUFFIX = "__dxpWrapSource";
-	public static final String PREPEND_SOURCE_SUFFIX = "__dxpPrependSource";
-	public static final String PREPEND_PATCH_SUFFIX = "__dxpPrependPatch";
-	public static final String APPEND_SOURCE_SUFFIX = "__dxpAppendSource";
-	public static final String APPEND_PATCH_SUFFIX = "__dxpAppendPatch";
+	private static final String DEXPATCHER_PREFIX = "__$";
 
-	public static final String SPECIAL_METHOD_PREFIX = "__";
+	public static final String WRAP_SOURCE_SUFFIX = DEXPATCHER_PREFIX + "wrapSource";
+	public static final String PREPEND_SOURCE_SUFFIX = DEXPATCHER_PREFIX + "prependSource";
+	public static final String PREPEND_PATCH_SUFFIX = DEXPATCHER_PREFIX + "prependPatch";
+	public static final String APPEND_SOURCE_SUFFIX = DEXPATCHER_PREFIX + "appendSource";
+	public static final String APPEND_PATCH_SUFFIX = DEXPATCHER_PREFIX + "appendPatch";
+
+	public static final String SPECIAL_METHOD_PREFIX = DEXPATCHER_PREFIX;
 
 	// Dalvik
 
