@@ -56,8 +56,7 @@ public enum Marker {
 	public static final String APPEND_SOURCE_SUFFIX = "__dxpAppendSource";
 	public static final String APPEND_PATCH_SUFFIX = "__dxpAppendPatch";
 
-	public static final String RENAME_STATIC_CONSTRUCTOR = "__clinit";
-	public static final String RENAME_INSTANCE_CONSTRUCTOR = "__init";
+	public static final String SPECIAL_METHOD_PREFIX = "__";
 
 	// Dalvik
 

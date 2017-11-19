@@ -299,16 +299,12 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 	}
 
 	private String createMethodName(Method base, String suffix) {
-		String baseName = base.getName();
-		switch (baseName) {
-			case Marker.NAME_STATIC_CONSTRUCTOR:
-				baseName = Marker.RENAME_STATIC_CONSTRUCTOR;
-				break;
-			case Marker.NAME_INSTANCE_CONSTRUCTOR:
-				baseName = Marker.RENAME_INSTANCE_CONSTRUCTOR;
-				break;
+		String prefix = base.getName();
+		int pl = prefix.length();
+		if (pl >= 2 && prefix.charAt(0) == '<' && prefix.charAt(pl - 1) == '>') {
+			prefix = Marker.SPECIAL_METHOD_PREFIX + prefix.substring(1, pl - 1);
 		}
-		baseName += suffix;
+		String baseName = prefix + suffix;
 		int n = 1;
 		String name = baseName;
 		for (;;) {
