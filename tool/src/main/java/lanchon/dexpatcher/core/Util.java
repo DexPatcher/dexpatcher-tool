@@ -69,12 +69,15 @@ public abstract class Util {
 	}
 
 	public static String resolveTypeName(String name, String base) {
-		if (name.indexOf('.') == -1) {			// if name is not a fully qualified name
-			int i = base.lastIndexOf('.');
-			if (name.indexOf('$') == -1) {		// if name is not a qualified nested type
-				i = Math.max(i, base.lastIndexOf('$'));
+		int nameDot = name.indexOf('.');
+		if (nameDot < 0) {                      // if name is not a fully qualified name
+			int baseEnd = base.lastIndexOf('.');
+			if (name.indexOf('$') < 0) {        // if name is not a qualified nested type
+				baseEnd = Math.max(baseEnd, base.lastIndexOf('$'));
 			}
-			if (i != -1) name = base.substring(0, i + 1) + name;
+			if (baseEnd >= 0) name = base.substring(0, baseEnd + 1) + name;
+		} else if (nameDot == 0) {              // if fully qualified name starts with '.'
+			name = name.substring(1);
 		}
 		return name;
 	}
