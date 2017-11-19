@@ -25,8 +25,8 @@ repositories {
     flatDir dirs: '../../multidexlib2/build/libs'
 }
 
-def dexlib2Version = '2.2.1'
-def multidexlib2VersionSuffix = '.r2'
+def dexlib2Version = '2.2.2'
+def multidexlib2VersionSuffix = ''
 
 def multidexlib2Version = dexlib2Version + multidexlib2VersionSuffix
 
