@@ -26,8 +26,8 @@ import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 
 public class PackagePatcher extends ClassSetPatcher {
 
-	private static final String PACKAGE_SUFFIX = Marker.PACKAGE_INFO + ';';
-	private static final Pattern PACKAGE_PATTERN = Pattern.compile("(?s)L(.*/)?" + Pattern.quote(Marker.PACKAGE_INFO) + ';');
+	private static final String PACKAGE_SUFFIX = Marker.NAME_PACKAGE_INFO + ';';
+	private static final Pattern PACKAGE_PATTERN = Pattern.compile("(?s)L(.*/)?" + Pattern.quote(Marker.NAME_PACKAGE_INFO) + ';');
 
 	private static boolean isPackage(String patchId) {
 		return patchId.endsWith(PACKAGE_SUFFIX) && PACKAGE_PATTERN.matcher(patchId).matches();
@@ -86,7 +86,7 @@ public class PackagePatcher extends ClassSetPatcher {
 				targetId = target;
 			} else {
 				// Target cannot be an empty string.
-				targetId = TypeDescriptors.getFromName(target + '.' + Marker.PACKAGE_INFO);
+				targetId = TypeDescriptors.getFromName(target + '.' + Marker.NAME_PACKAGE_INFO);
 			}
 		} else {
 			targetId = patchId;
