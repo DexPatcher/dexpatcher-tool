@@ -85,8 +85,10 @@ public class PackagePatcher extends ClassSetPatcher {
 			if (TypeDescriptor.isLong(target)) {
 				targetId = target;
 			} else {
-				// Target cannot be an empty string.
-				targetId = TypeDescriptor.fromName(target + '.' + Marker.NAME_PACKAGE_INFO);
+				if (target.startsWith(".")) target = target.substring(1);
+				if (target.length() != 0) target += '.' + Marker.NAME_PACKAGE_INFO;
+				else target = Marker.NAME_PACKAGE_INFO;
+				targetId = TypeDescriptor.fromName(target);
 			}
 		} else {
 			targetId = patchId;
