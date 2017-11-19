@@ -13,7 +13,7 @@ package lanchon.dexpatcher.core;
 import java.util.List;
 
 import lanchon.dexpatcher.core.util.Id;
-import lanchon.dexpatcher.core.util.TypeDescriptors;
+import lanchon.dexpatcher.core.util.TypeDescriptor;
 
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.AnnotationElement;
@@ -54,7 +54,7 @@ public abstract class Util {
 
 	public static String getLongTypeNameFromDescriptor(String descriptor) {
 		// TODO: Catch invalid type descriptor exceptions in client code.
-		if (!TypeDescriptors.isLong(descriptor)) throw invalidTypeDescriptor(descriptor);
+		if (!TypeDescriptor.isLong(descriptor)) throw invalidTypeDescriptor(descriptor);
 		int l = descriptor.length();
 		StringBuilder sb = new StringBuilder(l - 2);
 		for (int i = 1; i < l - 1; i++) {

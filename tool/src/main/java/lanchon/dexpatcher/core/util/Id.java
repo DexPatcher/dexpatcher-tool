@@ -29,7 +29,7 @@ public abstract class Id {
 	}
 
 	public static String ofType(String name) {
-		return TypeDescriptors.getFromName(name);
+		return TypeDescriptor.fromName(name);
 	}
 
 	public static String ofField(Field field) {

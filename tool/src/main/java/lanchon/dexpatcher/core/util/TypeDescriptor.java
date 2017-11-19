@@ -10,13 +10,13 @@
 
 package lanchon.dexpatcher.core.util;
 
-public abstract class TypeDescriptors {
+public abstract class TypeDescriptor {
 
-	public static String getFromClass(Class<?> c) {
-		return getFromName(c.getName());
+	public static String fromClass(Class<?> c) {
+		return fromName(c.getName());
 	}
 
-	public static String getFromName(String name) {
+	public static String fromName(String name) {
 		int l = name.length();
 		StringBuilder sb = new StringBuilder(l + 2);
 		sb.append('L');
