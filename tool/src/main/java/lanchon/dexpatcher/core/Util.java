@@ -68,20 +68,6 @@ public abstract class Util {
 		return new RuntimeException("Invalid type descriptor (" + descriptor + ")");
 	}
 
-	public static String resolveTypeName(String name, String base) {
-		int nameDot = name.indexOf('.');
-		if (nameDot < 0) {                      // if name is not a fully qualified name
-			int baseEnd = base.lastIndexOf('.');
-			if (name.indexOf('$') < 0) {        // if name is not a qualified nested type
-				baseEnd = Math.max(baseEnd, base.lastIndexOf('$'));
-			}
-			if (baseEnd >= 0) name = base.substring(0, baseEnd + 1) + name;
-		} else if (nameDot == 0) {              // if fully qualified name starts with '.'
-			name = name.substring(1);
-		}
-		return name;
-	}
-
 	// Labels
 
 	public static String getTypeLabel(ClassDef classDef) {
