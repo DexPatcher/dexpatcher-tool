@@ -16,6 +16,7 @@ import lanchon.dexpatcher.core.PatchException;
 import lanchon.dexpatcher.core.PatcherAnnotation;
 import lanchon.dexpatcher.core.Util;
 import lanchon.dexpatcher.core.model.BasicField;
+import lanchon.dexpatcher.core.util.Ids;
 
 import org.jf.dexlib2.iface.Field;
 import org.jf.dexlib2.iface.value.EncodedValue;
@@ -39,7 +40,7 @@ public abstract class FieldSetPatcher extends MemberSetPatcher<Field> {
 
 	@Override
 	protected final String getId(Field item) {
-		return Util.getFieldId(item);
+		return Ids.getFieldId(item);
 	}
 
 	@Override
@@ -56,7 +57,7 @@ public abstract class FieldSetPatcher extends MemberSetPatcher<Field> {
 	@Override
 	protected String getTargetId(String patchId, Field patch, PatcherAnnotation annotation) {
 		String target = annotation.getTarget();
-		String targetId = (target != null ? Util.getFieldId(patch, target) : patchId);
+		String targetId = (target != null ? Ids.getFieldId(patch, target) : patchId);
 		if (shouldLogTarget(patchId, targetId)) {
 			extendLogPrefixWithTargetLabel(Util.getMemberShortLabel(target));
 		}

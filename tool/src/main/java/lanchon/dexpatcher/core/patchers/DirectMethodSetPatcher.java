@@ -18,6 +18,7 @@ import lanchon.dexpatcher.core.Marker;
 import lanchon.dexpatcher.core.PatchException;
 import lanchon.dexpatcher.core.PatcherAnnotation;
 import lanchon.dexpatcher.core.Util;
+import lanchon.dexpatcher.core.util.Ids;
 
 import org.jf.dexlib2.Opcode;
 import org.jf.dexlib2.iface.Method;
@@ -60,7 +61,7 @@ public class DirectMethodSetPatcher extends MethodSetPatcher {
 			staticConstructorFound = true;
 			if (staticConstructorAction != null) return staticConstructorAction;
 			if (defaultAction == null) {
-				Action action = targetExists(Marker.SIGN_STATIC_CONSTRUCTOR) ? Action.APPEND : Action.ADD;
+				Action action = targetExists(Ids.STATIC_CONSTRUCTOR) ? Action.APPEND : Action.ADD;
 				log(INFO, "implicit " + action.getLabel() + " of static constructor");
 				return action;
 			}

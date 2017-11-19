@@ -12,6 +12,8 @@ package lanchon.dexpatcher.core;
 
 import java.util.List;
 
+import lanchon.dexpatcher.core.util.Ids;
+
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.AnnotationElement;
 import org.jf.dexlib2.iface.ClassDef;
@@ -100,40 +102,6 @@ public abstract class Util {
 		return name;
 	}
 
-	// IDs
-
-	public static String getTypeId(ClassDef classDef) {
-		return classDef.getType();
-	}
-
-	public static String getTypeIdFromName(String name) {
-		return getTypeDescriptorFromName(name);
-	}
-
-	public static String getFieldId(Field field) {
-		return getFieldId(field, field.getName());
-	}
-
-	public static String getFieldId(Field field, String name) {
-		return name + '.' + field.getType();
-	}
-
-	public static String getMethodId(Method method) {
-		return getMethodId(method, method.getName());
-	}
-
-	public static String getMethodId(Method method, String name) {
-		return getMethodId(method.getParameters(), method.getReturnType(), name);
-	}
-
-	public static String getMethodId(List<? extends MethodParameter> parameters, String returnType, String name) {
-		StringBuilder sb = new StringBuilder();
-		sb.append(name).append('.');
-		for (MethodParameter p : parameters) sb.append(p.getType());
-		sb.append('.').append(returnType);
-		return sb.toString();
-	}
-
 	// Labels
 
 	public static String getTypeLabel(ClassDef classDef) {
@@ -202,7 +170,7 @@ public abstract class Util {
 		int bits = CONSTRUCTOR.getValue() | STATIC.getValue();
 		int mask = bits;
 		return (method.getAccessFlags() & mask) == bits &&
-				Marker.SIGN_STATIC_CONSTRUCTOR.equals(methodId);
+				Ids.STATIC_CONSTRUCTOR.equals(methodId);
 	}
 
 	public static boolean isInstanceConstructor(String methodId, Method method) {
@@ -216,7 +184,7 @@ public abstract class Util {
 		int bits = CONSTRUCTOR.getValue();
 		int mask = bits | STATIC.getValue();
 		return (method.getAccessFlags() & mask) == bits &&
-				Marker.SIGN_DEFAULT_CONSTRUCTOR.equals(methodId);
+				Ids.DEFAULT_CONSTRUCTOR.equals(methodId);
 	}
 
 }
