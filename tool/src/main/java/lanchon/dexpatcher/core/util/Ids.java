@@ -13,7 +13,6 @@ package lanchon.dexpatcher.core.util;
 import java.util.List;
 
 import lanchon.dexpatcher.core.Marker;
-import lanchon.dexpatcher.core.Util;
 
 import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.Field;
@@ -30,7 +29,7 @@ public abstract class Ids {
 	}
 
 	public static String getTypeIdFromName(String name) {
-		return Util.getTypeDescriptorFromName(name);
+		return TypeDescriptors.getFromName(name);
 	}
 
 	public static String getFieldId(Field field) {

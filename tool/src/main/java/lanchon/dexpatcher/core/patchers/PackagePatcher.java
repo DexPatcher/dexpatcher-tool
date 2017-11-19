@@ -17,6 +17,7 @@ import lanchon.dexpatcher.core.Marker;
 import lanchon.dexpatcher.core.PatchException;
 import lanchon.dexpatcher.core.PatcherAnnotation;
 import lanchon.dexpatcher.core.Util;
+import lanchon.dexpatcher.core.util.TypeDescriptors;
 
 import org.jf.dexlib2.iface.ClassDef;
 
@@ -81,11 +82,11 @@ public class PackagePatcher extends ClassSetPatcher {
 		String target = annotation.getTarget();
 		String targetId;
 		if (target != null) {
-			if (Util.isLongTypeDescriptor(target)) {
+			if (TypeDescriptors.isLong(target)) {
 				targetId = target;
 			} else {
 				// Target cannot be an empty string.
-				targetId = Util.getTypeDescriptorFromName(target + '.' + Marker.PACKAGE_INFO);
+				targetId = TypeDescriptors.getFromName(target + '.' + Marker.PACKAGE_INFO);
 			}
 		} else {
 			targetId = patchId;

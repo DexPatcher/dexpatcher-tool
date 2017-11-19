@@ -13,6 +13,7 @@ package lanchon.dexpatcher.core;
 import java.util.List;
 
 import lanchon.dexpatcher.core.util.Ids;
+import lanchon.dexpatcher.core.util.TypeDescriptors;
 
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.AnnotationElement;
@@ -26,30 +27,6 @@ import org.jf.dexlib2.iface.value.IntEncodedValue;
 import static org.jf.dexlib2.AccessFlags.*;
 
 public abstract class Util {
-
-	// Type Descriptors
-
-	public static String getTypeDescriptorFromClass(Class<?> c) {
-		return getTypeDescriptorFromName(c.getName());
-	}
-
-	public static String getTypeDescriptorFromName(String name) {
-		int l = name.length();
-		StringBuilder sb = new StringBuilder(l + 2);
-		sb.append('L');
-		for (int i = 0; i < l; i++) {
-			char c = name.charAt(i);
-			if (c == '.') c = '/';
-			sb.append(c);
-		}
-		sb.append(';');
-		return sb.toString();
-	}
-
-	public static boolean isLongTypeDescriptor(String descriptor) {
-		int l = descriptor.length();
-		return l >= 2 && descriptor.charAt(l - 1) == ';' && descriptor.charAt(0) == 'L';
-	}
 
 	// Type Names
 
@@ -77,7 +54,7 @@ public abstract class Util {
 
 	public static String getLongTypeNameFromDescriptor(String descriptor) {
 		// TODO: Catch invalid type descriptor exceptions in client code.
-		if (!isLongTypeDescriptor(descriptor)) throw invalidTypeDescriptor(descriptor);
+		if (!TypeDescriptors.isLong(descriptor)) throw invalidTypeDescriptor(descriptor);
 		int l = descriptor.length();
 		StringBuilder sb = new StringBuilder(l - 2);
 		for (int i = 1; i < l - 1; i++) {

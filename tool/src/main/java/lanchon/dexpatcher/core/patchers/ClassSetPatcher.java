@@ -21,6 +21,7 @@ import lanchon.dexpatcher.core.PatcherAnnotation;
 import lanchon.dexpatcher.core.Util;
 import lanchon.dexpatcher.core.model.BasicClassDef;
 import lanchon.dexpatcher.core.util.Ids;
+import lanchon.dexpatcher.core.util.TypeDescriptors;
 
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.ClassDef;
@@ -89,7 +90,7 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 		String targetClass = annotation.getTargetClass();
 		String targetId;
 		if (target != null) {
-			if (Util.isLongTypeDescriptor(target)) {
+			if (TypeDescriptors.isLong(target)) {
 				targetId = target;
 			} else {
 				String base = Util.getLongTypeNameFromDescriptor(patch.getType());
