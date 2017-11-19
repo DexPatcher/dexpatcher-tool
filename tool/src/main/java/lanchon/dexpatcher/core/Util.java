@@ -13,7 +13,7 @@ package lanchon.dexpatcher.core;
 import java.util.List;
 
 import lanchon.dexpatcher.core.util.Id;
-import lanchon.dexpatcher.core.util.TypeDescriptor;
+import lanchon.dexpatcher.core.util.TypeName;
 
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.AnnotationElement;
@@ -28,54 +28,14 @@ import static org.jf.dexlib2.AccessFlags.*;
 
 public abstract class Util {
 
-	// Type Names
-
-	public static String getTypeNameFromDescriptor(String descriptor) {
-		// Void is only valid for return types.
-		return "V".equals(descriptor) ? "void" : getFieldTypeNameFromDescriptor(descriptor);
-	}
-
-	public static String getFieldTypeNameFromDescriptor(String descriptor) {
-		if (descriptor.length() == 0) throw invalidTypeDescriptor(descriptor);
-		switch (descriptor.charAt(0)) {
-			case '[': return getTypeNameFromDescriptor(descriptor.substring(1)) + "[]";
-			case 'L': return getLongTypeNameFromDescriptor(descriptor);
-			case 'Z': return "boolean";
-			case 'B': return "byte";
-			case 'S': return "short";
-			case 'C': return "char";
-			case 'I': return "int";
-			case 'J': return "long";
-			case 'F': return "float";
-			case 'D': return "double";
-			default:  throw invalidTypeDescriptor(descriptor);
-		}
-	}
-
-	public static String getLongTypeNameFromDescriptor(String descriptor) {
-		// TODO: Catch invalid type descriptor exceptions in client code.
-		if (!TypeDescriptor.isLong(descriptor)) throw invalidTypeDescriptor(descriptor);
-		int l = descriptor.length();
-		StringBuilder sb = new StringBuilder(l - 2);
-		for (int i = 1; i < l - 1; i++) {
-			char c = descriptor.charAt(i);
-			sb.append(c == '/' ? '.' : c);
-		}
-		return sb.toString();
-	}
-
-	private static RuntimeException invalidTypeDescriptor(String descriptor) {
-		return new RuntimeException("Invalid type descriptor (" + descriptor + ")");
-	}
-
 	// Labels
 
 	public static String getTypeLabel(ClassDef classDef) {
-		return getLongTypeNameFromDescriptor(classDef.getType());
+		return TypeName.fromLongDescriptor(classDef.getType());
 	}
 
 	public static String getTypeLabelFromId(String id) {
-		return getLongTypeNameFromDescriptor(id);
+		return TypeName.fromLongDescriptor(id);
 	}
 
 	public static String getMemberShortLabel(String name) {
@@ -87,7 +47,7 @@ public abstract class Util {
 	}
 
 	public static String getFieldLabel(Field field, String name) {
-		return name + ':' + getFieldTypeNameFromDescriptor(field.getType());
+		return name + ':' + TypeName.fromFieldDescriptor(field.getType());
 	}
 
 	public static String getMethodLabel(Method method) {
@@ -104,10 +64,10 @@ public abstract class Util {
 		boolean first = true;
 		for (MethodParameter p : parameters) {
 			if (!first) sb.append(", ");
-			sb.append(getFieldTypeNameFromDescriptor(p.getType()));
+			sb.append(TypeName.fromFieldDescriptor(p.getType()));
 			first = false;
 		}
-		sb.append("):").append(getTypeNameFromDescriptor(returnType));
+		sb.append("):").append(TypeName.fromDescriptor(returnType));
 		return sb.toString();
 	}
 
