@@ -8,9 +8,9 @@
  * or (at your option) any later version.
  */
 
-package lanchon.dexpatcher.core;
+package lanchon.dexpatcher.core.util;
 
-import lanchon.dexpatcher.core.util.Id;
+import lanchon.dexpatcher.core.Marker;
 
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.AnnotationElement;
@@ -21,7 +21,7 @@ import org.jf.dexlib2.iface.value.IntEncodedValue;
 
 import static org.jf.dexlib2.AccessFlags.*;
 
-public abstract class Util {
+public abstract class DexUtils {
 
 	// Access Flags
 

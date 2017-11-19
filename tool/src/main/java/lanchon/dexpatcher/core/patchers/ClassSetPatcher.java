@@ -18,8 +18,8 @@ import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.Marker;
 import lanchon.dexpatcher.core.PatchException;
 import lanchon.dexpatcher.core.PatcherAnnotation;
-import lanchon.dexpatcher.core.Util;
 import lanchon.dexpatcher.core.model.BasicClassDef;
+import lanchon.dexpatcher.core.util.DexUtils;
 import lanchon.dexpatcher.core.util.Id;
 import lanchon.dexpatcher.core.util.Label;
 import lanchon.dexpatcher.core.util.TypeDescriptor;
@@ -70,7 +70,7 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 
 	@Override
 	protected int getAccessFlags(ClassDef item) {
-		return Util.getClassAccessFlags(item);
+		return DexUtils.getClassAccessFlags(item);
 	}
 
 	@Override

@@ -17,7 +17,7 @@ import lanchon.dexpatcher.core.Action;
 import lanchon.dexpatcher.core.Marker;
 import lanchon.dexpatcher.core.PatchException;
 import lanchon.dexpatcher.core.PatcherAnnotation;
-import lanchon.dexpatcher.core.Util;
+import lanchon.dexpatcher.core.util.DexUtils;
 import lanchon.dexpatcher.core.util.Id;
 
 import org.jf.dexlib2.Opcode;
@@ -57,7 +57,7 @@ public class DirectMethodSetPatcher extends MethodSetPatcher {
 
 	@Override
 	protected Action getDefaultAction(String patchId, Method patch) throws PatchException {
-		if (Util.isStaticConstructor(patchId, patch)) {
+		if (DexUtils.isStaticConstructor(patchId, patch)) {
 			staticConstructorFound = true;
 			if (staticConstructorAction != null) return staticConstructorAction;
 			if (defaultAction == null) {
@@ -66,7 +66,7 @@ public class DirectMethodSetPatcher extends MethodSetPatcher {
 				return action;
 			}
 		} else if (!getContext().isConstructorAutoIgnoreDisabled() && defaultAction == null &&
-				Util.isDefaultConstructor(patchId, patch)) {
+				DexUtils.isDefaultConstructor(patchId, patch)) {
 			if (isTrivialConstructor(patch)) {
 				log(INFO, "implicit ignore of trivial default constructor");
 				return Action.IGNORE;
@@ -80,7 +80,7 @@ public class DirectMethodSetPatcher extends MethodSetPatcher {
 
 	@Override
 	protected void onWrap(String patchId, Method patch, PatcherAnnotation annotation) throws PatchException {
-		if (Util.isStaticConstructor(patchId, patch) || Util.isInstanceConstructor(patchId, patch)) {
+		if (DexUtils.isStaticConstructor(patchId, patch) || DexUtils.isInstanceConstructor(patchId, patch)) {
 			throw Action.WRAP.invalidAction();
 		}
 		super.onWrap(patchId, patch, annotation);
@@ -91,7 +91,7 @@ public class DirectMethodSetPatcher extends MethodSetPatcher {
 	@Override
 	protected void onSplice(String patchId, Method patch, PatcherAnnotation annotation, Action action)
 			throws PatchException {
-		if (Util.isInstanceConstructor(patchId, patch)) {
+		if (DexUtils.isInstanceConstructor(patchId, patch)) {
 			throw action.invalidAction();
 		}
 		super.onSplice(patchId, patch, annotation, action);
