@@ -16,7 +16,7 @@ import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.Marker;
 import lanchon.dexpatcher.core.PatchException;
 import lanchon.dexpatcher.core.PatcherAnnotation;
-import lanchon.dexpatcher.core.Util;
+import lanchon.dexpatcher.core.util.Label;
 import lanchon.dexpatcher.core.util.TypeDescriptor;
 
 import org.jf.dexlib2.iface.ClassDef;
@@ -93,7 +93,7 @@ public class PackagePatcher extends ClassSetPatcher {
 		}
 		if (!isPackage(targetId)) throw new PatchException("target is not a package");
 		if (shouldLogTarget(patchId, targetId)) {
-			extendLogPrefixWithTargetLabel(Util.getTypeLabelFromId(targetId));
+			extendLogPrefixWithTargetLabel(Label.ofTypeFromId(targetId));
 		}
 		return targetId;
 	}

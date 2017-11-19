@@ -10,66 +10,18 @@
 
 package lanchon.dexpatcher.core;
 
-import java.util.List;
-
 import lanchon.dexpatcher.core.util.Id;
-import lanchon.dexpatcher.core.util.TypeName;
 
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.AnnotationElement;
 import org.jf.dexlib2.iface.ClassDef;
-import org.jf.dexlib2.iface.Field;
 import org.jf.dexlib2.iface.Method;
-import org.jf.dexlib2.iface.MethodParameter;
 import org.jf.dexlib2.iface.value.EncodedValue;
 import org.jf.dexlib2.iface.value.IntEncodedValue;
 
 import static org.jf.dexlib2.AccessFlags.*;
 
 public abstract class Util {
-
-	// Labels
-
-	public static String getTypeLabel(ClassDef classDef) {
-		return TypeName.fromLongDescriptor(classDef.getType());
-	}
-
-	public static String getTypeLabelFromId(String id) {
-		return TypeName.fromLongDescriptor(id);
-	}
-
-	public static String getMemberShortLabel(String name) {
-		return name;
-	}
-
-	public static String getFieldLabel(Field field) {
-		return getFieldLabel(field, field.getName());
-	}
-
-	public static String getFieldLabel(Field field, String name) {
-		return name + ':' + TypeName.fromFieldDescriptor(field.getType());
-	}
-
-	public static String getMethodLabel(Method method) {
-		return getMethodLabel(method, method.getName());
-	}
-
-	public static String getMethodLabel(Method method, String name) {
-		return getMethodLabel(method.getParameters(), method.getReturnType(), name);
-	}
-
-	public static String getMethodLabel(List<? extends MethodParameter> parameters, String returnType, String name) {
-		StringBuilder sb = new StringBuilder();
-		sb.append(name).append('(');
-		boolean first = true;
-		for (MethodParameter p : parameters) {
-			if (!first) sb.append(", ");
-			sb.append(TypeName.fromFieldDescriptor(p.getType()));
-			first = false;
-		}
-		sb.append("):").append(TypeName.fromDescriptor(returnType));
-		return sb.toString();
-	}
 
 	// Access Flags
 

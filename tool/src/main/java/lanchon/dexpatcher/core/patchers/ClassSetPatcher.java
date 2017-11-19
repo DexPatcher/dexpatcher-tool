@@ -21,6 +21,7 @@ import lanchon.dexpatcher.core.PatcherAnnotation;
 import lanchon.dexpatcher.core.Util;
 import lanchon.dexpatcher.core.model.BasicClassDef;
 import lanchon.dexpatcher.core.util.Id;
+import lanchon.dexpatcher.core.util.Label;
 import lanchon.dexpatcher.core.util.TypeDescriptor;
 import lanchon.dexpatcher.core.util.TypeName;
 
@@ -51,7 +52,7 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 
 	@Override
 	protected void setupLogPrefix(String id, ClassDef item, ClassDef patch, ClassDef patched) {
-		setupLogPrefix(getSetItemLabel() + " '" + Util.getTypeLabel(item) + "'");
+		setupLogPrefix(getSetItemLabel() + " '" + Label.ofType(item) + "'");
 		setSourceFileClass(patch);
 	}
 
@@ -103,7 +104,7 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 			targetId = patchId;
 		}
 		if (shouldLogTarget(patchId, targetId)) {
-			extendLogPrefixWithTargetLabel(Util.getTypeLabelFromId(targetId));
+			extendLogPrefixWithTargetLabel(Label.ofTypeFromId(targetId));
 		}
 		return targetId;
 	}

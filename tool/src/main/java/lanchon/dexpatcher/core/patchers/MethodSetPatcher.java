@@ -18,10 +18,10 @@ import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.Marker;
 import lanchon.dexpatcher.core.PatchException;
 import lanchon.dexpatcher.core.PatcherAnnotation;
-import lanchon.dexpatcher.core.Util;
 import lanchon.dexpatcher.core.model.BasicMethod;
 import lanchon.dexpatcher.core.model.BasicMethodImplementation;
 import lanchon.dexpatcher.core.util.Id;
+import lanchon.dexpatcher.core.util.Label;
 
 import org.jf.dexlib2.Opcode;
 import org.jf.dexlib2.iface.Annotation;
@@ -100,7 +100,7 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 
 	@Override
 	protected void setupLogPrefix(String id, Method item, Method patch, Method patched) {
-		setupLogPrefix(getSetItemLabel() + " '" + Util.getMethodLabel(item) + "'");
+		setupLogPrefix(getSetItemLabel() + " '" + Label.ofMethod(item) + "'");
 		setSourceFileMethod(patch);
 	}
 
@@ -126,10 +126,10 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 			ArrayList<MethodParameter> parameters = new ArrayList<MethodParameter>(patch.getParameters());
 			parameters.remove(parameters.size() - 1);
 			targetId = Id.ofMethod(parameters, patch.getReturnType(), resolvedTarget);
-			targetLabel = Util.getMethodLabel(parameters, patch.getReturnType(), resolvedTarget);
+			targetLabel = Label.ofMethod(parameters, patch.getReturnType(), resolvedTarget);
 		} else {
 			targetId = (target != null ? Id.ofMethod(patch, target) : patchId);
-			targetLabel = Util.getMemberShortLabel(resolvedTarget);
+			targetLabel = Label.getMemberShortLabel(resolvedTarget);
 		}
 		if (shouldLogTarget(patchId, targetId)) {
 			extendLogPrefixWithTargetLabel(targetLabel);
