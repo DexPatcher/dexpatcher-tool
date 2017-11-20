@@ -11,21 +11,14 @@
 package lanchon.dexpatcher.core.patchers;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 import lanchon.dexpatcher.core.Action;
-import lanchon.dexpatcher.core.Marker;
 import lanchon.dexpatcher.core.PatchException;
 import lanchon.dexpatcher.core.PatcherAnnotation;
 import lanchon.dexpatcher.core.util.DexUtils;
 import lanchon.dexpatcher.core.util.Id;
 
-import org.jf.dexlib2.Opcode;
 import org.jf.dexlib2.iface.Method;
-import org.jf.dexlib2.iface.MethodImplementation;
-import org.jf.dexlib2.iface.instruction.Instruction;
-import org.jf.dexlib2.iface.instruction.ReferenceInstruction;
-import org.jf.dexlib2.iface.reference.MethodReference;
 
 import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 
@@ -65,9 +58,9 @@ public class DirectMethodSetPatcher extends MethodSetPatcher {
 				log(INFO, "implicit " + action.getLabel() + " of static constructor");
 				return action;
 			}
-		} else if (!getContext().isConstructorAutoIgnoreDisabled() && defaultAction == null &&
-				DexUtils.isDefaultConstructor(patchId, patch)) {
-			if (isTrivialConstructor(patch)) {
+		} else if (DexUtils.isDefaultConstructor(patchId, patch) && defaultAction == null &&
+				!getContext().isConstructorAutoIgnoreDisabled()) {
+			if (DexUtils.hasTrivialConstructorImplementation(patch)) {
 				log(INFO, "implicit ignore of trivial default constructor");
 				return Action.IGNORE;
 			}
@@ -95,29 +88,6 @@ public class DirectMethodSetPatcher extends MethodSetPatcher {
 			throw action.invalidAction();
 		}
 		super.onSplice(patchId, patch, annotation, action);
-	}
-
-	// Helpers
-
-	private static boolean isTrivialConstructor(Method method) {
-		MethodImplementation implementation = method.getImplementation();
-		if (implementation.getRegisterCount() != 1 || !implementation.getTryBlocks().isEmpty()) return false;
-		Iterator<? extends Instruction> iterator = implementation.getInstructions().iterator();
-		if (!iterator.hasNext()) return false;
-		{
-			Instruction instruction = iterator.next();
-			if (instruction.getOpcode() != Opcode.INVOKE_DIRECT) return false;
-			MethodReference reference = (MethodReference) ((ReferenceInstruction) instruction).getReference();
-			if (!Marker.NAME_INSTANCE_CONSTRUCTOR.equals(reference.getName())) return false;
-			if (method.getDefiningClass().equals(reference.getDefiningClass())) return false;
-		}
-		if (!iterator.hasNext()) return false;
-		{
-			Instruction instruction = iterator.next();
-			if (instruction.getOpcode() != Opcode.RETURN_VOID) return false;
-		}
-		if (iterator.hasNext()) return false;
-		return true;
 	}
 
 }

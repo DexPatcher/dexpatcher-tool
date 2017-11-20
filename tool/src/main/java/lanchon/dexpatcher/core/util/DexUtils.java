@@ -10,12 +10,19 @@
 
 package lanchon.dexpatcher.core.util;
 
+import java.util.Iterator;
+
 import lanchon.dexpatcher.core.Marker;
 
+import org.jf.dexlib2.Opcode;
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.AnnotationElement;
 import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.Method;
+import org.jf.dexlib2.iface.MethodImplementation;
+import org.jf.dexlib2.iface.instruction.Instruction;
+import org.jf.dexlib2.iface.instruction.ReferenceInstruction;
+import org.jf.dexlib2.iface.reference.MethodReference;
 import org.jf.dexlib2.iface.value.EncodedValue;
 import org.jf.dexlib2.iface.value.IntEncodedValue;
 
@@ -68,6 +75,28 @@ public abstract class DexUtils {
 		int mask = bits | STATIC.getValue();
 		return (method.getAccessFlags() & mask) == bits &&
 				Id.DEFAULT_CONSTRUCTOR.equals(methodId);
+	}
+
+	public static boolean hasTrivialConstructorImplementation(Method method) {
+		// Precondition: isDefaultConstructor(...) returns true.
+		MethodImplementation implementation = method.getImplementation();
+		if (implementation.getRegisterCount() != 1 || !implementation.getTryBlocks().isEmpty()) return false;
+		Iterator<? extends Instruction> iterator = implementation.getInstructions().iterator();
+		if (!iterator.hasNext()) return false;
+		{
+			Instruction instruction = iterator.next();
+			if (instruction.getOpcode() != Opcode.INVOKE_DIRECT) return false;
+			MethodReference reference = (MethodReference) ((ReferenceInstruction) instruction).getReference();
+			if (!Marker.NAME_INSTANCE_CONSTRUCTOR.equals(reference.getName())) return false;
+			if (method.getDefiningClass().equals(reference.getDefiningClass())) return false;
+		}
+		if (!iterator.hasNext()) return false;
+		{
+			Instruction instruction = iterator.next();
+			if (instruction.getOpcode() != Opcode.RETURN_VOID) return false;
+		}
+		if (iterator.hasNext()) return false;
+		return true;
 	}
 
 }
