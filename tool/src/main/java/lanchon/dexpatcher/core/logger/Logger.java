@@ -76,7 +76,7 @@ public abstract class Logger implements Flushable, Closeable {
 		counts = new int[Level.values().length];
 	}
 
-	public boolean hasNotloggedErrors() {
+	public boolean hasNotLoggedErrors() {
 		int errors = getMessageCount(FATAL) + getMessageCount(ERROR);
 		return errors == 0;
 	}

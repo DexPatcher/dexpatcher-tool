@@ -62,7 +62,7 @@ public class Processor {
 			dex = processDex(dex, patchDex);
 		}
 
-		if (logger.hasNotloggedErrors()) {
+		if (logger.hasNotLoggedErrors()) {
 			if (config.dryRun) {
 				logger.log(INFO, "dry run due to '--dry-run' option");
 			} else {
@@ -78,7 +78,7 @@ public class Processor {
 		logStats("total process", types, time);
 
 		logger.logErrorAndWarningCounts();
-		return logger.hasNotloggedErrors();
+		return logger.hasNotLoggedErrors();
 
 	}
 
