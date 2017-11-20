@@ -49,7 +49,8 @@ public class StaticFieldSetPatcher extends FieldSetPatcher {
 			log(WARN, "static field will not be initialized as specified in patch because code of static constructor of class is being discarded");
 			return value;
 		} else {
-			return patch.getInitialValue();
+			EncodedValue patchValue = patch.getInitialValue();
+			return (patchValue != null) ? patchValue : value;
 		}
 	}
 

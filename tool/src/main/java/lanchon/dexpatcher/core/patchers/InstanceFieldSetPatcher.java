@@ -33,10 +33,11 @@ public class InstanceFieldSetPatcher extends FieldSetPatcher {
 	@Override
 	protected EncodedValue filterInitialValue(Field patch, EncodedValue value) {
 		// Instance fields should never have initializer values.
-		if (patch.getInitialValue() != null) {
+		EncodedValue patchValue = patch.getInitialValue();
+		if (patchValue != null) {
 			log(ERROR, "unexpected instance field initializer value in patch");
 		}
-		return value;
+		return (patchValue != null) ? patchValue : value;
 	}
 
 }
