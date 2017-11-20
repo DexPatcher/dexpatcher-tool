@@ -12,6 +12,7 @@ package lanchon.dexpatcher;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Locale;
 
@@ -66,14 +67,12 @@ public class Main {
 	}
 
 	public static String getVersion() {
-		String version = "<undefined>";
 		final String FILE = "version";
-		try {
-			BufferedReader reader = new BufferedReader(new InputStreamReader(Main.class.getResourceAsStream(FILE)));
-			version = reader.readLine().trim();
-			reader.close();
-		} catch (Exception e) {}
-		return version;
+		try (InputStream is = Main.class.getResourceAsStream(FILE)) {
+			return new BufferedReader(new InputStreamReader(is)).readLine().trim();
+		} catch (IOException e) {
+			return  "<undefined>";
+		}
 	}
 
 }

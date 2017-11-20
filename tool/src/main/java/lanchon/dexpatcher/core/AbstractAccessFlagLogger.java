@@ -19,9 +19,9 @@ import static org.jf.dexlib2.AccessFlags.*;
 
 public abstract class AbstractAccessFlagLogger {
 
-	private String item;
-	private int oldFlags;
-	private int newFlags;
+	private final String item;
+	private final int oldFlags;
+	private final int newFlags;
 
 	protected AbstractAccessFlagLogger(String item, int oldFlags, int newFlags) {
 		this.item = item;

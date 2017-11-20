@@ -44,7 +44,7 @@ compileJava {
 
 task writeVersionFile {
     ext.version = version
-    ext.outputFile = file('build/classes/main/lanchon/dexpatcher/version');
+    ext.outputFile = file('build/classes/main/lanchon/dexpatcher/version')
     dependsOn compileJava
     inputs.property 'version', { ext.version }
     outputs.file { ext.outputFile }

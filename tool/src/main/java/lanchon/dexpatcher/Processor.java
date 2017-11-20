@@ -150,6 +150,7 @@ public class Processor {
 				if (logger.isLogging(DEBUG)) {
 					String h = header;
 					// See https://github.com/DexPatcher/multidexlib2/commit/177350fbba4d490111d1362810bbeb4521d1803b
+					// noinspection StringEquality
 					if (entryName != SingletonDexContainer.UNDEFINED_ENTRY_NAME) {
 						h += ": file '" + entryName + "'";
 					}

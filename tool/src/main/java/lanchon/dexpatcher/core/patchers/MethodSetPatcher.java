@@ -123,7 +123,7 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 		String targetId;
 		String targetLabel;
 		if (isTaggedByLastParameter(patch, true)) {
-			ArrayList<MethodParameter> parameters = new ArrayList<MethodParameter>(patch.getParameters());
+			ArrayList<MethodParameter> parameters = new ArrayList<>(patch.getParameters());
 			parameters.remove(parameters.size() - 1);
 			targetId = Id.ofMethod(parameters, patch.getReturnType(), resolvedTarget);
 			targetLabel = Label.ofMethod(parameters, patch.getReturnType(), resolvedTarget);
