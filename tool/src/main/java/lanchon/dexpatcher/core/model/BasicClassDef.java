@@ -10,11 +10,10 @@
 
 package lanchon.dexpatcher.core.model;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import com.google.common.collect.Iterators;
+import com.google.common.collect.Iterables;
 
 import org.jf.dexlib2.base.reference.BaseTypeReference;
 import org.jf.dexlib2.iface.Annotation;
@@ -111,22 +110,12 @@ public class BasicClassDef extends BaseTypeReference implements ClassDef {
 
 	@Override
 	public Iterable<? extends Field> getFields() {
-		return new Iterable<Field>() {
-			@Override
-			public Iterator<Field> iterator() {
-				return Iterators.concat(staticFields.iterator(), instanceFields.iterator());
-			}
-		};
+		return Iterables.concat(staticFields, instanceFields);
 	}
 
 	@Override
 	public Iterable<? extends Method> getMethods() {
-		return new Iterable<Method>() {
-			@Override
-			public Iterator<Method> iterator() {
-				return Iterators.concat(directMethods.iterator(), virtualMethods.iterator());
-			}
-		};
+		return Iterables.concat(directMethods, virtualMethods);
 	}
 
 }
