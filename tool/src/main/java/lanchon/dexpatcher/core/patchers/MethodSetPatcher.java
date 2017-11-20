@@ -11,6 +11,7 @@
 package lanchon.dexpatcher.core.patchers;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import lanchon.dexpatcher.core.Action;
@@ -20,6 +21,7 @@ import lanchon.dexpatcher.core.PatchException;
 import lanchon.dexpatcher.core.PatcherAnnotation;
 import lanchon.dexpatcher.core.model.BasicMethod;
 import lanchon.dexpatcher.core.model.BasicMethodImplementation;
+import lanchon.dexpatcher.core.util.DexUtils;
 import lanchon.dexpatcher.core.util.Id;
 import lanchon.dexpatcher.core.util.Label;
 
@@ -38,7 +40,6 @@ import org.jf.dexlib2.iface.instruction.formats.Instruction3rc;
 import org.jf.dexlib2.iface.reference.Reference;
 import org.jf.dexlib2.immutable.ImmutableMethodImplementation;
 import org.jf.dexlib2.immutable.instruction.ImmutableInstruction;
-import org.jf.dexlib2.immutable.instruction.ImmutableInstruction3rc;
 import org.jf.dexlib2.immutable.instruction.ImmutableInstructionFactory;
 import org.jf.dexlib2.rewriter.DexRewriter;
 import org.jf.dexlib2.rewriter.InstructionRewriter;
@@ -52,10 +53,12 @@ import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 import static org.jf.dexlib2.AccessFlags.*;
 import static org.jf.dexlib2.Opcode.*;
 
-public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
+public class MethodSetPatcher extends MemberSetPatcher<Method> {
 
 	private Method sourceFileMethod;
 	private int sourceFileLine;
+
+	private boolean staticConstructorFound;
 
 	public MethodSetPatcher(ClassSetPatcher parent, PatcherAnnotation annotation) {
 		super(parent, annotation);
@@ -107,13 +110,50 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 	// Implementation
 
 	@Override
+	public Collection<Method> process(Iterable<? extends Method> sourceSet, int sourceSetSizeHint,
+			Iterable<? extends Method> patchSet, int patchSetSizeHint) {
+		staticConstructorFound = false;
+		Collection<Method> methods = super.process(sourceSet, sourceSetSizeHint, patchSet, patchSetSizeHint);
+		if (staticConstructorAction != null && !staticConstructorFound) {
+			log(ERROR, "static constructor not found");
+		}
+		return methods;
+	}
+
+	@Override
 	protected final String getId(Method item) {
 		return Id.ofMethod(item);
 	}
 
 	@Override
+	protected String getSetItemLabel() {
+		return "method";
+	}
+
+	@Override
 	protected String getSetItemShortLabel() {
 		return "method";
+	}
+
+	@Override
+	protected Action getDefaultAction(String patchId, Method patch) throws PatchException {
+		if (DexUtils.isStaticConstructor(patchId, patch)) {
+			staticConstructorFound = true;
+			if (staticConstructorAction != null) return staticConstructorAction;
+			if (defaultAction == null) {
+				Action action = targetExists(Id.STATIC_CONSTRUCTOR) ? Action.APPEND : Action.ADD;
+				log(INFO, "implicit " + action.getLabel() + " of static constructor");
+				return action;
+			}
+		} else if (DexUtils.isDefaultConstructor(patchId, patch) && defaultAction == null &&
+				!getContext().isConstructorAutoIgnoreDisabled()) {
+			if (DexUtils.hasTrivialConstructorImplementation(patch)) {
+				log(INFO, "implicit ignore of trivial default constructor");
+				return Action.IGNORE;
+			}
+			throw new PatchException("no action defined for non-trivial default constructor");
+		}
+		return super.getDefaultAction(patchId, patch);
 	}
 
 	@Override
@@ -218,6 +258,10 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 	@Override
 	protected void onWrap(String patchId, Method patch, PatcherAnnotation annotation) throws PatchException {
 
+		if (DexUtils.isStaticConstructor(patchId, patch) || DexUtils.isInstanceConstructor(patchId, patch)) {
+			throw Action.WRAP.invalidAction();
+		}
+
 		Method target = findTargetNonNative(patchId, patch, annotation);
 
 		Method wrapSource = new BasicMethod(
@@ -247,6 +291,10 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 	@Override
 	protected void onSplice(String patchId, Method patch, PatcherAnnotation annotation, Action action)
 			throws PatchException {
+
+		if (DexUtils.isInstanceConstructor(patchId, patch)) {
+			throw action.invalidAction();
+		}
 
 		if (!"V".equals(patch.getReturnType())) {
 			throw new PatchException(action.getLabel() + " action can only be applied to methods that return void");
@@ -315,25 +363,25 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 		}
 	}
 
-	private int createMethodFlags(Method method) {
+	private static int createMethodFlags(Method method) {
 		int flags = method.getAccessFlags();
-		if (this instanceof VirtualMethodSetPatcher) {
+		if (MethodUtil.isDirect(method)) {
+			flags &= ~(PUBLIC.getValue() | PROTECTED.getValue());
+			flags |= PRIVATE.getValue();
+		} else {
 			if (!PRIVATE.isSet(flags)) {
 				flags &= ~PUBLIC.getValue();
 				flags |= PROTECTED.getValue();
 			}
-		} else {
-			flags &= ~(PUBLIC.getValue() | PROTECTED.getValue());
-			flags |= PRIVATE.getValue();
 		}
 		flags &= ~CONSTRUCTOR.getValue();
 		return flags;
 	}
 
-	private MethodImplementation replaceMethodInvocations(MethodImplementation implementation,
+	private static MethodImplementation replaceMethodInvocations(MethodImplementation implementation,
 			final Method from, final Method to) {
 
-		final boolean virtual = this instanceof VirtualMethodSetPatcher;
+		final boolean fromIsDirect = MethodUtil.isDirect(from);
 
 		DexRewriter rewriter = new DexRewriter(new RewriterModule() {
 			@Override
@@ -351,7 +399,7 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 									case INVOKE_DIRECT_RANGE:
 									case INVOKE_STATIC:
 									case INVOKE_STATIC_RANGE:
-										match = !virtual;
+										match = fromIsDirect;
 										break;
 									case INVOKE_VIRTUAL:
 									case INVOKE_VIRTUAL_RANGE:
@@ -359,7 +407,7 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 									//case INVOKE_SUPER_RANGE:
 									//case INVOKE_INTERFACE:
 									//case INVOKE_INTERFACE_RANGE:
-										match = virtual;
+										match = !fromIsDirect;
 										break;
 									default:
 										match = false;
@@ -406,30 +454,22 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 
 	}
 
-	private MethodImplementation createCallSequence(int parameterCount, Method... methods) throws PatchException {
+	private static MethodImplementation createCallSequence(int parameterCount, Method... methods) throws PatchException {
 		ImmutableInstructionFactory factory = ImmutableInstructionFactory.INSTANCE;
 		List<ImmutableInstruction> instructions = new ArrayList<>(methods.length + 1);
 		for (Method method : methods) {
-			instructions.add(createInvokeRangeInstruction(factory, 0, parameterCount, method));
+			Opcode opcode = getInvokeOpcode(method.getAccessFlags(), true);
+			instructions.add(factory.makeInstruction3rc(opcode, 0, parameterCount, method));
 		}
 		instructions.add(factory.makeInstruction10x(RETURN_VOID));
 		return new ImmutableMethodImplementation(parameterCount, instructions, null, null);
 	}
 
-	private ImmutableInstruction3rc createInvokeRangeInstruction(ImmutableInstructionFactory factory,
-			int baseRegister, int parameterCount, Method method) throws PatchException {
-		Opcode opcode = getInvokeRangeOpcode(method.getAccessFlags());
-		return factory.makeInstruction3rc(opcode, baseRegister, parameterCount, method);
-	}
-
-	private Opcode getInvokeRangeOpcode(int accessFlags) throws PatchException {
-		boolean isStatic = STATIC.isSet(accessFlags);
-		if (this instanceof VirtualMethodSetPatcher) {
-			if (isStatic) throw new PatchException("method cannot be both static and virtual");
-			return INVOKE_VIRTUAL_RANGE;
-		} else {
-			return isStatic ? INVOKE_STATIC_RANGE : INVOKE_DIRECT_RANGE;
-		}
+	private static Opcode getInvokeOpcode(int methodFlags, boolean range) throws PatchException {
+		if (CONSTRUCTOR.isSet(methodFlags)) throw new PatchException("constructor invocation is not supported");
+		if (STATIC.isSet(methodFlags)) return range ? INVOKE_STATIC_RANGE : INVOKE_STATIC;
+		if (PRIVATE.isSet(methodFlags)) return range ? INVOKE_DIRECT_RANGE : INVOKE_DIRECT;
+		return range ? INVOKE_VIRTUAL_RANGE : INVOKE_VIRTUAL;
 	}
 
 }

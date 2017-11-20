@@ -153,9 +153,6 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 			if (!inPlace) target = renameClass(target, patch.getType());
 		}
 
-		Collection<Field> fields = Collections.unmodifiableCollection(new FieldSetPatcher(this, annotation)
-				.process(target.getFields(), patch.getFields()));
-
 		return new BasicClassDef(
 				source.getType(),
 				source.getAccessFlags(),
@@ -163,12 +160,10 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 				source.getInterfaces(),
 				source.getSourceFile(),
 				annotations,
-				Iterables.filter(fields, FieldUtil.FIELD_IS_STATIC),
-				Iterables.filter(fields, FieldUtil.FIELD_IS_INSTANCE),
-				Collections.unmodifiableCollection(new DirectMethodSetPatcher(this, annotation)
-						.process(target.getDirectMethods(), patch.getDirectMethods())),
-				Collections.unmodifiableCollection(new VirtualMethodSetPatcher(this, annotation)
-						.process(target.getVirtualMethods(), patch.getVirtualMethods())));
+				Collections.unmodifiableCollection(new FieldSetPatcher(this, annotation)
+						.process(target.getFields(), patch.getFields())),
+				Collections.unmodifiableCollection(new MethodSetPatcher(this, annotation)
+						.process(target.getMethods(), patch.getMethods())));
 
 	}
 
