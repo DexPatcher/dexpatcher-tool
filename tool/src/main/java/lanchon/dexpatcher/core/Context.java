@@ -15,7 +15,7 @@ import java.util.Map;
 
 import lanchon.dexpatcher.core.logger.BasicLogger;
 import lanchon.dexpatcher.core.logger.Logger;
-import lanchon.dexpatcher.core.util.TypeDescriptor;
+import lanchon.dexpatcher.core.util.TypeName;
 
 import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 
@@ -100,11 +100,11 @@ public class Context {
 	// Extras
 
 	private String getMarkerTypeDescriptor(Marker marker) {
-		return TypeDescriptor.fromName(annotationPackage + "." + marker.getClassName());
+		return TypeName.toClassDescriptor(annotationPackage + "." + marker.getClassName());
 	}
 
-	public Action getActionFromMarkerTypeDescriptor(String typeDescriptor) {
-		return actionMap.get(typeDescriptor);
+	public Action getActionFromMarkerTypeDescriptor(String descriptor) {
+		return actionMap.get(descriptor);
 	}
 
 	public String getTagTypeDescriptor() {

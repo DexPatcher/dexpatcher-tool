@@ -23,7 +23,6 @@ import lanchon.multidexlib2.MultiDexIO;
 import lanchon.multidexlib2.OpcodeUtils;
 import lanchon.multidexlib2.SingletonDexContainer;
 
-import com.google.common.base.Objects;
 import org.jf.dexlib2.Opcodes;
 import org.jf.dexlib2.iface.DexFile;
 

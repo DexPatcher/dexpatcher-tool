@@ -22,7 +22,6 @@ import lanchon.dexpatcher.core.model.BasicClassDef;
 import lanchon.dexpatcher.core.util.DexUtils;
 import lanchon.dexpatcher.core.util.Id;
 import lanchon.dexpatcher.core.util.Label;
-import lanchon.dexpatcher.core.util.TypeDescriptor;
 import lanchon.dexpatcher.core.util.TypeName;
 
 import org.jf.dexlib2.iface.Annotation;
@@ -52,7 +51,7 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 
 	@Override
 	protected void setupLogPrefix(String id, ClassDef item, ClassDef patch, ClassDef patched) {
-		setupLogPrefix(getSetItemLabel() + " '" + Label.ofType(item) + "'");
+		setupLogPrefix(getSetItemLabel() + " '" + Label.ofClass(item) + "'");
 		setSourceFileClass(patch);
 	}
 
@@ -60,7 +59,7 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 
 	@Override
 	protected final String getId(ClassDef item) {
-		return Id.ofType(item);
+		return Id.ofClass(item);
 	}
 
 	@Override
@@ -88,23 +87,25 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 
 	@Override
 	protected String getTargetId(String patchId, ClassDef patch, PatcherAnnotation annotation) {
+		String targetId = patchId;
 		String target = annotation.getTarget();
 		String targetClass = annotation.getTargetClass();
-		String targetId;
-		if (target != null) {
-			if (TypeDescriptor.isLong(target)) {
-				targetId = target;
+		if (target != null || targetClass != null) {
+			String targetDescriptor;
+			if (target != null) {
+				if (DexUtils.isClassDescriptor(target)) {
+					targetDescriptor = target;
+				} else {
+					String base = TypeName.fromClassDescriptor(patch.getType());
+					targetDescriptor = TypeName.toClassDescriptor(resolveTarget(target, base));
+				}
 			} else {
-				String base = TypeName.fromLongDescriptor(patch.getType());
-				targetId = Id.ofType(resolveTarget(target, base));
+				targetDescriptor = targetClass;
 			}
-		} else if (targetClass != null) {
-			targetId = targetClass;
-		} else {
-			targetId = patchId;
+			targetId = Id.fromClassDescriptor(targetDescriptor);
 		}
 		if (shouldLogTarget(patchId, targetId)) {
-			extendLogPrefixWithTargetLabel(Label.ofTypeFromId(targetId));
+			extendLogPrefixWithTargetLabel(Label.fromClassId(targetId));
 		}
 		return targetId;
 	}

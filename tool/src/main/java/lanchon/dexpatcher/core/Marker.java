@@ -10,7 +10,7 @@
 
 package lanchon.dexpatcher.core;
 
-import lanchon.dexpatcher.core.util.TypeDescriptor;
+import lanchon.dexpatcher.core.util.TypeName;
 
 public enum Marker {
 
@@ -64,8 +64,8 @@ public enum Marker {
 
 	// Dalvik
 
-	public static final String TYPE_VOID = TypeDescriptor.fromClass(Void.class);
-	public static final String TYPE_INNER_CLASS = TypeDescriptor.fromName("dalvik.annotation.InnerClass");
+	public static final String TYPE_VOID = TypeName.toClassDescriptor(Void.class.getName());
+	public static final String TYPE_INNER_CLASS = TypeName.toClassDescriptor("dalvik.annotation.InnerClass");
 	public static final String ELEM_ACCESS_FLAGS = "accessFlags";
 	public static final String NAME_STATIC_CONSTRUCTOR = "<clinit>";
 	public static final String NAME_INSTANCE_CONSTRUCTOR = "<init>";

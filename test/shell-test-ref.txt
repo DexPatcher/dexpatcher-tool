@@ -150,11 +150,11 @@ debug: type 'test.info.package-info': (package-info.java:0): replace
 debug: type 'test.info.package-info': (package-info.java:0): replace package non-recursive
 debug: type 'test.rec.package-info': (package-info.java:0): remove
 debug: type 'test.rec.package-info': (package-info.java:0): remove package recursive
-debug: type 'test.rec.package-info': (package-info.java:0): remove type 'Ltest/rec/Rec;'
-debug: type 'test.rec.package-info': (package-info.java:0): remove type 'Ltest/rec/inner/RecInner;'
+debug: type 'test.rec.package-info': (package-info.java:0): remove type 'test.rec.Rec'
+debug: type 'test.rec.package-info': (package-info.java:0): remove type 'test.rec.inner.RecInner'
 debug: type 'test.target.package-info': (package-info.java:0): remove
 debug: type 'test.target.package-info': target 'test.nonrec.package-info': (package-info.java:0): remove package non-recursive
-debug: type 'test.target.package-info': target 'test.nonrec.package-info': (package-info.java:0): remove type 'Ltest/nonrec/NonRec;'
+debug: type 'test.target.package-info': target 'test.nonrec.package-info': (package-info.java:0): remove type 'test.nonrec.NonRec'
 info: write 'build/patched.dex'
 debug: write 'build/patched.dex': dex version '035'
 debug: write 'build/patched.dex': 24 types

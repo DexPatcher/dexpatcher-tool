@@ -16,8 +16,10 @@ import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.Marker;
 import lanchon.dexpatcher.core.PatchException;
 import lanchon.dexpatcher.core.PatcherAnnotation;
+import lanchon.dexpatcher.core.util.DexUtils;
+import lanchon.dexpatcher.core.util.Id;
 import lanchon.dexpatcher.core.util.Label;
-import lanchon.dexpatcher.core.util.TypeDescriptor;
+import lanchon.dexpatcher.core.util.TypeName;
 
 import org.jf.dexlib2.iface.ClassDef;
 
@@ -29,8 +31,9 @@ public class PackagePatcher extends ClassSetPatcher {
 	private static final String PACKAGE_SUFFIX = Marker.NAME_PACKAGE_INFO + ';';
 	private static final Pattern PACKAGE_PATTERN = Pattern.compile("(?s)L(.*/)?" + Pattern.quote(Marker.NAME_PACKAGE_INFO) + ';');
 
-	private static boolean isPackage(String patchId) {
-		return patchId.endsWith(PACKAGE_SUFFIX) && PACKAGE_PATTERN.matcher(patchId).matches();
+	private static boolean isPackageId(String id) {
+		String descriptor = Id.toClassDescriptor(id);
+		return descriptor.endsWith(PACKAGE_SUFFIX) && PACKAGE_PATTERN.matcher(descriptor).matches();
 	}
 
 	private boolean processingPackage;
@@ -43,7 +46,7 @@ public class PackagePatcher extends ClassSetPatcher {
 
 	@Override
 	protected void onPrepare(String patchId, ClassDef patch, PatcherAnnotation annotation) throws PatchException {
-		processingPackage = isPackage(patchId);
+		processingPackage = isPackageId(patchId);
 		if (!processingPackage) {
 			super.onPrepare(patchId, patch, annotation);
 			return;
@@ -79,23 +82,23 @@ public class PackagePatcher extends ClassSetPatcher {
 	}
 
 	private String getPackageTargetId(String patchId, ClassDef patch, PatcherAnnotation annotation) throws PatchException {
+		String targetId = patchId;
 		String target = annotation.getTarget();
-		String targetId;
 		if (target != null) {
-			if (TypeDescriptor.isLong(target)) {
-				targetId = target;
+			String targetDescriptor;
+			if (DexUtils.isClassDescriptor(target)) {
+				targetDescriptor = target;
 			} else {
 				if (target.startsWith(".")) target = target.substring(1);
 				if (target.length() != 0) target += '.' + Marker.NAME_PACKAGE_INFO;
 				else target = Marker.NAME_PACKAGE_INFO;
-				targetId = TypeDescriptor.fromName(target);
+				targetDescriptor = TypeName.toClassDescriptor(target);
 			}
-		} else {
-			targetId = patchId;
+			targetId = Id.fromClassDescriptor(targetDescriptor);
 		}
-		if (!isPackage(targetId)) throw new PatchException("target is not a package");
+		if (!isPackageId(targetId)) throw new PatchException("target is not a package");
 		if (shouldLogTarget(patchId, targetId)) {
-			extendLogPrefixWithTargetLabel(Label.ofTypeFromId(targetId));
+			extendLogPrefixWithTargetLabel(Label.fromClassId(targetId));
 		}
 		return targetId;
 	}
@@ -107,9 +110,9 @@ public class PackagePatcher extends ClassSetPatcher {
 			if (id.startsWith(prefix) && pattern.matcher(id).matches()) {
 				try {
 					addTarget(id, false);
-					if (isLogging(DEBUG)) log(DEBUG, "remove type '" + id + "'");
+					if (isLogging(DEBUG)) log(DEBUG, "remove type '" + Label.fromClassId(id) + "'");
 				} catch (PatchException e) {
-					log(ERROR, "already targeted type '" + id + "'");
+					log(ERROR, "already targeted type '" + Label.fromClassId(id) + "'");
 				}
 			}
 		}

@@ -129,7 +129,7 @@ public abstract class MethodSetPatcher extends MemberSetPatcher<Method> {
 			targetLabel = Label.ofMethod(parameters, patch.getReturnType(), resolvedTarget);
 		} else {
 			targetId = (target != null ? Id.ofMethod(patch, target) : patchId);
-			targetLabel = Label.getMemberShortLabel(resolvedTarget);
+			targetLabel = Label.shortLabelOfMember(resolvedTarget);
 		}
 		if (shouldLogTarget(patchId, targetId)) {
 			extendLogPrefixWithTargetLabel(targetLabel);

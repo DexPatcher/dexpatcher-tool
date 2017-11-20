@@ -23,6 +23,11 @@ import static org.jf.dexlib2.AccessFlags.*;
 
 public abstract class DexUtils {
 
+	public static boolean isClassDescriptor(String descriptor) {
+		int l = descriptor.length();
+		return l >= 2 && descriptor.charAt(0) == 'L' && descriptor.charAt(l - 1) == ';';
+	}
+
 	// Access Flags
 
 	public static int getClassAccessFlags(ClassDef classDef) {

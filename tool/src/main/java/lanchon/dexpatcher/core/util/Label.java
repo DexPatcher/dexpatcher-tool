@@ -19,15 +19,19 @@ import org.jf.dexlib2.iface.MethodParameter;
 
 public abstract class Label {
 
-	public static String ofType(ClassDef classDef) {
-		return ofTypeFromId(classDef.getType());
+	public static String ofClass(ClassDef classDef) {
+		return fromClassDescriptor(classDef.getType());
 	}
 
-	public static String ofTypeFromId(String id) {
-		return TypeName.fromLongDescriptor(id);
+	public static String fromClassId(String id) {
+		return fromClassDescriptor(Id.toClassDescriptor(id));
 	}
 
-	public static String getMemberShortLabel(String name) {
+	private static String fromClassDescriptor(String descriptor) {
+		return TypeName.fromClassDescriptor(descriptor);
+	}
+
+	public static String shortLabelOfMember(String name) {
 		return name;
 	}
 
@@ -56,7 +60,7 @@ public abstract class Label {
 			sb.append(TypeName.fromFieldDescriptor(p.getType()));
 			first = false;
 		}
-		sb.append("):").append(TypeName.fromDescriptor(returnType));
+		sb.append("):").append(TypeName.fromReturnDescriptor(returnType));
 		return sb.toString();
 	}
 

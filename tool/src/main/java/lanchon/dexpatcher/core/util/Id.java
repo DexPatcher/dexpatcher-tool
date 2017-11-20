@@ -24,12 +24,16 @@ public abstract class Id {
 	public static final String STATIC_CONSTRUCTOR = Marker.NAME_STATIC_CONSTRUCTOR + "..V";
 	public static final String DEFAULT_CONSTRUCTOR = Marker.NAME_INSTANCE_CONSTRUCTOR + "..V";
 
-	public static String ofType(ClassDef classDef) {
-		return classDef.getType();
+	public static String ofClass(ClassDef classDef) {
+		return fromClassDescriptor(classDef.getType());
 	}
 
-	public static String ofType(String name) {
-		return TypeDescriptor.fromName(name);
+	public static String fromClassDescriptor(String descriptor) {
+		return descriptor;
+	}
+
+	public static String toClassDescriptor(String id) {
+		return id;
 	}
 
 	public static String ofField(Field field) {
