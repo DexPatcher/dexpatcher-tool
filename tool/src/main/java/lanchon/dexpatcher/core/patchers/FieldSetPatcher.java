@@ -20,10 +20,13 @@ import lanchon.dexpatcher.core.util.Label;
 
 import org.jf.dexlib2.iface.Field;
 import org.jf.dexlib2.iface.value.EncodedValue;
+import org.jf.dexlib2.util.FieldUtil;
 
 import static lanchon.dexpatcher.core.PatcherAnnotation.*;
+import static lanchon.dexpatcher.core.logger.Logger.Level.*;
+import static org.jf.dexlib2.AccessFlags.*;
 
-public abstract class FieldSetPatcher extends MemberSetPatcher<Field> {
+public class FieldSetPatcher extends MemberSetPatcher<Field> {
 
 	public FieldSetPatcher(ClassSetPatcher parent, PatcherAnnotation annotation) {
 		super(parent, annotation);
@@ -41,6 +44,11 @@ public abstract class FieldSetPatcher extends MemberSetPatcher<Field> {
 	@Override
 	protected final String getId(Field item) {
 		return Id.ofField(item);
+	}
+
+	@Override
+	protected String getSetItemLabel() {
+		return "field";
 	}
 
 	@Override
@@ -108,8 +116,38 @@ public abstract class FieldSetPatcher extends MemberSetPatcher<Field> {
 		throw new AssertionError("Replace field");
 	}
 
-	// Handlers
+	@Override
+	protected void onSimpleRemove(Field patch, PatcherAnnotation annotation, Field target) {
+		if (FieldUtil.isStatic(target)) {
+			if (FINAL.isSet(target.getAccessFlags())) {
+				log(WARN, "original value of final static field is likely to be embedded in code");
+			}
+		}
+	}
 
-	protected abstract EncodedValue filterInitialValue(Field patch, EncodedValue value);
+	// Helpers
+
+	private EncodedValue filterInitialValue(Field patch, EncodedValue value){
+		if (FieldUtil.isStatic(patch)) {
+			// Use the static field initializer values in patch if and
+			// only if the static constructor code in patch is being used.
+			// This makes behavior more predictable across compilers.
+			Action action = resolvedStaticConstructorAction;
+			if (action != null && action.ignoresCode()) {
+				log(WARN, "static field will not be initialized as specified in patch because code of static constructor of class is being discarded");
+				return value;
+			} else {
+				EncodedValue patchValue = patch.getInitialValue();
+				return (patchValue != null) ? patchValue : value;
+			}
+		} else {
+			// Instance fields should never have initializer values.
+			EncodedValue patchValue = patch.getInitialValue();
+			if (patchValue != null) {
+				log(ERROR, "unexpected instance field initializer value in patch");
+			}
+			return (patchValue != null) ? patchValue : value;
+		}
+	}
 
 }

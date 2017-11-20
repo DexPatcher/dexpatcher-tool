@@ -38,10 +38,10 @@ debug: read 'build/patch.dex': dex version '035'
 debug: type 'test.Main$A': (Main.java:0): replace
 debug: type 'test.Main$Abstract': (Main.java:0): ignore
 debug: type 'test.Main$B': (Main.java:0): edit
-debug: type 'test.Main$B': static field 'staticField:int': (Main.java:0): add
-debug: type 'test.Main$B': instance field 'instanceField:int': (Main.java:0): add
-debug: type 'test.Main$B': instance field 'privateKey:java.lang.String': (Main.java:0): edit
-info: type 'test.Main$B': instance field 'privateKey:java.lang.String': (Main.java:0): 'private' modifier changed to 'public' in edited field
+debug: type 'test.Main$B': field 'staticField:int': (Main.java:0): add
+debug: type 'test.Main$B': field 'instanceField:int': (Main.java:0): add
+debug: type 'test.Main$B': field 'privateKey:java.lang.String': (Main.java:0): edit
+info: type 'test.Main$B': field 'privateKey:java.lang.String': (Main.java:0): 'private' modifier changed to 'public' in edited field
 debug: type 'test.Main$B': direct method '<clinit>():void': (Main.java:100): add
 debug: type 'test.Main$B': direct method '<init>():void': (Main.java:143): ignore
 debug: type 'test.Main$B': direct method 'directMethod():void': (Main.java:152): replace
@@ -56,12 +56,12 @@ debug: type 'test.Main$B': virtual method 'virtualMethod(java.lang.String):void'
 debug: type 'test.Main$B': virtual method 'wrapTestMethod(java.lang.String):void': (Main.java:185): wrap
 debug: type 'test.Main$Base': (Main.java:0): ignore
 debug: type 'test.Main$C': (Main.java:0): edit
-debug: type 'test.Main$C': static field 'patchStaticField:int': (Main.java:0): add
-warning: type 'test.Main$C': static field 'patchStaticField:int': (Main.java:0): static field will not be initialized as specified in patch because code of static constructor of class is being discarded
-debug: type 'test.Main$C': static field 'redefinedSourceStaticField:int': (Main.java:0): edit
-warning: type 'test.Main$C': static field 'redefinedSourceStaticField:int': (Main.java:0): static field will not be initialized as specified in patch because code of static constructor of class is being discarded
-debug: type 'test.Main$C': instance field 'patchField:int': (Main.java:0): add
-debug: type 'test.Main$C': instance field 'redefinedSourceField:int': (Main.java:0): edit
+debug: type 'test.Main$C': field 'patchStaticField:int': (Main.java:0): add
+warning: type 'test.Main$C': field 'patchStaticField:int': (Main.java:0): static field will not be initialized as specified in patch because code of static constructor of class is being discarded
+debug: type 'test.Main$C': field 'redefinedSourceStaticField:int': (Main.java:0): edit
+warning: type 'test.Main$C': field 'redefinedSourceStaticField:int': (Main.java:0): static field will not be initialized as specified in patch because code of static constructor of class is being discarded
+debug: type 'test.Main$C': field 'patchField:int': (Main.java:0): add
+debug: type 'test.Main$C': field 'redefinedSourceField:int': (Main.java:0): edit
 debug: type 'test.Main$C': direct method '<clinit>():void': (Main.java:245): ignore
 debug: type 'test.Main$C': direct method '<init>():void': (Main.java:267): ignore
 debug: type 'test.Main$C': virtual method 'print():void': (Main.java:275): append
@@ -91,10 +91,10 @@ debug: type 'test.Main$CrossClassBPatcher': target 'test.Main$CrossClassB': dire
 debug: type 'test.Main$CrossClassBPatcher': target 'test.Main$CrossClassB': virtual method 'go():void': (Main.java:619): wrap
 debug: type 'test.Main$CrossClassCPatcher': (Main.java:0): replace
 debug: type 'test.Main$D': (Main.java:0): edit
-debug: type 'test.Main$D': static field 'patchStaticField:int': (Main.java:0): add
-debug: type 'test.Main$D': static field 'redefinedSourceStaticField:int': (Main.java:0): edit
-debug: type 'test.Main$D': instance field 'patchField:int': (Main.java:0): add
-debug: type 'test.Main$D': instance field 'redefinedSourceField:int': (Main.java:0): edit
+debug: type 'test.Main$D': field 'patchStaticField:int': (Main.java:0): add
+debug: type 'test.Main$D': field 'redefinedSourceStaticField:int': (Main.java:0): edit
+debug: type 'test.Main$D': field 'patchField:int': (Main.java:0): add
+debug: type 'test.Main$D': field 'redefinedSourceField:int': (Main.java:0): edit
 debug: type 'test.Main$D': direct method '<clinit>():void': (Main.java:286): replace
 debug: type 'test.Main$D': direct method '<init>():void': (Main.java:312): replace
 debug: type 'test.Main$D': virtual method 'print():void': (Main.java:321): append
@@ -105,10 +105,10 @@ debug: type 'test.Main$Derived': virtual method 'method():void': (Main.java:233)
 debug: type 'test.Main$Derived': virtual method 'source_method():void': (Main.java:230): edit
 debug: type 'test.Main$Derived': virtual method 'source_method():void': target 'method': (Main.java:230): 'public' modifier changed to 'protected' in renamed method
 debug: type 'test.Main$E': (Main.java:0): edit
-debug: type 'test.Main$E': static field 'patchStaticField:int': (Main.java:0): add
-debug: type 'test.Main$E': static field 'redefinedSourceStaticField:int': (Main.java:0): edit
-debug: type 'test.Main$E': instance field 'patchField:int': (Main.java:0): add
-debug: type 'test.Main$E': instance field 'redefinedSourceField:int': (Main.java:0): edit
+debug: type 'test.Main$E': field 'patchStaticField:int': (Main.java:0): add
+debug: type 'test.Main$E': field 'redefinedSourceStaticField:int': (Main.java:0): edit
+debug: type 'test.Main$E': field 'patchField:int': (Main.java:0): add
+debug: type 'test.Main$E': field 'redefinedSourceField:int': (Main.java:0): edit
 info: type 'test.Main$E': direct method '<clinit>():void': (Main.java:334): default add
 debug: type 'test.Main$E': direct method '<clinit>():void': (Main.java:334): add
 debug: type 'test.Main$E': direct method '<init>(java.lang.String):void': (Main.java:386): add
@@ -119,23 +119,23 @@ debug: type 'test.Main$E': direct method 'source_static():void': target '<clinit
 debug: type 'test.Main$E': direct method 'source_static():void': target '<clinit>': (Main.java:345): 'constructor' modifier removed from renamed method
 debug: type 'test.Main$E': virtual method 'print():void': (Main.java:392): append
 debug: type 'test.Main$F': (Main.java:0): edit
-debug: type 'test.Main$F': static field 'patchStaticField:int': (Main.java:0): add
-debug: type 'test.Main$F': static field 'redefinedSourceStaticField:int': (Main.java:0): edit
-debug: type 'test.Main$F': instance field 'patchField:int': (Main.java:0): add
-debug: type 'test.Main$F': instance field 'redefinedSourceField:int': (Main.java:0): edit
+debug: type 'test.Main$F': field 'patchStaticField:int': (Main.java:0): add
+debug: type 'test.Main$F': field 'redefinedSourceStaticField:int': (Main.java:0): edit
+debug: type 'test.Main$F': field 'patchField:int': (Main.java:0): add
+debug: type 'test.Main$F': field 'redefinedSourceField:int': (Main.java:0): edit
 debug: type 'test.Main$F': direct method '<clinit>():void': (Main.java:403): append
 debug: type 'test.Main$F': direct method '<init>():void': (Main.java:423): ignore
 debug: type 'test.Main$F': virtual method 'print():void': (Main.java:431): append
 debug: type 'test.Main$G': (Main.java:0): edit
-debug: type 'test.Main$G': static field 'patchStaticField:int': (Main.java:0): add
-debug: type 'test.Main$G': static field 'redefinedSourceStaticField:int': (Main.java:0): edit
+debug: type 'test.Main$G': field 'patchStaticField:int': (Main.java:0): add
+debug: type 'test.Main$G': field 'redefinedSourceStaticField:int': (Main.java:0): edit
 info: type 'test.Main$G': direct method '<clinit>():void': (Main.java:450): implicit append of static constructor
 debug: type 'test.Main$G': direct method '<clinit>():void': (Main.java:450): append
 info: type 'test.Main$G': direct method '<init>():void': (Main.java:447): implicit ignore of trivial default constructor
 debug: type 'test.Main$G': direct method '<init>():void': (Main.java:447): ignore
 debug: type 'test.Main$G': virtual method 'print():void': (Main.java:461): append
 debug: type 'test.Main$H': (Main.java:0): edit
-debug: type 'test.Main$H': static field 'patchStaticField:int': (Main.java:0): add
+debug: type 'test.Main$H': field 'patchStaticField:int': (Main.java:0): add
 info: type 'test.Main$H': direct method '<clinit>():void': (Main.java:471): implicit add of static constructor
 debug: type 'test.Main$H': direct method '<clinit>():void': (Main.java:471): add
 info: type 'test.Main$H': direct method '<init>():void': (Main.java:468): implicit ignore of trivial default constructor
