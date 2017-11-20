@@ -20,6 +20,8 @@ import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.Field;
 import org.jf.dexlib2.iface.Method;
+import org.jf.dexlib2.util.FieldUtil;
+import org.jf.dexlib2.util.MethodUtil;
 
 public class BasicClassDef extends BaseTypeReference implements ClassDef {
 
@@ -29,10 +31,36 @@ public class BasicClassDef extends BaseTypeReference implements ClassDef {
 	private final List<String> interfaces;
 	private final String sourceFile;
 	private final Set<? extends Annotation> annotations;
+	private final Iterable<? extends Field> fields;
 	private final Iterable<? extends Field> staticFields;
 	private final Iterable<? extends Field> instanceFields;
+	private final Iterable<? extends Method> methods;
 	private final Iterable<? extends Method> directMethods;
 	private final Iterable<? extends Method> virtualMethods;
+
+	public BasicClassDef(
+			String type,
+			int accessFlags,
+			String superclass,
+			List<String> interfaces,
+			String sourceFile,
+			Set<? extends Annotation> annotations,
+			Iterable<? extends Field> fields,
+			Iterable<? extends Method> methods
+	) {
+		this.type = type;
+		this.accessFlags = accessFlags;
+		this.superclass = superclass;
+		this.interfaces = interfaces;
+		this.sourceFile = sourceFile;
+		this.annotations = annotations;
+		this.fields = fields;
+		this.staticFields = Iterables.filter(fields, FieldUtil.FIELD_IS_STATIC);
+		this.instanceFields = Iterables.filter(fields, FieldUtil.FIELD_IS_INSTANCE);
+		this.methods = methods;
+		this.directMethods = Iterables.filter(methods, MethodUtil.METHOD_IS_DIRECT);
+		this.virtualMethods = Iterables.filter(methods, MethodUtil.METHOD_IS_VIRTUAL);
+	}
 
 	public BasicClassDef(
 			String type,
@@ -52,8 +80,10 @@ public class BasicClassDef extends BaseTypeReference implements ClassDef {
 		this.interfaces = interfaces;
 		this.sourceFile = sourceFile;
 		this.annotations = annotations;
+		this.fields = Iterables.concat(staticFields, instanceFields);
 		this.staticFields = staticFields;
 		this.instanceFields = instanceFields;
+		this.methods = Iterables.concat(directMethods, virtualMethods);
 		this.directMethods = directMethods;
 		this.virtualMethods = virtualMethods;
 	}
@@ -89,6 +119,11 @@ public class BasicClassDef extends BaseTypeReference implements ClassDef {
 	}
 
 	@Override
+	public Iterable<? extends Field> getFields() {
+		return fields;
+	}
+
+	@Override
 	public Iterable<? extends Field> getStaticFields() {
 		return staticFields;
 	}
@@ -99,6 +134,11 @@ public class BasicClassDef extends BaseTypeReference implements ClassDef {
 	}
 
 	@Override
+	public Iterable<? extends Method> getMethods() {
+		return methods;
+	}
+
+	@Override
 	public Iterable<? extends Method> getDirectMethods() {
 		return directMethods;
 	}
@@ -106,16 +146,6 @@ public class BasicClassDef extends BaseTypeReference implements ClassDef {
 	@Override
 	public Iterable<? extends Method> getVirtualMethods() {
 		return virtualMethods;
-	}
-
-	@Override
-	public Iterable<? extends Field> getFields() {
-		return Iterables.concat(staticFields, instanceFields);
-	}
-
-	@Override
-	public Iterable<? extends Method> getMethods() {
-		return Iterables.concat(directMethods, virtualMethods);
 	}
 
 }
