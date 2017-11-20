@@ -378,7 +378,7 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 		return flags;
 	}
 
-	private static MethodImplementation replaceMethodInvocations(MethodImplementation implementation,
+	private MethodImplementation replaceMethodInvocations(MethodImplementation implementation,
 			final Method from, final Method to) {
 
 		final boolean fromIsDirect = MethodUtil.isDirect(from);
@@ -390,60 +390,68 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 
 					@Override
 					public Instruction rewrite(Instruction instruction) {
-						if (instruction instanceof ReferenceInstruction) {
-							Reference reference = ((ReferenceInstruction) instruction).getReference();
-							if (from.equals(reference)) {
-								boolean match;
-								switch (instruction.getOpcode()) {
-									case INVOKE_DIRECT:
-									case INVOKE_DIRECT_RANGE:
-									case INVOKE_STATIC:
-									case INVOKE_STATIC_RANGE:
-										match = fromIsDirect;
-										break;
-									case INVOKE_VIRTUAL:
-									case INVOKE_VIRTUAL_RANGE:
-									//case INVOKE_SUPER:
-									//case INVOKE_SUPER_RANGE:
-									//case INVOKE_INTERFACE:
-									//case INVOKE_INTERFACE_RANGE:
-										match = !fromIsDirect;
-										break;
-									default:
-										match = false;
+						if (!(instruction instanceof ReferenceInstruction)) return instruction;
+						Reference reference = ((ReferenceInstruction) instruction).getReference();
+						if (!from.equals(reference)) return instruction;
+						boolean invokeIsDirect;
+						switch (instruction.getOpcode()) {
+							case INVOKE_DIRECT:
+							case INVOKE_DIRECT_RANGE:
+							case INVOKE_STATIC:
+							case INVOKE_STATIC_RANGE:
+								invokeIsDirect = true;
+								break;
+							case INVOKE_VIRTUAL:
+							case INVOKE_VIRTUAL_RANGE:
+								invokeIsDirect = false;
+								break;
+							case INVOKE_SUPER:
+							case INVOKE_SUPER_RANGE:
+							case INVOKE_INTERFACE:
+							case INVOKE_INTERFACE_RANGE:
+								invokeIsDirect = false;
+								if (fromIsDirect == invokeIsDirect) {
+									log(ERROR, "unsupported invocation type (" + instruction.getOpcode() + ")");
+									return instruction;
 								}
-								if (match) {
-									if (instruction instanceof Instruction35c) {
-										return new RewrittenInstruction35c((Instruction35c) instruction) {
-											//@Override
-											//public Opcode getOpcode() {
-											//	return virtual ? instruction.getOpcode() :
-											//			STATIC.isSet(to.getAccessFlags()) ?
-											//					INVOKE_STATIC : INVOKE_DIRECT;
-											//}
-											@Override
-											public Reference getReference() {
-												return to;
-											}
-										};
-									} else if (instruction instanceof Instruction3rc) {
-										return new RewrittenInstruction3rc((Instruction3rc) instruction) {
-											//@Override
-											//public Opcode getOpcode() {
-											//	return virtual ? instruction.getOpcode() :
-											//			STATIC.isSet(to.getAccessFlags()) ?
-											//					INVOKE_STATIC_RANGE : INVOKE_DIRECT_RANGE;
-											//}
-											@Override
-											public Reference getReference() {
-												return to;
-											}
-										};
-									} else throw new AssertionError("Unexpected instruction");
-								}
-							}
+								break;
+							default:
+								return instruction;
 						}
-						return instruction;
+						if (fromIsDirect != invokeIsDirect) {
+							log(ERROR, "unexpected invocation type (" + instruction.getOpcode() + ")");
+							return instruction;
+						}
+						if (instruction instanceof Instruction35c) {
+							return new RewrittenInstruction35c((Instruction35c) instruction) {
+								//@Override
+								//public Opcode getOpcode() {
+								//	return virtual ? instruction.getOpcode() :
+								//			STATIC.isSet(to.getAccessFlags()) ?
+								//					INVOKE_STATIC : INVOKE_DIRECT;
+								//}
+								@Override
+								public Reference getReference() {
+									return to;
+								}
+							};
+						} else if (instruction instanceof Instruction3rc) {
+							return new RewrittenInstruction3rc((Instruction3rc) instruction) {
+								//@Override
+								//public Opcode getOpcode() {
+								//	return virtual ? instruction.getOpcode() :
+								//			STATIC.isSet(to.getAccessFlags()) ?
+								//					INVOKE_STATIC_RANGE : INVOKE_DIRECT_RANGE;
+								//}
+								@Override
+								public Reference getReference() {
+									return to;
+								}
+							};
+						} else {
+							log(ERROR, "unexpected instruction type (" + instruction.getClass().getSimpleName() + ")");
+							return instruction;
+						}
 					}
 
 				};
