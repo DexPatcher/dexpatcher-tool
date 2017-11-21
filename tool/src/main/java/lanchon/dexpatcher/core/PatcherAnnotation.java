@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import lanchon.dexpatcher.core.patchers.ActionBasedPatcher;
+import lanchon.dexpatcher.core.patcher.ActionBasedPatcher;
 
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.AnnotationElement;

@@ -16,7 +16,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import lanchon.dexpatcher.core.model.BasicDexFile;
-import lanchon.dexpatcher.core.patchers.PackagePatcher;
+import lanchon.dexpatcher.core.patcher.PackagePatcher;
 
 import org.jf.dexlib2.Opcodes;
 import org.jf.dexlib2.iface.ClassDef;

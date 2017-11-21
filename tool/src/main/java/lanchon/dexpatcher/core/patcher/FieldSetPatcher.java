@@ -8,7 +8,7 @@
  * or (at your option) any later version.
  */
 
-package lanchon.dexpatcher.core.patchers;
+package lanchon.dexpatcher.core.patcher;
 
 import lanchon.dexpatcher.core.Action;
 import lanchon.dexpatcher.core.Marker;
