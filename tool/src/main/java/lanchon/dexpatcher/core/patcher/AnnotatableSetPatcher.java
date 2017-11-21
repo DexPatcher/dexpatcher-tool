@@ -113,7 +113,7 @@ public abstract class AnnotatableSetPatcher<T extends Annotatable> extends Actio
 			protected void log(Logger.Level level, String message) {
 				AnnotatableSetPatcher.this.log(level, message);
 			}
-		}.allFlags(keepInterface, keepImplementation);
+		}.allFlags(this, keepInterface, keepImplementation);
 	}
 
 	@Override

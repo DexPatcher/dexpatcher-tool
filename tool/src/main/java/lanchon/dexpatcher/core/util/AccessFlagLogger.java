@@ -11,6 +11,10 @@
 package lanchon.dexpatcher.core.util;
 
 import lanchon.dexpatcher.core.logger.Logger;
+import lanchon.dexpatcher.core.patcher.AnnotatableSetPatcher;
+import lanchon.dexpatcher.core.patcher.ClassSetPatcher;
+import lanchon.dexpatcher.core.patcher.FieldSetPatcher;
+import lanchon.dexpatcher.core.patcher.MethodSetPatcher;
 
 import org.jf.dexlib2.AccessFlags;
 
@@ -47,6 +51,10 @@ public abstract class AccessFlagLogger {
 		}
 	}
 
+	private void scopeFlags(Logger.Level level) {
+		scopeFlags(level, level);
+	}
+
 	private void scopeFlags(Logger.Level decreased, Logger.Level notDecreased) {
 		AccessFlags newScope = getScope(newFlags);
 		AccessFlags oldScope = getScope(oldFlags);
@@ -74,18 +82,40 @@ public abstract class AccessFlagLogger {
 		throw new AssertionError("Unexpected scope");
 	}
 
-	public void allFlags(boolean keepInterface, boolean keepImplementation) {
+	public void allFlags(AnnotatableSetPatcher<?> patcher, boolean keepInterface, boolean keepImplementation) {
+
+		//if (!(keepInterface || keepImplementation)) {
+		//	throw new AssertionError("Neither interface nor implementation kept");
+		//}
+
+		boolean isClass = (patcher instanceof ClassSetPatcher);
+		boolean isField = (patcher instanceof FieldSetPatcher);
+		boolean isMethod = (patcher instanceof MethodSetPatcher);
 
 		// Interface Dependent
-		scopeFlags(keepInterface ? WARN : DEBUG, keepInterface ? INFO : DEBUG);
-		flag(FINAL, (keepInterface && !PRIVATE.isSet(oldFlags)) ? WARN : INFO, INFO);
+		if (keepInterface) {
+			if (isMethod && !STATIC.isSet(oldFlags | newFlags) && PRIVATE.isSet(oldFlags ^ newFlags)) {
+				scopeFlags(WARN);
+			} else {
+				scopeFlags(WARN, INFO);
+			}
+		} else {
+			scopeFlags(DEBUG);
+		}
+		if (keepInterface) {
+			if      (isClass)  flag(FINAL, WARN, INFO);
+			else if (isField)  flag(FINAL, WARN, (STATIC.isSet(oldFlags) ? WARN : INFO));
+			else if (isMethod) flag(FINAL, (!PRIVATE.isSet(oldFlags) ? WARN : INFO), INFO);
+		} else {
+			flag(FINAL, INFO);
+		}
 		flag(VOLATILE, INFO, keepInterface ? WARN : INFO);
 		flag(TRANSIENT, keepInterface ? WARN : INFO);
 		flag(VARARGS, INFO);
-		flag(CONSTRUCTOR, keepInterface ? WARN : DEBUG);
+		flag(CONSTRUCTOR, keepInterface ? ERROR : DEBUG);
 
 		// Interface And Implementation Dependent
-		flag(STATIC, WARN);
+		flag(STATIC, (isMethod && keepImplementation ? ERROR : WARN));
 		flag(INTERFACE, WARN);
 		flag(ANNOTATION, WARN);
 		flag(ENUM, WARN);
@@ -93,9 +123,13 @@ public abstract class AccessFlagLogger {
 		// Implementation Dependent
 		flag(SYNCHRONIZED, keepImplementation ? WARN : DEBUG);
 		flag(NATIVE, keepImplementation ? WARN : DEBUG);
-		flag(ABSTRACT, WARN, keepImplementation ? WARN : INFO);
+		if (keepImplementation) {
+			flag(ABSTRACT, (isMethod ? ERROR : WARN));
+		} else {
+			flag(ABSTRACT, WARN, INFO);
+		}
 		flag(STRICTFP, keepImplementation ? WARN : DEBUG);
-		flag(DECLARED_SYNCHRONIZED, keepImplementation ? INFO : DEBUG);
+		flag(DECLARED_SYNCHRONIZED, keepImplementation ? WARN : DEBUG);
 
 		// Extra
 		flag(BRIDGE, DEBUG);
