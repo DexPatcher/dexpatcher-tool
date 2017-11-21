@@ -131,11 +131,6 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 	}
 
 	@Override
-	protected String getSetItemShortLabel() {
-		return "method";
-	}
-
-	@Override
 	protected Action getDefaultAction(String patchId, Method patch) throws PatchException {
 		if (DexUtils.isStaticConstructor(patchId, patch)) {
 			staticConstructorFound = true;
