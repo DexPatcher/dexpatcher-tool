@@ -19,7 +19,7 @@ import org.jf.dexlib2.iface.Field;
 import org.jf.dexlib2.iface.Method;
 import org.jf.dexlib2.iface.MethodParameter;
 
-public abstract class Id {
+public class Id {
 
 	public static final String STATIC_CONSTRUCTOR = Marker.NAME_STATIC_CONSTRUCTOR + "..V";
 	public static final String DEFAULT_CONSTRUCTOR = Marker.NAME_INSTANCE_CONSTRUCTOR + "..V";
@@ -59,5 +59,7 @@ public abstract class Id {
 		sb.append('.').append(returnType);
 		return sb.toString();
 	}
+
+	private Id() {}
 
 }

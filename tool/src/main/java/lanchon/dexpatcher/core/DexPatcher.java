@@ -24,8 +24,6 @@ import org.jf.dexlib2.iface.DexFile;
 
 public class DexPatcher {
 
-	private DexPatcher() {}
-
 	public static DexFile process(Context context, DexFile sourceDex, DexFile patchDex) {
 		return process(context, sourceDex, patchDex, sourceDex.getOpcodes());
 	}
@@ -38,5 +36,7 @@ public class DexPatcher {
 				patchClasses, patchClasses.size());
 		return new BasicDexFile(opcodes, Collections.unmodifiableSet(new LinkedHashSet<>(patchedClasses)));
 	}
+
+	private DexPatcher() {}
 
 }

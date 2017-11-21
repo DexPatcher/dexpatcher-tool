@@ -75,4 +75,6 @@ public class Main {
 		}
 	}
 
+	private Main() {}
+
 }

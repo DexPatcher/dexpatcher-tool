@@ -17,7 +17,7 @@ import org.jf.dexlib2.iface.Field;
 import org.jf.dexlib2.iface.Method;
 import org.jf.dexlib2.iface.MethodParameter;
 
-public abstract class Label {
+public class Label {
 
 	public static String ofClass(ClassDef classDef) {
 		return fromClassDescriptor(classDef.getType());
@@ -63,5 +63,7 @@ public abstract class Label {
 		sb.append("):").append(TypeName.fromReturnDescriptor(returnType));
 		return sb.toString();
 	}
+
+	private Label() {}
 
 }

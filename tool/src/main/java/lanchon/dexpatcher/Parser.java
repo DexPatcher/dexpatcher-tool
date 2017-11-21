@@ -134,4 +134,6 @@ public class Parser {
 
 	}
 
+	private Parser() {}
+
 }

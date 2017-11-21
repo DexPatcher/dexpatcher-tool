@@ -10,7 +10,7 @@
 
 package lanchon.dexpatcher.core.util;
 
-public abstract class TypeName {
+public class TypeName {
 
 	public static String fromClassDescriptor(String descriptor) {
 		// TODO: Catch invalid type descriptor exceptions in client code.
@@ -62,5 +62,7 @@ public abstract class TypeName {
 	private static RuntimeException invalidTypeDescriptor(String descriptor) {
 		return new RuntimeException("Invalid type descriptor (" + descriptor + ")");
 	}
+
+	private TypeName() {}
 
 }

@@ -28,7 +28,7 @@ import org.jf.dexlib2.iface.value.IntEncodedValue;
 
 import static org.jf.dexlib2.AccessFlags.*;
 
-public abstract class DexUtils {
+public class DexUtils {
 
 	public static boolean isClassDescriptor(String descriptor) {
 		int l = descriptor.length();
@@ -98,5 +98,7 @@ public abstract class DexUtils {
 		if (iterator.hasNext()) return false;
 		return true;
 	}
+
+	private DexUtils() {}
 
 }
