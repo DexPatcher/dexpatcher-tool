@@ -210,13 +210,9 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 	@Override
 	protected Method onSimpleEdit(Method patch, PatcherAnnotation annotation, Method target, boolean inPlace) {
 
-		//String message = "updating '%s' modifier in edited member to match its target";
-		//AccessFlags[] flagArray = new AccessFlags[] { CONSTRUCTOR };
-		//int flagMask = CONSTRUCTOR.getValue();
-		//int patchFlags = patch.getAccessFlags();
-		//int targetFlags = target.getAccessFlags();
-		//checkAccessFlags(INFO, patchFlags, targetFlags, flagArray, message);
-		//int flags = (patchFlags & ~flagMask) | (targetFlags & flagMask); 
+		if (!inPlace && NATIVE.isSet(patch.getAccessFlags() & target.getAccessFlags())) {
+			log(ERROR, "cannot rename native method");
+		}
 
 		MethodImplementation implementation = target.getImplementation();
 		if (isTaggedByLastParameter(patch, false)) {
