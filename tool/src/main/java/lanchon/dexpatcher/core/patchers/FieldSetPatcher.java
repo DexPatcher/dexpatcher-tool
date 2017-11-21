@@ -36,7 +36,7 @@ public class FieldSetPatcher extends MemberSetPatcher<Field> {
 
 	@Override
 	protected void setupLogPrefix(String id, Field item, Field patch, Field patched) {
-		setupLogPrefix(getSetItemLabel() + " '" + Label.ofField(item) + "'");
+		setupLogPrefix(getItemLabel() + " '" + Label.ofField(item) + "'");
 	}
 
 	// Implementation
@@ -47,7 +47,7 @@ public class FieldSetPatcher extends MemberSetPatcher<Field> {
 	}
 
 	@Override
-	protected String getSetItemLabel() {
+	protected String getItemLabel() {
 		return "field";
 	}
 

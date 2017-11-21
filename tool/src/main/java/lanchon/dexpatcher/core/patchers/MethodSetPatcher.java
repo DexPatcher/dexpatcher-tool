@@ -103,7 +103,7 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 
 	@Override
 	protected void setupLogPrefix(String id, Method item, Method patch, Method patched) {
-		setupLogPrefix(getSetItemLabel() + " '" + Label.ofMethod(item) + "'");
+		setupLogPrefix(getItemLabel() + " '" + Label.ofMethod(item) + "'");
 		setSourceFileMethod(patch);
 	}
 
@@ -126,7 +126,7 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 	}
 
 	@Override
-	protected String getSetItemLabel() {
+	protected String getItemLabel() {
 		return "method";
 	}
 

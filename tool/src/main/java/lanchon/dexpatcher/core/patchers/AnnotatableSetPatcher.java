@@ -121,10 +121,10 @@ public abstract class AnnotatableSetPatcher<T extends Annotatable> extends Actio
 		int oldFlags = getAccessFlags(target);
 		int newFlags = getAccessFlags(patch);
 		if (inPlace) {
-			String item = "edited " + getSetItemLabel();
+			String item = "edited " + getItemLabel();
 			logAccessFlags(item, oldFlags, newFlags, true, true);
 		} else {
-			String item = "renamed " + getSetItemLabel();
+			String item = "renamed " + getItemLabel();
 			logAccessFlags(item, oldFlags, newFlags, false, true);
 		}
 		return patch;
@@ -136,14 +136,14 @@ public abstract class AnnotatableSetPatcher<T extends Annotatable> extends Actio
 		if (!inPlaceEdit) {
 			int oldFlags = getAccessFlags(original);
 			int newFlags = getAccessFlags(patched);
-			String item = "replaced " + getSetItemLabel();
+			String item = "replaced " + getItemLabel();
 			logAccessFlags(item, oldFlags, newFlags, true, false);
 		}
 	}
 
 	// Handlers
 
-	protected abstract String getSetItemLabel();
+	protected abstract String getItemLabel();
 	protected abstract int getAccessFlags(T item);
 	protected abstract Action getDefaultAction(String patchId, T patch) throws PatchException;
 
