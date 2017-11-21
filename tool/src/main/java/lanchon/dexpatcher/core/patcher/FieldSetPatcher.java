@@ -62,7 +62,7 @@ public class FieldSetPatcher extends MemberSetPatcher<Field> {
 		String target = annotation.getTarget();
 		String targetId = (target != null ? Id.ofField(patch, target) : patchId);
 		if (shouldLogTarget(patchId, targetId)) {
-			extendLogPrefixWithTargetLabel(Label.shortLabelOfMember(target));
+			extendLogPrefixWithTargetLabel(Label.ofTargetMember(target));
 		}
 		return targetId;
 	}

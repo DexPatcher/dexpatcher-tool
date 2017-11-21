@@ -31,7 +31,7 @@ public class Label {
 		return TypeName.fromClassDescriptor(descriptor);
 	}
 
-	public static String shortLabelOfMember(String name) {
+	public static String ofTargetMember(String name) {
 		return name;
 	}
 
