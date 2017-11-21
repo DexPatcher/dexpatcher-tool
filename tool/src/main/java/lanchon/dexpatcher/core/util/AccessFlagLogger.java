@@ -8,7 +8,7 @@
  * or (at your option) any later version.
  */
 
-package lanchon.dexpatcher.core;
+package lanchon.dexpatcher.core.util;
 
 import lanchon.dexpatcher.core.logger.Logger;
 
@@ -17,13 +17,13 @@ import org.jf.dexlib2.AccessFlags;
 import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 import static org.jf.dexlib2.AccessFlags.*;
 
-public abstract class AbstractAccessFlagLogger {
+public abstract class AccessFlagLogger {
 
 	private final String item;
 	private final int oldFlags;
 	private final int newFlags;
 
-	protected AbstractAccessFlagLogger(String item, int oldFlags, int newFlags) {
+	protected AccessFlagLogger(String item, int oldFlags, int newFlags) {
 		this.item = item;
 		this.oldFlags = oldFlags;
 		this.newFlags = newFlags;

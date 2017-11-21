@@ -13,12 +13,12 @@ package lanchon.dexpatcher.core.patchers;
 import java.io.File;
 import java.util.Set;
 
-import lanchon.dexpatcher.core.AbstractAccessFlagLogger;
 import lanchon.dexpatcher.core.Action;
 import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.PatchException;
 import lanchon.dexpatcher.core.PatcherAnnotation;
 import lanchon.dexpatcher.core.logger.Logger;
+import lanchon.dexpatcher.core.util.AccessFlagLogger;
 
 import org.jf.dexlib2.iface.Annotatable;
 import org.jf.dexlib2.iface.Annotation;
@@ -108,7 +108,7 @@ public abstract class AnnotatableSetPatcher<T extends Annotatable> extends Actio
 
 	private void logAccessFlags(String item, int oldFlags, int newFlags, boolean keepInterface,
 			boolean keepImplementation) {
-		new AbstractAccessFlagLogger(item, oldFlags, newFlags) {
+		new AccessFlagLogger(item, oldFlags, newFlags) {
 			@Override
 			protected void log(Logger.Level level, String message) {
 				AnnotatableSetPatcher.this.log(level, message);
