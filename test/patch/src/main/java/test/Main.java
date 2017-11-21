@@ -158,7 +158,7 @@ public class Main {
 		// Replace a method, invoking the replaced method at will:
 		// Part 1: Rename the target method, optionally reducing visibility:
 		@DexEdit(target = "virtualMethod")
-		protected void source_virtualMethod(String data) { throw null; }
+		private void source_virtualMethod(String data) { throw null; }
 		// Part 2: Add a new method:
 		// Note: Cannot replace method here, items can be targeted only once.
 		@DexAdd
@@ -227,7 +227,7 @@ public class Main {
 		// super (not Base::source_method).
 		// Note: The less verbose @DexWrap could have been used here instead.
 		@DexEdit(target = "method")
-		protected void source_method() { throw null; }
+		private void source_method() { throw null; }
 		@DexAdd
 		public void method() {
 			p("entering replaced Derived::method");

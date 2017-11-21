@@ -365,23 +365,17 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 
 	private static int createMethodFlags(Method method) {
 		int flags = method.getAccessFlags();
-		if (MethodUtil.isDirect(method)) {
-			flags &= ~(PUBLIC.getValue() | PROTECTED.getValue());
-			flags |= PRIVATE.getValue();
-		} else {
-			if (!PRIVATE.isSet(flags)) {
-				flags &= ~PUBLIC.getValue();
-				flags |= PROTECTED.getValue();
-			}
-		}
-		flags &= ~CONSTRUCTOR.getValue();
+		flags &= ~(PUBLIC.getValue() | PROTECTED.getValue() | CONSTRUCTOR.getValue());
+		flags |= PRIVATE.getValue();
 		return flags;
 	}
 
 	private MethodImplementation replaceMethodInvocations(MethodImplementation implementation,
-			final Method from, final Method to) {
+			final Method from, final Method to) throws PatchException {
 
 		final boolean fromIsDirect = MethodUtil.isDirect(from);
+		final Opcode toInvoke = getInvokeOpcode(to.getAccessFlags(), false);
+		final Opcode toInvokeRange = getInvokeOpcode(to.getAccessFlags(), true);
 
 		DexRewriter rewriter = new DexRewriter(new RewriterModule() {
 			@Override
@@ -424,32 +418,17 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 						}
 						if (instruction instanceof Instruction35c) {
 							return new RewrittenInstruction35c((Instruction35c) instruction) {
-								//@Override
-								//public Opcode getOpcode() {
-								//	return virtual ? instruction.getOpcode() :
-								//			STATIC.isSet(to.getAccessFlags()) ?
-								//					INVOKE_STATIC : INVOKE_DIRECT;
-								//}
-								@Override
-								public Reference getReference() {
-									return to;
-								}
+								@Override public Opcode getOpcode() { return toInvoke; }
+								@Override public Reference getReference() { return to; }
 							};
 						} else if (instruction instanceof Instruction3rc) {
 							return new RewrittenInstruction3rc((Instruction3rc) instruction) {
-								//@Override
-								//public Opcode getOpcode() {
-								//	return virtual ? instruction.getOpcode() :
-								//			STATIC.isSet(to.getAccessFlags()) ?
-								//					INVOKE_STATIC_RANGE : INVOKE_DIRECT_RANGE;
-								//}
-								@Override
-								public Reference getReference() {
-									return to;
-								}
+								@Override public Opcode getOpcode() { return toInvokeRange; }
+								@Override public Reference getReference() { return to; }
 							};
 						} else {
-							log(ERROR, "unexpected instruction type (" + instruction.getClass().getSimpleName() + ")");
+							log(ERROR, "unexpected invocation instruction type (" +
+									instruction.getClass().getSimpleName() + ": " + instruction.getOpcode() + ")");
 							return instruction;
 						}
 					}
@@ -474,7 +453,7 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 	}
 
 	private static Opcode getInvokeOpcode(int methodFlags, boolean range) throws PatchException {
-		if (CONSTRUCTOR.isSet(methodFlags)) throw new PatchException("constructor invocation is not supported");
+		if (CONSTRUCTOR.isSet(methodFlags)) throw new PatchException("unsupported constructor invocation");
 		if (STATIC.isSet(methodFlags)) return range ? INVOKE_STATIC_RANGE : INVOKE_STATIC;
 		if (PRIVATE.isSet(methodFlags)) return range ? INVOKE_DIRECT_RANGE : INVOKE_DIRECT;
 		return range ? INVOKE_VIRTUAL_RANGE : INVOKE_VIRTUAL;

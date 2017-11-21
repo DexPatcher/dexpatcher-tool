@@ -47,11 +47,11 @@ debug: type 'test.Main$B': method '<init>():void': (Main.java:143): ignore
 debug: type 'test.Main$B': method 'directMethod():void': (Main.java:152): replace
 debug: type 'test.Main$B': method 'privateStaticMethod(int):void': (Main.java:112): edit
 info: type 'test.Main$B': method 'privateStaticMethod(int):void': (Main.java:112): 'private' modifier changed to 'public' in edited method
+debug: type 'test.Main$B': method 'source_virtualMethod(java.lang.String):void': (Main.java:161): edit
+debug: type 'test.Main$B': method 'source_virtualMethod(java.lang.String):void': target 'virtualMethod': (Main.java:161): 'public' modifier changed to 'private' in renamed method
 debug: type 'test.Main$B': method 'addedMethod():void': (Main.java:147): add
 debug: type 'test.Main$B': method 'appendTestMethod(java.lang.String):void': (Main.java:209): append
 debug: type 'test.Main$B': method 'prependTestMethod(java.lang.String):void': (Main.java:203): prepend
-debug: type 'test.Main$B': method 'source_virtualMethod(java.lang.String):void': (Main.java:161): edit
-debug: type 'test.Main$B': method 'source_virtualMethod(java.lang.String):void': target 'virtualMethod': (Main.java:161): 'public' modifier changed to 'protected' in renamed method
 debug: type 'test.Main$B': method 'virtualMethod(java.lang.String):void': (Main.java:166): add
 debug: type 'test.Main$B': method 'wrapTestMethod(java.lang.String):void': (Main.java:185): wrap
 debug: type 'test.Main$Base': (Main.java:0): ignore
@@ -101,9 +101,9 @@ debug: type 'test.Main$D': method 'print():void': (Main.java:321): append
 debug: type 'test.Main$Derived': (Main.java:0): edit
 info: type 'test.Main$Derived': method '<init>():void': (Main.java:223): default ignore
 debug: type 'test.Main$Derived': method '<init>():void': (Main.java:223): ignore
-debug: type 'test.Main$Derived': method 'method():void': (Main.java:233): add
 debug: type 'test.Main$Derived': method 'source_method():void': (Main.java:230): edit
-debug: type 'test.Main$Derived': method 'source_method():void': target 'method': (Main.java:230): 'public' modifier changed to 'protected' in renamed method
+debug: type 'test.Main$Derived': method 'source_method():void': target 'method': (Main.java:230): 'public' modifier changed to 'private' in renamed method
+debug: type 'test.Main$Derived': method 'method():void': (Main.java:233): add
 debug: type 'test.Main$E': (Main.java:0): edit
 debug: type 'test.Main$E': field 'patchStaticField:int': (Main.java:0): add
 debug: type 'test.Main$E': field 'redefinedSourceStaticField:int': (Main.java:0): edit
