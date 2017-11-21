@@ -10,7 +10,6 @@
 
 package lanchon.dexpatcher.core.patchers;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Set;
 
@@ -25,15 +24,12 @@ import lanchon.dexpatcher.core.util.Id;
 import lanchon.dexpatcher.core.util.Label;
 import lanchon.dexpatcher.core.util.TypeName;
 
-import com.google.common.collect.Iterables;
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.ClassDef;
-import org.jf.dexlib2.iface.Field;
 import org.jf.dexlib2.rewriter.DexRewriter;
 import org.jf.dexlib2.rewriter.Rewriter;
 import org.jf.dexlib2.rewriter.RewriterModule;
 import org.jf.dexlib2.rewriter.Rewriters;
-import org.jf.dexlib2.util.FieldUtil;
 
 import static lanchon.dexpatcher.core.PatcherAnnotation.*;
 
