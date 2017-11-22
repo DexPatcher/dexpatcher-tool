@@ -112,7 +112,8 @@ public abstract class AccessFlagLogger {
 		flag(VOLATILE, INFO, keepInterface ? WARN : INFO);
 		flag(TRANSIENT, keepInterface ? WARN : INFO);
 		flag(VARARGS, INFO);
-		flag(CONSTRUCTOR, keepInterface ? ERROR : DEBUG);
+		// This is an error, but it is tolerated in case malformed code is not rejected by ART:
+		flag(CONSTRUCTOR, keepInterface ? /* ERROR */ WARN : DEBUG);
 
 		// Interface And Implementation Dependent
 		flag(STATIC, (isMethod && keepImplementation ? ERROR : WARN));
