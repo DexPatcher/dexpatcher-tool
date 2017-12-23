@@ -65,6 +65,7 @@ public class Main {
 	//@DexReplace(target = "A")			// using the nested class name
 	//@DexReplace(target = "Main$A")	// using the full bytecode class name
 	//@DexReplace(target = "test.Main$A")	// using the fully qualified name
+	//@DexReplace(target = ".test.Main$A")	// using the explicit FQN
 	//@DexReplace(target = "Ltest/Main$A;")	// using the type descriptor
 	//@DexReplace(targetClass = A.class)	// using a class reference
 	@DexReplace		// or implicitly, given that the names match
