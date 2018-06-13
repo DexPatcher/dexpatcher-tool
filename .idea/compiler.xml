@@ -2,7 +2,7 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <bytecodeTargetLevel>
-      <module name="annotation" target="1.5" />
+      <module name="annotation" target="1.6" />
       <module name="tool" target="1.7" />
     </bytecodeTargetLevel>
   </component>

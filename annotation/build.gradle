@@ -15,7 +15,7 @@ plugins {
 group = parent.group
 version = parent.version
 
-sourceCompatibility = '1.5'
+sourceCompatibility = '1.6'
 
 jar {
     baseName = 'dexpatcher-annotation'
