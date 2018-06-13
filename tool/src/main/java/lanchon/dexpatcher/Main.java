@@ -60,6 +60,7 @@ public class Main {
 		try {
 			Configuration config = Parser.parseCommandLine(args);
 			if (config == null) return true;
+			logger.log(NONE, getHeader());
 			return Processor.processFiles(logger, config);
 		} finally {
 			logger.flush();
@@ -73,6 +74,10 @@ public class Main {
 		} catch (IOException e) {
 			return  "<undefined>";
 		}
+	}
+
+	public static String getHeader() {
+		return "DexPatcher version " + Main.getVersion() + " by Lanchon (https://dexpatcher.github.io/)";
 	}
 
 	private Main() {}

@@ -82,8 +82,7 @@ public class Parser {
 	}
 
 	public static void printUsage() {
-		System.out.println("DexPatcher Version " + Main.getVersion() + " by Lanchon");
-		System.out.println("           https://dexpatcher.github.io/");
+		System.out.println(Main.getHeader());
 		String usage = "dexpatcher [<option> ...] [--output <patched-dex-or-dir>] " +
 				"<source-dex-apk-or-dir> [<patch-dex-apk-or-dir> ...]";
 		new HelpFormatter().printHelp(usage, getOptions());
