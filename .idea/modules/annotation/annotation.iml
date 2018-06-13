@@ -6,9 +6,6 @@
     <exclude-output />
     <content url="file://$MODULE_DIR$/../../../annotation">
       <sourceFolder url="file://$MODULE_DIR$/../../../annotation/src/main/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/../../../annotation/src/test/java" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/../../../annotation/src/main/resources" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/../../../annotation/src/test/resources" type="java-test-resource" />
       <excludeFolder url="file://$MODULE_DIR$/../../../annotation/.gradle" />
       <excludeFolder url="file://$MODULE_DIR$/../../../annotation/build" />
       <excludeFolder url="file://$MODULE_DIR$/../../../annotation/out" />

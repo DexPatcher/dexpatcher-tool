@@ -1,0 +1,27 @@
+<component name="ProjectCodeStyleConfiguration">
+  <code_scheme name="Project" version="173">
+    <JavaCodeStyleSettings>
+      <option name="CLASS_COUNT_TO_USE_IMPORT_ON_DEMAND" value="100" />
+      <option name="NAMES_COUNT_TO_USE_IMPORT_ON_DEMAND" value="0" />
+      <option name="IMPORT_LAYOUT_TABLE">
+        <value>
+          <package name="java" withSubpackages="true" static="false" />
+          <package name="javax" withSubpackages="true" static="false" />
+          <emptyLine />
+          <package name="lanchon" withSubpackages="true" static="false" />
+          <emptyLine />
+          <package name="" withSubpackages="true" static="false" />
+          <emptyLine />
+          <package name="" withSubpackages="true" static="true" />
+        </value>
+      </option>
+    </JavaCodeStyleSettings>
+    <codeStyleSettings language="JAVA">
+      <option name="ALIGN_MULTILINE_PARAMETERS" value="false" />
+      <indentOptions>
+        <option name="USE_TAB_CHARACTER" value="true" />
+        <option name="SMART_TABS" value="true" />
+      </indentOptions>
+    </codeStyleSettings>
+  </code_scheme>
+</component>

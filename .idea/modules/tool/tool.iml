@@ -6,9 +6,7 @@
     <exclude-output />
     <content url="file://$MODULE_DIR$/../../../tool">
       <sourceFolder url="file://$MODULE_DIR$/../../../tool/src/main/java" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/../../../tool/src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/../../../tool/src/main/resources" type="java-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/../../../tool/src/test/resources" type="java-test-resource" />
       <excludeFolder url="file://$MODULE_DIR$/../../../tool/.gradle" />
       <excludeFolder url="file://$MODULE_DIR$/../../../tool/build" />
       <excludeFolder url="file://$MODULE_DIR$/../../../tool/out" />
