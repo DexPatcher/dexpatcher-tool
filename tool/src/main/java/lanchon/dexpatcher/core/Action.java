@@ -29,7 +29,7 @@ public enum Action {
 
 	Action(Marker marker, boolean ignoresCode) {
 		this.marker = marker;
-		label = name().toLowerCase(Locale.ENGLISH);
+		label = name().toLowerCase(Locale.ROOT);
 		this.ignoresCode = ignoresCode;
 	}
 
