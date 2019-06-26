@@ -26,8 +26,7 @@ import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 public class Main {
 
 	public static void main(String[] args) {
-		Locale locale = new Locale("en", "US");
-		Locale.setDefault(locale);
+		Locale.setDefault(Locale.ENGLISH);
 		int value = run(args);
 		System.exit(value);
 	}
