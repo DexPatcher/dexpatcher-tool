@@ -2,12 +2,12 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/annotation/annotation.iml" filepath="$PROJECT_DIR$/.idea/modules/annotation/annotation.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dexpatcher-tool.iml" filepath="$PROJECT_DIR$/.idea/modules/dexpatcher-tool.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/test/patch/patch.iml" filepath="$PROJECT_DIR$/.idea/modules/test/patch/patch.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/test/source/source.iml" filepath="$PROJECT_DIR$/.idea/modules/test/source/source.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/test/test.iml" filepath="$PROJECT_DIR$/.idea/modules/test/test.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/tool/tool.iml" filepath="$PROJECT_DIR$/.idea/modules/tool/tool.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/annotation/annotation.iml" filepath="$PROJECT_DIR$/.idea/modules/annotation/annotation.iml" group="dexpatcher-tool/annotation" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/dexpatcher-tool.iml" filepath="$PROJECT_DIR$/.idea/modules/dexpatcher-tool.iml" group="dexpatcher-tool" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/test/patch/patch.iml" filepath="$PROJECT_DIR$/.idea/modules/test/patch/patch.iml" group="dexpatcher-tool/test/patch" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/test/source/source.iml" filepath="$PROJECT_DIR$/.idea/modules/test/source/source.iml" group="dexpatcher-tool/test/source" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/test/test.iml" filepath="$PROJECT_DIR$/.idea/modules/test/test.iml" group="dexpatcher-tool/test" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/tool/tool.iml" filepath="$PROJECT_DIR$/.idea/modules/tool/tool.iml" group="dexpatcher-tool/tool" />
     </modules>
   </component>
 </project>
