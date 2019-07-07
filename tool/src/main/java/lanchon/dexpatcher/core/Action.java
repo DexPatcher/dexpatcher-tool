@@ -22,6 +22,7 @@ public enum Action {
 	WRAP(Marker.WRAP, false),
 	PREPEND(Marker.PREPEND, false),
 	APPEND(Marker.APPEND, false),
+
 	NONE(null, false);
 
 	private final Marker marker;
