@@ -23,17 +23,18 @@ import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 public abstract class MemberSetPatcher<T extends Member> extends AnnotatableSetPatcher<T> {
 
 	protected final Action explicitStaticConstructorAction;
-	protected final Action resolvedStaticConstructorAction;
+	protected final Action resolvedStaticConstructorAction;     // not null
 	protected final Action explicitDefaultAction;
-	protected final Action resolvedDefaultAction;
+	protected final Action resolvedDefaultAction;               // not null
 
 	public MemberSetPatcher(ClassSetPatcher parent, PatcherAnnotation annotation) {
 		super(parent);
+		Action defaultAction = Action.NONE;
 		Action sca = annotation.getStaticConstructorAction();
 		Action da = annotation.getDefaultAction();
 		explicitStaticConstructorAction = sca;
 		explicitDefaultAction = da;
-		resolvedDefaultAction = da;
+		resolvedDefaultAction = (da != null) ? da : defaultAction;
 		resolvedStaticConstructorAction = (sca != null) ? sca : resolvedDefaultAction;
 	}
 
@@ -46,7 +47,7 @@ public abstract class MemberSetPatcher<T extends Member> extends AnnotatableSetP
 
 	@Override
 	protected Action getDefaultAction(String patchId, T patch) throws PatchException {
-		if (resolvedDefaultAction == null) throw new PatchException("no action defined");
+		if (resolvedDefaultAction == Action.NONE) throw new PatchException("no action defined");
 		log(INFO, "default " + resolvedDefaultAction.getLabel());
 		return resolvedDefaultAction;
 	}

@@ -21,7 +21,8 @@ public enum Action {
 	IGNORE(Marker.IGNORE, true),
 	WRAP(Marker.WRAP, false),
 	PREPEND(Marker.PREPEND, false),
-	APPEND(Marker.APPEND, false);
+	APPEND(Marker.APPEND, false),
+	NONE(null, false);
 
 	private final Marker marker;
 	private final String label;

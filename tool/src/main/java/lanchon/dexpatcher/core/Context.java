@@ -68,7 +68,8 @@ public class Context {
 		Action[] actions = Action.values();
 		actionMap = new HashMap<>(actions.length);
 		for (Action action : actions) {
-			actionMap.put(getMarkerTypeDescriptor(action.getMarker()), action);
+			Marker marker = action.getMarker();
+			if (marker != null) actionMap.put(getMarkerTypeDescriptor(marker), action);
 		}
 		tagTypeDescriptor = getMarkerTypeDescriptor(Marker.TAG);
 	}

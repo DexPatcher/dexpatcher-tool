@@ -114,7 +114,8 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 			Iterable<? extends Method> patchSet, int patchSetSizeHint) {
 		staticConstructorFound = false;
 		Collection<Method> methods = super.process(sourceSet, sourceSetSizeHint, patchSet, patchSetSizeHint);
-		if (explicitStaticConstructorAction != null && !staticConstructorFound) {
+		if (explicitStaticConstructorAction != null && explicitStaticConstructorAction != Action.NONE &&
+				!staticConstructorFound) {
 			log(ERROR, "static constructor not found");
 		}
 		return methods;
@@ -134,13 +135,13 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 	protected Action getDefaultAction(String patchId, Method patch) throws PatchException {
 		if (DexUtils.isStaticConstructor(patchId, patch)) {
 			staticConstructorFound = true;
-			if (resolvedStaticConstructorAction == null) {
+			if (resolvedStaticConstructorAction == Action.NONE) {
 				Action action = targetExists(Id.STATIC_CONSTRUCTOR) ? Action.APPEND : Action.ADD;
 				log(INFO, "implicit " + action.getLabel() + " of static constructor");
 				return action;
 			}
 			if (explicitStaticConstructorAction != null) return explicitStaticConstructorAction;
-		} else if (DexUtils.isDefaultConstructor(patchId, patch) && resolvedDefaultAction == null &&
+		} else if (DexUtils.isDefaultConstructor(patchId, patch) && resolvedDefaultAction == Action.NONE &&
 				!getContext().isConstructorAutoIgnoreDisabled()) {
 			if (DexUtils.hasTrivialConstructorImplementation(patch)) {
 				log(INFO, "implicit ignore of trivial default constructor");

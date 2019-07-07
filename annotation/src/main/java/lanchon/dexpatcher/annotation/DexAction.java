@@ -20,5 +20,6 @@ public enum DexAction {
 	WRAP,
 	PREPEND,
 	APPEND,
+	NONE,
 	UNDEFINED;
 }

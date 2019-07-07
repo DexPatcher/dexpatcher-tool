@@ -128,7 +128,7 @@ public class FieldSetPatcher extends MemberSetPatcher<Field> {
 			// only if the static constructor code in patch is being used.
 			// This makes behavior more predictable across compilers.
 			Action action = resolvedStaticConstructorAction;
-			if (action != null && action.ignoresCode()) {
+			if (/* action != Action.NONE && */ action.ignoresCode()) {
 				log(WARN, "static field will not be initialized as specified in patch because code of static constructor of class is being discarded");
 				return value;
 			} else {
