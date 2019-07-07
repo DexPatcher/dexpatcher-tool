@@ -465,7 +465,12 @@ public class Main {
 	}
 
 	// Modify members of class 'H' implicitly handling static constructors:
-	@DexEdit
+	// Note: Setting 'defaultAction' defines a default action for all members
+	// including static constructors, thus disabling their implicit handling.
+	// DexPatcher tool v1.6.3 adds the new 'DexAction.NONE' value which can
+	// be assigned to 'staticConstructorAction' to restore implicit handling
+	// of static constructors when using 'defaultAction'.
+	@DexEdit(defaultAction = DexAction.WRAP, staticConstructorAction = DexAction.NONE)
 	public static class H {
 
 		@DexAdd
@@ -475,6 +480,9 @@ public class Main {
 		static {
 			p("added H::<clinit>");
 		}
+
+		@DexIgnore
+		H() { throw null; }
 
 		@DexAppend
 		public void print() {

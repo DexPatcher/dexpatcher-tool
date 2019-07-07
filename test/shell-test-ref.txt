@@ -67,28 +67,28 @@ debug: type 'test.Main$C': method '<init>():void': (Main.java:268): ignore
 debug: type 'test.Main$C': method 'print():void': (Main.java:276): append
 debug: type 'test.Main$Interface': (Main.java:0): ignore
 debug: type 'test.Main$Concrete1': (Main.java:0): edit
-info: type 'test.Main$Concrete1': method '<init>():void': (Main.java:510): implicit ignore of trivial default constructor
-debug: type 'test.Main$Concrete1': method '<init>():void': (Main.java:510): ignore
+info: type 'test.Main$Concrete1': method '<init>():void': (Main.java:518): implicit ignore of trivial default constructor
+debug: type 'test.Main$Concrete1': method '<init>():void': (Main.java:518): ignore
 debug: type 'test.Main$Concrete1': method 'abstractMethod():void': (Main.java:0): ignore
-debug: type 'test.Main$Concrete1': method 'interfaceMethod():void': (Main.java:519): ignore
-debug: type 'test.Main$Concrete1': method 'method():void': (Main.java:513): replace
+debug: type 'test.Main$Concrete1': method 'interfaceMethod():void': (Main.java:527): ignore
+debug: type 'test.Main$Concrete1': method 'method():void': (Main.java:521): replace
 debug: type 'test.Main$Concrete2': (Main.java:0): edit
-info: type 'test.Main$Concrete2': method '<init>():void': (Main.java:547): implicit ignore of trivial default constructor
-debug: type 'test.Main$Concrete2': method '<init>():void': (Main.java:547): ignore
-debug: type 'test.Main$Concrete2': method 'method():void': (Main.java:550): replace
+info: type 'test.Main$Concrete2': method '<init>():void': (Main.java:555): implicit ignore of trivial default constructor
+debug: type 'test.Main$Concrete2': method '<init>():void': (Main.java:555): ignore
+debug: type 'test.Main$Concrete2': method 'method():void': (Main.java:558): replace
 debug: type 'test.Main$Concrete3': (Main.java:0): edit
-info: type 'test.Main$Concrete3': method '<init>():void': (Main.java:558): implicit ignore of trivial default constructor
-debug: type 'test.Main$Concrete3': method '<init>():void': (Main.java:558): ignore
-debug: type 'test.Main$Concrete3': method 'method():void': (Main.java:561): replace
+info: type 'test.Main$Concrete3': method '<init>():void': (Main.java:566): implicit ignore of trivial default constructor
+debug: type 'test.Main$Concrete3': method '<init>():void': (Main.java:566): ignore
+debug: type 'test.Main$Concrete3': method 'method():void': (Main.java:569): replace
 debug: type 'test.Main$CrossClassA': (Main.java:0): add
 debug: type 'test.Main$CrossClassAHelper': (Main.java:0): edit
-info: type 'test.Main$CrossClassAHelper': method '<init>():void': (Main.java:585): implicit ignore of trivial default constructor
-debug: type 'test.Main$CrossClassAHelper': method '<init>():void': (Main.java:585): ignore
-debug: type 'test.Main$CrossClassAHelper': method 'help2(test.Main$source_CrossClassA):void': (Main.java:587): add
+info: type 'test.Main$CrossClassAHelper': method '<init>():void': (Main.java:593): implicit ignore of trivial default constructor
+debug: type 'test.Main$CrossClassAHelper': method '<init>():void': (Main.java:593): ignore
+debug: type 'test.Main$CrossClassAHelper': method 'help2(test.Main$source_CrossClassA):void': (Main.java:595): add
 debug: type 'test.Main$CrossClassBPatcher': (Main.java:0): edit
-info: type 'test.Main$CrossClassBPatcher': target 'test.Main$CrossClassB': method '<init>():void': (Main.java:617): implicit ignore of trivial default constructor
-debug: type 'test.Main$CrossClassBPatcher': target 'test.Main$CrossClassB': method '<init>():void': (Main.java:617): ignore
-debug: type 'test.Main$CrossClassBPatcher': target 'test.Main$CrossClassB': method 'go():void': (Main.java:620): wrap
+info: type 'test.Main$CrossClassBPatcher': target 'test.Main$CrossClassB': method '<init>():void': (Main.java:625): implicit ignore of trivial default constructor
+debug: type 'test.Main$CrossClassBPatcher': target 'test.Main$CrossClassB': method '<init>():void': (Main.java:625): ignore
+debug: type 'test.Main$CrossClassBPatcher': target 'test.Main$CrossClassB': method 'go():void': (Main.java:628): wrap
 debug: type 'test.Main$CrossClassCPatcher': (Main.java:0): replace
 debug: type 'test.Main$D': (Main.java:0): edit
 debug: type 'test.Main$D': field 'patchStaticField:int': (Main.java:0): add
@@ -136,15 +136,14 @@ debug: type 'test.Main$G': method '<init>():void': (Main.java:448): ignore
 debug: type 'test.Main$G': method 'print():void': (Main.java:462): append
 debug: type 'test.Main$H': (Main.java:0): edit
 debug: type 'test.Main$H': field 'patchStaticField:int': (Main.java:0): add
-info: type 'test.Main$H': method '<clinit>():void': (Main.java:472): implicit add of static constructor
-debug: type 'test.Main$H': method '<clinit>():void': (Main.java:472): add
-info: type 'test.Main$H': method '<init>():void': (Main.java:469): implicit ignore of trivial default constructor
-debug: type 'test.Main$H': method '<init>():void': (Main.java:469): ignore
-debug: type 'test.Main$H': method 'print():void': (Main.java:481): append
+info: type 'test.Main$H': method '<clinit>():void': (Main.java:477): implicit add of static constructor
+debug: type 'test.Main$H': method '<clinit>():void': (Main.java:477): add
+debug: type 'test.Main$H': method '<init>():void': (Main.java:485): ignore
+debug: type 'test.Main$H': method 'print():void': (Main.java:489): append
 debug: type 'test.Main$source_CrossClassA': (Main.java:0): edit
 debug: type 'test.Main$source_CrossClassA': target 'test.Main$CrossClassA': (Main.java:0): 'public' modifier removed from renamed type
-debug: type 'test.Main$source_CrossClassA': target 'test.Main$CrossClassA': method '<init>(java.lang.String):void': (Main.java:578): ignore
-debug: type 'test.Main$source_CrossClassA': target 'test.Main$CrossClassA': method 'go():void': (Main.java:580): ignore
+debug: type 'test.Main$source_CrossClassA': target 'test.Main$CrossClassA': method '<init>(java.lang.String):void': (Main.java:586): ignore
+debug: type 'test.Main$source_CrossClassA': target 'test.Main$CrossClassA': method 'go():void': (Main.java:588): ignore
 debug: type 'test.Main': (Main.java:0): ignore
 debug: type 'test.info.package-info': (package-info.java:0): replace
 debug: type 'test.info.package-info': (package-info.java:0): replace package non-recursive
