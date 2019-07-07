@@ -154,7 +154,7 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 	@Override
 	protected String getTargetId(String patchId, Method patch, PatcherAnnotation annotation) {
 		String target = annotation.getTarget();
-		String resolvedTarget = (target != null ? target : patch.getName());
+		String resolvedTarget = (target != null) ? target : patch.getName();
 		String targetId;
 		String targetLabel;
 		if (isTaggedByLastParameter(patch, true)) {
@@ -163,7 +163,7 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 			targetId = Id.ofMethod(parameters, patch.getReturnType(), resolvedTarget);
 			targetLabel = Label.ofMethod(parameters, patch.getReturnType(), resolvedTarget);
 		} else {
-			targetId = (target != null ? Id.ofMethod(patch, target) : patchId);
+			targetId = (target != null) ? Id.ofMethod(patch, target) : patchId;
 			targetLabel = Label.ofTargetMember(resolvedTarget);
 		}
 		if (shouldLogTarget(patchId, targetId)) {
@@ -218,7 +218,7 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 		if (isTaggedByLastParameter(patch, false)) {
 			List<? extends MethodParameter> parameters = patch.getParameters();
 			MethodParameter lastParameter = parameters.get(parameters.size() - 1);
-			int tagRegisterCount = (TypeUtils.isWideType(lastParameter) ? 2 : 1);
+			int tagRegisterCount = TypeUtils.isWideType(lastParameter) ? 2 : 1;
 			implementation = new BasicMethodImplementation(
 					implementation.getRegisterCount() + tagRegisterCount,
 					implementation.getInstructions(),

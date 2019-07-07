@@ -34,7 +34,7 @@ public abstract class MemberSetPatcher<T extends Member> extends AnnotatableSetP
 		explicitStaticConstructorAction = sca;
 		explicitDefaultAction = da;
 		resolvedDefaultAction = da;
-		resolvedStaticConstructorAction = (sca != null ? sca : resolvedDefaultAction);
+		resolvedStaticConstructorAction = (sca != null) ? sca : resolvedDefaultAction;
 	}
 
 	// Implementation
