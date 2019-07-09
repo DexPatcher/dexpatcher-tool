@@ -27,11 +27,9 @@ public class Context {
 	private Logger logger;
 	private String annotationPackage;
 	private boolean constructorAutoIgnoreDisabled;
-	private boolean dexTagSupported;
 	private String sourceCodeRoot;
 
 	private Map<String, Action> actionMap;
-	private String tagTypeDescriptor;
 
 	public Context() {
 		this(DEFAULT_LOG_LEVEL);
@@ -71,7 +69,6 @@ public class Context {
 			Marker marker = action.getMarker();
 			if (marker != null) actionMap.put(getMarkerTypeDescriptor(marker), action);
 		}
-		tagTypeDescriptor = getMarkerTypeDescriptor(Marker.TAG);
 	}
 
 	public boolean isConstructorAutoIgnoreDisabled() {
@@ -80,14 +77,6 @@ public class Context {
 
 	public void setConstructorAutoIgnoreDisabled(boolean constructorAutoIgnoreDisabled) {
 		this.constructorAutoIgnoreDisabled = constructorAutoIgnoreDisabled;
-	}
-
-	public boolean isDexTagSupported() {
-		return dexTagSupported;
-	}
-
-	public void setDexTagSupported(boolean dexTagSupported) {
-		this.dexTagSupported = dexTagSupported;
 	}
 
 	public String getSourceCodeRoot() {
@@ -106,10 +95,6 @@ public class Context {
 
 	public Action getActionFromMarkerTypeDescriptor(String descriptor) {
 		return actionMap.get(descriptor);
-	}
-
-	public String getTagTypeDescriptor() {
-		return tagTypeDescriptor;
 	}
 
 }

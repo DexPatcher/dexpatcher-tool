@@ -31,7 +31,6 @@ public class Configuration {
 
 	public String annotationPackage = Context.DEFAULT_ANNOTATION_PACKAGE;
 	public boolean constructorAutoIgnoreDisabled;
-	public boolean dexTagSupported;
 
 	public Logger.Level logLevel = Context.DEFAULT_LOG_LEVEL;
 

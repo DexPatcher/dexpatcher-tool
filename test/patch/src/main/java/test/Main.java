@@ -366,10 +366,6 @@ public class Main {
 		// The argument can be of any type and must be tagged with @DexIgnore.
 		// When you invoke the original constructor, the value of the extra
 		// argument is ignored.
-		// Note: DexPatcher tool v1.0 used the DexTag type to tag constructor
-		// arguments. This has been deprecated but a backwards compatible mode
-		// can be enabled in newer DexPatcher versions. See older revisions
-		// of this file for more details on DexTag.
 		@DexEdit
 		private E(String data, @DexIgnore Void tag) { throw null; }
 		// Part 2: Add a new constructor that invokes the source constructor:

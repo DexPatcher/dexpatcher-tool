@@ -179,10 +179,6 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 		if (size == 0) return false;
 		MethodParameter lastParameter = parameters.get(parameters.size() - 1);
 		Context context = getContext();
-		if (context.getTagTypeDescriptor().equals(lastParameter.getType())) {
-			if (context.isDexTagSupported()) return true;
-			if (warn) log(WARN, "use of deprecated DexTag detected (consider enabling DexTag support)");
-		}
 		for (Annotation annotation : lastParameter.getAnnotations()) {
 			if (context.getActionFromMarkerTypeDescriptor(annotation.getType()) == Action.IGNORE) return true;
 		}

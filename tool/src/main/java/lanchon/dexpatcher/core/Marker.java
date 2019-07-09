@@ -21,9 +21,7 @@ public enum Marker {
 	IGNORE("DexIgnore"),
 	WRAP("DexWrap"),
 	PREPEND("DexPrepend"),
-	APPEND("DexAppend"),
-
-	TAG("DexTag");                  // deprecated
+	APPEND("DexAppend");
 
 	// Annotations
 
