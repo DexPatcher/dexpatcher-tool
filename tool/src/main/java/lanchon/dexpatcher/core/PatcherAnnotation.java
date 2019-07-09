@@ -15,6 +15,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import lanchon.dexpatcher.core.patcher.ActionBasedPatcher;
+import lanchon.dexpatcher.core.util.DexUtils;
 
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.AnnotationElement;
@@ -72,7 +73,10 @@ public class PatcherAnnotation implements ActionBasedPatcher.ActionContext {
 			case Marker.ELEM_TARGET_CLASS: {
 				if (targetClass != null) break;
 				String s = ((TypeEncodedValue) value).getValue();
-				if (!Marker.TYPE_VOID.equals(s)) targetClass = s;
+				if (!Marker.TYPE_VOID.equals(s)) {
+					if (!DexUtils.isClassDescriptor(s)) throw invalidElement(name);
+					targetClass = s;
+				}
 				continue;
 			}
 			case Marker.ELEM_STATIC_CONSTRUCTOR_ACTION: {
