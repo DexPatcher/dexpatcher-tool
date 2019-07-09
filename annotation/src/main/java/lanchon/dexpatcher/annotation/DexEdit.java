@@ -24,7 +24,7 @@ import java.lang.annotation.Target;
 })
 public @interface DexEdit {
 	String target() default "";
-	Class<?> targetClass() default Void.class;
+	Class<?> targetClass() default void.class;
 	DexAction staticConstructorAction() default DexAction.UNDEFINED;
 	DexAction defaultAction() default DexAction.UNDEFINED;
 	boolean contentOnly() default false;

@@ -64,7 +64,7 @@ public enum Marker {
 
 	// Dalvik
 
-	public static final String TYPE_VOID = TypeName.toClassDescriptor(Void.class.getName());
+	public static final String TYPE_VOID = "V";
 	public static final String TYPE_INNER_CLASS = TypeName.toClassDescriptor("dalvik.annotation.InnerClass");
 	public static final String ELEM_ACCESS_FLAGS = "accessFlags";
 	public static final String NAME_STATIC_CONSTRUCTOR = "<clinit>";

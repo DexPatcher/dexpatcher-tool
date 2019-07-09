@@ -25,6 +25,6 @@ import java.lang.annotation.Target;
 })
 public @interface DexRemove {
 	String target() default "";
-	Class<?> targetClass() default Void.class;
+	Class<?> targetClass() default void.class;
 	boolean recursive() default false;
 }
