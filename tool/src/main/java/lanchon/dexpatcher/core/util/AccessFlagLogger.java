@@ -66,7 +66,7 @@ public abstract class AccessFlagLogger {
 		} else {
 			flag(PUBLIC, notDecreased, decreased);
 			flag(PRIVATE, decreased, notDecreased);
-			flag(PROTECTED, decreased, decreased);
+			flag(PROTECTED, notDecreased, decreased);
 		}
 	}
 
