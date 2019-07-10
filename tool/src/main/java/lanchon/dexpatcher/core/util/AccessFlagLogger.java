@@ -82,7 +82,8 @@ public abstract class AccessFlagLogger {
 		throw new AssertionError("Unexpected scope");
 	}
 
-	public void allFlags(AnnotatableSetPatcher<?> patcher, boolean keepInterface, boolean keepImplementation) {
+	public void allFlags(AnnotatableSetPatcher<?> patcher, boolean keepInterface, boolean ensureInterface,
+			boolean keepImplementation, Logger.Level warningLevel) {
 
 		//if (!(keepInterface || keepImplementation)) {
 		//	throw new AssertionError("Neither interface nor implementation kept");
@@ -92,45 +93,60 @@ public abstract class AccessFlagLogger {
 		boolean isField = (patcher instanceof FieldSetPatcher);
 		boolean isMethod = (patcher instanceof MethodSetPatcher);
 
+		boolean checkInterface = keepInterface || ensureInterface;
+
+		Logger.Level warn = warningLevel;
+
+		Logger.Level warnOnKeepInterface = keepInterface ? warn : INFO;
+		Logger.Level warnOnEnsureInterface = ensureInterface ? warn : INFO;
+
 		// Interface Dependent
-		if (keepInterface) {
+		if (checkInterface) {
 			if (isMethod && !STATIC.isSet(oldFlags | newFlags) && PRIVATE.isSet(oldFlags ^ newFlags)) {
-				scopeFlags(WARN);
+				scopeFlags(warn);
 			} else {
-				scopeFlags(WARN, INFO);
+				scopeFlags(warnOnKeepInterface, warnOnEnsureInterface);
 			}
 		} else {
 			scopeFlags(DEBUG);
 		}
-		if (keepInterface) {
-			if      (isClass)  flag(FINAL, WARN, INFO);
-			else if (isField)  flag(FINAL, WARN, (STATIC.isSet(oldFlags) ? WARN : INFO));
-			else if (isMethod) flag(FINAL, (!PRIVATE.isSet(oldFlags) ? WARN : INFO), INFO);
+		if (checkInterface) {
+			if (isClass) flag(FINAL, warnOnKeepInterface, warnOnEnsureInterface);
+			else if (isField) {
+				if (STATIC.isSet(oldFlags | newFlags)) {
+					flag(FINAL, warn, WARN);
+				} else {
+					flag(FINAL, warnOnKeepInterface, ensureInterface ? WARN : INFO);
+				}
+			}
+			else if (isMethod) flag(FINAL,
+					(!PRIVATE.isSet(oldFlags) ? warnOnKeepInterface : INFO),
+					(!PRIVATE.isSet(newFlags) ? warnOnEnsureInterface : INFO));
 		} else {
 			flag(FINAL, INFO);
 		}
-		flag(VOLATILE, INFO, keepInterface ? WARN : INFO);
-		flag(TRANSIENT, keepInterface ? WARN : INFO);
+		flag(VOLATILE, INFO, checkInterface ? warn : INFO);
+		flag(TRANSIENT, checkInterface ? warn : INFO);
 		flag(VARARGS, INFO);
 		// This is an error, but it is tolerated in case malformed code is not rejected by ART:
-		flag(CONSTRUCTOR, keepInterface ? /* ERROR */ WARN : DEBUG);
+		flag(CONSTRUCTOR, checkInterface ? /* ERROR */ warn : DEBUG);
 
 		// Interface And Implementation Dependent
-		flag(STATIC, (isMethod && keepImplementation ? ERROR : WARN));
-		flag(INTERFACE, WARN);
-		flag(ANNOTATION, WARN);
-		flag(ENUM, WARN);
+		flag(STATIC, (isMethod && keepImplementation ? ERROR : warn));
+		flag(INTERFACE, warn);
+		flag(ANNOTATION, warn);
+		flag(ENUM, warn);
 
 		// Implementation Dependent
-		flag(SYNCHRONIZED, keepImplementation ? WARN : DEBUG);
-		flag(NATIVE, keepImplementation ? WARN : DEBUG);
+		flag(SYNCHRONIZED, keepImplementation ? warn : DEBUG);
+		flag(NATIVE, keepImplementation ? warn : DEBUG);
 		if (keepImplementation) {
-			flag(ABSTRACT, (isMethod ? ERROR : WARN));
+			flag(ABSTRACT, (isMethod ? ERROR : warn));
 		} else {
-			flag(ABSTRACT, WARN, INFO);
+			flag(ABSTRACT, warnOnKeepInterface, warnOnEnsureInterface);
 		}
-		flag(STRICTFP, keepImplementation ? WARN : DEBUG);
-		flag(DECLARED_SYNCHRONIZED, keepImplementation ? WARN : DEBUG);
+		flag(STRICTFP, keepImplementation ? warn : DEBUG);
+		flag(DECLARED_SYNCHRONIZED, keepImplementation ? warn : DEBUG);
 
 		// Extra
 		flag(BRIDGE, DEBUG);

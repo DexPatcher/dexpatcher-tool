@@ -24,6 +24,8 @@ import org.jf.dexlib2.iface.Annotatable;
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.ClassDef;
 
+import static lanchon.dexpatcher.core.logger.Logger.Level.*;
+
 public abstract class AnnotatableSetPatcher<T extends Annotatable> extends ActionBasedPatcher<T, PatcherAnnotation> {
 
 	private ClassDef sourceFileClass;
@@ -107,13 +109,13 @@ public abstract class AnnotatableSetPatcher<T extends Annotatable> extends Actio
 	// Access Flags Logging
 
 	private void logAccessFlags(String item, int oldFlags, int newFlags, boolean keepInterface,
-			boolean keepImplementation) {
+			boolean ensureInterface, boolean keepImplementation, Logger.Level warningLevel) {
 		new AccessFlagLogger(item, oldFlags, newFlags) {
 			@Override
 			protected void log(Logger.Level level, String message) {
 				AnnotatableSetPatcher.this.log(level, message);
 			}
-		}.allFlags(this, keepInterface, keepImplementation);
+		}.allFlags(this, keepInterface, ensureInterface, keepImplementation, warningLevel);
 	}
 
 	@Override
@@ -122,10 +124,12 @@ public abstract class AnnotatableSetPatcher<T extends Annotatable> extends Actio
 		int newFlags = getAccessFlags(patch);
 		if (inPlace) {
 			String item = "edited " + getItemLabel();
-			logAccessFlags(item, oldFlags, newFlags, true, true);
+			logAccessFlags(item, oldFlags, newFlags, true, false,
+					true, WARN);
 		} else {
 			String item = "renamed " + getItemLabel();
-			logAccessFlags(item, oldFlags, newFlags, false, true);
+			logAccessFlags(item, oldFlags, newFlags, false, false,
+					true, WARN);
 		}
 		return patch;
 	}
@@ -137,7 +141,8 @@ public abstract class AnnotatableSetPatcher<T extends Annotatable> extends Actio
 			int oldFlags = getAccessFlags(original);
 			int newFlags = getAccessFlags(patched);
 			String item = "replaced " + getItemLabel();
-			logAccessFlags(item, oldFlags, newFlags, true, false);
+			logAccessFlags(item, oldFlags, newFlags, true, false,
+					false, WARN);
 		}
 	}
 
