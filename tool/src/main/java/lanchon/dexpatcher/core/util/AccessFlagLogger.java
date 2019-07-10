@@ -55,18 +55,18 @@ public abstract class AccessFlagLogger {
 		scopeFlags(level, level);
 	}
 
-	private void scopeFlags(Logger.Level decreased, Logger.Level notDecreased) {
+	private void scopeFlags(Logger.Level decreased, Logger.Level increased) {
 		AccessFlags newScope = getScope(newFlags);
 		AccessFlags oldScope = getScope(oldFlags);
 		if (oldScope != null && newScope != null) {
 			if (oldScope != newScope) {
-				Logger.Level level = (oldScope == PRIVATE || newScope == PUBLIC) ? notDecreased : decreased;
+				Logger.Level level = (oldScope == PRIVATE || newScope == PUBLIC) ? increased : decreased;
 				log(level, oldScope, "changed to '" + newScope + "' in " + item);
 			}
 		} else {
-			flag(PUBLIC, notDecreased, decreased);
-			flag(PRIVATE, decreased, notDecreased);
-			flag(PROTECTED, notDecreased, decreased);
+			flag(PUBLIC, increased, decreased);
+			flag(PRIVATE, decreased, increased);
+			flag(PROTECTED, increased, decreased);
 		}
 	}
 
