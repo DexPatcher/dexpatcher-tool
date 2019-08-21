@@ -15,10 +15,12 @@ import java.io.IOException;
 
 import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.DexPatcher;
+import lanchon.dexpatcher.core.PatchException;
+import lanchon.dexpatcher.core.Retargeter;
 import lanchon.dexpatcher.core.logger.Logger;
 import lanchon.multidexlib2.BasicDexFileNamer;
-import lanchon.multidexlib2.DexIO;
 import lanchon.multidexlib2.DexFileNamer;
+import lanchon.multidexlib2.DexIO;
 import lanchon.multidexlib2.MultiDexIO;
 import lanchon.multidexlib2.OpcodeUtils;
 import lanchon.multidexlib2.SingletonDexContainer;
@@ -55,6 +57,16 @@ public class Processor {
 
 		DexFile dex = readDex(new File(config.sourceFile));
 		int types = dex.getClasses().size();
+
+		Retargeter retargeter = new Retargeter(createContext());
+
+		try {
+			for (String patchFile : config.patchFiles) {
+				retargeter.populateTargetMap(readDex(new File(patchFile)));
+			}
+		} catch (PatchException e) {
+			logger.log(ERROR, "Exception while populating target map: " + e.getMessage());
+		}
 
 		for (String patchFile : config.patchFiles) {
 			DexFile patchDex = readDex(new File(patchFile));

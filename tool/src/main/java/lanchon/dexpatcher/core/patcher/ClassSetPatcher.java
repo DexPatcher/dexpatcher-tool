@@ -58,7 +58,7 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 	// Implementation
 
 	@Override
-	protected final String getId(ClassDef item) {
+	public final String getId(ClassDef item) {
 		return Id.ofClass(item);
 	}
 
@@ -86,7 +86,7 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 	}
 
 	@Override
-	protected String getTargetId(String patchId, ClassDef patch, PatcherAnnotation annotation) {
+	public String getTargetId(String patchId, ClassDef patch, PatcherAnnotation annotation) {
 		String targetId = patchId;
 		String target = annotation.getTarget();
 		String targetClass = annotation.getTargetClass();

@@ -122,7 +122,7 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 	}
 
 	@Override
-	protected final String getId(Method item) {
+	public final String getId(Method item) {
 		return Id.ofMethod(item);
 	}
 
@@ -153,7 +153,7 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 	}
 
 	@Override
-	protected String getTargetId(String patchId, Method patch, PatcherAnnotation annotation) {
+	public String getTargetId(String patchId, Method patch, PatcherAnnotation annotation) {
 		String target = annotation.getTarget();
 		String resolvedTarget = (target != null) ? target : patch.getName();
 		String targetId;

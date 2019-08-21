@@ -111,7 +111,7 @@ public abstract class ActionBasedPatcher<T, C extends ActionBasedPatcher.ActionC
 
 	protected abstract C getActionContext(String patchId, T patch) throws PatchException;
 	protected void onPrepare(String patchId, T patch, C actionContext) throws PatchException {}
-	protected abstract String getTargetId(String patchId, T patch, C actionContext) throws PatchException;
+	public abstract String getTargetId(String patchId, T patch, C actionContext) throws PatchException;
 
 	protected abstract T onSimpleAdd(T patch, C actionContext);
 	protected abstract T onSimpleEdit(T patch, C actionContext, T target, boolean inPlace);

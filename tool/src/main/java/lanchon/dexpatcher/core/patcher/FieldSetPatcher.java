@@ -42,7 +42,7 @@ public class FieldSetPatcher extends MemberSetPatcher<Field> {
 	// Implementation
 
 	@Override
-	protected final String getId(Field item) {
+	public final String getId(Field item) {
 		return Id.ofField(item);
 	}
 
@@ -58,7 +58,7 @@ public class FieldSetPatcher extends MemberSetPatcher<Field> {
 	}
 
 	@Override
-	protected String getTargetId(String patchId, Field patch, PatcherAnnotation annotation) {
+	public String getTargetId(String patchId, Field patch, PatcherAnnotation annotation) {
 		String target = annotation.getTarget();
 		String targetId = (target != null) ? Id.ofField(patch, target) : patchId;
 		if (shouldLogTarget(patchId, targetId)) {
