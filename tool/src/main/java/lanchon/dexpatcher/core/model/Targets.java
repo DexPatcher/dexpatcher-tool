@@ -10,7 +10,15 @@
 
 package lanchon.dexpatcher.core.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
+import lanchon.dexpatcher.core.util.Id;
+
+import org.jf.dexlib2.iface.MethodParameter;
+import org.jf.dexlib2.iface.reference.FieldReference;
+import org.jf.dexlib2.iface.reference.MethodReference;
 
 public class Targets {
 	private HashMap<String, TargetClass> classes;
@@ -34,6 +42,32 @@ public class Targets {
 
 	public Targets() {
 		this.classes = new HashMap<>();
+	}
+
+	public String getRetargetedClassName(String originalType) {
+		return getTargetClass(originalType).target;
+	}
+
+	public String getRetargetedFieldName(FieldReference field) {
+		TargetClass targetClass = getTargetClass(field.getDefiningClass());
+		String fieldName = targetClass.fields.get(Id.ofField(field));
+
+		if (fieldName == null) {
+			fieldName = field.getName();
+		}
+
+		return fieldName;
+	}
+
+	public String getRetargetedMethodName(MethodReference method) {
+		TargetClass targetClass = getTargetClass(method.getDefiningClass());
+		String methodName = targetClass.fields.get(Id.ofMethod(method));
+
+		if (methodName == null) {
+			methodName = method.getName();
+		}
+
+		return methodName;
 	}
 
 	public void addClass(String patchClass) {

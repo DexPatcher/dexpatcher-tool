@@ -12,6 +12,7 @@ package lanchon.dexpatcher.core;
 
 import java.util.HashMap;
 import java.util.Map;
+import javax.annotation.Nonnull;
 
 import lanchon.dexpatcher.core.logger.Logger;
 import lanchon.dexpatcher.core.model.Targets;
@@ -25,6 +26,17 @@ import org.jf.dexlib2.iface.DexFile;
 import org.jf.dexlib2.iface.Field;
 import org.jf.dexlib2.iface.Member;
 import org.jf.dexlib2.iface.Method;
+import org.jf.dexlib2.iface.reference.FieldReference;
+import org.jf.dexlib2.iface.reference.MethodReference;
+import org.jf.dexlib2.rewriter.DexRewriter;
+import org.jf.dexlib2.rewriter.FieldReferenceRewriter;
+import org.jf.dexlib2.rewriter.FieldRewriter;
+import org.jf.dexlib2.rewriter.MethodReferenceRewriter;
+import org.jf.dexlib2.rewriter.MethodRewriter;
+import org.jf.dexlib2.rewriter.Rewriter;
+import org.jf.dexlib2.rewriter.RewriterModule;
+import org.jf.dexlib2.rewriter.Rewriters;
+import org.jf.dexlib2.rewriter.TypeRewriter;
 
 import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 
@@ -76,6 +88,86 @@ public class Retargeter {
 				targets.getTargetClass(classPatchId).fields.putAll(getTargetMapping(fieldSetPatcher, patchField));
 			}
 		}
+	}
+
+	// Rewrite all source references in the dex file using the target map
+	public DexFile rewrite(DexFile patchDex) {
+		
+		DexRewriter rewriter = new DexRewriter(new RewriterModule() {
+			
+			// Field/method definitions
+			@Override
+			public Rewriter<Field> getFieldRewriter(@Nonnull Rewriters rewriters) {
+				return new FieldRewriter(rewriters) {
+					@Override
+					public Field rewrite(final Field field) {
+						return new RewrittenField(field) {
+							@Override public String getName() {
+								return targets.getRetargetedFieldName(field);
+							}
+						};
+					}
+				};
+			}
+
+			@Override
+			public Rewriter<Method> getMethodRewriter(@Nonnull Rewriters rewriters) {
+				return new MethodRewriter(rewriters) {
+					@Override
+					public Method rewrite(final Method method) {
+						return new RewrittenMethod(method) {
+							@Override public String getName() {
+								return targets.getRetargetedMethodName(method);
+							}
+						};
+					}
+				};
+			}
+
+			// References to fields/methods in the method implementation
+			@Override
+			public Rewriter<FieldReference> getFieldReferenceRewriter(Rewriters rewriters) {
+				return new FieldReferenceRewriter(rewriters) {
+
+					@Override
+					public FieldReference rewrite(final FieldReference field) {
+						return new RewrittenFieldReference(field) {
+							@Override public String getName() {
+								return targets.getRetargetedFieldName(field);
+							}
+						};
+					}
+				};
+			}
+
+			@Override
+			public Rewriter<MethodReference> getMethodReferenceRewriter(Rewriters rewriters) {
+				return new MethodReferenceRewriter(rewriters) {
+
+					@Override
+					public MethodReference rewrite(final MethodReference method) {
+						return new RewrittenMethodReference(method) {
+							@Override public String getName() {
+								return targets.getRetargetedMethodName(method);
+							}
+						};
+					}
+				};
+			}
+
+			// Rewrite class types everywhere (return types, method parameters, field types, etc)
+			@Override
+			public Rewriter<String> getTypeRewriter(Rewriters rewriters) {
+				return new TypeRewriter() {
+					@Override
+					public String rewrite(String classType) {
+						return targets.getRetargetedClassName(classType);
+					}
+				};
+			}
+		});
+
+		return rewriter.rewriteDexFile(patchDex);
 	}
 
 	private <Member> Map<String, String> getTargetMapping(MemberSetPatcher<? super Member> memberPatcher, Member member) throws PatchException {

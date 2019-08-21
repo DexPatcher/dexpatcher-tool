@@ -69,7 +69,7 @@ public class Processor {
 		}
 
 		for (String patchFile : config.patchFiles) {
-			DexFile patchDex = readDex(new File(patchFile));
+			DexFile patchDex = retargeter.rewrite(readDex(new File(patchFile)));
 			types += patchDex.getClasses().size();
 			dex = processDex(dex, patchDex);
 		}
