@@ -46,10 +46,13 @@ public class Retargeter {
 	Context context;
 	Logger logger;
 
+	private Map<String, String> subclasses;
+
 	public Retargeter(Context context) {
 		this.targets = new Targets();
 		this.context = context;
 		this.logger = context.getLogger();
+		this.subclasses = new HashMap<>();
 	}
 
 	// Creates the source => target mapping for class types and fields/methods names,
@@ -67,6 +70,11 @@ public class Retargeter {
 			}
 
 			targets.addClass(classPatchId);
+
+			// Keep track of subclasses so we can inherit the retargeting info for parent methods/fields
+			if (patchClass.getSuperclass() != null) {
+				subclasses.put(patchClass.getSuperclass(), classPatchId);
+			}
 
 			String classTargetId = classSetPatcher.getTargetId(classPatchId, patchClass, classActionContext);
 
@@ -88,6 +96,31 @@ public class Retargeter {
 				targets.getTargetClass(classPatchId).fields.putAll(getTargetMapping(fieldSetPatcher, patchField));
 			}
 		}
+
+		// Copy retargeting info to subclasses
+		for (String parentClass : subclasses.keySet()) {
+			log(DEBUG, "Copying " + targets.getTargetClass(parentClass).fields.size() + " field(s), "
+					+ targets.getTargetClass(parentClass).methods.size() + " method(s) from "
+					+ parentClass + " to " + subclasses.get(parentClass));
+			copyTargetsToSubclasses(parentClass);
+		}
+	}
+
+	private void copyTargetsToSubclasses(String parentClass) {
+		String childClass = subclasses.get(parentClass);
+
+		if (childClass == null) {
+			return;
+		}
+
+		Targets.TargetClass parentClassDef = targets.getTargetClass(parentClass);
+		Targets.TargetClass childClassDef = targets.getTargetClass(childClass);
+
+		childClassDef.fields.putAll(parentClassDef.fields);
+		childClassDef.methods.putAll(parentClassDef.methods);
+
+		// Recurse
+		copyTargetsToSubclasses(childClass);
 	}
 
 	// Rewrite all source references in the dex file using the target map
