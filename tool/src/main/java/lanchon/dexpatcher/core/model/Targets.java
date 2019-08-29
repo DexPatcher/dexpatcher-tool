@@ -45,6 +45,11 @@ public class Targets {
 	}
 
 	public String getRetargetedClassName(String originalType) {
+		// Need to manually handle arrays of objects
+		if (originalType.startsWith("[")) {
+			return "[" + getTargetClass(originalType.substring(1)).target;
+		}
+
 		return getTargetClass(originalType).target;
 	}
 
