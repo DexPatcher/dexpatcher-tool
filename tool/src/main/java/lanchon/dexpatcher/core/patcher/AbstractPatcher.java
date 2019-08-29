@@ -38,7 +38,7 @@ public abstract class AbstractPatcher<T> {
 
 	private String logPrefix;
 
-	private LinkedHashMap<String, T> sourceMap;
+	private LinkedHashMap<String, T> sourceMap = new LinkedHashMap<>();
 	private LinkedHashMap<String, Boolean> targetedMap;
 	private LinkedHashMap<String, PatchedItem<T>> patchedMap;
 
