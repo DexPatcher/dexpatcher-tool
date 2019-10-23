@@ -30,7 +30,7 @@ def runShellTest = true
 // Either set the path to the 'dx' executable:
 def dxPath = 'dx'
 // Or set the version of the SDK 'build tools' to use:
-def sdkBuildToolVersion = 'current'
+def sdkBuildToolVersion = ''
 // And the SDK path will be obtained from 'local.properties'.
 // (For convenience I always have a symbolic link named 'current' in
 // '<sdk-dir>/build-tools/' that aliases the latest build tools.)
