@@ -1,5 +1,5 @@
 ********************************************************************
-DexPatcher - Copyright 2015-2017 Rodrigo Balerdi
+DexPatcher - Copyright 2015-2019 Rodrigo Balerdi
 (GNU General Public License version 3 or later)
 ********************************************************************
 DexPatcher uses dexlib2 (part of smali) by Ben Gruver (JesusFreke).
