@@ -10,3 +10,22 @@
 
 group = 'com.github.lanchon.dexpatcher'
 version = '1.7.0'
+
+task checkCopyrightNotice {
+    def notice = "Copyright 2015-${new java.text.SimpleDateFormat('yyyy').format(new Date())}"
+    def checkNotice = { noticeFile ->
+        if (!file(noticeFile).text.contains(notice)) {
+            System.err.println "********************************  WARNING  ********************************"
+            System.err.println "Expired copyright notice: ${noticeFile}"
+        }
+    }
+    doLast {
+        checkNotice 'NOTICE.txt'
+        checkNotice 'tool/src/main/resources/NOTICE.txt'
+    }
+    dependsOn { subprojects*.tasks.build }
+}
+
+task build {
+    dependsOn checkCopyrightNotice
+}
