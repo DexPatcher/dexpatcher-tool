@@ -58,11 +58,11 @@ task writeVersionFile {
 jar.dependsOn writeVersionFile
 
 jar {
-    baseName = 'dexpatcher-tool'
+    archiveBaseName.set 'dexpatcher-tool'
     manifest {
         attributes(
                 'Implementation-Title': 'DexPatcher-tool',
-                'Implementation-Version': version,
+                'Implementation-Version': project.version,
                 'Main-Class': 'lanchon.dexpatcher.Main'
         )
     }
@@ -72,15 +72,15 @@ jar {
 }
 
 task shadowBugWorkaround(type: Jar) {
-    destinationDir file('build/shadow-bug-workaround')
-    baseName = 'nested-content'
+    destinationDirectory.set layout.buildDirectory.dir('shadow-bug-workaround')
+    archiveBaseName.set 'nested-content'
     from jar
     from tasks.getByPath(':annotation:jar')
 }
 
 shadowJar {
-    baseName = 'dexpatcher'
-    classifier = null
+    archiveBaseName.set 'dexpatcher'
+    archiveClassifier.set null
     exclude 'META-INF/**'
     from 'extras'
     // Shadow plugin bug: explodes the nested jar.

@@ -21,11 +21,11 @@ def jdk_rt = new File(jdk, 'jre/lib/rt.jar')
 if (jdk_rt.exists()) compileJava.options.bootstrapClasspath = files(jdk_rt)
 
 jar {
-    baseName = 'dexpatcher-annotation'
+    archiveBaseName.set 'dexpatcher-annotation'
     manifest {
         attributes(
                 'Implementation-Title': 'DexPatcher-annotation',
-                'Implementation-Version': version
+                'Implementation-Version': project.version
         )
     }
     reproducibleFileOrder = true
