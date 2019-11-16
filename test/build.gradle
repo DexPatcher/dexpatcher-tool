@@ -26,24 +26,27 @@ plugins {
 def runPortableTest = false
 def runShellTest = false
 
+repositories {
+    google()
+    maven { url 'https://dexpatcher.github.io/dexpatcher-repo/m2' }
+}
+
+configurations {
+    r8
+    dex2jar
+}
+
+dependencies {
+    r8 'com.android.tools:r8:1.5.68'
+    dex2jar 'dexpatcher-repo.dexpatcher.dex2jar:dex-tools:2.1-20171001-lanchon@zip'
+}
+
 def dexpatcherJar = tasks.getByPath(':tool:shadowJar').archiveFile
 
 def sourceJar = tasks.getByPath(':test:source:jar').archiveFile
 def patchJar = tasks.getByPath(':test:patch:jar').archiveFile
 
 // Portable Test
-
-repositories {
-    google()
-}
-
-configurations {
-    r8
-}
-
-dependencies {
-    r8 'com.android.tools:r8:1.5.68'
-}
 
 @CompileStatic
 @CacheableTask
@@ -121,10 +124,32 @@ task portableTest(type:JavaExec) {
 
 // Tool paths for this test are configured in 'shell-test.config'.
 
+def toolsDir = layout.buildDirectory.dir('tools')
+
+task setupTools(type:Sync) {
+
+    group 'verification'
+
+    from(configurations.r8) {
+        into 'r8'
+    }
+    from(zipTree(configurations.dex2jar.singleFile)) {
+        include 'dex-tools-*/lib/*'
+        includeEmptyDirs false
+        eachFile { f ->
+            f.path = 'dex2jar/' + f.name
+        }
+    }
+    into toolsDir
+
+}
+
 task shellTest(type:Exec) {
 
     group 'verification'
 
+    dependsOn setupTools
+    inputs.dir toolsDir
     inputs.file dexpatcherJar
     inputs.file sourceJar
     inputs.file patchJar
@@ -144,7 +169,10 @@ task shellTestSetReference(type:Exec) {
 
     group 'verification'
 
-    dependsOn dexpatcherJar, sourceJar, patchJar
+    dependsOn setupTools
+    dependsOn dexpatcherJar
+    dependsOn sourceJar
+    dependsOn patchJar
 
     commandLine 'bash', 'shell-test-set-ref'
 
