@@ -14,9 +14,9 @@ mkdir -p build
 
 diff=$(diff shell-test-ref.txt build/shell-test-out.txt --color=always) || {
     echo "error: shell-test: unexpected output"
-    echo
-    echo "======  full output  ======"
-    cat build/shell-test-out.txt
+    #echo
+    #echo "======  full output  ======"
+    #cat build/shell-test-out.txt
     echo
     echo "======  diff output  ======"
     echo "$diff"
