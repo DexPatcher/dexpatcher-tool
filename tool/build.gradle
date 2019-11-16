@@ -45,17 +45,19 @@ compileJava {
     options.compilerArgs << '-Xlint:unchecked' << '-Xlint:deprecation'
 }
 
-task writeVersionFile {
-    ext.version = version
-    ext.outputFile = file('build/classes/main/lanchon/dexpatcher/version')
-    dependsOn compileJava
-    inputs.property 'version', { ext.version }
-    outputs.file { ext.outputFile }
+def generatedResourcesDir = layout.buildDirectory.get().dir('generated-resources')
+
+task generateResources {
+    inputs.property 'version', project.version
+    outputs.dir generatedResourcesDir
     doLast {
-        ext.outputFile.text = "${ext.version}"
+        def file = generatedResourcesDir.file('lanchon/dexpatcher/version').asFile
+        file.parentFile.mkdirs()
+        file.text = project.version
     }
 }
-jar.dependsOn writeVersionFile
+
+sourceSets.main.output.dir builtBy: generateResources, generatedResourcesDir
 
 jar {
     archiveBaseName.set 'dexpatcher-tool'
@@ -92,4 +94,5 @@ shadowJar {
     preserveFileTimestamps = false
     duplicatesStrategy = DuplicatesStrategy.FAIL
 }
+
 assemble.dependsOn shadowJar
