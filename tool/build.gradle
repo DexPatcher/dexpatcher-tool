@@ -9,7 +9,7 @@
  */
 
 plugins {
-    id 'java'
+    id 'java-library'
     id 'com.github.johnrengelman.shadow' version '5.2.0'
 }
 
@@ -36,9 +36,7 @@ def multidexlib2Version = dexlib2Version + multidexlib2VersionSuffix
 dependencies {
     implementation 'commons-cli:commons-cli:1.2'
     implementation 'com.github.lanchon.dexpatcher:multidexlib2:' + multidexlib2Version
-
-    // Use local version of multidexlib2:
-    implementation 'org.smali:dexlib2:' + dexlib2Version
+    api 'org.smali:dexlib2:' + dexlib2Version
 }
 
 compileJava {
