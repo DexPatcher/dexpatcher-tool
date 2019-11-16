@@ -12,6 +12,7 @@ group = 'com.github.lanchon.dexpatcher'
 version = '1.7.0'
 
 task checkCopyrightNotice {
+    dependsOn { subprojects*.tasks.build }
     def notice = "Copyright 2015-${new java.text.SimpleDateFormat('yyyy').format(new Date())}"
     def checkNotice = { noticeFile ->
         if (!file(noticeFile).text.contains(notice)) {
@@ -23,7 +24,6 @@ task checkCopyrightNotice {
         checkNotice 'NOTICE.txt'
         checkNotice 'tool/src/main/resources/NOTICE.txt'
     }
-    dependsOn { subprojects*.tasks.build }
 }
 
 task build {
