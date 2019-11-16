@@ -19,7 +19,7 @@ version = parent.version
 sourceCompatibility = '1.7'
 def jdk = findProperty('JDK7_HOME') ?: '/usr/lib/jvm/java-7-openjdk-amd64'
 def jdk_rt = new File(jdk, 'jre/lib/rt.jar')
-if (jdk_rt.exists()) compileJava.options.bootClasspath = jdk_rt
+if (jdk_rt.exists()) compileJava.options.bootstrapClasspath = files(jdk_rt)
 
 repositories {
     jcenter()
