@@ -15,8 +15,8 @@ run() {
 dex-jar() {
     name="$1"
     jar=$name/build/libs/$name.jar
-    dex=build/$name.dex
-    run dx --dex --output $dex $jar
+    dex=build/$name.dex.zip
+    run d8 --no-desugaring --output $dex $jar
     #run dex2jar --force --output $name-dex2jar.jar $dex
 }
 
@@ -34,7 +34,7 @@ dex-jar source
 dex-jar patch
 
 run dexpatcher --help
-run dexpatcher build/source.dex build/patch.dex --output build/patched.dex --debug "$@"
+run dexpatcher build/source.dex.zip build/patch.dex.zip --output build/patched.dex --debug "$@"
 
 run dex2jar --force --output build/patched-dex2jar.jar build/patched.dex
 
