@@ -28,4 +28,7 @@ jar {
                 'Implementation-Version': version
         )
     }
+    reproducibleFileOrder = true
+    preserveFileTimestamps = false
+    duplicatesStrategy = DuplicatesStrategy.FAIL
 }

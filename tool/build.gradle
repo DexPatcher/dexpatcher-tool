@@ -66,6 +66,9 @@ jar {
                 'Main-Class': 'lanchon.dexpatcher.Main'
         )
     }
+    reproducibleFileOrder = true
+    preserveFileTimestamps = false
+    duplicatesStrategy = DuplicatesStrategy.FAIL
 }
 
 task shadowBugWorkaround(type: Jar) {
@@ -84,5 +87,8 @@ shadowJar {
     //from tasks.getByPath(':annotation:jar')
     // Workaround: double-nest the jar.
     from shadowBugWorkaround
+    reproducibleFileOrder = true
+    preserveFileTimestamps = false
+    duplicatesStrategy = DuplicatesStrategy.FAIL
 }
 assemble.dependsOn shadowJar
