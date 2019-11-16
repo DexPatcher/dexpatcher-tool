@@ -29,3 +29,7 @@ task checkCopyrightNotice {
 task build {
     dependsOn checkCopyrightNotice
 }
+
+wrapper {
+    distributionType = Wrapper.DistributionType.ALL
+}
