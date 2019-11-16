@@ -18,14 +18,14 @@ dependencies {
 
 task dex(type:Exec) {
 
-    ext.inputFile = jar
-    ext.outputFile = file("build/libs/${project.name}.dex")
+    ext.inputFile = jar.archiveFile
+    ext.outputFile = objects.fileProperty().value(layout.buildDirectory.file("libs/${project.name}.dex"))
 
-    inputs.file parent.dxPath
+    //inputs.file parent.dxPath
     inputs.file inputFile
     outputs.file outputFile
 
     executable parent.dxPath
-    args '--dex', '--output', outputFile, inputFile
+    args '--dex', '--output', outputFile.get(), inputFile.get()
 
 }
