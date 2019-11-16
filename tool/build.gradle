@@ -71,6 +71,8 @@ jar {
     duplicatesStrategy = DuplicatesStrategy.FAIL
 }
 
+// The Shadow plugin erroneously unpacks nested jars.
+// The issue can be worked around by double-jarring the jars.
 task shadowBugWorkaround(type: Jar) {
     destinationDirectory.set layout.buildDirectory.dir('shadow-bug-workaround')
     archiveBaseName.set 'nested-content'
@@ -83,9 +85,8 @@ shadowJar {
     archiveClassifier.set null
     exclude 'META-INF/**'
     from 'extras'
-    // Shadow plugin bug: explodes the nested jar.
+    //from jar
     //from tasks.getByPath(':annotation:jar')
-    // Workaround: double-nest the jar.
     from shadowBugWorkaround
     reproducibleFileOrder = true
     preserveFileTimestamps = false
