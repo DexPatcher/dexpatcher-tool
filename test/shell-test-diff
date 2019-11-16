@@ -1,15 +1,18 @@
 #!/bin/bash
 
-mkdir -p build
-
-./shell-test "$@" &> build/shell-test-out.txt
-
-diff=$(diff shell-test-ref.txt build/shell-test-out.txt)
-status=$?
-
 set -e
 
-if [[ -n $diff ]]; then
+mkdir -p build
+
+./shell-test "$@" &> build/shell-test-out.txt || {
+    echo "error: shell-test: execution failed"
+    echo
+    echo "======  full output  ======"
+    cat build/shell-test-out.txt
+    exit 1
+}
+
+diff=$(diff shell-test-ref.txt build/shell-test-out.txt) || {
     echo "error: shell-test: unexpected output"
     echo
     echo "======  full output  ======"
@@ -17,6 +20,5 @@ if [[ -n $diff ]]; then
     echo
     echo "======  diff output  ======"
     echo "$diff"
-fi
-
-exit $status
+    exit 2
+}
