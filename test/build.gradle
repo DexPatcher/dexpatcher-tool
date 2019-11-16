@@ -26,24 +26,17 @@ def runShellTest = true
 
 // Portable Test
 
-// This test invokes the 'dx' tool from the Android SDK.
-// Either set the path to the 'dx' executable:
-def dxPath = 'dx'
-// Or set the version of the SDK 'build tools' to use:
-def sdkBuildToolVersion = ''
-// And the SDK path will be obtained from 'local.properties'.
-// (For convenience I always have a symbolic link named 'current' in
-// '<sdk-dir>/build-tools/' that aliases the latest build tools.)
-
-if (!dxPath) {
-    def localProperties = new Properties()
-    rootProject.file('local.properties').withReader {
-        localProperties.load(it)
-    }
-    def sdkDir = new File(localProperties.get('sdk.dir'))
-    dxPath = new File(sdkDir, "build-tools/$sdkBuildToolVersion/dx")
+repositories {
+    google()
 }
-ext.dxPath = dxPath
+
+configurations {
+    r8
+}
+
+dependencies {
+    r8 'com.android.tools:r8:1.5.68'
+}
 
 def toolShadowJar = tasks.getByPath(':tool:shadowJar')
 def sourceJar = tasks.getByPath(':test:source:jar')
