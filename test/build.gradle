@@ -22,7 +22,7 @@ plugins {
 
 // Select tests to run when executing the 'check' task:
 def runPortableTest = false
-def runShellTest = true
+def runShellTest = false
 
 // Portable Test
 
