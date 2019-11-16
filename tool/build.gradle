@@ -34,11 +34,11 @@ def multidexlib2VersionSuffix = ''
 def multidexlib2Version = dexlib2Version + multidexlib2VersionSuffix
 
 dependencies {
-    compile 'commons-cli:commons-cli:1.2'
-    compile 'com.github.lanchon.dexpatcher:multidexlib2:' + multidexlib2Version
+    implementation 'commons-cli:commons-cli:1.2'
+    implementation 'com.github.lanchon.dexpatcher:multidexlib2:' + multidexlib2Version
 
     // Use local version of multidexlib2:
-    compile 'org.smali:dexlib2:' + dexlib2Version
+    implementation 'org.smali:dexlib2:' + dexlib2Version
 }
 
 compileJava {
