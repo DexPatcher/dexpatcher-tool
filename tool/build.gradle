@@ -47,9 +47,15 @@ compileJava {
 
 def generatedResourcesDir = layout.buildDirectory.get().dir('generated-resources')
 
-task generateResources {
+task generateResources(type: Sync) {
+    // Add copyright notice license.
+    from(rootDir) {
+        include 'NOTICE.txt'
+        include 'LICENSE.txt'
+    }
+    into generatedResourcesDir
+    // Generate version file.
     inputs.property 'version', project.version
-    outputs.dir generatedResourcesDir
     doLast {
         def file = generatedResourcesDir.file('lanchon/dexpatcher/version').asFile
         file.parentFile.mkdirs()

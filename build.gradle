@@ -18,11 +18,11 @@ task checkCopyrightNotice {
         if (!file(noticeFile).text.contains(notice)) {
             System.err.println "********************************  WARNING  ********************************"
             System.err.println "Expired copyright notice: ${noticeFile}"
+            System.err.println "***************************************************************************"
         }
     }
     doLast {
         checkNotice 'NOTICE.txt'
-        checkNotice 'tool/src/main/resources/NOTICE.txt'
     }
 }
 
