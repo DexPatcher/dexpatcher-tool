@@ -86,14 +86,14 @@ class DexerTask extends JavaExec {
 task sourceDex(type:DexerTask) {
 
     inputFiles.setFrom sourceJar
-    outputFile.set layout.buildDirectory.file('libs/source.dex.zip')
+    outputFile.set layout.buildDirectory.file('portable-test/source.dex.zip')
 
 }
 
 task patchDex(type:DexerTask) {
 
     inputFiles.setFrom patchJar
-    outputFile.set layout.buildDirectory.file('libs/patch.dex.zip')
+    outputFile.set layout.buildDirectory.file('portable-test/patch.dex.zip')
 
 }
 
@@ -106,7 +106,7 @@ task portableTest(type:JavaExec) {
     ext.sourceFile = sourceDex.outputFile
     ext.patchFile = patchDex.outputFile
     ext.outputFile = objects.fileProperty()
-    outputFile.set layout.buildDirectory.file('libs/patched.dex')
+    outputFile.set layout.buildDirectory.file('portable-test/patched.dex')
 
     inputs.file sourceFile
     inputs.file patchFile
