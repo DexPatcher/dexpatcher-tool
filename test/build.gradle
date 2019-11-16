@@ -128,11 +128,11 @@ task shellTest(type:Exec) {
     inputs.file dexpatcherJar
     inputs.file sourceJar
     inputs.file patchJar
-    inputs.file file('shell-test')
-    inputs.file file('shell-test.config')
-    inputs.file file('shell-test-diff')
-    inputs.file file('shell-test-ref.txt')
-    outputs.file file('build/shell-test-out.txt')
+    inputs.file layout.projectDirectory.file('shell-test')
+    inputs.file layout.projectDirectory.file('shell-test.config')
+    inputs.file layout.projectDirectory.file('shell-test-diff')
+    inputs.file layout.projectDirectory.file('shell-test-ref.txt')
+    outputs.file layout.buildDirectory.file('shell-test-out.txt')
 
     commandLine 'bash', 'shell-test-diff'
 
