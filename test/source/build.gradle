@@ -11,17 +11,3 @@
 plugins {
     id 'java'
 }
-
-task dex(type:JavaExec) {
-
-    ext.inputFile = jar.archiveFile
-    ext.outputFile = objects.fileProperty().value(layout.buildDirectory.file("libs/${project.name}.dex.zip"))
-
-    inputs.file inputFile
-    outputs.file outputFile
-
-    classpath parent.configurations.r8
-    main 'com.android.tools.r8.D8'
-    args '--no-desugaring', '--output', outputFile.get(), inputFile.get()
-
-}
