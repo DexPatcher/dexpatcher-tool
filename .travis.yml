@@ -4,7 +4,7 @@ language: java
 jdk: openjdk8
 
 script:
-  - ./gradlew build portableTest shellTest --stacktrace
+  - ./gradlew clean build portableTest shellTest --stacktrace
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
