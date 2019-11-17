@@ -1,0 +1,28 @@
+/*
+ * DexPatcher - Copyright 2015-2019 Rodrigo Balerdi
+ * (GNU General Public License version 3 or later)
+ *
+ * DexPatcher is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
+ */
+
+task checkCopyrightNotice {
+    dependsOn { subprojects*.tasks.build }
+    def notice = "Copyright 2015-${new java.text.SimpleDateFormat('yyyy').format(new Date())}"
+    def checkNotice = { noticeFile ->
+        if (!file(noticeFile).text.contains(notice)) {
+            System.err.println "********************************  WARNING  ********************************"
+            System.err.println "Expired copyright notice: ${noticeFile}"
+            System.err.println "***************************************************************************"
+        }
+    }
+    doLast {
+        checkNotice 'NOTICE.txt'
+    }
+}
+
+task build {
+    dependsOn checkCopyrightNotice
+}
