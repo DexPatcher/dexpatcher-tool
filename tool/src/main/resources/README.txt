@@ -2,7 +2,7 @@
 DexPatcher-tool
 ===============
 
-Modify Android DEX/APK files at source-level using Java.
+Android Dalvik bytecode patcher.
 https://dexpatcher.github.io/
 
 DexPatcher is free software. (GPLv3+)
