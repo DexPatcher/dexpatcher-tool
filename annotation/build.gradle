@@ -45,6 +45,8 @@ tasks.withType(Jar).configureEach {
     duplicatesStrategy = DuplicatesStrategy.FAIL
 }
 
+apply from: '../configure-publishing.gradle'
+
 publishing {
     publications {
         dexpatcherAnnotation(MavenPublication) {
@@ -52,10 +54,8 @@ publishing {
             from components.java
             pom {
                 name = artifactName
-                rootProject.configurePom it
+                configurePom it
             }
         }
     }
 }
-
-rootProject.configurePublishing project

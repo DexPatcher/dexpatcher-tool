@@ -118,6 +118,8 @@ shadowJar {
 
 assemble.dependsOn shadowJar
 
+apply from: '../configure-publishing.gradle'
+
 publishing {
     publications {
         dexpatcherTool(MavenPublication) {
@@ -125,7 +127,7 @@ publishing {
             from components.java
             pom {
                 name = artifactName
-                rootProject.configurePom it
+                configurePom it
             }
         }
         dexpatcher(MavenPublication) {
@@ -135,10 +137,8 @@ publishing {
             artifact sourcesJar
             pom {
                 name = artifactName + ' (Fat JAR)'
-                rootProject.configurePom it
+                configurePom it
             }
         }
     }
 }
-
-rootProject.configurePublishing project

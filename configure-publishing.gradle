@@ -1,0 +1,62 @@
+/*
+ * DexPatcher - Copyright 2015-2019 Rodrigo Balerdi
+ * (GNU General Public License version 3 or later)
+ *
+ * DexPatcher is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
+ */
+
+ext.configurePom = { pom ->
+    pom.description = 'Android Dalvik bytecode patcher.'
+    pom.url = 'https://github.com/DexPatcher/dexpatcher-tool'
+    pom.organization {
+        name = 'DexPatcher'
+        url = 'https://dexpatcher.github.io/'
+    }
+    pom.licenses {
+        license {
+            name = 'GNU General Public License (version 3 or later)'
+            url = 'https://www.gnu.org/licenses/gpl.txt'
+        }
+    }
+    pom.developers {
+        developer {
+            name = 'Lanchon'
+            url = 'https://github.com/Lanchon'
+        }
+    }
+    pom.scm {
+        connection = 'scm:git:git://github.com/DexPatcher/dexpatcher-tool.git'
+        developerConnection = 'scm:git:ssh://github.com:DexPatcher/dexpatcher-tool.git'
+        url = 'https://github.com/DexPatcher/dexpatcher-tool'
+    }
+}
+
+publishing {
+    repositories {
+        maven {
+            name = 'local'
+            url = rootProject.layout.buildDirectory.dir('repository')
+        }
+        if (project.hasProperty('publishing.url')) {
+            maven {
+                name = 'remote'
+                url = project.getProperty('publishing.url')
+                credentials {
+                    username = project.getProperty('publishing.username')
+                    password = project.getProperty('publishing.password')
+                }
+            }
+        }
+    }
+}
+
+signing {
+    if (project.hasProperty('signing.secretKeyRingFile')) {
+        sign publishing.publications
+    }
+}
+
+assemble.dependsOn publishAllPublicationsToLocalRepository
