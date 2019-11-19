@@ -14,7 +14,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.google.common.collect.Iterables;
-
 import org.jf.dexlib2.base.reference.BaseTypeReference;
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.ClassDef;
