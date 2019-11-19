@@ -33,7 +33,7 @@ java {
 def sharedManifest = manifest {
     attributes(
             'Implementation-Title': artifactName,
-            'Implementation-Version': project.version
+            'Implementation-Version': version
     )
 }
 
