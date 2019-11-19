@@ -16,8 +16,8 @@ java {
 ext.generatedResourcesDir = layout.buildDirectory.get().dir('generated-resources')
 
 task generateResources(type: Sync) {
-    // Add copyright notice license.
     from(rootDir) {
+        include 'README.txt'
         include 'NOTICE.txt'
         include 'LICENSE.txt'
     }
