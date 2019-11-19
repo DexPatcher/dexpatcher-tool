@@ -11,10 +11,17 @@
 plugins {
     id 'java-library'
     id 'com.github.johnrengelman.shadow' version '5.2.0'
+    id 'maven-publish'
+    id 'signing'
 }
 
 group = parent.group
 version = parent.version
+
+def mainArtifact = 'dexpatcher-tool'
+def fatArtifact = 'dexpatcher'
+
+def artifactName = 'DexPatcher-tool'
 
 sourceCompatibility = '1.7'
 def jdk = findProperty('JDK7_HOME') ?: '/usr/lib/jvm/java-7-openjdk-amd64'
@@ -41,6 +48,11 @@ dependencies {
     api 'org.smali:dexlib2:' + dexlib2Version
 }
 
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
 compileJava {
     options.compilerArgs << '-Xlint:unchecked' << '-Xlint:deprecation'
 }
@@ -65,15 +77,16 @@ task generateResources(type: Sync) {
 
 sourceSets.main.output.dir builtBy: generateResources, generatedResourcesDir
 
-jar {
-    archiveBaseName.set 'dexpatcher-tool'
-    manifest {
-        attributes(
-                'Implementation-Title': 'DexPatcher-tool',
-                'Implementation-Version': project.version,
-                'Main-Class': 'lanchon.dexpatcher.Main'
-        )
-    }
+def sharedManifest = manifest {
+    attributes(
+            'Implementation-Title': artifactName,
+            'Implementation-Version': project.version
+    )
+}
+
+tasks.withType(Jar).configureEach {
+    archiveBaseName.set mainArtifact
+    manifest.from sharedManifest
     reproducibleFileOrder = true
     preserveFileTimestamps = false
     duplicatesStrategy = DuplicatesStrategy.FAIL
@@ -89,16 +102,43 @@ task shadowBugWorkaround(type: Jar) {
 }
 
 shadowJar {
-    archiveBaseName.set 'dexpatcher'
+    archiveBaseName.set fatArtifact
     archiveClassifier.set null
+    manifest {
+        attributes(
+                'Main-Class': 'lanchon.dexpatcher.Main'
+        )
+    }
     exclude 'META-INF/**'
     from 'extras'
     //from jar
     //from tasks.getByPath(':annotation:jar')
     from shadowBugWorkaround
-    reproducibleFileOrder = true
-    preserveFileTimestamps = false
-    duplicatesStrategy = DuplicatesStrategy.FAIL
 }
 
 assemble.dependsOn shadowJar
+
+publishing {
+    publications {
+        dexpatcherTool(MavenPublication) {
+            artifactId = mainArtifact
+            from components.java
+            pom {
+                name = artifactName
+                rootProject.configurePom it
+            }
+        }
+        dexpatcher(MavenPublication) {
+            artifactId = fatArtifact
+            artifact shadowJar
+            artifact javadocJar
+            artifact sourcesJar
+            pom {
+                name = artifactName + ' (Fat JAR)'
+                rootProject.configurePom it
+            }
+        }
+    }
+}
+
+rootProject.configurePublishing project

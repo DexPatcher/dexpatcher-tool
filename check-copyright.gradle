@@ -23,6 +23,6 @@ task checkCopyrightNotice {
     }
 }
 
-task build {
+build {
     dependsOn checkCopyrightNotice
 }

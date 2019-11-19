@@ -10,25 +10,52 @@
 
 plugins {
     id 'java-library'
+    id 'maven-publish'
+    id 'signing'
 }
 
 group = parent.group
 version = parent.version
+
+def mainArtifact = 'dexpatcher-annotation'
+def artifactName = 'DexPatcher-annotation'
 
 sourceCompatibility = '1.6'
 def jdk = findProperty('JDK6_HOME') ?: '/usr/lib/jvm/java-6-openjdk-amd64'
 def jdk_rt = new File(jdk, 'jre/lib/rt.jar')
 if (jdk_rt.exists()) compileJava.options.bootstrapClasspath = files(jdk_rt)
 
-jar {
-    archiveBaseName.set 'dexpatcher-annotation'
-    manifest {
-        attributes(
-                'Implementation-Title': 'DexPatcher-annotation',
-                'Implementation-Version': project.version
-        )
-    }
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+def sharedManifest = manifest {
+    attributes(
+            'Implementation-Title': artifactName,
+            'Implementation-Version': project.version
+    )
+}
+
+tasks.withType(Jar).configureEach {
+    archiveBaseName.set mainArtifact
+    manifest.from sharedManifest
     reproducibleFileOrder = true
     preserveFileTimestamps = false
     duplicatesStrategy = DuplicatesStrategy.FAIL
 }
+
+publishing {
+    publications {
+        dexpatcherAnnotation(MavenPublication) {
+            artifactId = mainArtifact
+            from components.java
+            pom {
+                name = artifactName
+                rootProject.configurePom it
+            }
+        }
+    }
+}
+
+rootProject.configurePublishing project

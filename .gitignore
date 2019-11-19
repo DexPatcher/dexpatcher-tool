@@ -9,4 +9,4 @@
 /test/source/build/
 /test/patch/build/
 
-/local.properties
+/gradle.properties
