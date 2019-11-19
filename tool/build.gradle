@@ -18,10 +18,10 @@ plugins {
 group = parent.group
 version = parent.version
 
-def mainArtifact = 'dexpatcher-tool'
-def fatArtifact = 'dexpatcher'
+ext.mainArtifact = 'dexpatcher-tool'
+ext.artifactName = 'DexPatcher-tool'
 
-def artifactName = 'DexPatcher-tool'
+def fatArtifact = 'dexpatcher'
 
 sourceCompatibility = '1.7'
 def jdk = findProperty('JDK7_HOME') ?: '/usr/lib/jvm/java-7-openjdk-amd64'
@@ -48,24 +48,13 @@ dependencies {
     api 'org.smali:dexlib2:' + dexlib2Version
 }
 
-java {
-    withJavadocJar()
-    withSourcesJar()
-}
-
 compileJava {
     options.compilerArgs << '-Xlint:unchecked' << '-Xlint:deprecation'
 }
 
-def generatedResourcesDir = layout.buildDirectory.get().dir('generated-resources')
+apply from: '../configure-artifacts.gradle'
 
-task generateResources(type: Sync) {
-    // Add copyright notice license.
-    from(rootDir) {
-        include 'NOTICE.txt'
-        include 'LICENSE.txt'
-    }
-    into generatedResourcesDir
+generateResources {
     // Generate version file.
     inputs.property 'version', version
     doLast {
@@ -73,23 +62,6 @@ task generateResources(type: Sync) {
         file.parentFile.mkdirs()
         file.text = version
     }
-}
-
-sourceSets.main.output.dir builtBy: generateResources, generatedResourcesDir
-
-def sharedManifest = manifest {
-    attributes(
-            'Implementation-Title': artifactName,
-            'Implementation-Version': version
-    )
-}
-
-tasks.withType(Jar).configureEach {
-    archiveBaseName.set mainArtifact
-    manifest.from sharedManifest
-    reproducibleFileOrder = true
-    preserveFileTimestamps = false
-    duplicatesStrategy = DuplicatesStrategy.FAIL
 }
 
 // The Shadow plugin erroneously unpacks nested jars.

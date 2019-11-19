@@ -1,0 +1,42 @@
+/*
+ * DexPatcher - Copyright 2015-2019 Rodrigo Balerdi
+ * (GNU General Public License version 3 or later)
+ *
+ * DexPatcher is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
+ */
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+ext.generatedResourcesDir = layout.buildDirectory.get().dir('generated-resources')
+
+task generateResources(type: Sync) {
+    // Add copyright notice license.
+    from(rootDir) {
+        include 'NOTICE.txt'
+        include 'LICENSE.txt'
+    }
+    into generatedResourcesDir
+}
+
+sourceSets.main.output.dir builtBy: generateResources, generatedResourcesDir
+
+def sharedManifest = manifest {
+    attributes(
+            'Implementation-Title': artifactName,
+            'Implementation-Version': version
+    )
+}
+
+tasks.withType(Jar).configureEach {
+    archiveBaseName.set mainArtifact
+    manifest.from sharedManifest
+    reproducibleFileOrder = true
+    preserveFileTimestamps = false
+    duplicatesStrategy = DuplicatesStrategy.FAIL
+}
