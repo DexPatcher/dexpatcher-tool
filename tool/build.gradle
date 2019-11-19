@@ -25,7 +25,9 @@ repositories {
     jcenter()
 
     // Use local version of multidexlib2:
-    flatDir dirs: '../../multidexlib2/build/libs'
+    maven {
+        url = '../../multidexlib2/build/repository'
+    }
 }
 
 def dexlib2Version = '2.3.4'
