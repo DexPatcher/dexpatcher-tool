@@ -21,7 +21,7 @@ task generateResources(type: Sync) {
         include 'NOTICE.txt'
         include 'LICENSE.txt'
     }
-    into generatedResourcesDir
+    into generatedResourcesDir.dir('META-INF/about')
 }
 
 sourceSets.main.output.dir builtBy: generateResources, generatedResourcesDir

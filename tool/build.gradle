@@ -81,8 +81,12 @@ shadowJar {
                 'Main-Class': 'lanchon.dexpatcher.Main'
         )
     }
-    exclude 'META-INF/**'
-    from 'extras'
+    exclude '*.txt'
+    exclude 'META-INF/*.txt'
+    exclude 'META-INF/maven/**'
+    from('about') {
+        into 'META-INF/about'
+    }
     //from jar
     //from tasks.getByPath(':annotation:jar')
     from shadowBugWorkaround
