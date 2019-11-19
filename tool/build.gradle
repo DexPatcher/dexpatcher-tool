@@ -54,13 +54,20 @@ compileJava {
 
 apply from: '../configure-artifacts.gradle'
 
-generateResources {
-    // Generate version file.
+def versionFile = layout.buildDirectory.file('version-file/version')
+
+task createVersionFile {
     inputs.property 'version', version
+    outputs.file versionFile
     doLast {
-        def file = generatedResourcesDir.file('lanchon/dexpatcher/version').asFile
-        file.parentFile.mkdirs()
-        file.text = version
+        versionFile.get().asFile.text = version
+    }
+}
+
+processResources {
+    dependsOn createVersionFile
+    from(versionFile) {
+        into 'lanchon/dexpatcher'
     }
 }
 

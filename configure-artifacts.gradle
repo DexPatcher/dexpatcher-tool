@@ -13,18 +13,14 @@ java {
     withSourcesJar()
 }
 
-ext.generatedResourcesDir = layout.buildDirectory.get().dir('generated-resources')
-
-task generateResources(type: Sync) {
+processResources {
     from(rootDir) {
         include 'README.txt'
         include 'NOTICE.txt'
         include 'LICENSE.txt'
+        into 'META-INF/about'
     }
-    into generatedResourcesDir.dir('META-INF/about')
 }
-
-sourceSets.main.output.dir builtBy: generateResources, generatedResourcesDir
 
 def sharedManifest = manifest {
     attributes(
