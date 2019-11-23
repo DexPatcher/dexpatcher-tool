@@ -83,13 +83,11 @@ public class Processor {
 	}
 
 	private Context createContext() {
-		Context context = new Context(logger);
-		context.setAnnotationPackage(config.annotationPackage);
-		context.setConstructorAutoIgnoreDisabled(config.constructorAutoIgnoreDisabled);
-		String root = config.sourceCodeRoot;
-		if (root != null && root.length() > 0 && !root.endsWith(File.separator)) root += File.separator;
-		context.setSourceCodeRoot(root);
-		return context;
+		return new Context.Builder(logger)
+			.setAnnotationPackage(config.annotationPackage)
+			.setConstructorAutoIgnoreDisabled(config.constructorAutoIgnoreDisabled)
+			.setSourceCodeRoot(config.sourceCodeRoot)
+			.build();
 	}
 
 	private DexFile processDex(DexFile sourceDex, DexFile patchDex) {

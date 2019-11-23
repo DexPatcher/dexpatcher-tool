@@ -10,6 +10,7 @@
 
 package lanchon.dexpatcher.core;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,45 +25,65 @@ public class Context {
 	public static final Logger.Level DEFAULT_LOG_LEVEL = WARN;
 	public static final String DEFAULT_ANNOTATION_PACKAGE = "lanchon.dexpatcher.annotation";
 
-	private Logger logger;
-	private String annotationPackage;
-	private boolean constructorAutoIgnoreDisabled;
-	private String sourceCodeRoot;
+	public static class Builder {
+
+		private final Logger logger;
+		private String annotationPackage = DEFAULT_ANNOTATION_PACKAGE;
+		private boolean constructorAutoIgnoreDisabled;
+		private String sourceCodeRoot;
+
+		public Builder() {
+			this(DEFAULT_LOG_LEVEL);
+		}
+
+		public Builder(Logger.Level logLevel) {
+			this(new BasicLogger());
+			logger.setLogLevel(logLevel);
+		}
+
+		public Builder(Logger logger) {
+			this.logger = logger;
+		}
+
+		public Builder setAnnotationPackage(String value) {
+			annotationPackage = value;
+			return this;
+		}
+
+		public Builder setConstructorAutoIgnoreDisabled(boolean value) {
+			constructorAutoIgnoreDisabled = value;
+			return this;
+		}
+
+		public Builder setSourceCodeRoot(String value) {
+			sourceCodeRoot = value;
+			return this;
+		}
+
+		public Context build() {
+			return new Context(logger, annotationPackage, constructorAutoIgnoreDisabled, sourceCodeRoot);
+		}
+
+	}
+
+	private final Logger logger;
+	private final String annotationPackage;
+	private final boolean constructorAutoIgnoreDisabled;
+	private final String sourceCodeRoot;
 
 	private Map<String, Action> actionMap;
 
-	public Context() {
-		this(DEFAULT_LOG_LEVEL);
-	}
-
-	public Context(Logger.Level logLevel) {
-		Logger logger = new BasicLogger();
-		logger.setLogLevel(logLevel);
+	private Context(Logger logger, String annotationPackage, boolean constructorAutoIgnoreDisabled,
+			String sourceCodeRoot) {
 		this.logger = logger;
-		setAnnotationPackage(DEFAULT_ANNOTATION_PACKAGE);
-	}
+		this.annotationPackage = annotationPackage;
+		this.constructorAutoIgnoreDisabled = constructorAutoIgnoreDisabled;
 
-	public Context(Logger logger) {
-		this.logger = logger;
-	}
+		if (sourceCodeRoot != null && sourceCodeRoot.length() > 0 && !sourceCodeRoot.endsWith(File.separator)) {
+			sourceCodeRoot += File.separator;
+		}
+		this.sourceCodeRoot = sourceCodeRoot;
 
-	// Properties
-
-	public Logger getLogger() {
-		return logger;
-	}
-
-	public void setLogger(Logger logger) {
-		this.logger = logger;
-	}
-
-	public String getAnnotationPackage() {
-		return annotationPackage;
-	}
-
-	public void setAnnotationPackage(String value) {
-		if (value.equals(annotationPackage)) return;
-		annotationPackage = value;
 		Action[] actions = Action.values();
 		actionMap = new HashMap<>(actions.length);
 		for (Action action : actions) {
@@ -71,20 +92,20 @@ public class Context {
 		}
 	}
 
+	public Logger getLogger() {
+		return logger;
+	}
+
+	public String getAnnotationPackage() {
+		return annotationPackage;
+	}
+
 	public boolean isConstructorAutoIgnoreDisabled() {
 		return constructorAutoIgnoreDisabled;
 	}
 
-	public void setConstructorAutoIgnoreDisabled(boolean constructorAutoIgnoreDisabled) {
-		this.constructorAutoIgnoreDisabled = constructorAutoIgnoreDisabled;
-	}
-
 	public String getSourceCodeRoot() {
 		return sourceCodeRoot;
-	}
-
-	public void setSourceCodeRoot(String sourceCodeRoot) {
-		this.sourceCodeRoot = sourceCodeRoot;
 	}
 
 	// Extras
