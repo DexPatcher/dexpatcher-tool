@@ -325,7 +325,7 @@ public class Main {
 
 	}
 
-	// Modify members of class 'E'
+	// Modify members of class 'E':
 	// Note: The default value of 'staticConstructorAction' is the value of
 	// 'defaultAction' if one is defined. Otherwise it is undefined.
 	@DexEdit(defaultAction = DexAction.ADD)
