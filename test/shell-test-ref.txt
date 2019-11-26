@@ -10,7 +10,11 @@ usage: dexpatcher [<option> ...] [--output <patched-dex-or-dir>]
  -a,--api-level <n>           android api level (default: auto-detect)
     --annotations <package>   package name of DexPatcher annotations
                               (default: 'lanchon.dexpatcher.annotation')
+    --code-marker <marker>    identifier code marker (default: '_$$_')
     --debug                   output debugging information
+    --decode-output           decode identifiers in output
+    --decode-patches          decode identifiers in patches
+    --decode-source           decode identifiers in source
     --dry-run                 do not write output files (much faster)
  -J,--multi-dex-jobs <n>      multi-dex thread count (implies: -m -M)
                               (default: available processors up to 4)
@@ -18,6 +22,7 @@ usage: dexpatcher [<option> ...] [--output <patched-dex-or-dir>]
  -M,--multi-dex-threaded      multi-threaded multi-dex (implies: -m)
     --max-dex-pool-size <n>   maximum size of dex pools (default: 65536)
     --no-auto-ignore          no trivial default constructor auto-ignore
+    --no-decode-errors        treat identifier decode errors as warnings
  -o,--output <dex-or-dir>     name of output file or directory
  -p,--path                    output relative paths of source code files
  -P,--path-root <root>        output absolute paths of source code files

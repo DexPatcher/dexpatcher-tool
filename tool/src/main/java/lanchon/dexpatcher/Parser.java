@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lanchon.dexpatcher.core.Context;
+import lanchon.dexpatcher.mapper.NameDecoder;
 import lanchon.multidexlib2.DexIO;
 import lanchon.multidexlib2.MultiDexIO;
 
@@ -66,6 +67,16 @@ public class Parser {
 		config.annotationPackage = cl.getOptionValue("annotations", Context.DEFAULT_ANNOTATION_PACKAGE);
 		config.constructorAutoIgnoreDisabled = cl.hasOption("no-auto-ignore");
 
+		config.decodeSource = cl.hasOption("decode-source");
+		config.decodePatches = cl.hasOption("decode-patches");
+		config.decodeOutput = cl.hasOption("decode-output");
+
+		config.codeMarker = cl.getOptionValue("code-marker", NameDecoder.DEFAULT_CODE_MARKER);
+		if (!NameDecoder.isValidCodeMarker(config.codeMarker)) {
+			throw new ParseException("Invalid code marker: '" + config.codeMarker + "'");
+		}
+		config.treatDecodeErrorsAsWarnings = cl.hasOption("no-decode-errors");
+
 		config.logLevel = WARN;
 		if (cl.hasOption("quiet")) config.logLevel = ERROR;
 		if (cl.hasOption("verbose")) config.logLevel = INFO;
@@ -113,6 +124,15 @@ public class Parser {
 				Context.DEFAULT_ANNOTATION_PACKAGE + "')");
 		o.setArgName("package"); options.addOption(o);
 		options.addOption(new Option(null, "no-auto-ignore", false, "no trivial default constructor auto-ignore"));
+
+		options.addOption(new Option(null, "decode-source", false, "decode identifiers in source"));
+		options.addOption(new Option(null, "decode-patches", false, "decode identifiers in patches"));
+		options.addOption(new Option(null, "decode-output", false, "decode identifiers in output"));
+
+		o = new Option(null, "code-marker", true, "identifier code marker (default: '" +
+				NameDecoder.DEFAULT_CODE_MARKER + "')");
+		o.setArgName("marker"); options.addOption(o);
+		options.addOption(new Option(null, "no-decode-errors", false, "treat identifier decode errors as warnings"));
 
 		options.addOption(new Option("q", "quiet", false, "do not output warnings"));
 		options.addOption(new Option("v", "verbose", false, "output extra information"));

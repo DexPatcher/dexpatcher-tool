@@ -12,6 +12,7 @@ package lanchon.dexpatcher;
 
 import java.util.List;
 
+import lanchon.dexpatcher.mapper.NameDecoder;
 import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.logger.Logger;
 import lanchon.multidexlib2.DexIO;
@@ -31,6 +32,13 @@ public class Configuration {
 
 	public String annotationPackage = Context.DEFAULT_ANNOTATION_PACKAGE;
 	public boolean constructorAutoIgnoreDisabled;
+
+	public boolean decodeSource;
+	public boolean decodePatches;
+	public boolean decodeOutput;
+
+	public String codeMarker = NameDecoder.DEFAULT_CODE_MARKER;
+	public boolean treatDecodeErrorsAsWarnings;
 
 	public Logger.Level logLevel = Context.DEFAULT_LOG_LEVEL;
 

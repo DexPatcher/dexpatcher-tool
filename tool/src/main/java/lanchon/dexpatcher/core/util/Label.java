@@ -27,8 +27,12 @@ public class Label {
 		return fromClassDescriptor(Id.toClassDescriptor(id));
 	}
 
-	private static String fromClassDescriptor(String descriptor) {
-		return TypeName.fromClassDescriptor(descriptor);
+	public static String fromClassDescriptor(String descriptor) {
+		try {
+			return TypeName.fromClassDescriptor(descriptor);
+		} catch (RuntimeException e) {
+			return descriptor;
+		}
 	}
 
 	public static String ofTargetMember(String name) {
