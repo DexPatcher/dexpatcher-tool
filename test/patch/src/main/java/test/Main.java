@@ -638,6 +638,54 @@ public class Main {
 		public CrossClassCPatcher() { p("replaced CrossClassCPatcher::<init> (" + this.getClass() + ")"); }
 	}
 
+	// Modify members of obfuscated class named '42':
+	// Note: The patch dex file must be decoded using '--decode-patches'.
+	@DexEdit
+	public static class __My_label_for_Class42_$$_42__ {
+
+		// Replace obfuscated method named '42':
+		@DexReplace
+		public void __my_label_for_method42_$$_42__() { p("replaced Class42::method42"); }
+
+		// Test valid coded identifiers:
+		@DexAdd void    __$$_withoutLabel__() { printMethodName(new Throwable()); };
+		@DexAdd void __ok_$$_with$sdollarEscape__() { printMethodName(new Throwable()); };
+		@DexAdd void __ok_$$_with$uunderscoreEscape__() { printMethodName(new Throwable()); };
+		@DexAdd void __ok_$$_with$x00B1unicodeEscape__() { printMethodName(new Throwable()); };
+		@DexAdd void __prefix_$$_1____infix_$$_2__and__postfix_$$_3__() { printMethodName(new Throwable()); };
+
+		// Test invalid coded identifiers:
+		// Note: The patch dex file must be decoded using '--no-decode-errors'.
+		// Note: Invalid codes within identifiers are skipped during decoding,
+		// but valid codes within the affected identifiers are still decoded.
+		@DexAdd int  _bad_$$_noStartMark__;
+		@DexAdd int __bad_$$_noEndMark_;
+		@DexAdd int __bad_emptyCode_$$__;
+		@DexAdd int __bad_$$_invalid_character__;
+		@DexAdd int __bad_$$_invalid$Uescape__;
+		@DexAdd int __bad_$$_invalid$xB1unicodeEscape__;
+		@DexAdd int __bad_$$_truncatedEscape$__;
+		@DexAdd int __bad_$$_truncatedUnicodeEscape$xB1__;
+		@DexAdd void __prefix_$$_1____bad_infix_$$_$2__and__postfix_$$_3__() { printMethodName(new Throwable()); };
+
+		// Print the decoded identifiers:
+		@DexWrap
+		public void print() {
+			__$$_withoutLabel__();
+			__ok_$$_with$sdollarEscape__();
+			__ok_$$_with$uunderscoreEscape__();
+			__ok_$$_with$x00B1unicodeEscape__();
+			__prefix_$$_1____infix_$$_2__and__postfix_$$_3__();
+			__prefix_$$_1____bad_infix_$$_$2__and__postfix_$$_3__();
+			print();
+		}
+		@DexAdd
+		private void printMethodName(Throwable t) {
+			p("decoded Class42::" + t.getStackTrace()[0].getMethodName());
+		}
+
+	}
+
 	// Mini FAQ
 
 	// Q) My IDE outputs classes that clash with classes in my source app

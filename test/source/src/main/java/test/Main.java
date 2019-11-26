@@ -50,6 +50,8 @@ public class Main {
 		CrossClassBHelper.print();
 		p();
 		new CrossClassC();
+		p();
+		new __Class42_$$_42__().print();
 	}
 
 	public static class A {
@@ -246,6 +248,16 @@ public class Main {
 	public static class CrossClassC {
 		static { p("original CrossClassC::<clinit>"); }
 		public CrossClassC() { p("original CrossClassC::<init>"); }
+	}
+
+	// Define obfuscated class named '42' containing method named '42':
+	// Note: The source dex file must be decoded using '--decode-source'.
+	public static class __Class42_$$_42__ {
+		public __Class42_$$_42__() { p("decoded Class42::<init> (" + this.getClass() + ")"); }
+		public void __method42_$$_42__() { p("original Class42::method42"); }
+		public void print() {
+			__method42_$$_42__();
+		}
 	}
 
 }

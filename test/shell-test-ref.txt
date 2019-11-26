@@ -31,14 +31,15 @@ usage: dexpatcher [<option> ...] [--output <patched-dex-or-dir>]
  -v,--verbose                 output extra information
     --version                 print version information and exit
 
-$ dexpatcher build/source.dex.zip build/patch.dex.zip --output build/patched.dex --debug
+$ dexpatcher build/source.dex.zip build/patch.dex.zip --output build/patched.dex --decode-source --decode-patches --no-decode-errors --debug
 DexPatcher version 1.7.0 by Lanchon (https://dexpatcher.github.io/)
 info: read 'build/source.dex.zip'
-debug: read 'build/source.dex.zip': file 'classes.dex': 25 types
+debug: read 'build/source.dex.zip': file 'classes.dex': 26 types
 debug: read 'build/source.dex.zip': dex version '035'
 info: read 'build/patch.dex.zip'
-debug: read 'build/patch.dex.zip': file 'classes.dex': 24 types
+debug: read 'build/patch.dex.zip': file 'classes.dex': 25 types
 debug: read 'build/patch.dex.zip': dex version '035'
+debug: decode source: type 'test.Main$__Class42_$$_42__': decoded to 'test.Main$42'
 debug: type 'test.Main$A': (Main.java:0): replace
 debug: type 'test.Main$Abstract': (Main.java:0): ignore
 debug: type 'test.Main$B': (Main.java:0): edit
@@ -128,6 +129,45 @@ debug: type 'test.Main$H': method '<clinit>():void': (Main.java:473): add
 debug: type 'test.Main$H': method '<init>():void': (Main.java:481): ignore
 debug: type 'test.Main$H': method 'print():void': (Main.java:485): append
 debug: type 'test.Main$Interface': (Main.java:0): ignore
+debug: decode patch: type 'test.Main$__My_label_for_Class42_$$_42__': decoded to 'test.Main$42'
+debug: decode patch: annotation element value '__My_label_for_Class42_$$_42__': decoded to '42'
+debug: type 'test.Main$42': (Main.java:0): edit
+warning: decode patch: type 'test.Main$__My_label_for_Class42_$$_42__': field '__bad_$$_invalid$Uescape__': invalid escape sequence '$U' in '__bad_$$_invalid[->]$U[<-]escape__'
+debug: type 'test.Main$42': field '__bad_$$_invalid$Uescape__:int': (Main.java:0): add
+warning: decode patch: type 'test.Main$__My_label_for_Class42_$$_42__': field '__bad_$$_invalid$xB1unicodeEscape__': invalid escape sequence '$xB1u' in '__bad_$$_invalid[->]$xB1u[<-]nicodeEscape__'
+debug: type 'test.Main$42': field '__bad_$$_invalid$xB1unicodeEscape__:int': (Main.java:0): add
+warning: decode patch: type 'test.Main$__My_label_for_Class42_$$_42__': field '__bad_$$_invalid_character__': invalid character '_' in '__bad_$$_invalid[->]_[<-]character__'
+debug: type 'test.Main$42': field '__bad_$$_invalid_character__:int': (Main.java:0): add
+warning: decode patch: type 'test.Main$__My_label_for_Class42_$$_42__': field '__bad_$$_noEndMark_': missing end of code in '__bad[->]_$$_noEndMark_[<-]'
+debug: type 'test.Main$42': field '__bad_$$_noEndMark_:int': (Main.java:0): add
+warning: decode patch: type 'test.Main$__My_label_for_Class42_$$_42__': field '__bad_$$_truncatedEscape$__': invalid escape sequence '$' in '__bad_$$_truncatedEscape[->]$[<-]__'
+debug: type 'test.Main$42': field '__bad_$$_truncatedEscape$__:int': (Main.java:0): add
+warning: decode patch: type 'test.Main$__My_label_for_Class42_$$_42__': field '__bad_$$_truncatedUnicodeEscape$xB1__': invalid escape sequence '$xB1' in '__bad_$$_truncatedUnicodeEscape[->]$xB1[<-]__'
+debug: type 'test.Main$42': field '__bad_$$_truncatedUnicodeEscape$xB1__:int': (Main.java:0): add
+warning: decode patch: type 'test.Main$__My_label_for_Class42_$$_42__': field '__bad_emptyCode_$$__': empty code in '__bad_emptyCode[->]_$$__[<-]'
+debug: type 'test.Main$42': field '__bad_emptyCode_$$__:int': (Main.java:0): add
+warning: decode patch: type 'test.Main$__My_label_for_Class42_$$_42__': field '_bad_$$_noStartMark__': missing start of code in '[->]_bad_$$_[<-]noStartMark__'
+debug: type 'test.Main$42': field '_bad_$$_noStartMark__:int': (Main.java:0): add
+debug: decode source: type 'test.Main$__Class42_$$_42__': method '__method42_$$_42__': decoded to '42'
+info: type 'test.Main$42': method '<init>():void': (Main.java:644): implicit ignore of trivial default constructor
+debug: type 'test.Main$42': method '<init>():void': (Main.java:644): ignore
+debug: type 'test.Main$42': method 'printMethodName(java.lang.Throwable):void': (Main.java:684): add
+debug: decode patch: type 'test.Main$__My_label_for_Class42_$$_42__': method '__$$_withoutLabel__': decoded to 'withoutLabel'
+debug: type 'test.Main$42': method 'withoutLabel():void': (Main.java:651): add
+debug: decode patch: type 'test.Main$__My_label_for_Class42_$$_42__': method '__my_label_for_method42_$$_42__': decoded to '42'
+debug: type 'test.Main$42': method '42():void': (Main.java:648): replace
+debug: decode patch: type 'test.Main$__My_label_for_Class42_$$_42__': method '__ok_$$_with$sdollarEscape__': decoded to 'with$dollarEscape'
+debug: type 'test.Main$42': method 'with$dollarEscape():void': (Main.java:652): add
+debug: decode patch: type 'test.Main$__My_label_for_Class42_$$_42__': method '__ok_$$_with$uunderscoreEscape__': decoded to 'with_underscoreEscape'
+debug: type 'test.Main$42': method 'with_underscoreEscape():void': (Main.java:653): add
+debug: decode patch: type 'test.Main$__My_label_for_Class42_$$_42__': method '__ok_$$_with$x00B1unicodeEscape__': decoded to 'with±unicodeEscape'
+debug: type 'test.Main$42': method 'with±unicodeEscape():void': (Main.java:654): add
+warning: decode patch: type 'test.Main$__My_label_for_Class42_$$_42__': method '__prefix_$$_1____bad_infix_$$_$2__and__postfix_$$_3__': invalid escape sequence '$2' in '__bad_infix_$$_[->]$2[<-]__'
+debug: decode patch: type 'test.Main$__My_label_for_Class42_$$_42__': method '__prefix_$$_1____bad_infix_$$_$2__and__postfix_$$_3__': decoded to '1__bad_infix_$$_$2__and3'
+debug: type 'test.Main$42': method '1__bad_infix_$$_$2__and3():void': (Main.java:669): add
+debug: decode patch: type 'test.Main$__My_label_for_Class42_$$_42__': method '__prefix_$$_1____infix_$$_2__and__postfix_$$_3__': decoded to '12and3'
+debug: type 'test.Main$42': method '12and3():void': (Main.java:655): add
+debug: type 'test.Main$42': method 'print():void': (Main.java:674): wrap
 debug: type 'test.Main$source_CrossClassA': (Main.java:0): edit
 debug: type 'test.Main$source_CrossClassA': target 'test.Main$CrossClassA': (Main.java:0): 'public' modifier removed from renamed type
 debug: type 'test.Main$source_CrossClassA': target 'test.Main$CrossClassA': method '<init>(java.lang.String):void': (Main.java:582): ignore
@@ -160,11 +200,13 @@ debug: type 'test.Main$Derived': method 'source_method():void': target 'method':
 debug: type 'test.Main$Derived': method 'method():void': (Main.java:234): add
 info: write 'build/patched.dex'
 debug: write 'build/patched.dex': dex version '035'
-debug: write 'build/patched.dex': 24 types
-0 error(s), 2 warning(s)
+debug: write 'build/patched.dex': 25 types
+0 error(s), 11 warning(s)
 
 $ dex2jar --force --output build/patched-dex2jar.jar build/patched.dex
 dex2jar build/patched.dex -> build/patched-dex2jar.jar
+WARN: ignored invalid inner class name , treat as anonymous inner class.
+WARN: ignored invalid inner class name , treat as anonymous inner class.
 
 --- run source/build/libs/source.jar ---
 original A::<clinit>
@@ -237,6 +279,9 @@ original CrossClassB::go: data (class test.Main$CrossClassB)
 
 original CrossClassC::<clinit>
 original CrossClassC::<init>
+
+decoded Class42::<init> (class test.Main$__Class42_$$_42__)
+original Class42::method42
 --- end source/build/libs/source.jar ---
 
 --- run build/patched-dex2jar.jar ---
@@ -344,5 +389,14 @@ exiting wrapper CrossClassBPatcher::go
 
 replaced CrossClassCPatcher::<clinit> (class test.Main$CrossClassC)
 replaced CrossClassCPatcher::<init> (class test.Main$CrossClassC)
+
+decoded Class42::<init> (class test.Main$42)
+decoded Class42::withoutLabel
+decoded Class42::with$dollarEscape
+decoded Class42::with_underscoreEscape
+decoded Class42::with±unicodeEscape
+decoded Class42::12and3
+decoded Class42::1__bad_infix_$$_$2__and3
+replaced Class42::method42
 --- end build/patched-dex2jar.jar ---
 
