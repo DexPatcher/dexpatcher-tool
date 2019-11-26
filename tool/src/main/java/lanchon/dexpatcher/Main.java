@@ -71,7 +71,7 @@ public class Main {
 		try (InputStream is = Main.class.getResourceAsStream(FILE)) {
 			return new BufferedReader(new InputStreamReader(is)).readLine().trim();
 		} catch (IOException e) {
-			return  "<undefined>";
+			return "<undefined>";
 		}
 	}
 
