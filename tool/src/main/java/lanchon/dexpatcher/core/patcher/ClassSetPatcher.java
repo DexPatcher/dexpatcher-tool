@@ -20,6 +20,7 @@ import lanchon.dexpatcher.core.PatchException;
 import lanchon.dexpatcher.core.PatcherAnnotation;
 import lanchon.dexpatcher.core.model.BasicClassDef;
 import lanchon.dexpatcher.core.util.DexUtils;
+import lanchon.dexpatcher.core.util.ElementalTypeRewriter;
 import lanchon.dexpatcher.core.util.Id;
 import lanchon.dexpatcher.core.util.Label;
 import lanchon.dexpatcher.core.util.TypeName;
@@ -215,10 +216,10 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 		DexRewriter rewriter = new DexRewriter(new RewriterModule() {
 			@Override
 			public Rewriter<String> getTypeRewriter(Rewriters rewriters) {
-				return new Rewriter<String>() {
+				return new ElementalTypeRewriter() {
 
 					@Override
-					public String rewrite(String value) {
+					public String rewriteElementalType(String elementalType) {
 						return from.equals(value) ? to : value;
 					}
 
