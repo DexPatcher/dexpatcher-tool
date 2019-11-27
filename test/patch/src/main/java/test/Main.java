@@ -647,7 +647,51 @@ public class Main {
 		@DexReplace
 		public void __my_label_for_method42_$$_42__() { p("replaced Class42::method42"); }
 
-		// Test valid coded identifiers:
+		// Identifier codes:
+
+		// Identifier codes can be part of names of packages, types, fields,
+		// methods, method parameters and method local variables, and of values
+		// of string-valued annotation elements.
+
+		// Identifier codes are recognized by the presence of a code marker,
+		// which by default is '_$$_' but can be configured. Code markers must
+		// be at least two characters in length, must not contain spaces, must
+		// start with an underscore, and must not start or end with double
+		// underscore.
+
+		// Identifier codes can take one of two forms:
+		// - without label: _<code-marker><escaped-string>__
+		// - with label:    __<label><code-marker><escaped-string>__
+
+		// When using the default code marker, these forms become:
+		// - without label: __$$_<escaped-string>__
+		// - with label:    __<label>_$$_<escaped-string>__
+
+		// When instructed to decode dex files, DexPatcher will replace each
+		// occurrence of an identifier code with the unescaped version of its
+		// corresponding <escaped-string> field, ignoring the rest of the code
+		// (including its label). This mechanism allows using the java language
+		// to work with identifiers that are illegal in Java but legal in Java
+		// and Dalvik bytecode. This is often required when working with
+		// obfuscated code.
+
+		// The <label> field of codes is optional and used for disambiguation
+		// and documentation purposes. If present, it must not be zero-length,
+		// must not contain the code marker, must not start or end with an
+		// underscore, and must not contain double underscore.
+
+		// The <escaped-string> field of codes is mandatory. It must not be
+		// zero-length, must not contain the code marker, must not contain
+		// underscore, and can only contain dollar signs to signal the start
+		// of escape sequences.
+
+		// The allowed escape sequences are:
+		// - dollar sign: $S is replaced with the character $.
+		// - underscore: $U is replaced with the character _.
+		// - ASCII / Latin-1: $aNN is replaced with hex Unicode codepoint 0xNN.
+		// - Unicode: $uNNNN is replaced with hex Unicode codepoint 0xNNNN.
+
+		// Test valid identifier codes:
 		@DexAdd void    __$$_withoutLabel__() { printMethodName(new Throwable()); };
 		@DexAdd void __ok_$$_with$SdollarEscape__() { printMethodName(new Throwable()); };
 		@DexAdd void __ok_$$_with$UunderscoreEscape__() { printMethodName(new Throwable()); };
@@ -655,7 +699,7 @@ public class Main {
 		@DexAdd void __ok_$$_with$u00B1unicodeEscape__() { printMethodName(new Throwable()); };
 		@DexAdd void __prefix_$$_1____infix_$$_2__and__postfix_$$_3__() { printMethodName(new Throwable()); };
 
-		// Test invalid coded identifiers:
+		// Test invalid identifier codes:
 		// Note: The patch dex file must be decoded using '--no-decode-errors'.
 		// Note: Invalid codes within identifiers are skipped during decoding,
 		// but valid codes within the affected identifiers are still decoded.

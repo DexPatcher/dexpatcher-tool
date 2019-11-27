@@ -155,25 +155,25 @@ debug: type 'test.Main$42': field '_bad_$$_noStartMark__:int': (Main.java:0): ad
 debug: decode source: type 'test.Main$__Class42_$$_42__': method '__method42_$$_42__': decoded to '42'
 info: type 'test.Main$42': method '<init>():void': (Main.java:644): implicit ignore of trivial default constructor
 debug: type 'test.Main$42': method '<init>():void': (Main.java:644): ignore
-debug: type 'test.Main$42': method 'printMethodName(java.lang.Throwable):void': (Main.java:688): add
+debug: type 'test.Main$42': method 'printMethodName(java.lang.Throwable):void': (Main.java:732): add
 debug: decode patch: type 'test.Main$__My_label_for_Class42_$$_42__': method '__$$_withoutLabel__': decoded to 'withoutLabel'
-debug: type 'test.Main$42': method 'withoutLabel():void': (Main.java:651): add
+debug: type 'test.Main$42': method 'withoutLabel():void': (Main.java:695): add
 debug: decode patch: type 'test.Main$__My_label_for_Class42_$$_42__': method '__my_label_for_method42_$$_42__': decoded to '42'
 debug: type 'test.Main$42': method '42():void': (Main.java:648): replace
 debug: decode patch: type 'test.Main$__My_label_for_Class42_$$_42__': method '__ok_$$_with$SdollarEscape__': decoded to 'with$dollarEscape'
-debug: type 'test.Main$42': method 'with$dollarEscape():void': (Main.java:652): add
+debug: type 'test.Main$42': method 'with$dollarEscape():void': (Main.java:696): add
 debug: decode patch: type 'test.Main$__My_label_for_Class42_$$_42__': method '__ok_$$_with$UunderscoreEscape__': decoded to 'with_underscoreEscape'
-debug: type 'test.Main$42': method 'with_underscoreEscape():void': (Main.java:653): add
+debug: type 'test.Main$42': method 'with_underscoreEscape():void': (Main.java:697): add
 debug: decode patch: type 'test.Main$__My_label_for_Class42_$$_42__': method '__ok_$$_with$aB1asciiLatin1Escape__': decoded to 'with±asciiLatin1Escape'
-debug: type 'test.Main$42': method 'with±asciiLatin1Escape():void': (Main.java:654): add
+debug: type 'test.Main$42': method 'with±asciiLatin1Escape():void': (Main.java:698): add
 debug: decode patch: type 'test.Main$__My_label_for_Class42_$$_42__': method '__ok_$$_with$u00B1unicodeEscape__': decoded to 'with±unicodeEscape'
-debug: type 'test.Main$42': method 'with±unicodeEscape():void': (Main.java:655): add
+debug: type 'test.Main$42': method 'with±unicodeEscape():void': (Main.java:699): add
 warning: decode patch: type 'test.Main$__My_label_for_Class42_$$_42__': method '__prefix_$$_1____bad_infix_$$_$2__and__postfix_$$_3__': invalid escape sequence '$2' in '__bad_infix_$$_[->]$2[<-]__'
 debug: decode patch: type 'test.Main$__My_label_for_Class42_$$_42__': method '__prefix_$$_1____bad_infix_$$_$2__and__postfix_$$_3__': decoded to '1__bad_infix_$$_$2__and3'
-debug: type 'test.Main$42': method '1__bad_infix_$$_$2__and3():void': (Main.java:672): add
+debug: type 'test.Main$42': method '1__bad_infix_$$_$2__and3():void': (Main.java:716): add
 debug: decode patch: type 'test.Main$__My_label_for_Class42_$$_42__': method '__prefix_$$_1____infix_$$_2__and__postfix_$$_3__': decoded to '12and3'
-debug: type 'test.Main$42': method '12and3():void': (Main.java:656): add
-debug: type 'test.Main$42': method 'print():void': (Main.java:677): wrap
+debug: type 'test.Main$42': method '12and3():void': (Main.java:700): add
+debug: type 'test.Main$42': method 'print():void': (Main.java:721): wrap
 debug: type 'test.Main$source_CrossClassA': (Main.java:0): edit
 debug: type 'test.Main$source_CrossClassA': target 'test.Main$CrossClassA': (Main.java:0): 'public' modifier removed from renamed type
 debug: type 'test.Main$source_CrossClassA': target 'test.Main$CrossClassA': method '<init>(java.lang.String):void': (Main.java:582): ignore
