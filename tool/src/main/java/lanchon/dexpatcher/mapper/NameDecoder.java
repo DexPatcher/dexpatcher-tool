@@ -102,27 +102,28 @@ public class NameDecoder {
 					case '$':
 						int escapeIndex = i;
 						if (i + 1 < escapeEnd) {
-							switch (string.charAt(++i)) {
+							char e = string.charAt(++i);
+							switch (e) {
 								case 's':
 									sb.append('$');
 									continue;
 								case 'u':
 									sb.append('_');
 									continue;
-								case 'x': {
+								case 'a':
+								case 'x':
+									int n = (e == 'a' ? 2 : 4);
 									int value = 0;
-									int n = 0;
-									for (; n < 4; n++) {
+									for (; n != 0; n--) {
 										if (i + 1 >= escapeEnd) break;
 										int digit = Character.digit(string.charAt(++i), 16);
 										if (digit < 0) break;
 										value = (value << 4 | digit);
 									}
-									if (n == 4) {
+									if (n == 0) {
 										sb.append((char) value);
 										continue;
 									}
-								}
 							}
 						}
 						i++;

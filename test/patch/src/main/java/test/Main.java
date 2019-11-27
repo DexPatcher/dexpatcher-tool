@@ -651,6 +651,7 @@ public class Main {
 		@DexAdd void    __$$_withoutLabel__() { printMethodName(new Throwable()); };
 		@DexAdd void __ok_$$_with$sdollarEscape__() { printMethodName(new Throwable()); };
 		@DexAdd void __ok_$$_with$uunderscoreEscape__() { printMethodName(new Throwable()); };
+		@DexAdd void __ok_$$_with$aB1asciiLatin1Escape__() { printMethodName(new Throwable()); };
 		@DexAdd void __ok_$$_with$x00B1unicodeEscape__() { printMethodName(new Throwable()); };
 		@DexAdd void __prefix_$$_1____infix_$$_2__and__postfix_$$_3__() { printMethodName(new Throwable()); };
 
@@ -663,8 +664,10 @@ public class Main {
 		@DexAdd int __bad_emptyCode_$$__;
 		@DexAdd int __bad_$$_invalid_character__;
 		@DexAdd int __bad_$$_invalid$Uescape__;
+		@DexAdd int __bad_$$_invalid$aX1asciiLatin1Escape__;
 		@DexAdd int __bad_$$_invalid$xB1unicodeEscape__;
 		@DexAdd int __bad_$$_truncatedEscape$__;
+		@DexAdd int __bad_$$_truncatedAsciiLatin1Escape$aB__;
 		@DexAdd int __bad_$$_truncatedUnicodeEscape$xB1__;
 		@DexAdd void __prefix_$$_1____bad_infix_$$_$2__and__postfix_$$_3__() { printMethodName(new Throwable()); };
 
@@ -674,6 +677,7 @@ public class Main {
 			__$$_withoutLabel__();
 			__ok_$$_with$sdollarEscape__();
 			__ok_$$_with$uunderscoreEscape__();
+			__ok_$$_with$aB1asciiLatin1Escape__();
 			__ok_$$_with$x00B1unicodeEscape__();
 			__prefix_$$_1____infix_$$_2__and__postfix_$$_3__();
 			__prefix_$$_1____bad_infix_$$_$2__and__postfix_$$_3__();
