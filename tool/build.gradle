@@ -38,7 +38,7 @@ repositories {
 }
 
 def dexlib2Version = '2.3.4'
-def multidexlib2VersionSuffix = ''
+def multidexlib2VersionSuffix = '.r2'
 
 def multidexlib2Version = dexlib2Version + multidexlib2VersionSuffix
 

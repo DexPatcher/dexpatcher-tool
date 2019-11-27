@@ -13,7 +13,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Gradle: com.github.lanchon.dexpatcher:multidexlib2:2.3.4" level="project" />
+    <orderEntry type="library" name="Gradle: com.github.lanchon.dexpatcher:multidexlib2:2.3.4.r2" level="project" />
     <orderEntry type="library" name="Gradle: org.smali:dexlib2:2.3.4" level="project" />
     <orderEntry type="library" name="Gradle: commons-cli:commons-cli:1.2" level="project" />
     <orderEntry type="library" name="Gradle: com.google.guava:guava:27.1-android" level="project" />
