@@ -622,6 +622,7 @@ public class Main {
 		@DexWrap
 		public void go() {
 			p("entering wrapper CrossClassBPatcher::go (" + this.getClass() + ")");
+			new CrossClassBPatcher[] {}.hashCode();     // array rewrite test
 			go();
 			p("exiting wrapper CrossClassBPatcher::go");
 		}
