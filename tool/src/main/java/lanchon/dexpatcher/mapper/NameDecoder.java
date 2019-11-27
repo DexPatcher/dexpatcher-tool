@@ -104,14 +104,14 @@ public class NameDecoder {
 						if (i + 1 < escapeEnd) {
 							char e = string.charAt(++i);
 							switch (e) {
-								case 's':
+								case 'S':
 									sb.append('$');
 									continue;
-								case 'u':
+								case 'U':
 									sb.append('_');
 									continue;
 								case 'a':
-								case 'x':
+								case 'u':
 									int n = (e == 'a' ? 2 : 4);
 									int value = 0;
 									for (; n != 0; n--) {
