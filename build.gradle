@@ -13,7 +13,7 @@ plugins {
 }
 
 group = 'com.github.lanchon.dexpatcher'
-version = '1.7.0'
+version = '1.8.0-alpha1'
 
 apply from: 'check-copyright.gradle'
 
