@@ -210,25 +210,19 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 	}
 
 	private static ClassDef renameClass(ClassDef classDef, final String to) {
-
 		final String from = classDef.getType();
-
-		DexRewriter rewriter = new DexRewriter(new RewriterModule() {
+		RewriterModule rewriterModule = new RewriterModule() {
 			@Override
 			public Rewriter<String> getTypeRewriter(Rewriters rewriters) {
 				return new ElementalTypeRewriter() {
-
 					@Override
 					public String rewriteElementalType(String elementalType) {
-						return from.equals(value) ? to : value;
+						return elementalType.equals(from) ? to : elementalType;
 					}
-
 				};
 			}
-		});
-
-		return rewriter.getClassDefRewriter().rewrite(classDef);
-
+		};
+		return new DexRewriter(rewriterModule).getClassDefRewriter().rewrite(classDef);
 	}
 
 }
