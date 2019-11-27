@@ -50,18 +50,18 @@ public abstract class DexDecoderModule extends RewriterModule {
 	}
 
 	public final String rewriteTypeName(String value) {
-		if (value == null) return null;
-		int e = value.length() - 1;
-		if (e < 0 || value.charAt(e) != ';') return value;
-		int s = 0;
+		int end = value.length() - 1;
+		if (end < 0 || value.charAt(end) != ';') return value;
+		int start = 0;
 		char c;
-		while ((c = value.charAt(s++)) == '[');
+		while ((c = value.charAt(start)) == '[') start++;
 		if (c != 'L') return value;
-		String type = value.substring(s, e);
-		String rewrittenType = rewriteItem(null, "type", type);
-		if (rewrittenType == type) return value;
-		StringBuilder sb = new StringBuilder(s + rewrittenType.length() + 1);
-		sb.append(value, 0, s).append(rewrittenType).append(';');
+		start++;
+		String nakedType = value.substring(start, end);
+		String rewrittenNakedType = rewriteItem(null, "type", nakedType);
+		if (rewrittenNakedType.equals(nakedType)) return value;
+		StringBuilder sb = new StringBuilder(start + rewrittenNakedType.length() + 1);
+		sb.append(value, 0, start).append(rewrittenNakedType).append(';');
 		return sb.toString();
 	}
 
