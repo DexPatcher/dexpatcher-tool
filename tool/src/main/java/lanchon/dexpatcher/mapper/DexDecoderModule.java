@@ -38,18 +38,42 @@ public abstract class DexDecoderModule extends RewriterModule {
 
 	public abstract String rewriteItem(String definingClass, String type, String value);
 
+	public final String rewriteNakedTypeName(String value) {
+		return rewriteItem(null, "type", value);
+	}
+
+	public final String rewriteFieldName(String definingClass, String value) {
+		return rewriteItem(definingClass, "field", value);
+	}
+
+	public final String rewriteMethodName(String definingClass, String value) {
+		return rewriteItem(definingClass, "method", value);
+	}
+
+	public final String rewriteParameterName(String value) {
+		return rewriteItem(null, "parameter", value);
+	}
+
+	public final String rewriteLocalVariableName(String value) {
+		return rewriteItem(null, "local variable", value);
+	}
+
+	public final String rewriteAnnotationElementName(String value) {
+		return rewriteItem(null, "annotation element name", value);
+	}
+
+	public final String rewriteAnnotationElementStringValue(String value) {
+		return rewriteItem(null, "annotation element value", value);
+	}
+
 	@Override
 	public Rewriter<String> getTypeRewriter(Rewriters rewriters) {
 		return new NakedReferenceTypeRewriter() {
 			@Override
 			public String rewriteNakedReferenceType(String nakedReferenceType) {
-				return rewriteTypeName(nakedReferenceType);
+				return rewriteNakedTypeName(nakedReferenceType);
 			}
 		};
-	}
-
-	public final String rewriteTypeName(String nakedReferenceType) {
-		return rewriteItem(null, "type", nakedReferenceType);
 	}
 
 	@Override
@@ -67,10 +91,6 @@ public abstract class DexDecoderModule extends RewriterModule {
 		};
 	}
 
-	public final String rewriteFieldName(String definingClass, String value) {
-		return rewriteItem(definingClass, "field", value);
-	}
-
 	@Override
 	public Rewriter<MethodReference> getMethodReferenceRewriter(Rewriters rewriters) {
 		return new MethodReferenceRewriter(rewriters) {
@@ -84,10 +104,6 @@ public abstract class DexDecoderModule extends RewriterModule {
 				};
 			}
 		};
-	}
-
-	public final String rewriteMethodName(String definingClass, String value) {
-		return rewriteItem(definingClass, "method", value);
 	}
 
 	@Override
@@ -104,10 +120,6 @@ public abstract class DexDecoderModule extends RewriterModule {
 			}
 
 		};
-	}
-
-	public final String rewriteParameterName(String value) {
-		return rewriteItem(null, "parameter", value);
 	}
 
 	@Override
@@ -155,10 +167,6 @@ public abstract class DexDecoderModule extends RewriterModule {
 		};
 	}
 
-	public final String rewriteLocalVariableName(String value) {
-		return rewriteItem(null, "local variable", value);
-	}
-
 	@Override
 	public Rewriter<AnnotationElement> getAnnotationElementRewriter(Rewriters rewriters) {
 		return new AnnotationElementRewriter(rewriters) {
@@ -188,14 +196,6 @@ public abstract class DexDecoderModule extends RewriterModule {
 				};
 			}
 		};
-	}
-
-	public final String rewriteAnnotationElementName(String value) {
-		return rewriteItem(null, "annotation element name", value);
-	}
-
-	public final String rewriteAnnotationElementStringValue(String value) {
-		return rewriteItem(null, "annotation element value", value);
 	}
 
 }
