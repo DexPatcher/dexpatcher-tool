@@ -33,7 +33,6 @@ import org.jf.dexlib2.rewriter.MethodReferenceRewriter;
 import org.jf.dexlib2.rewriter.Rewriter;
 import org.jf.dexlib2.rewriter.RewriterModule;
 import org.jf.dexlib2.rewriter.Rewriters;
-import org.jf.dexlib2.rewriter.TypeRewriter;
 
 public abstract class DexDecoderModule extends RewriterModule {
 
@@ -41,28 +40,16 @@ public abstract class DexDecoderModule extends RewriterModule {
 
 	@Override
 	public Rewriter<String> getTypeRewriter(Rewriters rewriters) {
-		return new TypeRewriter() {
+		return new NakedReferenceTypeRewriter() {
 			@Override
-			public String rewrite(String type) {
-				return rewriteTypeName(type);
+			public String rewriteNakedReferenceType(String nakedReferenceType) {
+				return rewriteTypeName(nakedReferenceType);
 			}
 		};
 	}
 
-	public final String rewriteTypeName(String value) {
-		int end = value.length() - 1;
-		if (end < 0 || value.charAt(end) != ';') return value;
-		int start = 0;
-		char c;
-		while ((c = value.charAt(start)) == '[') start++;
-		if (c != 'L') return value;
-		start++;
-		String nakedType = value.substring(start, end);
-		String rewrittenNakedType = rewriteItem(null, "type", nakedType);
-		if (rewrittenNakedType.equals(nakedType)) return value;
-		StringBuilder sb = new StringBuilder(start + rewrittenNakedType.length() + 1);
-		sb.append(value, 0, start).append(rewrittenNakedType).append(';');
-		return sb.toString();
+	public final String rewriteTypeName(String nakedReferenceType) {
+		return rewriteItem(null, "type", nakedReferenceType);
 	}
 
 	@Override
