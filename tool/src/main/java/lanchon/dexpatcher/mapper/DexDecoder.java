@@ -14,6 +14,7 @@ import java.util.HashSet;
 
 import lanchon.dexpatcher.core.logger.Logger;
 import lanchon.dexpatcher.core.util.Label;
+import lanchon.dexpatcher.mapper.DexDecoderModule.ItemType;
 
 import org.jf.dexlib2.iface.DexFile;
 import org.jf.dexlib2.rewriter.DexRewriter;
@@ -35,7 +36,7 @@ public abstract class DexDecoder {
 		private final HashSet<String> loggedMessages = new HashSet<>();
 
 		protected String definingClass;
-		protected String type;
+		protected ItemType itemType;
 		protected String value;
 
 		public ItemRewriter(NameDecoder nameDecoder, Logger logger, String logPrefix, Logger.Level infoLevel,
@@ -47,9 +48,9 @@ public abstract class DexDecoder {
 			this.errorLevel = errorLevel;
 		}
 
-		public String rewriteItem(String definingClass, String type, String value) {
+		public String rewriteItem(String definingClass, ItemType itemType, String value) {
 			this.definingClass = definingClass;
-			this.type = type;
+			this.itemType = itemType;
 			this.value = value;
 			String decodedValue = nameDecoder.decode(value, this);
 			if (decodedValue != value && decodedValue != null) {
@@ -89,12 +90,12 @@ public abstract class DexDecoder {
 				}
 				sb.append("': ");
 			}
-			sb.append(type).append(" '").append(formatValue(value)).append("': ");
+			sb.append(itemType.label).append(" '").append(formatValue(value)).append("': ");
 			return sb;
 		}
 
 		protected String formatValue(String value) {
-			return "type".equals(type) ? value.replace('/', '.') : value;
+			return itemType == ItemType.NAKED_TYPE_NAME ? value.replace('/', '.') : value;
 		}
 
 		protected synchronized void log(Logger.Level level, String message) {
@@ -111,7 +112,7 @@ public abstract class DexDecoder {
 	protected static DexFile decode(DexFile dex, final ItemRewriter itemRewriter) {
 		DexDecoderModule module = new DexDecoderModule() {
 			@Override
-			public String rewriteItem(String definingClass, String type, String value) {
+			public String rewriteItem(String definingClass, ItemType type, String value) {
 				return itemRewriter.rewriteItem(definingClass, type, value);
 			}
 		};

@@ -36,34 +36,50 @@ import org.jf.dexlib2.rewriter.Rewriters;
 
 public abstract class DexDecoderModule extends RewriterModule {
 
-	public abstract String rewriteItem(String definingClass, String type, String value);
+	public enum ItemType {
+		NAKED_TYPE_NAME("type"),
+		FIELD_NAME("field"),
+		METHOD_NAME("method"),
+		PARAMETER_NAME("parameter"),
+		LOCAL_VARIABLE_NAME("local variable"),
+		ANNOTATION_ELEMENT_NAME("annotation element name"),
+		ANNOTATION_ELEMENT_VALUE("annotation element value");
+
+		public final String label;
+
+		ItemType(String label) {
+			this.label = label;
+		}
+	}
+
+	public abstract String rewriteItem(String definingClass, ItemType itemType, String value);
 
 	public final String rewriteNakedTypeName(String value) {
-		return rewriteItem(null, "type", value);
+		return rewriteItem(null, ItemType.NAKED_TYPE_NAME, value);
 	}
 
 	public final String rewriteFieldName(String definingClass, String value) {
-		return rewriteItem(definingClass, "field", value);
+		return rewriteItem(definingClass, ItemType.FIELD_NAME, value);
 	}
 
 	public final String rewriteMethodName(String definingClass, String value) {
-		return rewriteItem(definingClass, "method", value);
+		return rewriteItem(definingClass, ItemType.METHOD_NAME, value);
 	}
 
 	public final String rewriteParameterName(String value) {
-		return rewriteItem(null, "parameter", value);
+		return rewriteItem(null, ItemType.PARAMETER_NAME, value);
 	}
 
 	public final String rewriteLocalVariableName(String value) {
-		return rewriteItem(null, "local variable", value);
+		return rewriteItem(null, ItemType.LOCAL_VARIABLE_NAME, value);
 	}
 
 	public final String rewriteAnnotationElementName(String value) {
-		return rewriteItem(null, "annotation element name", value);
+		return rewriteItem(null, ItemType.ANNOTATION_ELEMENT_NAME, value);
 	}
 
 	public final String rewriteAnnotationElementStringValue(String value) {
-		return rewriteItem(null, "annotation element value", value);
+		return rewriteItem(null, ItemType.ANNOTATION_ELEMENT_VALUE, value);
 	}
 
 	@Override
