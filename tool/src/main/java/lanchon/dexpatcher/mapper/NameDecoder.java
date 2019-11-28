@@ -24,8 +24,7 @@ public class NameDecoder {
 	};
 
 	public static boolean isValidCodeMarker(String marker) {
-		return marker.length() >= 2 && !marker.contains(" ") && marker.startsWith("_") &&
-				!marker.startsWith("__") && !marker.endsWith("__");
+		return marker.length() >= 2 && marker.startsWith("_") && !marker.startsWith("__") && !marker.endsWith("__");
 	}
 
 	private final String codeMarker;

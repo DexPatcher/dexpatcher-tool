@@ -656,9 +656,8 @@ public class Main {
 
 		// Identifier codes are recognized by the presence of a code marker,
 		// which by default is '_$$_' but can be configured. Code markers must
-		// be at least two characters in length, must not contain spaces, must
-		// start with an underscore, and must not start or end with double
-		// underscore.
+		// be at least two characters in length, must start with an underscore,
+		// and must not start or end with double underscore.
 
 		// Identifier codes can take one of two forms:
 		// - without label: _<code-marker><escaped-string>__
