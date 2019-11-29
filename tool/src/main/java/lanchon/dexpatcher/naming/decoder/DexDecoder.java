@@ -14,13 +14,14 @@ import java.util.HashSet;
 
 import lanchon.dexpatcher.core.logger.Logger;
 import lanchon.dexpatcher.core.util.Label;
+import lanchon.dexpatcher.naming.decoder.DexDecoderModule.ItemType;
 
 import org.jf.dexlib2.iface.DexFile;
 import org.jf.dexlib2.rewriter.DexRewriter;
 
 import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 
-public class DexDecoder extends DexDecoderModule {
+public class DexDecoder implements DexDecoderModule.ItemRewriter {
 
 	private static final boolean LOG_DECODED_TYPES = false;
 
@@ -110,8 +111,8 @@ public class DexDecoder extends DexDecoderModule {
 
 	public static DexFile decode(DexFile dex, NameDecoder nameDecoder, Logger logger, String logPrefix,
 			Logger.Level infoLevel, Logger.Level errorLevel) {
-		DexDecoder module = new DexDecoder(nameDecoder, logger, logPrefix, infoLevel, errorLevel);
-		return new DexRewriter(module).rewriteDexFile(dex);
+		DexDecoder decoder = new DexDecoder(nameDecoder, logger, logPrefix, infoLevel, errorLevel);
+		return new DexRewriter(new DexDecoderModule(decoder)).rewriteDexFile(dex);
 	}
 
 }

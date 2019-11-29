@@ -34,7 +34,7 @@ import org.jf.dexlib2.rewriter.Rewriter;
 import org.jf.dexlib2.rewriter.RewriterModule;
 import org.jf.dexlib2.rewriter.Rewriters;
 
-public abstract class DexDecoderModule extends RewriterModule {
+public class DexDecoderModule extends RewriterModule {
 
 	public enum ItemType {
 		NAKED_TYPE_NAME("type"),
@@ -52,7 +52,19 @@ public abstract class DexDecoderModule extends RewriterModule {
 		}
 	}
 
-	public abstract String rewriteItem(String definingClass, ItemType itemType, String value);
+	public interface ItemRewriter {
+		String rewriteItem(String definingClass, ItemType itemType, String value);
+	}
+
+	private final ItemRewriter itemRewriter;
+
+	public DexDecoderModule(ItemRewriter itemRewriter) {
+		this.itemRewriter = itemRewriter;
+	}
+
+	protected final String rewriteItem(String definingClass, ItemType itemType, String value) {
+		return itemRewriter.rewriteItem(definingClass, itemType, value);
+	}
 
 	public final String rewriteNakedTypeName(String value) {
 		return rewriteItem(null, ItemType.NAKED_TYPE_NAME, value);
