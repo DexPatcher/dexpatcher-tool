@@ -49,13 +49,13 @@ public class NameDecoder {
 	}
 
 	public String decode(String string, ErrorHandler errorHandler) {
-		return string != null ? decode(string, 0, errorHandler) : null;
+		return string != null ? decodeTail(string, 0, errorHandler) : null;
 	}
 
-	private String decode(String string, int fromIndex, ErrorHandler errorHandler) {
+	private String decodeTail(String string, int start, ErrorHandler errorHandler) {
 
-		int markerStart = string.indexOf(codeMarker, fromIndex);
-		if (markerStart < 0) return string.substring(fromIndex);
+		int markerStart = string.indexOf(codeMarker, start);
+		if (markerStart < 0) return string.substring(start);
 
 		int markerEnd = markerStart + codeMarker.length();
 		int length = string.length();
@@ -64,7 +64,7 @@ public class NameDecoder {
 		do {
 
 			int codeStart = markerStart;
-			while (--codeStart >= fromIndex) {
+			while (--codeStart >= start) {
 				if (string.startsWith("__", codeStart)) break;
 			}
 			int codeEnd = markerEnd;
@@ -72,9 +72,9 @@ public class NameDecoder {
 				if (string.startsWith("__", codeEnd - 2)) break;
 			}
 
-			if (codeStart < fromIndex) {
+			if (codeStart < start) {
 				if (codeEnd > length) codeEnd = length;
-				errorHandler.onError("missing start of code", string, fromIndex, codeEnd, fromIndex, markerEnd);
+				errorHandler.onError("missing start of code", string, start, codeEnd, start, markerEnd);
 				break recoverFromError;
 			}
 			if (codeEnd > length) {
@@ -84,13 +84,13 @@ public class NameDecoder {
 
 			int escapeEnd = codeEnd - 2;
 			if (markerEnd >= escapeEnd) {
-				//return string.substring(fromIndex, codeStart) + decode(string, codeEnd, errorHandler);
+				//return string.substring(start, codeStart) + decodeTail(string, codeEnd, errorHandler);
 				errorHandler.onError("empty code", string, codeStart, codeEnd, markerStart, codeEnd);
 				break recoverFromError;
 			}
 
 			StringBuilder sb = new StringBuilder(codeStart + (length - markerEnd - 2));
-			sb.append(string, fromIndex, codeStart);
+			sb.append(string, start, codeStart);
 
 			for (int i = markerEnd; i < escapeEnd; i++) {
 				char c = string.charAt(i);
@@ -135,13 +135,13 @@ public class NameDecoder {
 				}
 			}
 
-			sb.append(decode(string, codeEnd, errorHandler));
+			sb.append(decodeTail(string, codeEnd, errorHandler));
 			return sb.toString();
 
 		} while (false);
 
 		int i = markerStart + 1;
-		return string.substring(fromIndex, i) + decode(string, i, errorHandler);
+		return string.substring(start, i) + decodeTail(string, i, errorHandler);
 
 	}
 
