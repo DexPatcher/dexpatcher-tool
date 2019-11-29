@@ -65,14 +65,14 @@ public abstract class DexDecoder {
 		}
 
 		@Override
-		public void onError(String message, String string, int codeFrom, int codeTo, int errorFrom, int errorTo) {
+		public void onError(String message, String string, int codeStart, int codeEnd, int errorStart, int errorEnd) {
 			// NOTE: This call to logger.isLogging() is not synchronized.
 			if (errorLevel != NONE && logger.isLogging(errorLevel)) {
 				StringBuilder sb = buildMessage();
 				sb.append(message);
-				sb.append(" in '").append(string, codeFrom, errorFrom)
-						.append("[->]").append(string, errorFrom, errorTo).append("[<-]")
-						.append(string, errorTo, codeTo).append("'");
+				sb.append(" in '").append(string, codeStart, errorStart)
+						.append("[->]").append(string, errorStart, errorEnd).append("[<-]")
+						.append(string, errorEnd, codeEnd).append("'");
 				log(errorLevel, sb.toString());
 			}
 		}

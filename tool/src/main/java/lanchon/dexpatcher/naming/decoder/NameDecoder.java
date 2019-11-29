@@ -13,14 +13,14 @@ package lanchon.dexpatcher.naming.decoder;
 public class NameDecoder {
 
 	public interface ErrorHandler {
-		void onError(String message, String string, int codeFrom, int codeTo, int errorFrom, int errorTo);
+		void onError(String message, String string, int codeStart, int codeEnd, int errorStart, int errorEnd);
 	}
 
 	public static final String DEFAULT_CODE_MARKER = "_$$_";
 
 	public static final ErrorHandler NULL_ERROR_HANDLER = new ErrorHandler() {
 		@Override
-		public void onError(String message, String string, int codeFrom, int codeTo, int errorFrom, int errorTo) {}
+		public void onError(String message, String string, int codeStart, int codeEnd, int errorStart, int errorEnd) {}
 	};
 
 	public static boolean isValidCodeMarker(String marker) {
