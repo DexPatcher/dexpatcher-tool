@@ -35,9 +35,9 @@ public abstract class DexDecoder {
 
 		private final HashSet<String> loggedMessages = new HashSet<>();
 
-		protected String definingClass;
-		protected ItemType itemType;
-		protected String value;
+		protected final ThreadLocal<String> definingClass = new ThreadLocal<>();
+		protected final ThreadLocal<ItemType> itemType = new ThreadLocal<>();
+		protected final ThreadLocal<String> value = new ThreadLocal<>();
 
 		public ItemRewriter(NameDecoder nameDecoder, Logger logger, String logPrefix, Logger.Level infoLevel,
 				Logger.Level errorLevel) {
@@ -49,9 +49,9 @@ public abstract class DexDecoder {
 		}
 
 		public String rewriteItem(String definingClass, ItemType itemType, String value) {
-			this.definingClass = definingClass;
-			this.itemType = itemType;
-			this.value = value;
+			this.definingClass.set(definingClass);
+			this.itemType.set(itemType);
+			this.value.set(value);
 			String decodedValue = nameDecoder.decode(value, this);
 			if (decodedValue != value && decodedValue != null) {
 				// NOTE: This call to logger.isLogging() is not synchronized.
@@ -80,22 +80,23 @@ public abstract class DexDecoder {
 		protected StringBuilder buildMessage() {
 			StringBuilder sb = new StringBuilder();
 			if (logPrefix != null) sb.append(logPrefix).append(": ");
-			if (definingClass != null) {
-				sb.append("type '").append(Label.fromClassDescriptor(definingClass));
+			String defClass = definingClass.get();
+			if (defClass != null) {
+				sb.append("type '").append(Label.fromClassDescriptor(defClass));
 				if (LOG_DECODED_TYPES) {
-					String decodedDefiningClass = nameDecoder.decode(definingClass);
-					if (!definingClass.equals(decodedDefiningClass)) {
-						sb.append("' -> '").append(Label.fromClassDescriptor(decodedDefiningClass));
+					String decodedDefClass = nameDecoder.decode(defClass);
+					if (!defClass.equals(decodedDefClass)) {
+						sb.append("' -> '").append(Label.fromClassDescriptor(decodedDefClass));
 					}
 				}
 				sb.append("': ");
 			}
-			sb.append(itemType.label).append(" '").append(formatValue(value)).append("': ");
+			sb.append(itemType.get().label).append(" '").append(formatValue(value.get())).append("': ");
 			return sb;
 		}
 
 		protected String formatValue(String value) {
-			return itemType == ItemType.NAKED_TYPE_NAME ? value.replace('/', '.') : value;
+			return itemType.get() == ItemType.NAKED_TYPE_NAME ? value.replace('/', '.') : value;
 		}
 
 		protected synchronized void log(Logger.Level level, String message) {
