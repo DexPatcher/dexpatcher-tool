@@ -14,54 +14,26 @@ import java.util.HashSet;
 
 import lanchon.dexpatcher.core.logger.Logger;
 import lanchon.dexpatcher.core.util.Label;
-import lanchon.dexpatcher.naming.decoder.DexDecoderModule.ItemType;
 
 import org.jf.dexlib2.iface.DexFile;
 import org.jf.dexlib2.rewriter.DexRewriter;
 
 import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 
-public abstract class DexDecoder {
+public class DexDecoder extends DexDecoderModule {
 
-	protected static class ItemRewriter implements NameDecoder.ErrorHandler {
+	private static final boolean LOG_DECODED_TYPES = false;
 
-		private static final boolean LOG_DECODED_TYPES = false;
+	private class ErrorHandler implements NameDecoder.ErrorHandler {
 
-		protected final NameDecoder nameDecoder;
-		protected final Logger logger;
-		protected final String logPrefix;
-		protected final Logger.Level infoLevel;
-		protected final Logger.Level errorLevel;
+		private final String definingClass;
+		private final ItemType itemType;
+		private final String value;
 
-		private final HashSet<String> loggedMessages = new HashSet<>();
-
-		protected final ThreadLocal<String> definingClass = new ThreadLocal<>();
-		protected final ThreadLocal<ItemType> itemType = new ThreadLocal<>();
-		protected final ThreadLocal<String> value = new ThreadLocal<>();
-
-		public ItemRewriter(NameDecoder nameDecoder, Logger logger, String logPrefix, Logger.Level infoLevel,
-				Logger.Level errorLevel) {
-			this.nameDecoder = nameDecoder;
-			this.logger = logger;
-			this.logPrefix = logPrefix;
-			this.infoLevel = infoLevel;
-			this.errorLevel = errorLevel;
-		}
-
-		public String rewriteItem(String definingClass, ItemType itemType, String value) {
-			this.definingClass.set(definingClass);
-			this.itemType.set(itemType);
-			this.value.set(value);
-			String decodedValue = nameDecoder.decode(value, this);
-			if (decodedValue != value && decodedValue != null) {
-				// NOTE: This call to logger.isLogging() is not synchronized.
-				if (infoLevel != NONE && logger.isLogging(infoLevel) && !decodedValue.equals(value)) {
-					StringBuilder sb = buildMessage();
-					sb.append("decoded to '").append(formatValue(decodedValue)).append("'");
-					log(infoLevel, sb.toString());
-				}
-			}
-			return decodedValue;
+		public ErrorHandler(String definingClass, ItemType itemType, String value) {
+			this.definingClass = definingClass;
+			this.itemType = itemType;
+			this.value = value;
 		}
 
 		@Override
@@ -77,46 +49,68 @@ public abstract class DexDecoder {
 			}
 		}
 
-		protected StringBuilder buildMessage() {
+		public final StringBuilder buildMessage() {
 			StringBuilder sb = new StringBuilder();
 			if (logPrefix != null) sb.append(logPrefix).append(": ");
-			String defClass = definingClass.get();
-			if (defClass != null) {
-				sb.append("type '").append(Label.fromClassDescriptor(defClass));
+			if (definingClass != null) {
+				sb.append("type '").append(Label.fromClassDescriptor(definingClass));
 				if (LOG_DECODED_TYPES) {
-					String decodedDefClass = nameDecoder.decode(defClass);
-					if (!defClass.equals(decodedDefClass)) {
-						sb.append("' -> '").append(Label.fromClassDescriptor(decodedDefClass));
+					String decodedDefiningClass = nameDecoder.decode(definingClass);
+					if (!definingClass.equals(decodedDefiningClass)) {
+						sb.append("' -> '").append(Label.fromClassDescriptor(decodedDefiningClass));
 					}
 				}
 				sb.append("': ");
 			}
-			sb.append(itemType.get().label).append(" '").append(formatValue(value.get())).append("': ");
+			sb.append(itemType.label).append(" '").append(formatValue(value)).append("': ");
 			return sb;
 		}
 
-		protected String formatValue(String value) {
-			return itemType.get() == ItemType.NAKED_TYPE_NAME ? value.replace('/', '.') : value;
+		public final String formatValue(String value) {
+			return itemType == ItemType.NAKED_TYPE_NAME ? value.replace('/', '.') : value;
 		}
 
-		protected synchronized void log(Logger.Level level, String message) {
-			if (logger.isLogging(level) && loggedMessages.add(message)) logger.log(level, message);
-		}
+	}
 
+	@Override
+	public String rewriteItem(String definingClass, ItemType itemType, String value) {
+		ErrorHandler errorHandler = new ErrorHandler(definingClass, itemType, value);
+		String decodedValue = nameDecoder.decode(value, errorHandler);
+		if (decodedValue != value && decodedValue != null) {
+			// NOTE: This call to logger.isLogging() is not synchronized.
+			if (infoLevel != NONE && logger.isLogging(infoLevel) && !decodedValue.equals(value)) {
+				StringBuilder sb = errorHandler.buildMessage();
+				sb.append("decoded to '").append(errorHandler.formatValue(decodedValue)).append("'");
+				log(infoLevel, sb.toString());
+			}
+		}
+		return decodedValue;
+	}
+
+	private final NameDecoder nameDecoder;
+	private final Logger logger;
+	private final String logPrefix;
+	private final Logger.Level infoLevel;
+	private final Logger.Level errorLevel;
+
+	private final HashSet<String> loggedMessages = new HashSet<>();
+
+	private DexDecoder(NameDecoder nameDecoder, Logger logger, String logPrefix, Logger.Level infoLevel,
+			Logger.Level errorLevel) {
+		this.nameDecoder = nameDecoder;
+		this.logger = logger;
+		this.logPrefix = logPrefix;
+		this.infoLevel = infoLevel;
+		this.errorLevel = errorLevel;
+	}
+
+	private synchronized void log(Logger.Level level, String message) {
+		if (logger.isLogging(level) && loggedMessages.add(message)) logger.log(level, message);
 	}
 
 	public static DexFile decode(DexFile dex, NameDecoder nameDecoder, Logger logger, String logPrefix,
 			Logger.Level infoLevel, Logger.Level errorLevel) {
-		return decode(dex, new ItemRewriter(nameDecoder, logger, logPrefix, infoLevel, errorLevel));
-	}
-
-	protected static DexFile decode(DexFile dex, final ItemRewriter itemRewriter) {
-		DexDecoderModule module = new DexDecoderModule() {
-			@Override
-			public String rewriteItem(String definingClass, ItemType type, String value) {
-				return itemRewriter.rewriteItem(definingClass, type, value);
-			}
-		};
+		DexDecoder module = new DexDecoder(nameDecoder, logger, logPrefix, infoLevel, errorLevel);
 		return new DexRewriter(module).rewriteDexFile(dex);
 	}
 
