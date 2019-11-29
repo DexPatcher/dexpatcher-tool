@@ -8,7 +8,7 @@
  * or (at your option) any later version.
  */
 
-package lanchon.dexpatcher.mapper;
+package lanchon.dexpatcher.naming.decoder;
 
 public class NameDecoder {
 

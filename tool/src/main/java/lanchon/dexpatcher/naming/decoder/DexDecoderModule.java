@@ -8,7 +8,7 @@
  * or (at your option) any later version.
  */
 
-package lanchon.dexpatcher.mapper;
+package lanchon.dexpatcher.naming.decoder;
 
 import org.jf.dexlib2.DebugItemType;
 import org.jf.dexlib2.ValueType;

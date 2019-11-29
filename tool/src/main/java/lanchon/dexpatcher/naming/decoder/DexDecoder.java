@@ -8,13 +8,13 @@
  * or (at your option) any later version.
  */
 
-package lanchon.dexpatcher.mapper;
+package lanchon.dexpatcher.naming.decoder;
 
 import java.util.HashSet;
 
 import lanchon.dexpatcher.core.logger.Logger;
 import lanchon.dexpatcher.core.util.Label;
-import lanchon.dexpatcher.mapper.DexDecoderModule.ItemType;
+import lanchon.dexpatcher.naming.decoder.DexDecoderModule.ItemType;
 
 import org.jf.dexlib2.iface.DexFile;
 import org.jf.dexlib2.rewriter.DexRewriter;
