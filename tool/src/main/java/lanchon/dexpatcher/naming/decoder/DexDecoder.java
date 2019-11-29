@@ -61,7 +61,7 @@ public class DexDecoder extends AbstractLoggingRewriter implements DexDecoderMod
 
 		@Override
 		protected String getRewrittenDefiningClass() {
-			return stringDecoder.decode(definingClass);
+			return stringDecoder.decodeString(definingClass);
 		}
 
 	}
@@ -81,7 +81,7 @@ public class DexDecoder extends AbstractLoggingRewriter implements DexDecoderMod
 	@Override
 	public String rewriteItem(String definingClass, ItemType itemType, String value) {
 		ErrorHandler errorHandler = new ErrorHandler(definingClass, itemType, value);
-		String decodedValue = stringDecoder.decode(value, errorHandler);
+		String decodedValue = stringDecoder.decodeString(value, errorHandler);
 		if (decodedValue != value && isLogging(infoLevel) && !decodedValue.equals(value)) {
 			StringBuilder sb = errorHandler.getMessageHeader();
 			sb.append("decoded to '").append(errorHandler.formatValue(decodedValue)).append("'");

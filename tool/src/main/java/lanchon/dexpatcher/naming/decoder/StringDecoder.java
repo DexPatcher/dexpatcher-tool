@@ -40,19 +40,19 @@ public class StringDecoder {
 		this.codeMarker = codeMarker;
 	}
 
-	public boolean isCoded(String string) {
+	public boolean isCodedString(String string) {
 		return string.contains(codeMarker);
 	}
 
-	public String decode(String string) {
-		return decode(string, NULL_ERROR_HANDLER);
+	public String decodeString(String string) {
+		return decodeString(string, NULL_ERROR_HANDLER);
 	}
 
-	public String decode(String string, ErrorHandler errorHandler) {
-		return string != null ? decodeTail(string, 0, errorHandler) : null;
+	public String decodeString(String string, ErrorHandler errorHandler) {
+		return string != null ? decodeStringTail(string, 0, errorHandler) : null;
 	}
 
-	private String decodeTail(String string, int start, ErrorHandler errorHandler) {
+	private String decodeStringTail(String string, int start, ErrorHandler errorHandler) {
 
 		int markerStart = string.indexOf(codeMarker, start);
 		if (markerStart < 0) return string.substring(start);
@@ -84,7 +84,7 @@ public class StringDecoder {
 
 			int escapeEnd = codeEnd - 2;
 			if (markerEnd >= escapeEnd) {
-				//return string.substring(start, codeStart) + decodeTail(string, codeEnd, errorHandler);
+				//return string.substring(start, codeStart) + decodeStringTail(string, codeEnd, errorHandler);
 				errorHandler.onError("empty code", string, codeStart, codeEnd, markerStart, codeEnd);
 				break recoverFromError;
 			}
@@ -135,13 +135,13 @@ public class StringDecoder {
 				}
 			}
 
-			sb.append(decodeTail(string, codeEnd, errorHandler));
+			sb.append(decodeStringTail(string, codeEnd, errorHandler));
 			return sb.toString();
 
 		} while (false);
 
 		int i = markerStart + 1;
-		return string.substring(start, i) + decodeTail(string, i, errorHandler);
+		return string.substring(start, i) + decodeStringTail(string, i, errorHandler);
 
 	}
 
