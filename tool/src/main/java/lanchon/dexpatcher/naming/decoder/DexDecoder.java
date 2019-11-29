@@ -25,6 +25,12 @@ public class DexDecoder implements DexDecoderModule.ItemRewriter {
 
 	private static final boolean LOG_DECODED_TYPES = false;
 
+	public static DexFile decode(DexFile dex, NameDecoder nameDecoder, Logger logger, String logPrefix,
+			Logger.Level infoLevel, Logger.Level errorLevel) {
+		DexDecoder decoder = new DexDecoder(nameDecoder, logger, logPrefix, infoLevel, errorLevel);
+		return new DexRewriter(new DexDecoderModule(decoder)).rewriteDexFile(dex);
+	}
+
 	private class ErrorHandler implements NameDecoder.ErrorHandler {
 
 		private final String definingClass;
@@ -73,21 +79,6 @@ public class DexDecoder implements DexDecoderModule.ItemRewriter {
 
 	}
 
-	@Override
-	public String rewriteItem(String definingClass, ItemType itemType, String value) {
-		ErrorHandler errorHandler = new ErrorHandler(definingClass, itemType, value);
-		String decodedValue = nameDecoder.decode(value, errorHandler);
-		if (decodedValue != value && decodedValue != null) {
-			// NOTE: This call to logger.isLogging() is not synchronized.
-			if (infoLevel != NONE && logger.isLogging(infoLevel) && !decodedValue.equals(value)) {
-				StringBuilder sb = errorHandler.buildMessage();
-				sb.append("decoded to '").append(errorHandler.formatValue(decodedValue)).append("'");
-				log(infoLevel, sb.toString());
-			}
-		}
-		return decodedValue;
-	}
-
 	private final NameDecoder nameDecoder;
 	private final Logger logger;
 	private final String logPrefix;
@@ -105,14 +96,23 @@ public class DexDecoder implements DexDecoderModule.ItemRewriter {
 		this.errorLevel = errorLevel;
 	}
 
-	private synchronized void log(Logger.Level level, String message) {
-		if (logger.isLogging(level) && loggedMessages.add(message)) logger.log(level, message);
+	@Override
+	public String rewriteItem(String definingClass, ItemType itemType, String value) {
+		ErrorHandler errorHandler = new ErrorHandler(definingClass, itemType, value);
+		String decodedValue = nameDecoder.decode(value, errorHandler);
+		if (decodedValue != value && decodedValue != null) {
+			// NOTE: This call to logger.isLogging() is not synchronized.
+			if (infoLevel != NONE && logger.isLogging(infoLevel) && !decodedValue.equals(value)) {
+				StringBuilder sb = errorHandler.buildMessage();
+				sb.append("decoded to '").append(errorHandler.formatValue(decodedValue)).append("'");
+				log(infoLevel, sb.toString());
+			}
+		}
+		return decodedValue;
 	}
 
-	public static DexFile decode(DexFile dex, NameDecoder nameDecoder, Logger logger, String logPrefix,
-			Logger.Level infoLevel, Logger.Level errorLevel) {
-		DexDecoder decoder = new DexDecoder(nameDecoder, logger, logPrefix, infoLevel, errorLevel);
-		return new DexRewriter(new DexDecoderModule(decoder)).rewriteDexFile(dex);
+	private synchronized void log(Logger.Level level, String message) {
+		if (logger.isLogging(level) && loggedMessages.add(message)) logger.log(level, message);
 	}
 
 }
