@@ -56,42 +56,38 @@ public class DexDecoderModule extends RewriterModule {
 		String rewriteItem(String definingClass, ItemType itemType, String value);
 	}
 
-	private final ItemRewriter itemRewriter;
+	protected final ItemRewriter itemRewriter;
 
 	public DexDecoderModule(ItemRewriter itemRewriter) {
 		this.itemRewriter = itemRewriter;
 	}
 
-	protected final String rewriteItem(String definingClass, ItemType itemType, String value) {
-		return itemRewriter.rewriteItem(definingClass, itemType, value);
-	}
-
 	public final String rewriteNakedTypeName(String value) {
-		return rewriteItem(null, ItemType.NAKED_TYPE_NAME, value);
+		return itemRewriter.rewriteItem(null, ItemType.NAKED_TYPE_NAME, value);
 	}
 
 	public final String rewriteFieldName(String definingClass, String value) {
-		return rewriteItem(definingClass, ItemType.FIELD_NAME, value);
+		return itemRewriter.rewriteItem(definingClass, ItemType.FIELD_NAME, value);
 	}
 
 	public final String rewriteMethodName(String definingClass, String value) {
-		return rewriteItem(definingClass, ItemType.METHOD_NAME, value);
+		return itemRewriter.rewriteItem(definingClass, ItemType.METHOD_NAME, value);
 	}
 
 	public final String rewriteParameterName(String value) {
-		return rewriteItem(null, ItemType.PARAMETER_NAME, value);
+		return itemRewriter.rewriteItem(null, ItemType.PARAMETER_NAME, value);
 	}
 
 	public final String rewriteLocalVariableName(String value) {
-		return rewriteItem(null, ItemType.LOCAL_VARIABLE_NAME, value);
+		return itemRewriter.rewriteItem(null, ItemType.LOCAL_VARIABLE_NAME, value);
 	}
 
 	public final String rewriteAnnotationElementName(String value) {
-		return rewriteItem(null, ItemType.ANNOTATION_ELEMENT_NAME, value);
+		return itemRewriter.rewriteItem(null, ItemType.ANNOTATION_ELEMENT_NAME, value);
 	}
 
 	public final String rewriteAnnotationElementStringValue(String value) {
-		return rewriteItem(null, ItemType.ANNOTATION_ELEMENT_VALUE, value);
+		return itemRewriter.rewriteItem(null, ItemType.ANNOTATION_ELEMENT_VALUE, value);
 	}
 
 	@Override

@@ -17,7 +17,7 @@ import lanchon.dexpatcher.naming.decoder.DexDecoderModule.ItemType;
 import org.jf.dexlib2.iface.DexFile;
 import org.jf.dexlib2.rewriter.DexRewriter;
 
-public class DexDecoder extends AbstractLoggingRewriter implements DexDecoderModule.ItemRewriter {
+public final class DexDecoder extends AbstractLoggingRewriter implements DexDecoderModule.ItemRewriter {
 
 	public static DexFile decode(DexFile dex, StringDecoder stringDecoder, Logger logger, String logPrefix,
 			Logger.Level infoLevel, Logger.Level errorLevel) {

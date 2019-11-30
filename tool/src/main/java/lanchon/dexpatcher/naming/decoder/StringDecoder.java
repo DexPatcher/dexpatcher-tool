@@ -10,7 +10,7 @@
 
 package lanchon.dexpatcher.naming.decoder;
 
-public class StringDecoder {
+public final class StringDecoder {
 
 	public interface ErrorHandler {
 		void onError(String message, String string, int codeStart, int codeEnd, int errorStart, int errorEnd);
@@ -38,6 +38,10 @@ public class StringDecoder {
 			throw new IllegalArgumentException("codeMarker");
 		}
 		this.codeMarker = codeMarker;
+	}
+
+	public String getCodeMarker() {
+		return codeMarker;
 	}
 
 	public boolean isCodedString(String string) {
