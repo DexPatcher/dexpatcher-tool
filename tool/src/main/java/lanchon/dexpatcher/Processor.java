@@ -17,7 +17,7 @@ import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.DexPatcher;
 import lanchon.dexpatcher.core.logger.Logger;
 import lanchon.dexpatcher.naming.decoder.DexDecoder;
-import lanchon.dexpatcher.naming.decoder.NameDecoder;
+import lanchon.dexpatcher.naming.decoder.StringDecoder;
 import lanchon.multidexlib2.BasicDexFileNamer;
 import lanchon.multidexlib2.DexFileNamer;
 import lanchon.multidexlib2.DexIO;
@@ -41,7 +41,7 @@ public class Processor {
 
 	private DexFileNamer dexFileNamer;
 	private Opcodes opcodes;
-	private NameDecoder nameDecoder;
+	private StringDecoder stringDecoder;
 
 	private Processor(Logger logger, Configuration config) {
 		this.logger = logger;
@@ -55,7 +55,7 @@ public class Processor {
 		logger.setLogLevel(config.logLevel);
 		dexFileNamer = new BasicDexFileNamer();
 		if (config.apiLevel > 0) opcodes = Opcodes.forApi(config.apiLevel);
-		nameDecoder = new NameDecoder(config.codeMarker);
+		stringDecoder = new StringDecoder(config.codeMarker);
 
 		DexFile dex = readDex(new File(config.sourceFile));
 		if (config.decodeSource) dex = decodeDex(dex, "decode source");
@@ -91,7 +91,7 @@ public class Processor {
 	}
 
 	private DexFile decodeDex(DexFile dex, String logPrefix) {
-		return DexDecoder.decode(dex, nameDecoder, logger, logPrefix, DEBUG,
+		return DexDecoder.decode(dex, stringDecoder, logger, logPrefix, DEBUG,
 				config.treatDecodeErrorsAsWarnings ? WARN : ERROR);
 	}
 

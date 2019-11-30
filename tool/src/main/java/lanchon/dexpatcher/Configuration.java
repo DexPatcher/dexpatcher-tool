@@ -12,7 +12,7 @@ package lanchon.dexpatcher;
 
 import java.util.List;
 
-import lanchon.dexpatcher.naming.decoder.NameDecoder;
+import lanchon.dexpatcher.naming.decoder.StringDecoder;
 import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.logger.Logger;
 import lanchon.multidexlib2.DexIO;
@@ -37,7 +37,7 @@ public class Configuration {
 	public boolean decodePatches;
 	public boolean decodeOutput;
 
-	public String codeMarker = NameDecoder.DEFAULT_CODE_MARKER;
+	public String codeMarker = StringDecoder.DEFAULT_CODE_MARKER;
 	public boolean treatDecodeErrorsAsWarnings;
 
 	public Logger.Level logLevel = Context.DEFAULT_LOG_LEVEL;

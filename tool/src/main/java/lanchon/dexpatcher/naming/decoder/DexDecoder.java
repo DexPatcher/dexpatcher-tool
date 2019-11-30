@@ -19,13 +19,13 @@ import org.jf.dexlib2.rewriter.DexRewriter;
 
 public class DexDecoder extends AbstractLoggingRewriter implements DexDecoderModule.ItemRewriter {
 
-	public static DexFile decode(DexFile dex, NameDecoder nameDecoder, Logger logger, String logPrefix,
+	public static DexFile decode(DexFile dex, StringDecoder stringDecoder, Logger logger, String logPrefix,
 			Logger.Level infoLevel, Logger.Level errorLevel) {
-		DexDecoder decoder = new DexDecoder(nameDecoder, logger, logPrefix, infoLevel, errorLevel);
+		DexDecoder decoder = new DexDecoder(stringDecoder, logger, logPrefix, infoLevel, errorLevel);
 		return new DexRewriter(new DexDecoderModule(decoder)).rewriteDexFile(dex);
 	}
 
-	private final class ErrorHandler extends MemberContext implements NameDecoder.ErrorHandler {
+	private final class ErrorHandler extends MemberContext implements StringDecoder.ErrorHandler {
 
 		private final ItemType itemType;
 		private final String value;
@@ -61,19 +61,19 @@ public class DexDecoder extends AbstractLoggingRewriter implements DexDecoderMod
 
 		@Override
 		protected String getRewrittenDefiningClass() {
-			return nameDecoder.decode(definingClass);
+			return stringDecoder.decode(definingClass);
 		}
 
 	}
 
-	private final NameDecoder nameDecoder;
+	private final StringDecoder stringDecoder;
 	private final Logger.Level infoLevel;
 	private final Logger.Level errorLevel;
 
-	private DexDecoder(NameDecoder nameDecoder, Logger logger, String logPrefix, Logger.Level infoLevel,
+	private DexDecoder(StringDecoder stringDecoder, Logger logger, String logPrefix, Logger.Level infoLevel,
 			Logger.Level errorLevel) {
 		super(logger, logPrefix);
-		this.nameDecoder = nameDecoder;
+		this.stringDecoder = stringDecoder;
 		this.infoLevel = infoLevel;
 		this.errorLevel = errorLevel;
 	}
@@ -81,7 +81,7 @@ public class DexDecoder extends AbstractLoggingRewriter implements DexDecoderMod
 	@Override
 	public String rewriteItem(String definingClass, ItemType itemType, String value) {
 		ErrorHandler errorHandler = new ErrorHandler(definingClass, itemType, value);
-		String decodedValue = nameDecoder.decode(value, errorHandler);
+		String decodedValue = stringDecoder.decode(value, errorHandler);
 		if (decodedValue != value && isLogging(infoLevel) && !decodedValue.equals(value)) {
 			StringBuilder sb = errorHandler.getMessageHeader();
 			sb.append("decoded to '").append(errorHandler.formatValue(decodedValue)).append("'");

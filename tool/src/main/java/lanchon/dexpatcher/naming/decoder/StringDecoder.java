@@ -10,7 +10,7 @@
 
 package lanchon.dexpatcher.naming.decoder;
 
-public class NameDecoder {
+public class StringDecoder {
 
 	public interface ErrorHandler {
 		void onError(String message, String string, int codeStart, int codeEnd, int errorStart, int errorEnd);
@@ -29,11 +29,11 @@ public class NameDecoder {
 
 	private final String codeMarker;
 
-	public NameDecoder() {
+	public StringDecoder() {
 		codeMarker = DEFAULT_CODE_MARKER;
 	}
 
-	public NameDecoder(String codeMarker) {
+	public StringDecoder(String codeMarker) {
 		if (!isValidCodeMarker(codeMarker)) {
 			throw new IllegalArgumentException("codeMarker");
 		}
