@@ -2,8 +2,12 @@
   <dictionary name="rod">
     <words>
       <w>annotatable</w>
+      <w>anonymized</w>
+      <w>anonymizer</w>
       <w>balerdi</w>
       <w>dalvik</w>
+      <w>deanonymize</w>
+      <w>deanonymized</w>
       <w>dexlib</w>
       <w>dexpatcher</w>
       <w>lanchon</w>
@@ -11,6 +15,8 @@
       <w>nano</w>
       <w>opcode</w>
       <w>opcodes</w>
+      <w>reanonymize</w>
+      <w>reanonymized</w>
       <w>smali</w>
     </words>
   </dictionary>
