@@ -136,7 +136,7 @@ public class Parser {
 
 		options.addOption(new Option("q", "quiet", false, "do not output warnings"));
 		options.addOption(new Option("v", "verbose", false, "output extra information"));
-		options.addOption(new Option(null, "debug", false, "output debugging information"));
+		options.addOption(new Option("d", "debug", false, "output debugging information"));
 
 		options.addOption(new Option("p", "path", false, "output relative paths of source code files"));
 		o = new Option("P", "path-root", true, "output absolute paths of source code files");

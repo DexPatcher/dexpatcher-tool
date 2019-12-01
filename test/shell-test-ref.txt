@@ -11,7 +11,7 @@ usage: dexpatcher [<option> ...] [--output <patched-dex-or-dir>]
     --annotations <package>   package name of DexPatcher annotations
                               (default: 'lanchon.dexpatcher.annotation')
     --code-marker <marker>    identifier code marker (default: '_$$_')
-    --debug                   output debugging information
+ -d,--debug                   output debugging information
     --decode-output           decode identifiers in output
     --decode-patches          decode identifiers in patches
     --decode-source           decode identifiers in source
