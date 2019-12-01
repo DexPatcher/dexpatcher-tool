@@ -27,8 +27,17 @@ public class Main {
 
 	public static void main(String[] args) {
 		Locale.setDefault(Locale.ROOT);
-		int value = run(args);
+		int value = runWithUsage(args);
 		System.exit(value);
+	}
+
+	public static int runWithUsage(String[] args) {
+		if (args.length == 0) {
+			Parser.printUsage();
+			return 2;
+		} else {
+			return run(args);
+		}
 	}
 
 	public static int run(String[] args) {
@@ -41,7 +50,6 @@ public class Main {
 			return success ? 0 : 1;
 		} catch (ParseException e) {
 			logger.log(FATAL, e.getMessage());
-			Parser.printUsage();
 			return 2;
 		} catch (Exception e) {
 			if (logger.isLogging(DEBUG)) {
