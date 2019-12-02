@@ -719,9 +719,8 @@ public class Main {
 		@DexAdd void __prefix_$$_1____bad_infix_$$_$2__and__postfix_$$_3__() { printMethod("added"); };
 
 		// Print the decoded identifiers:
-		@DexWrap
+		@DexAppend
 		public void print() {
-			print();
 			__$$_withoutLabel__();
 			__ok_$$_with$SdollarEscape__();
 			__ok_$$_with$UunderscoreEscape__();

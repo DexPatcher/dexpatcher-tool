@@ -179,7 +179,7 @@ debug: decode patch: type 'test.Main$__My_label_for_class_void_$$_void__': metho
 debug: type 'test.Main$void': method '1__bad_infix_$$_$2__and3():void': (Main.java:719): add
 debug: decode patch: type 'test.Main$__My_label_for_class_void_$$_void__': method '__prefix_$$_1____infix_$$_2__and__postfix_$$_3__': decoded to '12and3'
 debug: type 'test.Main$void': method '12and3():void': (Main.java:703): add
-debug: type 'test.Main$void': method 'print():void': (Main.java:724): wrap
+debug: type 'test.Main$void': method 'print():void': (Main.java:724): append
 debug: type 'test.Main$source_CrossClassA': (Main.java:0): edit
 debug: type 'test.Main$source_CrossClassA': target 'test.Main$CrossClassA': (Main.java:0): 'public' modifier removed from renamed type
 debug: type 'test.Main$source_CrossClassA': target 'test.Main$CrossClassA': method '<init>(java.lang.String):void': (Main.java:582): ignore
