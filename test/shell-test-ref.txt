@@ -292,6 +292,7 @@ original CrossClassC::<init>
 
 original void::<init> (class test.Main$__ClassVoid_$$_void__)
 original void::__method42_$$_42__
+
 --- end source/build/libs/source.jar ---
 
 --- run build/patched-dex2jar.jar ---
@@ -409,5 +410,6 @@ added void::with±asciiLatin1Escape
 added void::with±unicodeEscape
 added void::12and3
 added void::1__bad_infix_$$_$2__and3
+
 --- end build/patched-dex2jar.jar ---
 

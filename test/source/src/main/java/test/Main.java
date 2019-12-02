@@ -52,6 +52,7 @@ public class Main {
 		new CrossClassC();
 		p();
 		new __ClassVoid_$$_void__().print();
+		p();
 	}
 
 	public static class A {
