@@ -16,6 +16,8 @@ import java.io.IOException;
 import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.DexPatcher;
 import lanchon.dexpatcher.core.logger.Logger;
+import lanchon.dexpatcher.naming.anonymizer.DexAnonymizer;
+import lanchon.dexpatcher.naming.anonymizer.TypeAnonymizer;
 import lanchon.dexpatcher.naming.decoder.DexDecoder;
 import lanchon.dexpatcher.naming.decoder.StringDecoder;
 import lanchon.multidexlib2.BasicDexFileNamer;
@@ -58,17 +60,22 @@ public class Processor {
 		stringDecoder = new StringDecoder(config.codeMarker);
 
 		DexFile dex = readDex(new File(config.sourceFile));
+		dex = anonymizeDex(dex, config.deanonSourcePlan, false, "deanonymize source");
 		if (config.decodeSource) dex = decodeDex(dex, "decode source");
+		dex = anonymizeDex(dex, config.reanonSourcePlan, true, "reanonymize source");
 		int types = dex.getClasses().size();
 
 		for (String patchFile : config.patchFiles) {
 			DexFile patchDex = readDex(new File(patchFile));
+			patchDex = anonymizeDex(patchDex, config.deanonPatchesPlan, false, "deanonymize patch");
 			if (config.decodePatches) patchDex = decodeDex(patchDex, "decode patch");
+			patchDex = anonymizeDex(patchDex, config.reanonPatchesPlan, true, "reanonymize patch");
 			types += patchDex.getClasses().size();
 			dex = processDex(dex, patchDex);
 		}
 
 		if (config.decodeOutput) dex = decodeDex(dex, "decode output");
+		dex = anonymizeDex(dex, config.reanonOutputPlan, true, "reanonymize output");
 
 		if (logger.hasNotLoggedErrors()) {
 			if (config.dryRun) {
@@ -88,6 +95,12 @@ public class Processor {
 		logger.logErrorAndWarningCounts();
 		return logger.hasNotLoggedErrors();
 
+	}
+
+	private DexFile anonymizeDex(DexFile dex, String plan, boolean reanonymize, String logPrefix) {
+		if (plan == null) return dex;
+		return DexAnonymizer.anonymize(dex, new TypeAnonymizer(plan, reanonymize), logger, logPrefix, DEBUG,
+				config.treatReanonymizeErrorsAsWarnings ? WARN : ERROR);
 	}
 
 	private DexFile decodeDex(DexFile dex, String logPrefix) {

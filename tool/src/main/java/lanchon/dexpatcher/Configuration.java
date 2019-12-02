@@ -33,9 +33,18 @@ public class Configuration {
 	public String annotationPackage = Context.DEFAULT_ANNOTATION_PACKAGE;
 	public boolean constructorAutoIgnoreDisabled;
 
+	public String deanonSourcePlan;
 	public boolean decodeSource;
+	public String reanonSourcePlan;
+
+	public String deanonPatchesPlan;
 	public boolean decodePatches;
+	public String reanonPatchesPlan;
+
 	public boolean decodeOutput;
+	public String reanonOutputPlan;
+
+	public boolean treatReanonymizeErrorsAsWarnings;
 
 	public String codeMarker = StringDecoder.DEFAULT_CODE_MARKER;
 	public boolean treatDecodeErrorsAsWarnings;

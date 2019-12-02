@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lanchon.dexpatcher.core.Context;
+import lanchon.dexpatcher.naming.anonymizer.TypeAnonymizer;
 import lanchon.dexpatcher.naming.decoder.StringDecoder;
 import lanchon.multidexlib2.DexIO;
 import lanchon.multidexlib2.MultiDexIO;
@@ -67,6 +68,15 @@ public class Parser {
 		config.annotationPackage = cl.getOptionValue("annotations", Context.DEFAULT_ANNOTATION_PACKAGE);
 		config.constructorAutoIgnoreDisabled = cl.hasOption("no-auto-ignore");
 
+		config.deanonSourcePlan = getPlan(cl, "deanon-source");
+		config.deanonPatchesPlan = getPlan(cl, "deanon-patches");
+
+		config.reanonSourcePlan = getPlan(cl, "reanon-source");
+		config.reanonPatchesPlan = getPlan(cl, "reanon-patches");
+		config.reanonOutputPlan = getPlan(cl, "reanon-output");
+
+		config.treatReanonymizeErrorsAsWarnings = cl.hasOption("no-reanon-errors");
+
 		config.decodeSource = cl.hasOption("decode-source");
 		config.decodePatches = cl.hasOption("decode-patches");
 		config.decodeOutput = cl.hasOption("decode-output");
@@ -90,6 +100,14 @@ public class Parser {
 
 		return config;
 
+	}
+
+	private static String getPlan(CommandLine cl, String opt) throws ParseException {
+		String plan = cl.getOptionValue(opt, null);
+		if (plan != null && !TypeAnonymizer.isValidPlan(plan)) {
+			throw new ParseException("Invalid plan for " + opt + ": '" + plan + "'");
+		}
+		return plan;
 	}
 
 	public static void printUsage() {
@@ -124,6 +142,20 @@ public class Parser {
 				Context.DEFAULT_ANNOTATION_PACKAGE + "')");
 		o.setArgName("package"); options.addOption(o);
 		options.addOption(new Option(null, "no-auto-ignore", false, "no trivial default constructor auto-ignore"));
+
+		o = new Option(null, "deanon-source", true, "deanonymize anonymous classes in source");
+		o.setArgName("plan"); options.addOption(o);
+		o = new Option(null, "deanon-patches", true, "deanonymize anonymous classes in patches");
+		o.setArgName("plan"); options.addOption(o);
+
+		o = new Option(null, "reanon-source", true, "reanonymize anonymous classes in source");
+		o.setArgName("plan"); options.addOption(o);
+		o = new Option(null, "reanon-patches", true, "reanonymize anonymous classes in patches");
+		o.setArgName("plan"); options.addOption(o);
+		o = new Option(null, "reanon-output", true, "reanonymize anonymous classes in output");
+		o.setArgName("plan"); options.addOption(o);
+
+		options.addOption(new Option(null, "no-reanon-errors", false, "treat reanonymize errors as warnings"));
 
 		options.addOption(new Option(null, "decode-source", false, "decode identifiers in source"));
 		options.addOption(new Option(null, "decode-patches", false, "decode identifiers in patches"));
