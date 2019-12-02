@@ -86,11 +86,11 @@ public final class TypeAnonymizer {
 		if (outerEnd < 0) return type;
 
 		// Rewrite the type if needed.
-		return anonymizeTypeTail(type, simpleStart, 0, outerEnd, errorHandler);
+		return anonymizeTypeTail(type, 1, simpleStart, 0, outerEnd, errorHandler);
 
 	}
 
-	private String anonymizeTypeTail(String type, int simpleStart, int start, int outerEnd,
+	private String anonymizeTypeTail(String type, int level, int simpleStart, int start, int outerEnd,
 			ErrorHandler errorHandler) {
 
 		int length = type.length();
@@ -104,9 +104,11 @@ public final class TypeAnonymizer {
 		// The inner class name is type.substring(innerStart, innerEnd) and is non-empty.
 
 		// Find the space where the anonymous class number should be.
+		int currentLevel = 0;
 		int numberStart = innerStart;
 		int numberEnd = innerEnd;
 		while (matchesPlan(type, numberStart, numberEnd)) {
+			currentLevel++;
 			numberStart += prefixLength;
 			numberEnd -= suffixLength;
 		}
@@ -114,22 +116,28 @@ public final class TypeAnonymizer {
 		if (!(numberStart < numberEnd)) throw new AssertionError("Invalid anonymous class number index range");
 
 		if (isAllDigits(type, numberStart, numberEnd)) {
-			if (reanonymize && numberStart == innerStart && numberEnd == innerEnd) {
+			if (reanonymize && currentLevel < level) {
 				errorHandler.onError(type, "class '" + type.substring(simpleStart, innerEnd) +
-						"' is already anonymous");
+						"' cannot be " + level + "-level reanonymized");
+
+
+
+
 			} else {
 
 				// Rewrite the type, tail first if needed.
 				String rewrittenTail = hasNestedInner ?
-						anonymizeTypeTail(type, simpleStart, innerEnd, innerEnd, errorHandler) : null;
+						anonymizeTypeTail(type, level + 1, simpleStart, innerEnd, innerEnd, errorHandler) : null;
 				int rewrittenLength = hasNestedInner ? innerEnd + rewrittenTail.length() : length;
 				int lengthChange = reanonymize ? -totalLength : +totalLength;
 				StringBuilder sb = new StringBuilder(rewrittenLength - start + lengthChange);
 				sb.append(type, start, innerStart);
 				if (reanonymize) {
-					sb.append(type, innerStart + prefixLength, innerEnd - suffixLength);
+					sb.append(type, innerStart + level * prefixLength, innerEnd - level * suffixLength);
 				} else {
-					sb.append(prefix).append(type, innerStart, innerEnd).append(suffix);
+					for (int i = 0; i < level; i++) sb.append(prefix);
+					sb.append(type, innerStart, innerEnd);
+					for (int i = 0; i < level; i++) sb.append(suffix);
 				}
 				if (hasNestedInner) {
 					sb.append(rewrittenTail);
@@ -140,7 +148,7 @@ public final class TypeAnonymizer {
 
 			}
 		}
-		return hasNestedInner ? anonymizeTypeTail(type, simpleStart, start, innerEnd, errorHandler) :
+		return hasNestedInner ? anonymizeTypeTail(type, level, simpleStart, start, innerEnd, errorHandler) :
 				type.substring(start);
 
 	}
