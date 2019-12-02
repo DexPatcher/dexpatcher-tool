@@ -61,20 +61,20 @@ public class Processor {
 
 		DexFile dex = readDex(new File(config.sourceFile));
 		dex = anonymizeDex(dex, config.deanonSourcePlan, false, "deanonymize source");
-		if (config.decodeSource) dex = decodeDex(dex, "decode source");
+		dex = decodeDex(dex, config.decodeSource, "decode source");
 		dex = anonymizeDex(dex, config.reanonSourcePlan, true, "reanonymize source");
 		int types = dex.getClasses().size();
 
 		for (String patchFile : config.patchFiles) {
 			DexFile patchDex = readDex(new File(patchFile));
 			patchDex = anonymizeDex(patchDex, config.deanonPatchesPlan, false, "deanonymize patch");
-			if (config.decodePatches) patchDex = decodeDex(patchDex, "decode patch");
+			patchDex = decodeDex(patchDex, config.decodePatches, "decode patch");
 			patchDex = anonymizeDex(patchDex, config.reanonPatchesPlan, true, "reanonymize patch");
 			types += patchDex.getClasses().size();
 			dex = processDex(dex, patchDex);
 		}
 
-		if (config.decodeOutput) dex = decodeDex(dex, "decode output");
+		dex = decodeDex(dex, config.decodeOutput, "decode output");
 		dex = anonymizeDex(dex, config.reanonOutputPlan, true, "reanonymize output");
 
 		if (logger.hasNotLoggedErrors()) {
@@ -103,7 +103,8 @@ public class Processor {
 				config.treatReanonymizeErrorsAsWarnings ? WARN : ERROR);
 	}
 
-	private DexFile decodeDex(DexFile dex, String logPrefix) {
+	private DexFile decodeDex(DexFile dex, boolean enabled, String logPrefix) {
+		if (!enabled) return dex;
 		return DexDecoder.decode(dex, stringDecoder, logger, logPrefix, DEBUG,
 				config.treatDecodeErrorsAsWarnings ? WARN : ERROR);
 	}
