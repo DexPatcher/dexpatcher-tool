@@ -116,7 +116,7 @@ task portableTest(type:JavaExec) {
     outputs.file outputFile
 
     classpath dexpatcherJar
-    args '--verbose', '--decode-source', '--decode-patches', '--no-decode-errors', '--output', outputFile.get(), sourceFile.get(), patchFile.get()
+    args '--verbose', '--deanon-source', 'Anon[]', '--reanon-output', 'Anon[]', '--deanon-patches', '[]_patch', '--no-reanon-errors', '--decode-source', '--decode-patches', '--no-decode-errors', '--output', outputFile.get(), sourceFile.get(), patchFile.get()
 
 }
 

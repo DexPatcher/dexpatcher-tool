@@ -732,6 +732,46 @@ public class Main {
 
 	}
 
+	// Modify members of an anonymous class:
+	// Note: For this to work, the source dex file must be deanonymized using
+	// '--deanon-source Anon[]'. It is recommended to reanonymize the output
+	// dex using '--reanon-output Anon[]'. This restores the original names
+	// of the anonymous classes right after the patching step is done
+	@DexEdit
+	public static class AnonymousClasses {
+		@DexEdit(contentOnly = true)
+		public static class Anon1 {
+			@DexEdit(contentOnly = true)
+			public static class AnonAnon1 implements Runnable {
+				@DexReplace
+				@Override public void run() {
+					p("replaced AnonymousClasses::<anon>::<anon>::run");
+				}
+			}
+		}
+
+		// Use anonymous classes in the patch:
+		// Note: Anonymous classes in the patch can name-clash with anonymous
+		// classes in the source. To avoid clashes, the patch dex file should
+		// be deanonymized using something like '--deanon-patch []_patch'.
+		@DexAppend
+		public static void print() {
+			new Runnable() {
+				@Override
+				public void run() {
+					p("added AnonymousClasses::<anon> (" + this.getClass() + ")");
+				}
+			}.run();
+		}
+
+		// Test unexpected anonymous classes during reanonymization:
+		// Note: The output must be reanonymized using '--no-reanon-errors'.
+		// Note: When reanonymizing the output, all classes are expected to be
+		// deanonymized. Insert an anonymous class in the output to test the
+		// error condition.
+		static class __UnexpectedAnonymousClass_$$_42__ {}
+	}
+
 	// Mini FAQ
 
 	// Q) My IDE outputs classes that clash with classes in my source app

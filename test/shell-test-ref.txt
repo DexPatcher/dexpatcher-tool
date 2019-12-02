@@ -37,17 +37,39 @@ usage: dexpatcher [<option> ...] [--output <patched-dex-or-dir>]
  -v,--verbose                 output extra information
     --version                 print version information and exit
 
-$ dexpatcher build/source.dex.zip build/patch.dex.zip --output build/patched.dex --decode-source --decode-patches --no-decode-errors --debug
+$ dexpatcher build/source.dex.zip build/patch.dex.zip --output build/patched.dex --deanon-source Anon\[\] --reanon-output Anon\[\] --deanon-patches \[\]_patch --no-reanon-errors --decode-source --decode-patches --no-decode-errors --debug
 DexPatcher version 1.8.0-alpha2 by Lanchon (https://dexpatcher.github.io/)
 info: read 'build/source.dex.zip'
-debug: read 'build/source.dex.zip': file 'classes.dex': 26 types
+debug: read 'build/source.dex.zip': file 'classes.dex': 33 types
 debug: read 'build/source.dex.zip': dex version '035'
 info: read 'build/patch.dex.zip'
-debug: read 'build/patch.dex.zip': file 'classes.dex': 25 types
+debug: read 'build/patch.dex.zip': file 'classes.dex': 30 types
 debug: read 'build/patch.dex.zip': dex version '035'
+debug: deanonymize source: type 'test.Main$AnonymousClasses$1$1$Inner': deanonymized to 'test.Main$AnonymousClasses$Anon1$AnonAnon1$Inner'
+debug: deanonymize source: type 'test.Main$AnonymousClasses$1$1': deanonymized to 'test.Main$AnonymousClasses$Anon1$AnonAnon1'
+debug: deanonymize source: type 'test.Main$AnonymousClasses$1': deanonymized to 'test.Main$AnonymousClasses$Anon1'
+debug: deanonymize source: type 'test.Main$AnonymousClasses$Anon1$1': deanonymized to 'test.Main$AnonymousClasses$AnonAnon1$AnonAnon1'
+debug: deanonymize source: type 'test.Main$AnonymousClasses$Anon1$AnonAnon1': deanonymized to 'test.Main$AnonymousClasses$AnonAnon1$AnonAnonAnonAnon1'
+debug: deanonymize source: type 'test.Main$AnonymousClasses$Anon1': deanonymized to 'test.Main$AnonymousClasses$AnonAnon1'
 debug: decode source: type 'test.Main$__ClassVoid_$$_void__': decoded to 'test.Main$void'
 debug: type 'test.Main$A': (Main.java:0): replace
 debug: type 'test.Main$Abstract': (Main.java:0): ignore
+debug: deanonymize patch: type 'test.Main$AnonymousClasses$1': deanonymized to 'test.Main$AnonymousClasses$1_patch'
+debug: type 'test.Main$AnonymousClasses$1_patch': (Main.java:0): add
+debug: type 'test.Main$AnonymousClasses$Anon1$AnonAnon1': (Main.java:0): edit
+info: type 'test.Main$AnonymousClasses$Anon1$AnonAnon1': method '<init>():void': (Main.java:745): implicit ignore of trivial default constructor
+debug: type 'test.Main$AnonymousClasses$Anon1$AnonAnon1': method '<init>():void': (Main.java:745): ignore
+debug: type 'test.Main$AnonymousClasses$Anon1$AnonAnon1': method 'run():void': (Main.java:748): replace
+debug: type 'test.Main$AnonymousClasses$Anon1': (Main.java:0): edit
+info: type 'test.Main$AnonymousClasses$Anon1': method '<init>():void': (Main.java:743): implicit ignore of trivial default constructor
+debug: type 'test.Main$AnonymousClasses$Anon1': method '<init>():void': (Main.java:743): ignore
+debug: decode patch: type 'test.Main$AnonymousClasses$__UnexpectedAnonymousClass_$$_42__': decoded to 'test.Main$AnonymousClasses$42'
+debug: decode patch: annotation element value '__UnexpectedAnonymousClass_$$_42__': decoded to '42'
+debug: type 'test.Main$AnonymousClasses$42': (Main.java:0): add
+debug: type 'test.Main$AnonymousClasses': (Main.java:0): edit
+info: type 'test.Main$AnonymousClasses': method '<init>():void': (Main.java:741): implicit ignore of trivial default constructor
+debug: type 'test.Main$AnonymousClasses': method '<init>():void': (Main.java:741): ignore
+debug: type 'test.Main$AnonymousClasses': method 'print():void': (Main.java:759): append
 debug: type 'test.Main$B': (Main.java:0): edit
 debug: type 'test.Main$B': field 'staticField:int': (Main.java:0): add
 debug: type 'test.Main$B': field 'instanceField:int': (Main.java:0): add
@@ -212,11 +234,21 @@ debug: type 'test.Main$Derived': method 'source_method():void': target 'method':
 debug: type 'test.Main$Derived': method 'method():void': (Main.java:234): add
 info: write 'build/patched.dex'
 debug: write 'build/patched.dex': dex version '035'
-debug: write 'build/patched.dex': 25 types
-0 error(s), 13 warning(s)
+debug: reanonymize output: type 'test.Main$AnonymousClasses$Anon1$AnonAnon1$Inner': reanonymized to 'test.Main$AnonymousClasses$1$1$Inner'
+debug: reanonymize output: type 'test.Main$AnonymousClasses$Anon1$AnonAnon1': reanonymized to 'test.Main$AnonymousClasses$1$1'
+debug: reanonymize output: type 'test.Main$AnonymousClasses$Anon1': reanonymized to 'test.Main$AnonymousClasses$1'
+debug: reanonymize output: type 'test.Main$AnonymousClasses$AnonAnon1$AnonAnon1': reanonymized to 'test.Main$AnonymousClasses$Anon1$1'
+debug: reanonymize output: type 'test.Main$AnonymousClasses$AnonAnon1': reanonymized to 'test.Main$AnonymousClasses$Anon1'
+debug: reanonymize output: type 'test.Main$AnonymousClasses$AnonAnon1$AnonAnonAnonAnon1': reanonymized to 'test.Main$AnonymousClasses$Anon1$AnonAnon1'
+warning: reanonymize output: type 'test.Main$AnonymousClasses$42': class 'Main$AnonymousClasses$42' cannot be 1-level reanonymized
+debug: write 'build/patched.dex': 34 types
+0 error(s), 14 warning(s)
 
 $ dex2jar --force --output build/patched-dex2jar.jar build/patched.dex
 dex2jar build/patched.dex -> build/patched-dex2jar.jar
+WARN: ignored invalid inner class name , treat as anonymous inner class.
+WARN: ignored invalid inner class name , treat as anonymous inner class.
+WARN: ignored invalid inner class name , treat as anonymous inner class.
 
 --- run source/build/libs/source.jar ---
 original A::<clinit>
@@ -292,6 +324,10 @@ original CrossClassC::<init>
 
 original void::<init> (class test.Main$__ClassVoid_$$_void__)
 original void::__method42_$$_42__
+
+original AnonymousClasses::<anon>::run
+original AnonymousClasses::<anon>::<anon>::run
+original AnonymousClasses::Anon1::go
 
 --- end source/build/libs/source.jar ---
 
@@ -410,6 +446,11 @@ added void::with±asciiLatin1Escape
 added void::with±unicodeEscape
 added void::12and3
 added void::1__bad_infix_$$_$2__and3
+
+original AnonymousClasses::<anon>::run
+replaced AnonymousClasses::<anon>::<anon>::run
+original AnonymousClasses::Anon1::go
+added AnonymousClasses::<anon> (class test.Main$AnonymousClasses$1_patch)
 
 --- end build/patched-dex2jar.jar ---
 

@@ -53,6 +53,8 @@ public class Main {
 		p();
 		new __ClassVoid_$$_void__().print();
 		p();
+		AnonymousClasses.print();
+		p();
 	}
 
 	public static class A {
@@ -260,6 +262,34 @@ public class Main {
 		public __ClassVoid_$$_void__() { p("original void::<init> (" + this.getClass() + ")"); }
 		public void __method42_$$_42__() { printMethod("original"); }
 		public void print() { __method42_$$_42__(); }
+	}
+
+	public static class AnonymousClasses {
+		public static void print() {
+			new Runnable() {
+				@Override public void run() {
+					p("original AnonymousClasses::<anon>::run");
+					new Runnable() {
+						class Inner {}
+						@Override public void run() {
+							p("original AnonymousClasses::<anon>::<anon>::run");
+						}
+					}.run();
+				}
+			}.run();
+			Anon1.go();
+		}
+		// Note: When the source dex is deanonymized with plan 'Anon[]', the
+		// deanonymized classes from above would clash with the following inner
+		// classes. So these inner classes will also be renamed proactively by
+		// the deanonymizer and eventually restored by the reanonymizer.
+		public static class Anon1 {
+			public static class AnonAnon1 {}
+			public static void go() {
+				p("original AnonymousClasses::Anon1::go");
+				new Object() {};
+			}
+		}
 	}
 
 }
