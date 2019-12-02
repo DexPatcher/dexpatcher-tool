@@ -67,7 +67,8 @@ public abstract class AbstractLoggingRewriter {
 	public final boolean isLogging(Logger.Level level) {
 		// NOTE: Logger level is assumed to be constant during renaming.
 		// This is why the call to logger.isLogging() is not synchronized.
-		return level != NONE && logger.isLogging(level);
+		// NOTE: A null value for level disables logging.
+		return level != null && logger.isLogging(level);
 	}
 
 	public final void log(Logger.Level level, String message) {
