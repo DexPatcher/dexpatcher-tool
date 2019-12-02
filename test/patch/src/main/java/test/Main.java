@@ -639,14 +639,17 @@ public class Main {
 		public CrossClassCPatcher() { p("replaced CrossClassCPatcher::<init> (" + this.getClass() + ")"); }
 	}
 
-	// Modify members of obfuscated class named '42':
+	// Modify members of obfuscated class named 'void':
 	// Note: The patch dex file must be decoded using '--decode-patches'.
 	@DexEdit
-	public static class __My_label_for_Class42_$$_42__ {
+	public static class __My_label_for_class_void_$$_void__ {
+
+		@DexIgnore
+		private static void printMethod(String message) { throw null; }
 
 		// Replace obfuscated method named '42':
 		@DexReplace
-		public void __my_label_for_method42_$$_42__() { p("replaced Class42::method42"); }
+		public void __my_label_for_method_42_$$_42__() { printMethod("replaced"); }
 
 		// Identifier codes:
 
@@ -692,12 +695,12 @@ public class Main {
 		// - Unicode: $uNNNN is replaced with hex Unicode codepoint 0xNNNN.
 
 		// Test valid identifier codes:
-		@DexAdd void    __$$_withoutLabel__() { printMethodName(new Throwable()); };
-		@DexAdd void __ok_$$_with$SdollarEscape__() { printMethodName(new Throwable()); };
-		@DexAdd void __ok_$$_with$UunderscoreEscape__() { printMethodName(new Throwable()); };
-		@DexAdd void __ok_$$_with$aB1asciiLatin1Escape__() { printMethodName(new Throwable()); };
-		@DexAdd void __ok_$$_with$u00B1unicodeEscape__() { printMethodName(new Throwable()); };
-		@DexAdd void __prefix_$$_1____infix_$$_2__and__postfix_$$_3__() { printMethodName(new Throwable()); };
+		@DexAdd void    __$$_withoutLabel__() { printMethod("added"); };
+		@DexAdd void __ok_$$_with$SdollarEscape__() { printMethod("added"); };
+		@DexAdd void __ok_$$_with$UunderscoreEscape__() { printMethod("added"); };
+		@DexAdd void __ok_$$_with$aB1asciiLatin1Escape__() { printMethod("added"); };
+		@DexAdd void __ok_$$_with$u00B1unicodeEscape__() { printMethod("added"); };
+		@DexAdd void __prefix_$$_1____infix_$$_2__and__postfix_$$_3__() { printMethod("added"); };
 
 		// Test invalid identifier codes:
 		// Note: The patch dex file must be decoded using '--no-decode-errors'.
@@ -713,11 +716,12 @@ public class Main {
 		@DexAdd int __bad_$$_truncatedEscape$__;
 		@DexAdd int __bad_$$_truncatedAsciiLatin1Escape$aB__;
 		@DexAdd int __bad_$$_truncatedUnicodeEscape$uB1__;
-		@DexAdd void __prefix_$$_1____bad_infix_$$_$2__and__postfix_$$_3__() { printMethodName(new Throwable()); };
+		@DexAdd void __prefix_$$_1____bad_infix_$$_$2__and__postfix_$$_3__() { printMethod("added"); };
 
 		// Print the decoded identifiers:
 		@DexWrap
 		public void print() {
+			print();
 			__$$_withoutLabel__();
 			__ok_$$_with$SdollarEscape__();
 			__ok_$$_with$UunderscoreEscape__();
@@ -725,11 +729,6 @@ public class Main {
 			__ok_$$_with$u00B1unicodeEscape__();
 			__prefix_$$_1____infix_$$_2__and__postfix_$$_3__();
 			__prefix_$$_1____bad_infix_$$_$2__and__postfix_$$_3__();
-			print();
-		}
-		@DexAdd
-		private void printMethodName(Throwable t) {
-			p("decoded Class42::" + t.getStackTrace()[0].getMethodName());
 		}
 
 	}
