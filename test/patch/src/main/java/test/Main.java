@@ -752,8 +752,8 @@ public class Main {
 
 		// Use anonymous classes in the patch:
 		// Note: Anonymous classes in the patch can name-clash with anonymous
-		// classes in the source. To avoid clashes, the patch dex file should
-		// be deanonymized using something like '--deanon-patch []_patch'.
+		// classes in the source. To avoid clashes, the patch dex file can be
+		// deanonymized using something like '--deanon-patch []_patch'.
 		@DexAppend
 		public static void print() {
 			new Runnable() {
@@ -767,8 +767,8 @@ public class Main {
 		// Test unexpected anonymous classes during reanonymization:
 		// Note: The output must be reanonymized using '--no-reanon-errors'.
 		// Note: When reanonymizing the output, all classes are expected to be
-		// deanonymized. Insert an anonymous class in the output to test the
-		// error condition.
+		// deanonymized. This inserts an non-deanonymized anonymous class named
+		// '42' in the output to test the handling of this error condition.
 		static class __UnexpectedAnonymousClass_$$_42__ {}
 	}
 
