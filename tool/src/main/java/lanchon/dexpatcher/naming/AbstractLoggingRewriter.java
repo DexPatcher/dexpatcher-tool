@@ -15,8 +15,6 @@ import java.util.HashSet;
 import lanchon.dexpatcher.core.logger.Logger;
 import lanchon.dexpatcher.core.util.Label;
 
-import static lanchon.dexpatcher.core.logger.Logger.Level.*;
-
 public abstract class AbstractLoggingRewriter {
 
 	private static final boolean LOG_REWRITTEN_TYPES = false;
