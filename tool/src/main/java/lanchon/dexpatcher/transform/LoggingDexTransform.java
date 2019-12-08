@@ -15,11 +15,7 @@ import java.util.HashSet;
 import lanchon.dexpatcher.core.logger.Logger;
 import lanchon.dexpatcher.core.util.Label;
 
-import org.jf.dexlib2.iface.DexFile;
-import org.jf.dexlib2.rewriter.DexRewriter;
-import org.jf.dexlib2.rewriter.RewriterModule;
-
-public abstract class LoggingDexTransform {
+public abstract class LoggingDexTransform extends DexTransform {
 
 	private static final boolean LOG_REWRITTEN_TYPES = false;
 
@@ -58,10 +54,6 @@ public abstract class LoggingDexTransform {
 	protected LoggingDexTransform(Logger logger, String logPrefix) {
 		this.logger = logger;
 		this.logPrefix = logPrefix;
-	}
-
-	protected DexFile transformDexFile(DexFile dex, RewriterModule rewriterModule) {
-		return new DexRewriter(rewriterModule).rewriteDexFile(dex);
 	}
 
 	public final StringBuilder getBaseMessageHeader() {
