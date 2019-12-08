@@ -8,7 +8,7 @@
  * or (at your option) any later version.
  */
 
-package lanchon.dexpatcher.naming.decoder;
+package lanchon.dexpatcher.transform.decoder;
 
 import org.jf.dexlib2.rewriter.TypeRewriter;
 

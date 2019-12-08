@@ -8,11 +8,11 @@
  * or (at your option) any later version.
  */
 
-package lanchon.dexpatcher.naming.anonymizer;
+package lanchon.dexpatcher.transform.anonymizer;
 
 import lanchon.dexpatcher.core.logger.Logger;
 import lanchon.dexpatcher.core.util.Label;
-import lanchon.dexpatcher.naming.AbstractLoggingRewriter;
+import lanchon.dexpatcher.transform.AbstractLoggingRewriter;
 
 import org.jf.dexlib2.iface.DexFile;
 import org.jf.dexlib2.rewriter.DexRewriter;

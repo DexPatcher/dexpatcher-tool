@@ -12,7 +12,7 @@ package lanchon.dexpatcher;
 
 import java.util.List;
 
-import lanchon.dexpatcher.naming.decoder.StringDecoder;
+import lanchon.dexpatcher.transform.decoder.StringDecoder;
 import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.logger.Logger;
 import lanchon.multidexlib2.DexIO;

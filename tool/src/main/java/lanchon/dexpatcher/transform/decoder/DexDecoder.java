@@ -8,11 +8,11 @@
  * or (at your option) any later version.
  */
 
-package lanchon.dexpatcher.naming.decoder;
+package lanchon.dexpatcher.transform.decoder;
 
 import lanchon.dexpatcher.core.logger.Logger;
-import lanchon.dexpatcher.naming.AbstractLoggingRewriter;
-import lanchon.dexpatcher.naming.decoder.DexDecoderModule.ItemType;
+import lanchon.dexpatcher.transform.AbstractLoggingRewriter;
+import lanchon.dexpatcher.transform.decoder.DexDecoderModule.ItemType;
 
 import org.jf.dexlib2.iface.DexFile;
 import org.jf.dexlib2.rewriter.DexRewriter;

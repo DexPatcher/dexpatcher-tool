@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lanchon.dexpatcher.core.Context;
-import lanchon.dexpatcher.naming.anonymizer.TypeAnonymizer;
-import lanchon.dexpatcher.naming.decoder.StringDecoder;
+import lanchon.dexpatcher.transform.anonymizer.TypeAnonymizer;
+import lanchon.dexpatcher.transform.decoder.StringDecoder;
 import lanchon.multidexlib2.DexIO;
 import lanchon.multidexlib2.MultiDexIO;
 

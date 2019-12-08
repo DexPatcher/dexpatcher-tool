@@ -8,7 +8,7 @@
  * or (at your option) any later version.
  */
 
-package lanchon.dexpatcher.naming;
+package lanchon.dexpatcher.transform;
 
 import java.util.HashSet;
 

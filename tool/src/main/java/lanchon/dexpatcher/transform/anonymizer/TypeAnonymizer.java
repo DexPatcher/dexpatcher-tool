@@ -8,7 +8,7 @@
  * or (at your option) any later version.
  */
 
-package lanchon.dexpatcher.naming.anonymizer;
+package lanchon.dexpatcher.transform.anonymizer;
 
 public final class TypeAnonymizer {
 
