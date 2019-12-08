@@ -15,14 +15,13 @@ import lanchon.dexpatcher.transform.AbstractLoggingRewriter;
 import lanchon.dexpatcher.transform.decoder.DexDecoderModule.ItemType;
 
 import org.jf.dexlib2.iface.DexFile;
-import org.jf.dexlib2.rewriter.DexRewriter;
 
 public final class DexDecoder extends AbstractLoggingRewriter implements DexDecoderModule.ItemRewriter {
 
 	public static DexFile decode(DexFile dex, StringDecoder stringDecoder, Logger logger, String logPrefix,
 			Logger.Level infoLevel, Logger.Level errorLevel) {
 		DexDecoder decoder = new DexDecoder(stringDecoder, logger, logPrefix, infoLevel, errorLevel);
-		return new DexRewriter(new DexDecoderModule(decoder)).rewriteDexFile(dex);
+		return decoder.transformDexFile(dex, new DexDecoderModule(decoder));
 	}
 
 	private final class ErrorHandler extends MemberContext implements StringDecoder.ErrorHandler {
