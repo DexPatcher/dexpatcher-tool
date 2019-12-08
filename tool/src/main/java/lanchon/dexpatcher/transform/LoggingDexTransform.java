@@ -15,9 +15,31 @@ import java.util.HashSet;
 import lanchon.dexpatcher.core.logger.Logger;
 import lanchon.dexpatcher.core.util.Label;
 
+import org.jf.dexlib2.iface.DexFile;
+import org.jf.dexlib2.rewriter.RewriterModule;
+
 public abstract class LoggingDexTransform extends DexTransform {
 
 	private static final boolean LOG_REWRITTEN_TYPES = false;
+
+	public interface LoggingTransform extends Transform {
+		void stopLogging();
+	}
+
+	public static void stopLogging(DexFile dex) {
+		for (Transform t : getTransforms(dex)) {
+			if (t instanceof LoggingTransform) ((LoggingTransform) t).stopLogging();
+		}
+	}
+
+	protected class LoggingTransformRewriter extends TransformRewriter {
+		protected class Rewritten extends TransformRewriter.Rewritten implements LoggingTransform {
+			public Rewritten(DexFile dex) { super(dex); }
+			@Override public void stopLogging() { LoggingDexTransform.this.stopLogging(); }
+		}
+		public LoggingTransformRewriter(RewriterModule module) { super(module); }
+		@Override public DexFile rewriteDexFile(DexFile dex) { return new Rewritten(dex); }
+	}
 
 	protected abstract class MemberContext {
 
@@ -46,14 +68,18 @@ public abstract class LoggingDexTransform extends DexTransform {
 
 	}
 
-	private final Logger logger;
-	private final String logPrefix;
+	private Logger logger;
+	private String logPrefix;
 
-	private final HashSet<String> loggedMessages = new HashSet<>();
+	private HashSet<String> loggedMessages = new HashSet<>();
 
 	protected LoggingDexTransform(Logger logger, String logPrefix) {
 		this.logger = logger;
 		this.logPrefix = logPrefix;
+	}
+
+	protected DexFile transformDexFile(DexFile dex, RewriterModule module) {
+		return new LoggingTransformRewriter(module).rewriteDexFile(dex);
 	}
 
 	public final StringBuilder getBaseMessageHeader() {
@@ -66,7 +92,7 @@ public abstract class LoggingDexTransform extends DexTransform {
 		// NOTE: Logger level is assumed to be constant during renaming.
 		// This is why the call to logger.isLogging() is not synchronized.
 		// NOTE: A null value for level disables logging.
-		return level != null && logger.isLogging(level);
+		return level != null && logger != null && logger.isLogging(level);
 	}
 
 	public final void log(Logger.Level level, String message) {
@@ -75,6 +101,12 @@ public abstract class LoggingDexTransform extends DexTransform {
 				if (loggedMessages.add(message)) logger.log(level, message);
 			}
 		}
+	}
+
+	public void stopLogging() {
+		logger = null;
+		logPrefix = null;
+		loggedMessages = null;
 	}
 
 }
