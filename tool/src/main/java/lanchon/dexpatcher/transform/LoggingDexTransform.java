@@ -19,7 +19,7 @@ import org.jf.dexlib2.iface.DexFile;
 import org.jf.dexlib2.rewriter.DexRewriter;
 import org.jf.dexlib2.rewriter.RewriterModule;
 
-public abstract class AbstractLoggingRewriter {
+public abstract class LoggingDexTransform {
 
 	private static final boolean LOG_REWRITTEN_TYPES = false;
 
@@ -55,7 +55,7 @@ public abstract class AbstractLoggingRewriter {
 
 	private final HashSet<String> loggedMessages = new HashSet<>();
 
-	protected AbstractLoggingRewriter(Logger logger, String logPrefix) {
+	protected LoggingDexTransform(Logger logger, String logPrefix) {
 		this.logger = logger;
 		this.logPrefix = logPrefix;
 	}

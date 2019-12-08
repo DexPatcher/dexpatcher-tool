@@ -11,12 +11,12 @@
 package lanchon.dexpatcher.transform.decoder;
 
 import lanchon.dexpatcher.core.logger.Logger;
-import lanchon.dexpatcher.transform.AbstractLoggingRewriter;
+import lanchon.dexpatcher.transform.LoggingDexTransform;
 import lanchon.dexpatcher.transform.decoder.DexDecoderModule.ItemType;
 
 import org.jf.dexlib2.iface.DexFile;
 
-public final class DexDecoder extends AbstractLoggingRewriter implements DexDecoderModule.ItemRewriter {
+public final class DexDecoder extends LoggingDexTransform implements DexDecoderModule.ItemRewriter {
 
 	public static DexFile decode(DexFile dex, StringDecoder stringDecoder, Logger logger, String logPrefix,
 			Logger.Level infoLevel, Logger.Level errorLevel) {
