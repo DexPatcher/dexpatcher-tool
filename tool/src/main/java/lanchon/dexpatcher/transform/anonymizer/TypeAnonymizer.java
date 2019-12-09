@@ -117,8 +117,8 @@ public final class TypeAnonymizer {
 
 		if (isAllDigits(type, numberStart, numberEnd)) {
 			if (reanonymize && currentLevel < level) {
-				errorHandler.onError(type, "class '" + type.substring(simpleStart, innerEnd) +
-						"' cannot be " + level + "-level reanonymized");
+				errorHandler.onError(type, "cannot reanonymize '" + type.substring(simpleStart, innerEnd) + "'" +
+						(level == 1 ? "" : level == 2 ? " twice" : " " + level + " times"));
 
 
 

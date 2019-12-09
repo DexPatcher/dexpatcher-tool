@@ -240,7 +240,7 @@ debug: reanonymize output: type 'test.Main$AnonymousClasses$Anon1': reanonymized
 debug: reanonymize output: type 'test.Main$AnonymousClasses$AnonAnon1$AnonAnon1': reanonymized to 'test.Main$AnonymousClasses$Anon1$1'
 debug: reanonymize output: type 'test.Main$AnonymousClasses$AnonAnon1': reanonymized to 'test.Main$AnonymousClasses$Anon1'
 debug: reanonymize output: type 'test.Main$AnonymousClasses$AnonAnon1$AnonAnonAnonAnon1': reanonymized to 'test.Main$AnonymousClasses$Anon1$AnonAnon1'
-warning: reanonymize output: type 'test.Main$AnonymousClasses$42': class 'Main$AnonymousClasses$42' cannot be 1-level reanonymized
+warning: reanonymize output: type 'test.Main$AnonymousClasses$42': cannot reanonymize 'Main$AnonymousClasses$42'
 debug: write 'build/patched.dex': 34 types
 0 error(s), 14 warning(s)
 
