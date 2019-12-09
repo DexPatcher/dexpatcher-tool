@@ -115,37 +115,40 @@ public final class TypeAnonymizer {
 		// The space where the number should be is type.substring(numberStart, numberEnd) and is non-empty.
 		if (!(numberStart < numberEnd)) throw new AssertionError("Invalid anonymous class number index range");
 
-		if (isAllDigits(type, numberStart, numberEnd)) {
-			if (reanonymize && currentLevel < level) {
-				errorHandler.onError(type, "cannot reanonymize '" + type.substring(simpleStart, innerEnd) + "'" +
-						(level == 1 ? "" : level == 2 ? " twice" : " " + level + " times"));
-			} else {
-
-				// Rewrite the type, tail first if needed.
-				String rewrittenTail = hasNestedInner ?
-						anonymizeTypeTail(type, level + 1, simpleStart, innerEnd, innerEnd, errorHandler) : null;
-				int rewrittenLength = hasNestedInner ? innerEnd + rewrittenTail.length() : length;
-				int lengthChange = reanonymize ? -totalLength : +totalLength;
-				StringBuilder sb = new StringBuilder(rewrittenLength - start + lengthChange);
-				sb.append(type, start, innerStart);
-				if (reanonymize) {
-					sb.append(type, innerStart + level * prefixLength, innerEnd - level * suffixLength);
-				} else {
-					for (int i = 0; i < level; i++) sb.append(prefix);
-					sb.append(type, innerStart, innerEnd);
-					for (int i = 0; i < level; i++) sb.append(suffix);
-				}
-				if (hasNestedInner) {
-					sb.append(rewrittenTail);
-				} else {
-					sb.append(type, innerEnd, length);
-				}
-				return sb.toString();
-
-			}
+		// Decide whether this inner class name has to be rewritten.
+		boolean rewriteInner = isAllDigits(type, numberStart, numberEnd);
+		if (rewriteInner && reanonymize && currentLevel < level) {
+			errorHandler.onError(type, "cannot reanonymize '" + type.substring(simpleStart, innerEnd) + "'" +
+					(level == 1 ? "" : level == 2 ? " twice" : " " + level + " times"));
+			rewriteInner = false;
 		}
-		return hasNestedInner ? anonymizeTypeTail(type, level, simpleStart, start, innerEnd, errorHandler) :
-				type.substring(start);
+
+		// If not rewriting this inner class name, then rewrite the type tail if needed.
+		if (!rewriteInner) {
+			return hasNestedInner ? anonymizeTypeTail(type, level, simpleStart, start, innerEnd, errorHandler) :
+					type.substring(start);
+		}
+
+		// Else rewrite the type, tail first if needed.
+		String rewrittenTail = hasNestedInner ?
+				anonymizeTypeTail(type, level + 1, simpleStart, innerEnd, innerEnd, errorHandler) : null;
+		int rewrittenLength = hasNestedInner ? innerEnd + rewrittenTail.length() : length;
+		int lengthChange = reanonymize ? -totalLength : +totalLength;
+		StringBuilder sb = new StringBuilder(rewrittenLength - start + lengthChange);
+		sb.append(type, start, innerStart);
+		if (reanonymize) {
+			sb.append(type, innerStart + level * prefixLength, innerEnd - level * suffixLength);
+		} else {
+			for (int i = 0; i < level; i++) sb.append(prefix);
+			sb.append(type, innerStart, innerEnd);
+			for (int i = 0; i < level; i++) sb.append(suffix);
+		}
+		if (hasNestedInner) {
+			sb.append(rewrittenTail);
+		} else {
+			sb.append(type, innerEnd, length);
+		}
+		return sb.toString();
 
 	}
 
