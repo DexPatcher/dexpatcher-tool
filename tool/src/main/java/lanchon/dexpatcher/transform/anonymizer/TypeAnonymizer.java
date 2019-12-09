@@ -119,10 +119,6 @@ public final class TypeAnonymizer {
 			if (reanonymize && currentLevel < level) {
 				errorHandler.onError(type, "cannot reanonymize '" + type.substring(simpleStart, innerEnd) + "'" +
 						(level == 1 ? "" : level == 2 ? " twice" : " " + level + " times"));
-
-
-
-
 			} else {
 
 				// Rewrite the type, tail first if needed.
