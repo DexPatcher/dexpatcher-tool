@@ -12,9 +12,10 @@ package lanchon.dexpatcher;
 
 import java.util.List;
 
-import lanchon.dexpatcher.transform.decoder.StringDecoder;
+import lanchon.dexpatcher.Processor.PreTransform;
 import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.logger.Logger;
+import lanchon.dexpatcher.transform.decoder.StringDecoder;
 import lanchon.multidexlib2.DexIO;
 
 public class Configuration {
@@ -48,6 +49,8 @@ public class Configuration {
 
 	public String codeMarker = StringDecoder.DEFAULT_CODE_MARKER;
 	public boolean treatDecodeErrorsAsWarnings;
+
+	public PreTransform preTransform = Processor.DEFAULT_PRE_TRANSFORM;
 
 	public Logger.Level logLevel = Context.DEFAULT_LOG_LEVEL;
 

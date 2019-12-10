@@ -29,6 +29,8 @@ usage: dexpatcher [<option> ...] [--output <patched-dex-or-dir>]
  -o,--output <dex-or-dir>     name of output file or directory
  -P,--path-root <root>        output absolute paths of source code files
  -p,--path                    output relative paths of source code files
+    --pre-transform <set>     add pre-transform stages (default: 'out')
+                              (<set>: 'none'|'dry'|'out'|'inout'|'all')
  -q,--quiet                   do not output warnings
     --reanon-output <plan>    reanonymize anonymous classes in output
     --reanon-patches <plan>   reanonymize anonymous classes in patches
@@ -232,8 +234,6 @@ debug: type 'test.Main$Derived': method '<init>():void': (Main.java:224): ignore
 debug: type 'test.Main$Derived': method 'source_method():void': (Main.java:231): edit
 debug: type 'test.Main$Derived': method 'source_method():void': target 'method': (Main.java:231): 'public' modifier changed to 'private' in renamed method
 debug: type 'test.Main$Derived': method 'method():void': (Main.java:234): add
-info: write 'build/patched.dex'
-debug: write 'build/patched.dex': dex version '035'
 debug: reanonymize output: type 'test.Main$AnonymousClasses$Anon1$AnonAnon1$Inner': reanonymized to 'test.Main$AnonymousClasses$1$1$Inner'
 debug: reanonymize output: type 'test.Main$AnonymousClasses$Anon1$AnonAnon1': reanonymized to 'test.Main$AnonymousClasses$1$1'
 debug: reanonymize output: type 'test.Main$AnonymousClasses$Anon1': reanonymized to 'test.Main$AnonymousClasses$1'
@@ -241,6 +241,8 @@ debug: reanonymize output: type 'test.Main$AnonymousClasses$AnonAnon1$AnonAnon1'
 debug: reanonymize output: type 'test.Main$AnonymousClasses$AnonAnon1': reanonymized to 'test.Main$AnonymousClasses$Anon1'
 debug: reanonymize output: type 'test.Main$AnonymousClasses$AnonAnon1$AnonAnonAnonAnon1': reanonymized to 'test.Main$AnonymousClasses$Anon1$AnonAnon1'
 warning: reanonymize output: type 'test.Main$AnonymousClasses$42': cannot reanonymize 'Main$AnonymousClasses$42'
+info: write 'build/patched.dex'
+debug: write 'build/patched.dex': dex version '035'
 debug: write 'build/patched.dex': 34 types
 0 error(s), 14 warning(s)
 

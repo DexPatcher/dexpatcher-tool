@@ -13,6 +13,7 @@ package lanchon.dexpatcher;
 import java.util.ArrayList;
 import java.util.List;
 
+import lanchon.dexpatcher.Processor.PreTransform;
 import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.transform.anonymizer.TypeAnonymizer;
 import lanchon.dexpatcher.transform.decoder.StringDecoder;
@@ -86,6 +87,14 @@ public class Parser {
 			throw new ParseException("Invalid code marker: '" + config.codeMarker + "'");
 		}
 		config.treatDecodeErrorsAsWarnings = cl.hasOption("no-decode-errors");
+
+		String preTransformSet = cl.getOptionValue("pre-transform", null);
+		if (preTransformSet != null) {
+			config.preTransform = PreTransform.parse(preTransformSet);
+			if (config.preTransform == null) {
+				throw new ParseException("Invalid pre-transform set: '" + preTransformSet + "'");
+			}
+		}
 
 		config.logLevel = WARN;
 		if (cl.hasOption("quiet")) config.logLevel = ERROR;
@@ -165,6 +174,15 @@ public class Parser {
 				StringDecoder.DEFAULT_CODE_MARKER + "')");
 		o.setArgName("marker"); options.addOption(o);
 		options.addOption(new Option(null, "no-decode-errors", false, "treat identifier decode errors as warnings"));
+
+		StringBuilder sb = new StringBuilder();
+		for (PreTransform pt : PreTransform.values()) {
+			if (sb.length() != 0) sb.append("|");
+			sb.append("'").append(pt.format()).append("'");
+		}
+		o = new Option(null, "pre-transform", true, "add pre-transform stages (default: '" +
+				Processor.DEFAULT_PRE_TRANSFORM.format() + "') (<set>: " + sb + ")");
+		o.setArgName("set"); options.addOption(o);
 
 		options.addOption(new Option("q", "quiet", false, "do not output warnings"));
 		options.addOption(new Option("v", "verbose", false, "output extra information"));

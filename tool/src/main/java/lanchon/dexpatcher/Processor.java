@@ -12,10 +12,14 @@ package lanchon.dexpatcher;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 
 import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.DexPatcher;
 import lanchon.dexpatcher.core.logger.Logger;
+import lanchon.dexpatcher.transform.DexTransform;
+import lanchon.dexpatcher.transform.DexVisitor;
+import lanchon.dexpatcher.transform.LoggingDexTransform;
 import lanchon.dexpatcher.transform.anonymizer.DexAnonymizer;
 import lanchon.dexpatcher.transform.anonymizer.TypeAnonymizer;
 import lanchon.dexpatcher.transform.decoder.DexDecoder;
@@ -33,6 +37,31 @@ import org.jf.dexlib2.iface.DexFile;
 import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 
 public class Processor {
+
+	public enum PreTransform {
+
+		NONE,
+		DRY,
+		OUT,
+		INOUT,
+		ALL;
+
+		public static PreTransform parse(String s) {
+			s = s /* .replace('-', '_') */ .toUpperCase(Locale.ROOT);
+			try {
+				return PreTransform.valueOf(s);
+			} catch (IllegalArgumentException e) {
+				return null;
+			}
+		}
+
+		public String format() {
+			return name().toLowerCase(Locale.ROOT) /* .replace('_', '-') */ ;
+		}
+
+	}
+
+	public static final PreTransform DEFAULT_PRE_TRANSFORM = PreTransform.OUT;
 
 	public static boolean processFiles(Logger logger, Configuration config) throws IOException {
 		return new Processor(logger, config).processFiles();
@@ -63,6 +92,7 @@ public class Processor {
 		dex = anonymizeDex(dex, config.deanonSourcePlan, false, "deanonymize source");
 		dex = decodeDex(dex, config.decodeSource, "decode source");
 		dex = anonymizeDex(dex, config.reanonSourcePlan, true, "reanonymize source");
+		if (config.preTransform == PreTransform.INOUT) preTransformDex(dex, "transform source");
 		int types = dex.getClasses().size();
 
 		for (String patchFile : config.patchFiles) {
@@ -70,12 +100,18 @@ public class Processor {
 			patchDex = anonymizeDex(patchDex, config.deanonPatchesPlan, false, "deanonymize patch");
 			patchDex = decodeDex(patchDex, config.decodePatches, "decode patch");
 			patchDex = anonymizeDex(patchDex, config.reanonPatchesPlan, true, "reanonymize patch");
+			if (config.preTransform == PreTransform.INOUT) preTransformDex(patchDex, "transform patch");
 			types += patchDex.getClasses().size();
 			dex = processDex(dex, patchDex);
 		}
 
 		dex = decodeDex(dex, config.decodeOutput, "decode output");
 		dex = anonymizeDex(dex, config.reanonOutputPlan, true, "reanonymize output");
+
+		boolean writeDex = logger.hasNotLoggedErrors() && !config.dryRun && config.patchedFile != null;
+		boolean preTransformOutput = (config.preTransform == PreTransform.DRY && !writeDex) ||
+				config.preTransform == PreTransform.OUT || config.preTransform == PreTransform.INOUT;
+		if (preTransformOutput) preTransformDex(dex, "transform output");
 
 		if (logger.hasNotLoggedErrors()) {
 			if (config.dryRun) {
@@ -98,15 +134,31 @@ public class Processor {
 	}
 
 	private DexFile anonymizeDex(DexFile dex, String plan, boolean reanonymize, String logPrefix) {
-		if (plan == null) return dex;
-		return DexAnonymizer.anonymize(dex, new TypeAnonymizer(plan, reanonymize), logger, logPrefix, DEBUG,
-				config.treatReanonymizeErrorsAsWarnings ? WARN : ERROR);
+		if (plan != null) {
+			dex = DexAnonymizer.anonymize(dex, new TypeAnonymizer(plan, reanonymize), logger, logPrefix, DEBUG,
+					config.treatReanonymizeErrorsAsWarnings ? WARN : ERROR);
+			if (config.preTransform == PreTransform.ALL) preTransformDex(dex, logPrefix);
+		}
+		return dex;
 	}
 
 	private DexFile decodeDex(DexFile dex, boolean enabled, String logPrefix) {
-		if (!enabled) return dex;
-		return DexDecoder.decode(dex, stringDecoder, logger, logPrefix, DEBUG,
-				config.treatDecodeErrorsAsWarnings ? WARN : ERROR);
+		if (enabled) {
+			dex = DexDecoder.decode(dex, stringDecoder, logger, logPrefix, DEBUG,
+					config.treatDecodeErrorsAsWarnings ? WARN : ERROR);
+			if (config.preTransform == PreTransform.ALL) preTransformDex(dex, logPrefix);
+		}
+		return dex;
+	}
+
+	private void preTransformDex(DexFile dex, String logPrefix) {
+		if (dex instanceof DexTransform.Transform) {
+			long time = System.nanoTime();
+			new DexVisitor().visitDexFile(dex);
+			time = System.nanoTime() - time;
+			logStats(logPrefix, dex.getClasses().size(), time);
+			LoggingDexTransform.stopLogging(dex);
+		}
 	}
 
 	private Context createContext() {
