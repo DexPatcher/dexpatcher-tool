@@ -10,6 +10,8 @@
 
 package lanchon.dexpatcher;
 
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +39,8 @@ public class Parser {
 
 		Options options = getOptions();
 		CommandLine cl = new PosixParser().parse(options, args);
+
+		// Main options:
 
 		if (cl.hasOption("help")) {
 			printUsage();
@@ -69,6 +73,19 @@ public class Parser {
 		config.annotationPackage = cl.getOptionValue("annotations", Context.DEFAULT_ANNOTATION_PACKAGE);
 		config.constructorAutoIgnoreDisabled = cl.hasOption("no-auto-ignore");
 
+		config.logLevel = WARN;
+		if (cl.hasOption("quiet")) config.logLevel = ERROR;
+		if (cl.hasOption("verbose")) config.logLevel = INFO;
+		if (cl.hasOption("debug")) config.logLevel = DEBUG;
+
+		if (cl.hasOption("path")) config.sourceCodeRoot = "";
+		config.sourceCodeRoot = cl.getOptionValue("path-root", config.sourceCodeRoot);
+		config.timingStats = cl.hasOption("stats");
+
+		config.dryRun = cl.hasOption("dry-run");
+
+		// Code transform options:
+
 		config.deanonSourcePlan = getPlan(cl, "deanon-source");
 		config.deanonPatchesPlan = getPlan(cl, "deanon-patches");
 
@@ -96,17 +113,6 @@ public class Parser {
 			}
 		}
 
-		config.logLevel = WARN;
-		if (cl.hasOption("quiet")) config.logLevel = ERROR;
-		if (cl.hasOption("verbose")) config.logLevel = INFO;
-		if (cl.hasOption("debug")) config.logLevel = DEBUG;
-
-		if (cl.hasOption("path")) config.sourceCodeRoot = "";
-		config.sourceCodeRoot = cl.getOptionValue("path-root", config.sourceCodeRoot);
-		config.timingStats = cl.hasOption("stats");
-
-		config.dryRun = cl.hasOption("dry-run");
-
 		return config;
 
 	}
@@ -120,15 +126,38 @@ public class Parser {
 	}
 
 	public static void printUsage() {
-		System.out.println(Main.getHeader());
+		PrintWriter writer = new PrintWriter(System.out);
+		printUsage(writer, new HelpFormatter());
+		writer.flush();
+	}
+
+	public static void printUsage(PrintWriter writer, HelpFormatter formatter) {
+		int width = formatter.getWidth();
+		int leftPadding = formatter.getLeftPadding();
+		int descPadding = formatter.getDescPadding();
 		String usage = "dexpatcher [<option> ...] [--output <patched-dex-or-dir>] " +
 				"<source-dex-apk-or-dir> [<patch-dex-apk-or-dir> ...]";
-		new HelpFormatter().printHelp(usage, getOptions());
+		formatter.printWrapped(writer, width, Main.getHeader());
+		writer.println();
+		formatter.printUsage(writer, width, usage);
+		writer.println();
+		formatter.printWrapped(writer, width, "main options:");
+		formatter.printOptions(writer, width, addMainOptions(new Options()), leftPadding, descPadding);
+		writer.println();
+		formatter.printWrapped(writer, width, "code transform options:");
+		formatter.printOptions(writer, width, addTransformOptions(new Options()), leftPadding, descPadding);
+		writer.println();
 	}
 
 	private static Options getOptions() {
-
 		Options options = new Options();
+		addMainOptions(options);
+		addTransformOptions(options);
+		return options;
+	}
+
+	private static Options addMainOptions(Options options) {
+
 		Option o;
 
 		o = new Option("o", "output", true, "name of output file or directory");
@@ -151,6 +180,28 @@ public class Parser {
 				Context.DEFAULT_ANNOTATION_PACKAGE + "')");
 		o.setArgName("package"); options.addOption(o);
 		options.addOption(new Option(null, "no-auto-ignore", false, "no trivial default constructor auto-ignore"));
+
+		options.addOption(new Option("q", "quiet", false, "do not output warnings"));
+		options.addOption(new Option("v", "verbose", false, "output extra information"));
+		options.addOption(new Option("d", "debug", false, "output debugging information"));
+
+		options.addOption(new Option("p", "path", false, "output relative paths of source code files"));
+		o = new Option("P", "path-root", true, "output absolute paths of source code files");
+		o.setArgName("root"); options.addOption(o);
+		options.addOption(new Option(null, "stats", false, "output timing statistics"));
+
+		options.addOption(new Option(null, "dry-run", false, "do not write output files (much faster)"));
+
+		options.addOption(new Option(null, "version", false, "print version information and exit"));
+		options.addOption(new Option("?", "help", false, "print this help message and exit"));
+
+		return options;
+
+	}
+
+	private static Options addTransformOptions(Options options) {
+
+		Option o;
 
 		o = new Option(null, "deanon-source", true, "deanonymize anonymous classes in source");
 		o.setArgName("plan"); options.addOption(o);
@@ -183,20 +234,6 @@ public class Parser {
 		o = new Option(null, "pre-transform", true, "add pre-transform stages (default: '" +
 				Processor.DEFAULT_PRE_TRANSFORM.format() + "') (<set>: " + sb + ")");
 		o.setArgName("set"); options.addOption(o);
-
-		options.addOption(new Option("q", "quiet", false, "do not output warnings"));
-		options.addOption(new Option("v", "verbose", false, "output extra information"));
-		options.addOption(new Option("d", "debug", false, "output debugging information"));
-
-		options.addOption(new Option("p", "path", false, "output relative paths of source code files"));
-		o = new Option("P", "path-root", true, "output absolute paths of source code files");
-		o.setArgName("root"); options.addOption(o);
-		options.addOption(new Option(null, "stats", false, "output timing statistics"));
-
-		options.addOption(new Option(null, "dry-run", false, "do not write output files (much faster)"));
-
-		options.addOption(new Option(null, "version", false, "print version information and exit"));
-		options.addOption(new Option("?", "help", false, "print this help message and exit"));
 
 		return options;
 

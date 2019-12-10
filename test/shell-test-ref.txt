@@ -4,40 +4,46 @@ $ d8 --no-desugaring --output build/patch.dex.zip patch/build/libs/patch.jar
 
 $ dexpatcher --help
 DexPatcher version 1.8.0-alpha3 by Lanchon (https://dexpatcher.github.io/)
+
 usage: dexpatcher [<option> ...] [--output <patched-dex-or-dir>]
                   <source-dex-apk-or-dir> [<patch-dex-apk-or-dir> ...]
+
+main options:
  -?,--help                    print this help message and exit
  -a,--api-level <n>           android api level (default: auto-detect)
     --annotations <package>   package name of DexPatcher annotations
                               (default: 'lanchon.dexpatcher.annotation')
-    --code-marker <marker>    identifier code marker (default: '_$$_')
  -d,--debug                   output debugging information
+    --dry-run                 do not write output files (much faster)
+ -J,--multi-dex-jobs <n>      multi-dex thread count (implies: -m -M)
+                              (default: available processors up to 4)
+ -m,--multi-dex               enable multi-dex support
+ -M,--multi-dex-threaded      multi-threaded multi-dex (implies: -m)
+    --max-dex-pool-size <n>   maximum size of dex pools (default: 65536)
+    --no-auto-ignore          no trivial default constructor auto-ignore
+ -o,--output <dex-or-dir>     name of output file or directory
+ -p,--path                    output relative paths of source code files
+ -P,--path-root <root>        output absolute paths of source code files
+ -q,--quiet                   do not output warnings
+    --stats                   output timing statistics
+ -v,--verbose                 output extra information
+    --version                 print version information and exit
+
+code transform options:
+    --code-marker <marker>    identifier code marker (default: '_$$_')
     --deanon-patches <plan>   deanonymize anonymous classes in patches
     --deanon-source <plan>    deanonymize anonymous classes in source
     --decode-output           decode identifiers in output
     --decode-patches          decode identifiers in patches
     --decode-source           decode identifiers in source
-    --dry-run                 do not write output files (much faster)
- -J,--multi-dex-jobs <n>      multi-dex thread count (implies: -m -M)
-                              (default: available processors up to 4)
- -M,--multi-dex-threaded      multi-threaded multi-dex (implies: -m)
- -m,--multi-dex               enable multi-dex support
-    --max-dex-pool-size <n>   maximum size of dex pools (default: 65536)
-    --no-auto-ignore          no trivial default constructor auto-ignore
     --no-decode-errors        treat identifier decode errors as warnings
     --no-reanon-errors        treat reanonymize errors as warnings
- -o,--output <dex-or-dir>     name of output file or directory
- -P,--path-root <root>        output absolute paths of source code files
- -p,--path                    output relative paths of source code files
     --pre-transform <set>     add pre-transform stages (default: 'out')
                               (<set>: 'none'|'dry'|'out'|'inout'|'all')
- -q,--quiet                   do not output warnings
     --reanon-output <plan>    reanonymize anonymous classes in output
     --reanon-patches <plan>   reanonymize anonymous classes in patches
     --reanon-source <plan>    reanonymize anonymous classes in source
-    --stats                   output timing statistics
- -v,--verbose                 output extra information
-    --version                 print version information and exit
+
 
 $ dexpatcher build/source.dex.zip build/patch.dex.zip --output build/patched.dex --deanon-source Anon\[\] --reanon-output Anon\[\] --deanon-patches \[\]_patch --no-reanon-errors --decode-source --decode-patches --no-decode-errors --debug
 DexPatcher version 1.8.0-alpha3 by Lanchon (https://dexpatcher.github.io/)
