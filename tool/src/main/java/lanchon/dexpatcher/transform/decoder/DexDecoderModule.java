@@ -43,7 +43,7 @@ public class DexDecoderModule extends RewriterModule {
 		PARAMETER_NAME("parameter"),
 		LOCAL_VARIABLE_NAME("local variable"),
 		ANNOTATION_ELEMENT_NAME("annotation element name"),
-		ANNOTATION_ELEMENT_VALUE("annotation element value");
+		ANNOTATION_ELEMENT_STRING_VALUE("annotation element value");
 
 		public final String label;
 
@@ -87,7 +87,7 @@ public class DexDecoderModule extends RewriterModule {
 	}
 
 	public final String rewriteAnnotationElementStringValue(String value) {
-		return itemRewriter.rewriteItem(null, ItemType.ANNOTATION_ELEMENT_VALUE, value);
+		return itemRewriter.rewriteItem(null, ItemType.ANNOTATION_ELEMENT_STRING_VALUE, value);
 	}
 
 	@Override
