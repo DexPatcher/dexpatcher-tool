@@ -10,6 +10,8 @@
 
 package lanchon.dexpatcher.transform.decoder;
 
+import lanchon.dexpatcher.transform.DelegatorRewriterModule;
+
 import org.jf.dexlib2.DebugItemType;
 import org.jf.dexlib2.ValueType;
 import org.jf.dexlib2.base.reference.BaseStringReference;
@@ -27,6 +29,8 @@ import org.jf.dexlib2.iface.value.EncodedValue;
 import org.jf.dexlib2.iface.value.StringEncodedValue;
 import org.jf.dexlib2.rewriter.AnnotationElementRewriter;
 import org.jf.dexlib2.rewriter.DebugItemRewriter;
+import org.jf.dexlib2.rewriter.DexRewriter;
+import org.jf.dexlib2.rewriter.EncodedValueRewriter;
 import org.jf.dexlib2.rewriter.FieldReferenceRewriter;
 import org.jf.dexlib2.rewriter.MethodParameterRewriter;
 import org.jf.dexlib2.rewriter.MethodReferenceRewriter;
@@ -191,6 +195,34 @@ public class DexDecoderModule extends RewriterModule {
 		};
 	}
 
+	protected static class AnnotationElementDecoderModule extends DelegatorRewriterModule<DexDecoderModule> {
+		public AnnotationElementDecoderModule(DexDecoderModule module) {
+			super(module);
+		}
+		@Override
+		public Rewriter<EncodedValue> getEncodedValueRewriter(Rewriters rewriters) {
+			return new EncodedValueRewriter(rewriters) {
+				@Override
+				public EncodedValue rewrite(EncodedValue value) {
+					switch (value.getValueType()) {
+						case ValueType.STRING:
+							final StringEncodedValue stringValue = (StringEncodedValue) value;
+							return new BaseStringEncodedValue() {
+								@Override
+								public String getValue() {
+									return module.rewriteAnnotationElementStringValue(stringValue.getValue());
+								}
+							};
+						default:
+							return super.rewrite(value);
+					}
+				}
+			};
+		}
+	}
+
+	protected final DexRewriter annotationElementDecoder = new DexRewriter(new AnnotationElementDecoderModule(this));
+
 	@Override
 	public Rewriter<AnnotationElement> getAnnotationElementRewriter(Rewriters rewriters) {
 		return new AnnotationElementRewriter(rewriters) {
@@ -203,19 +235,7 @@ public class DexDecoderModule extends RewriterModule {
 					}
 					@Override
 					public EncodedValue getValue() {
-						EncodedValue value = annotationElement.getValue();
-						switch (value.getValueType()) {
-							case ValueType.STRING:
-								final StringEncodedValue stringValue = (StringEncodedValue) value;
-								return new BaseStringEncodedValue() {
-									@Override
-									public String getValue() {
-										return rewriteAnnotationElementStringValue(stringValue.getValue());
-									}
-								};
-							default:
-								return super.getValue();
-						}
+						return annotationElementDecoder.getEncodedValueRewriter().rewrite(annotationElement.getValue());
 					}
 				};
 			}
