@@ -112,7 +112,9 @@ public class Context {
 	// Extras
 
 	private String getMarkerTypeDescriptor(Marker marker) {
-		return TypeName.toClassDescriptor(annotationPackage + "." + marker.getClassName());
+		String className = marker.getClassName();
+		if (annotationPackage.length() != 0) className = annotationPackage + '.' + className;
+		return TypeName.toClassDescriptor(className);
 	}
 
 	public Action getActionFromMarkerTypeDescriptor(String descriptor) {
