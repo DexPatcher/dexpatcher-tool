@@ -85,7 +85,8 @@ public class Context {
 		this.sourceCodeRoot = sourceCodeRoot;
 
 		Action[] actions = Action.values();
-		actionMap = new HashMap<>(actions.length);
+		int sizeFactor = 4;
+		actionMap = new HashMap<>(sizeFactor * actions.length);
 		for (Action action : actions) {
 			Marker marker = action.getMarker();
 			if (marker != null) actionMap.put(getMarkerTypeDescriptor(marker), action);
