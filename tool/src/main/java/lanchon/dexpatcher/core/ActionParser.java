@@ -27,8 +27,8 @@ public class ActionParser {
 		int sizeFactor = 4;
 		actionMap = new HashMap<>(sizeFactor * actions.length);
 		for (Action action : actions) {
-			Marker marker = action.getMarker();
-			if (marker != null) actionMap.put(getMarkerTypeDescriptor(marker), action);
+			String actionTypeDescriptor = getTypeDescriptorFromAction(action);
+			if (actionTypeDescriptor != null) actionMap.put(actionTypeDescriptor, action);
 		}
 	}
 
@@ -36,14 +36,15 @@ public class ActionParser {
 		return annotationPackage;
 	}
 
-	private String getMarkerTypeDescriptor(Marker marker) {
-		String className = marker.getClassName();
+	private String getTypeDescriptorFromAction(Action action) {
+		String className = action.getClassName();
+		if (className == null) return null;
 		if (annotationPackage.length() != 0) className = annotationPackage + '.' + className;
 		return TypeName.toClassDescriptor(className);
 	}
 
-	public Action getActionFromMarkerTypeDescriptor(String descriptor) {
-		return actionMap.get(descriptor);
+	public Action getActionFromTypeDescriptor(String typeDescriptor) {
+		return actionMap.get(typeDescriptor);
 	}
 
 }

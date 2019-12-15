@@ -11,7 +11,6 @@
 package lanchon.dexpatcher.core.patcher;
 
 import lanchon.dexpatcher.core.Action;
-import lanchon.dexpatcher.core.Marker;
 import lanchon.dexpatcher.core.PatchException;
 import lanchon.dexpatcher.core.PatcherAnnotation;
 import lanchon.dexpatcher.core.model.BasicField;
@@ -53,7 +52,7 @@ public class FieldSetPatcher extends MemberSetPatcher<Field> {
 
 	@Override
 	protected void onPrepare(String patchId, Field patch, PatcherAnnotation annotation) throws PatchException {
-		if (annotation.getAction() == Action.REPLACE) throw invalidAnnotation(Marker.REPLACE);
+		if (annotation.getAction() == Action.REPLACE) throw invalidAnnotation(Action.REPLACE);
 		super.onPrepare(patchId, patch, annotation);
 	}
 

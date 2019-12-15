@@ -180,7 +180,7 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 		MethodParameter lastParameter = parameters.get(parameters.size() - 1);
 		Context context = getContext();
 		for (Annotation annotation : lastParameter.getAnnotations()) {
-			if (context.getActionFromMarkerTypeDescriptor(annotation.getType()) == Action.IGNORE) return true;
+			if (context.getActionFromTypeDescriptor(annotation.getType()) == Action.IGNORE) return true;
 		}
 		return false;
 	}

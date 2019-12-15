@@ -12,28 +12,9 @@ package lanchon.dexpatcher.core;
 
 import lanchon.dexpatcher.core.util.TypeName;
 
-public enum Marker {
+public final class Marker {
 
-	ADD("DexAdd"),
-	EDIT("DexEdit"),
-	REPLACE("DexReplace"),
-	REMOVE("DexRemove"),
-	IGNORE("DexIgnore"),
-	WRAP("DexWrap"),
-	PREPEND("DexPrepend"),
-	APPEND("DexAppend");
-
-	// Annotations
-
-	private final String className;
-
-	Marker(String className) {
-		this.className = className;
-	}
-
-	public String getClassName() {
-		return className;
-	}
+	private Marker() {}
 
 	// Annotation Elements
 
@@ -45,8 +26,6 @@ public enum Marker {
 	public static final String ELEM_RECURSIVE = "recursive";
 
 	public static final String ELEM_ONLY_EDIT_MEMBERS = "onlyEditMembers";                  // deprecated
-
-	public static final String ACTION_UNDEFINED = "UNDEFINED";
 
 	// Actions
 

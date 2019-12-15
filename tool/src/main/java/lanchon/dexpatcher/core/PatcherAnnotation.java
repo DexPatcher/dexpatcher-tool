@@ -27,12 +27,6 @@ import org.jf.dexlib2.iface.value.TypeEncodedValue;
 
 public class PatcherAnnotation implements ActionBasedPatcher.ActionContext {
 
-	private static Action parseActionEnum(EncodedValue value) {
-		String s = ((EnumEncodedValue) value).getValue().getName();
-		if (Marker.ACTION_UNDEFINED.equals(s)) return null;
-		return Action.valueOf(s);
-	}
-
 	public static PatcherAnnotation parse(ActionParser actionParser, Set<? extends Annotation> annotations)
 			throws PatchException {
 
@@ -40,11 +34,11 @@ public class PatcherAnnotation implements ActionBasedPatcher.ActionContext {
 		Action action = null;
 		Set<Annotation> filteredAnnotations = new LinkedHashSet<>(annotations.size());
 		for (Annotation an : annotations) {
-			Action ac = actionParser.getActionFromMarkerTypeDescriptor(an.getType());
+			Action ac = actionParser.getActionFromTypeDescriptor(an.getType());
 			if (ac != null) {
 				if (action != null) {
 					throw new PatchException("conflicting patcher annotations (" +
-							action.getMarker().getClassName() + ", " + ac.getMarker().getClassName() + ")");
+							action.getClassName() + ", " + ac.getClassName() + ")");
 				}
 				action = ac;
 				annotation = an;
@@ -82,12 +76,12 @@ public class PatcherAnnotation implements ActionBasedPatcher.ActionContext {
 			}
 			case Marker.ELEM_STATIC_CONSTRUCTOR_ACTION: {
 				if (staticConstructorAction != null) break;
-				staticConstructorAction = parseActionEnum(value);
+				staticConstructorAction = Action.fromEnumEncodedValue((EnumEncodedValue) value);
 				continue;
 			}
 			case Marker.ELEM_DEFAULT_ACTION: {
 				if (defaultAction != null) break;
-				defaultAction = parseActionEnum(value);
+				defaultAction = Action.fromEnumEncodedValue((EnumEncodedValue) value);
 				continue;
 			}
 			case Marker.ELEM_ONLY_EDIT_MEMBERS:
@@ -117,8 +111,8 @@ public class PatcherAnnotation implements ActionBasedPatcher.ActionContext {
 
 	}
 
-	public static PatchException invalidAnnotation(Marker marker) {
-		return new PatchException("invalid patcher annotation (" + marker.getClassName() + ")");
+	public static PatchException invalidAnnotation(Action action) {
+		return new PatchException("invalid patcher annotation (" + action.getClassName() + ")");
 	}
 
 	public static PatchException invalidElement(String name) {
