@@ -33,13 +33,14 @@ public class PatcherAnnotation implements ActionBasedPatcher.ActionContext {
 		return Action.valueOf(s);
 	}
 
-	public static PatcherAnnotation parse(Context context, Set<? extends Annotation> annotations) throws PatchException {
+	public static PatcherAnnotation parse(ActionParser actionParser, Set<? extends Annotation> annotations)
+			throws PatchException {
 
 		Annotation annotation = null;
 		Action action = null;
 		Set<Annotation> filteredAnnotations = new LinkedHashSet<>(annotations.size());
 		for (Annotation an : annotations) {
-			Action ac = context.getActionFromMarkerTypeDescriptor(an.getType());
+			Action ac = actionParser.getActionFromMarkerTypeDescriptor(an.getType());
 			if (ac != null) {
 				if (action != null) {
 					throw new PatchException("conflicting patcher annotations (" +
