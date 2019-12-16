@@ -10,8 +10,6 @@
 
 package lanchon.dexpatcher.core.patcher;
 
-import java.util.regex.Pattern;
-
 import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.Marker;
 import lanchon.dexpatcher.core.PatchException;
@@ -28,14 +26,6 @@ import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 
 public class PackagePatcher extends ClassSetPatcher {
 
-	private static final String PACKAGE_SUFFIX = Marker.NAME_PACKAGE_INFO + ';';
-	private static final Pattern PACKAGE_PATTERN = Pattern.compile("(?s)L(.*/)?" + Pattern.quote(Marker.NAME_PACKAGE_INFO) + ';');
-
-	private static boolean isPackageId(String id) {
-		String descriptor = Id.toClassDescriptor(id);
-		return descriptor.endsWith(PACKAGE_SUFFIX) && PACKAGE_PATTERN.matcher(descriptor).matches();
-	}
-
 	private boolean processingPackage;
 
 	public PackagePatcher(Context context) {
@@ -46,7 +36,7 @@ public class PackagePatcher extends ClassSetPatcher {
 
 	@Override
 	protected void onPrepare(String patchId, ClassDef patch, PatcherAnnotation annotation) throws PatchException {
-		processingPackage = isPackageId(patchId);
+		processingPackage = DexUtils.isPackageId(patchId);
 		if (!processingPackage) {
 			super.onPrepare(patchId, patch, annotation);
 			return;
@@ -96,7 +86,7 @@ public class PackagePatcher extends ClassSetPatcher {
 			}
 			targetId = Id.fromClassDescriptor(targetDescriptor);
 		}
-		if (!isPackageId(targetId)) throw new PatchException("target is not a package");
+		if (!DexUtils.isPackageId(targetId)) throw new PatchException("target is not a package");
 		if (shouldLogTarget(patchId, targetId)) {
 			extendLogPrefixWithTargetLabel(Label.fromClassId(targetId));
 		}
@@ -104,10 +94,10 @@ public class PackagePatcher extends ClassSetPatcher {
 	}
 
 	private void removePackage(String targetId, boolean recursive) throws PatchException {
-		String prefix = targetId.substring(0, targetId.length() - PACKAGE_SUFFIX.length());
-		Pattern pattern = Pattern.compile("(?s)" + Pattern.quote(prefix) + (recursive ? ".*;" : "[^/]*;"));
+		int prefixLength = targetId.length() - (Marker.NAME_PACKAGE_INFO.length() + 1);
+		String prefix = targetId.substring(0, prefixLength);
 		for (String id: getSourceMap().keySet()) {
-			if (id.startsWith(prefix) && pattern.matcher(id).matches()) {
+			if (id.startsWith(prefix) && (recursive || id.indexOf('/', prefixLength) < 0) && id.endsWith(";")) {
 				try {
 					addTarget(id, false);
 					if (isLogging(DEBUG)) log(DEBUG, "remove type '" + Label.fromClassId(id) + "'");

@@ -35,6 +35,18 @@ public class DexUtils {
 		return l >= 2 && descriptor.charAt(0) == 'L' && descriptor.charAt(l - 1) == ';';
 	}
 
+	private static final String PACKAGE_DESCRIPTOR_SUFFIX = '/' + Marker.NAME_PACKAGE_INFO + ';';
+	private static final String PACKAGE_DESCRIPTOR_DEFAULT = 'L' + Marker.NAME_PACKAGE_INFO + ';';
+
+	public static boolean isPackageDescriptor(String descriptor) {
+		return (descriptor.endsWith(PACKAGE_DESCRIPTOR_SUFFIX) && descriptor.charAt(0) == 'L') ||
+				descriptor.equals(PACKAGE_DESCRIPTOR_DEFAULT);
+	}
+
+	public static boolean isPackageId(String id) {
+		return DexUtils.isPackageDescriptor(Id.toClassDescriptor(id));
+	}
+
 	// Access Flags
 
 	public static int getClassAccessFlags(ClassDef classDef) {
