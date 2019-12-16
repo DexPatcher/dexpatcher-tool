@@ -37,19 +37,22 @@ public class TypeName {
 	}
 
 	public static String fromFieldDescriptor(String descriptor) {
-		if (descriptor.length() == 0) throw invalidTypeDescriptor(descriptor);
-		switch (descriptor.charAt(0)) {
-			case '[': return fromFieldDescriptor(descriptor.substring(1)) + "[]";
-			case 'L': return fromClassDescriptor(descriptor);
-			case 'Z': return "boolean";
-			case 'B': return "byte";
-			case 'S': return "short";
-			case 'C': return "char";
-			case 'I': return "int";
-			case 'J': return "long";
-			case 'F': return "float";
-			case 'D': return "double";
-			default:  throw invalidTypeDescriptor(descriptor);
+		if (descriptor.length() == 1) {
+			switch (descriptor.charAt(0)) {
+				case 'Z': return "boolean";
+				case 'B': return "byte";
+				case 'S': return "short";
+				case 'C': return "char";
+				case 'I': return "int";
+				case 'J': return "long";
+				case 'F': return "float";
+				case 'D': return "double";
+			}
+		}
+		if (descriptor.startsWith("[")) {
+			return fromFieldDescriptor(descriptor.substring(1)) + "[]";
+		} else {
+			return fromClassDescriptor(descriptor);
 		}
 	}
 
