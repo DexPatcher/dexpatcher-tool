@@ -12,9 +12,7 @@ package lanchon.dexpatcher.core;
 
 import lanchon.dexpatcher.core.util.TypeName;
 
-public final class Marker {
-
-	private Marker() {}
+public class Marker {
 
 	// Annotation Elements
 
@@ -47,5 +45,7 @@ public final class Marker {
 	public static final String NAME_STATIC_CONSTRUCTOR = "<clinit>";
 	public static final String NAME_INSTANCE_CONSTRUCTOR = "<init>";
 	public static final String NAME_PACKAGE_INFO = "package-info";
+
+	private Marker() {}
 
 }
