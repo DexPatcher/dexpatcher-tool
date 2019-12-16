@@ -34,6 +34,15 @@ public class Configuration {
 	public String annotationPackage = Context.DEFAULT_ANNOTATION_PACKAGE;
 	public boolean constructorAutoIgnoreDisabled;
 
+	public Logger.Level logLevel = Context.DEFAULT_LOG_LEVEL;
+
+	public String sourceCodeRoot;
+	public boolean timingStats;
+
+	public boolean dryRun;
+
+	// Code transform options:
+
 	public String deanonSourcePlan;
 	public boolean decodeSource;
 	public String reanonSourcePlan;
@@ -51,12 +60,5 @@ public class Configuration {
 	public boolean treatDecodeErrorsAsWarnings;
 
 	public PreTransform preTransform = Processor.DEFAULT_PRE_TRANSFORM;
-
-	public Logger.Level logLevel = Context.DEFAULT_LOG_LEVEL;
-
-	public String sourceCodeRoot;
-	public boolean timingStats;
-
-	public boolean dryRun;
 
 }
