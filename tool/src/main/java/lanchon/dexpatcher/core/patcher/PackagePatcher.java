@@ -17,7 +17,7 @@ import lanchon.dexpatcher.core.PatcherAnnotation;
 import lanchon.dexpatcher.core.util.DexUtils;
 import lanchon.dexpatcher.core.util.Id;
 import lanchon.dexpatcher.core.util.Label;
-import lanchon.dexpatcher.core.util.TypeName;
+import lanchon.dexpatcher.core.util.Target;
 
 import org.jf.dexlib2.iface.ClassDef;
 
@@ -72,20 +72,8 @@ public class PackagePatcher extends ClassSetPatcher {
 	}
 
 	private String getPackageTargetId(String patchId, ClassDef patch, PatcherAnnotation annotation) throws PatchException {
-		String targetId = patchId;
 		String target = annotation.getTarget();
-		if (target != null) {
-			String targetDescriptor;
-			if (DexUtils.isClassDescriptor(target)) {
-				targetDescriptor = target;
-			} else {
-				if (target.startsWith(".")) target = target.substring(1);
-				if (target.length() != 0) target += '.' + Marker.NAME_PACKAGE_INFO;
-				else target = Marker.NAME_PACKAGE_INFO;
-				targetDescriptor = TypeName.toClassDescriptor(target);
-			}
-			targetId = Id.fromClassDescriptor(targetDescriptor);
-		}
+		String targetId = (target != null) ? Id.fromClassDescriptor(Target.resolvePackageDescriptor(target)) : patchId;
 		if (!DexUtils.isPackageId(targetId)) throw new PatchException("target is not a package");
 		if (shouldLogTarget(patchId, targetId)) {
 			extendLogPrefixWithTargetLabel(Label.fromClassId(targetId));

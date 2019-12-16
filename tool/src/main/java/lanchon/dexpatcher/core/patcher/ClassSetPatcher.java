@@ -23,7 +23,7 @@ import lanchon.dexpatcher.core.util.DexUtils;
 import lanchon.dexpatcher.core.util.ElementalTypeRewriter;
 import lanchon.dexpatcher.core.util.Id;
 import lanchon.dexpatcher.core.util.Label;
-import lanchon.dexpatcher.core.util.TypeName;
+import lanchon.dexpatcher.core.util.Target;
 
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.ClassDef;
@@ -88,23 +88,12 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 
 	@Override
 	protected String getTargetId(String patchId, ClassDef patch, PatcherAnnotation annotation) {
-		String targetId = patchId;
 		String target = annotation.getTarget();
 		String targetClass = annotation.getTargetClass();
-		if (target != null || targetClass != null) {
-			String targetDescriptor;
-			if (target != null) {
-				if (DexUtils.isClassDescriptor(target)) {
-					targetDescriptor = target;
-				} else {
-					String base = TypeName.fromClassDescriptor(patch.getType());
-					targetDescriptor = TypeName.toClassDescriptor(resolveTarget(target, base));
-				}
-			} else {
-				targetDescriptor = targetClass;
-			}
-			targetId = Id.fromClassDescriptor(targetDescriptor);
-		}
+		String targetId =
+				(target != null) ? Id.fromClassDescriptor(Target.resolveClassDescriptor(patch.getType(), target)) :
+				(targetClass != null) ? Id.fromClassDescriptor(targetClass) :
+				patchId;
 		if (shouldLogTarget(patchId, targetId)) {
 			extendLogPrefixWithTargetLabel(Label.fromClassId(targetId));
 		}
@@ -194,20 +183,6 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 	}
 
 	// Helpers
-
-	private static String resolveTarget(String name, String base) {
-		int nameDot = name.indexOf('.');
-		if (nameDot < 0) {                      // if name is not a fully qualified name
-			int baseEnd = base.lastIndexOf('.');
-			if (name.indexOf('$') < 0) {        // if name is not a qualified nested type
-				baseEnd = Math.max(baseEnd, base.lastIndexOf('$'));
-			}
-			if (baseEnd >= 0) name = base.substring(0, baseEnd + 1) + name;
-		} else if (nameDot == 0) {              // if fully qualified name starts with '.'
-			name = name.substring(1);
-		}
-		return name;
-	}
 
 	private static ClassDef renameClass(ClassDef classDef, final String to) {
 		final String from = classDef.getType();
