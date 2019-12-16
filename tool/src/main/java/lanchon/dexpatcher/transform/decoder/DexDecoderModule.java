@@ -10,7 +10,7 @@
 
 package lanchon.dexpatcher.transform.decoder;
 
-import lanchon.dexpatcher.transform.DelegatorRewriterModule;
+import lanchon.dexpatcher.transform.wrappers.WrapperRewriterModule;
 
 import org.jf.dexlib2.DebugItemType;
 import org.jf.dexlib2.ValueType;
@@ -195,9 +195,9 @@ public class DexDecoderModule extends RewriterModule {
 		};
 	}
 
-	protected static class AnnotationElementDecoderModule extends DelegatorRewriterModule<DexDecoderModule> {
-		public AnnotationElementDecoderModule(DexDecoderModule module) {
-			super(module);
+	protected static class AnnotationElementDecoderModule extends WrapperRewriterModule<DexDecoderModule> {
+		public AnnotationElementDecoderModule(DexDecoderModule wrappedModule) {
+			super(wrappedModule);
 		}
 		@Override
 		public Rewriter<EncodedValue> getEncodedValueRewriter(Rewriters rewriters) {
@@ -210,7 +210,7 @@ public class DexDecoderModule extends RewriterModule {
 							return new BaseStringEncodedValue() {
 								@Override
 								public String getValue() {
-									return module.rewriteAnnotationElementStringValue(stringValue.getValue());
+									return wrappedModule.rewriteAnnotationElementStringValue(stringValue.getValue());
 								}
 							};
 						default:

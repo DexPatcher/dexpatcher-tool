@@ -8,7 +8,7 @@
  * or (at your option) any later version.
  */
 
-package lanchon.dexpatcher.transform;
+package lanchon.dexpatcher.transform.wrappers;
 
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.AnnotationElement;
@@ -28,87 +28,87 @@ import org.jf.dexlib2.rewriter.Rewriter;
 import org.jf.dexlib2.rewriter.RewriterModule;
 import org.jf.dexlib2.rewriter.Rewriters;
 
-public class DelegatorRewriterModule<M extends RewriterModule> extends RewriterModule {
+public class WrapperRewriterModule<M extends RewriterModule> extends RewriterModule {
 
-	protected final M module;
+	protected final M wrappedModule;
 
-	public DelegatorRewriterModule(M module) {
-		this.module = module;
+	public WrapperRewriterModule(M wrappedModule) {
+		this.wrappedModule = wrappedModule;
 	}
 
 	@Override
 	public Rewriter<ClassDef> getClassDefRewriter(Rewriters rewriters) {
-		return module.getClassDefRewriter(rewriters);
+		return wrappedModule.getClassDefRewriter(rewriters);
 	}
 
 	@Override
 	public Rewriter<Field> getFieldRewriter(Rewriters rewriters) {
-		return module.getFieldRewriter(rewriters);
+		return wrappedModule.getFieldRewriter(rewriters);
 	}
 
 	@Override
 	public Rewriter<Method> getMethodRewriter(Rewriters rewriters) {
-		return module.getMethodRewriter(rewriters);
+		return wrappedModule.getMethodRewriter(rewriters);
 	}
 
 	@Override
 	public Rewriter<MethodParameter> getMethodParameterRewriter(Rewriters rewriters) {
-		return module.getMethodParameterRewriter(rewriters);
+		return wrappedModule.getMethodParameterRewriter(rewriters);
 	}
 
 	@Override
 	public Rewriter<MethodImplementation> getMethodImplementationRewriter(Rewriters rewriters) {
-		return module.getMethodImplementationRewriter(rewriters);
+		return wrappedModule.getMethodImplementationRewriter(rewriters);
 	}
 
 	@Override
 	public Rewriter<Instruction> getInstructionRewriter(Rewriters rewriters) {
-		return module.getInstructionRewriter(rewriters);
+		return wrappedModule.getInstructionRewriter(rewriters);
 	}
 
 	@Override
 	public Rewriter<TryBlock<? extends ExceptionHandler>> getTryBlockRewriter(Rewriters rewriters) {
-		return module.getTryBlockRewriter(rewriters);
+		return wrappedModule.getTryBlockRewriter(rewriters);
 	}
 
 	@Override
 	public Rewriter<ExceptionHandler> getExceptionHandlerRewriter(Rewriters rewriters) {
-		return module.getExceptionHandlerRewriter(rewriters);
+		return wrappedModule.getExceptionHandlerRewriter(rewriters);
 	}
 
 	@Override
 	public Rewriter<DebugItem> getDebugItemRewriter(Rewriters rewriters) {
-		return module.getDebugItemRewriter(rewriters);
+		return wrappedModule.getDebugItemRewriter(rewriters);
 	}
 
 	@Override
 	public Rewriter<String> getTypeRewriter(Rewriters rewriters) {
-		return module.getTypeRewriter(rewriters);
+		return wrappedModule.getTypeRewriter(rewriters);
 	}
 
 	@Override
 	public Rewriter<FieldReference> getFieldReferenceRewriter(Rewriters rewriters) {
-		return module.getFieldReferenceRewriter(rewriters);
+		return wrappedModule.getFieldReferenceRewriter(rewriters);
 	}
 
 	@Override
 	public Rewriter<MethodReference> getMethodReferenceRewriter(Rewriters rewriters) {
-		return module.getMethodReferenceRewriter(rewriters);
+		return wrappedModule.getMethodReferenceRewriter(rewriters);
 	}
 
 	@Override
 	public Rewriter<Annotation> getAnnotationRewriter(Rewriters rewriters) {
-		return module.getAnnotationRewriter(rewriters);
+		return wrappedModule.getAnnotationRewriter(rewriters);
 	}
 
 	@Override
 	public Rewriter<AnnotationElement> getAnnotationElementRewriter(Rewriters rewriters) {
-		return module.getAnnotationElementRewriter(rewriters);
+		return wrappedModule.getAnnotationElementRewriter(rewriters);
 	}
 
 	@Override
 	public Rewriter<EncodedValue> getEncodedValueRewriter(Rewriters rewriters) {
-		return module.getEncodedValueRewriter(rewriters);
+		return wrappedModule.getEncodedValueRewriter(rewriters);
 	}
 
 }
