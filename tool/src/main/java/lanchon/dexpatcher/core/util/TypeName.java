@@ -30,8 +30,7 @@ public class TypeName {
 		sb.append('L');
 		for (int i = 0; i < l; i++) {
 			char c = name.charAt(i);
-			if (c == '.') c = '/';
-			sb.append(c);
+			sb.append(c == '.' ? '/' : c);
 		}
 		sb.append(';');
 		return sb.toString();
