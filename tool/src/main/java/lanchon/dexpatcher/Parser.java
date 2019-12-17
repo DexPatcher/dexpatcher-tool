@@ -17,7 +17,7 @@ import java.util.List;
 import lanchon.dexpatcher.Processor.PreTransform;
 import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.transform.anonymizer.TypeAnonymizer;
-import lanchon.dexpatcher.transform.codec.decoder.StringDecoder;
+import lanchon.dexpatcher.transform.codec.StringCodec;
 import lanchon.multidexlib2.DexIO;
 import lanchon.multidexlib2.MultiDexIO;
 
@@ -98,8 +98,8 @@ public class Parser {
 		config.decodePatches = cl.hasOption("decode-patches");
 		config.decodeOutput = cl.hasOption("decode-output");
 
-		config.codeMarker = cl.getOptionValue("code-marker", StringDecoder.DEFAULT_CODE_MARKER);
-		if (!StringDecoder.isValidCodeMarker(config.codeMarker)) {
+		config.codeMarker = cl.getOptionValue("code-marker", StringCodec.DEFAULT_CODE_MARKER);
+		if (!StringCodec.isValidCodeMarker(config.codeMarker)) {
 			throw new ParseException("Invalid code marker: '" + config.codeMarker + "'");
 		}
 		config.treatDecodeErrorsAsWarnings = cl.hasOption("no-decode-errors");
@@ -221,7 +221,7 @@ public class Parser {
 		options.addOption(new Option(null, "decode-output", false, "decode identifiers in output"));
 
 		o = new Option(null, "code-marker", true, "identifier code marker (default: '" +
-				StringDecoder.DEFAULT_CODE_MARKER + "')");
+				StringCodec.DEFAULT_CODE_MARKER + "')");
 		o.setArgName("marker"); options.addOption(o);
 		options.addOption(new Option(null, "no-decode-errors", false, "treat identifier decode errors as warnings"));
 

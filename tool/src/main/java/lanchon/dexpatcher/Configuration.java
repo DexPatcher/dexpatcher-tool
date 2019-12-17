@@ -15,7 +15,7 @@ import java.util.List;
 import lanchon.dexpatcher.Processor.PreTransform;
 import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.logger.Logger;
-import lanchon.dexpatcher.transform.codec.decoder.StringDecoder;
+import lanchon.dexpatcher.transform.codec.StringCodec;
 import lanchon.multidexlib2.DexIO;
 
 public class Configuration {
@@ -56,7 +56,7 @@ public class Configuration {
 
 	public boolean treatReanonymizeErrorsAsWarnings;
 
-	public String codeMarker = StringDecoder.DEFAULT_CODE_MARKER;
+	public String codeMarker = StringCodec.DEFAULT_CODE_MARKER;
 	public boolean treatDecodeErrorsAsWarnings;
 
 	public PreTransform preTransform = Processor.DEFAULT_PRE_TRANSFORM;

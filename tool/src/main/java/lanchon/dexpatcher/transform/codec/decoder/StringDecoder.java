@@ -10,42 +10,21 @@
 
 package lanchon.dexpatcher.transform.codec.decoder;
 
-public final class StringDecoder {
+import lanchon.dexpatcher.transform.codec.StringCodec;
+
+public final class StringDecoder extends StringCodec {
 
 	public interface ErrorHandler {
 		void onError(String message, String string, int codeStart, int codeEnd, int errorStart, int errorEnd);
 	}
-
-	public static final String DEFAULT_CODE_MARKER = "_$$_";
 
 	public static final ErrorHandler NULL_ERROR_HANDLER = new ErrorHandler() {
 		@Override
 		public void onError(String message, String string, int codeStart, int codeEnd, int errorStart, int errorEnd) {}
 	};
 
-	public static boolean isValidCodeMarker(String marker) {
-		return marker.length() >= 2 && marker.startsWith("_") && !marker.startsWith("__") && !marker.endsWith("__");
-	}
-
-	private final String codeMarker;
-
-	public StringDecoder() {
-		codeMarker = DEFAULT_CODE_MARKER;
-	}
-
 	public StringDecoder(String codeMarker) {
-		if (!isValidCodeMarker(codeMarker)) {
-			throw new IllegalArgumentException("codeMarker");
-		}
-		this.codeMarker = codeMarker;
-	}
-
-	public String getCodeMarker() {
-		return codeMarker;
-	}
-
-	public boolean isCodedString(String string) {
-		return string.contains(codeMarker);
+		super(codeMarker);
 	}
 
 	public String decodeString(String string) {
