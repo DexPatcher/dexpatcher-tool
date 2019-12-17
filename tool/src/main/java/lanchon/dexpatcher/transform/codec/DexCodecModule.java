@@ -38,7 +38,7 @@ import org.jf.dexlib2.rewriter.Rewriter;
 import org.jf.dexlib2.rewriter.RewriterModule;
 import org.jf.dexlib2.rewriter.Rewriters;
 
-public class DexDecoderModule extends RewriterModule {
+public class DexCodecModule extends RewriterModule {
 
 	public enum ItemType {
 		NAKED_TYPE_NAME("type"),
@@ -62,7 +62,7 @@ public class DexDecoderModule extends RewriterModule {
 
 	protected final ItemRewriter itemRewriter;
 
-	public DexDecoderModule(ItemRewriter itemRewriter) {
+	public DexCodecModule(ItemRewriter itemRewriter) {
 		this.itemRewriter = itemRewriter;
 	}
 
@@ -195,8 +195,8 @@ public class DexDecoderModule extends RewriterModule {
 		};
 	}
 
-	protected static class AnnotationElementDecoderModule extends WrapperRewriterModule<DexDecoderModule> {
-		public AnnotationElementDecoderModule(DexDecoderModule wrappedModule) {
+	protected static class AnnotationElementCodecModule extends WrapperRewriterModule<DexCodecModule> {
+		public AnnotationElementCodecModule(DexCodecModule wrappedModule) {
 			super(wrappedModule);
 		}
 		@Override
@@ -221,7 +221,7 @@ public class DexDecoderModule extends RewriterModule {
 		}
 	}
 
-	protected final DexRewriter annotationElementDecoder = new DexRewriter(new AnnotationElementDecoderModule(this));
+	protected final DexRewriter annotationElementCodec = new DexRewriter(new AnnotationElementCodecModule(this));
 
 	@Override
 	public Rewriter<AnnotationElement> getAnnotationElementRewriter(Rewriters rewriters) {
@@ -235,7 +235,7 @@ public class DexDecoderModule extends RewriterModule {
 					}
 					@Override
 					public EncodedValue getValue() {
-						return annotationElementDecoder.getEncodedValueRewriter().rewrite(annotationElement.getValue());
+						return annotationElementCodec.getEncodedValueRewriter().rewrite(annotationElement.getValue());
 					}
 				};
 			}
