@@ -15,7 +15,7 @@ import java.util.List;
 import lanchon.dexpatcher.Processor.PreTransform;
 import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.logger.Logger;
-import lanchon.dexpatcher.transform.decoder.StringDecoder;
+import lanchon.dexpatcher.transform.codec.decoder.StringDecoder;
 import lanchon.multidexlib2.DexIO;
 
 public class Configuration {

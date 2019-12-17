@@ -8,7 +8,7 @@
  * or (at your option) any later version.
  */
 
-package lanchon.dexpatcher.transform.decoder;
+package lanchon.dexpatcher.transform.codec.decoder;
 
 public final class StringDecoder {
 

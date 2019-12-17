@@ -8,11 +8,12 @@
  * or (at your option) any later version.
  */
 
-package lanchon.dexpatcher.transform.decoder;
+package lanchon.dexpatcher.transform.codec.decoder;
 
 import lanchon.dexpatcher.core.logger.Logger;
 import lanchon.dexpatcher.transform.LoggingDexTransform;
-import lanchon.dexpatcher.transform.decoder.DexDecoderModule.ItemType;
+import lanchon.dexpatcher.transform.codec.DexDecoderModule;
+import lanchon.dexpatcher.transform.codec.DexDecoderModule.ItemType;
 
 import org.jf.dexlib2.iface.DexFile;
 
