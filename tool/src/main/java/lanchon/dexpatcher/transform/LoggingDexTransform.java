@@ -78,6 +78,11 @@ public abstract class LoggingDexTransform extends DexTransform {
 	}
 
 	@Override
+	public boolean isLogging(Transform dex) {
+		return logger != null || super.isLogging(dex);
+	}
+
+	@Override
 	public void stopLogging(Transform dex) {
 		logger = null;
 		logPrefix = null;

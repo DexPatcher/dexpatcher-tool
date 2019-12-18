@@ -18,6 +18,7 @@ public abstract class DexTransform {
 
 	public interface Transform extends DexFile {
 		DexFile getSourceDexFile();
+		boolean isLogging();
 		void stopLogging();
 	}
 
@@ -30,6 +31,10 @@ public abstract class DexTransform {
 			@Override
 			public DexFile getSourceDexFile() {
 				return dexFile;
+			}
+			@Override
+			public boolean isLogging() {
+				return DexTransform.this.isLogging(this);
 			}
 			@Override
 			public void stopLogging() {
@@ -45,10 +50,20 @@ public abstract class DexTransform {
 		}
 	}
 
+	public static boolean isLogging(DexFile dex) {
+		return dex instanceof Transform ?
+				((Transform) dex).isLogging() :
+				false;
+	}
+
 	public static void stopLogging(DexFile dex) {
 		if (dex instanceof Transform) {
 			((Transform) dex).stopLogging();
 		}
+	}
+
+	public boolean isLogging(Transform dex) {
+		return DexTransform.isLogging(dex.getSourceDexFile());
 	}
 
 	public void stopLogging(Transform dex) {

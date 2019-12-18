@@ -151,7 +151,7 @@ public class Processor {
 	}
 
 	private void preTransformDex(DexFile dex, String logPrefix) {
-		if (dex instanceof DexTransform.Transform) {
+		if (DexTransform.isLogging(dex)) {
 			long time = System.nanoTime();
 			new DexVisitor().visitDexFile(dex);
 			time = System.nanoTime() - time;
