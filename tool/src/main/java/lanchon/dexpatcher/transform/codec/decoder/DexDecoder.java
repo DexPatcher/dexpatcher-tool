@@ -11,17 +11,18 @@
 package lanchon.dexpatcher.transform.codec.decoder;
 
 import lanchon.dexpatcher.core.logger.Logger;
-import lanchon.dexpatcher.transform.DexProvider;
-import lanchon.dexpatcher.transform.RewriterDexTransform;
+import lanchon.dexpatcher.transform.LoggingDexTransform;
 import lanchon.dexpatcher.transform.codec.DexCodecModule;
 import lanchon.dexpatcher.transform.codec.DexCodecModule.ItemType;
 
-public final class DexDecoder extends RewriterDexTransform implements DexCodecModule.ItemRewriter {
+import org.jf.dexlib2.iface.DexFile;
 
-	public static DexProvider decode(DexProvider source, StringDecoder stringDecoder, Logger logger, String logPrefix,
+public final class DexDecoder extends LoggingDexTransform implements DexCodecModule.ItemRewriter {
+
+	public static DexFile decode(DexFile dex, StringDecoder stringDecoder, Logger logger, String logPrefix,
 			Logger.Level infoLevel, Logger.Level errorLevel) {
 		DexDecoder decoder = new DexDecoder(stringDecoder, logger, logPrefix, infoLevel, errorLevel);
-		return decoder.rewriteDex(source, new DexCodecModule(decoder));
+		return decoder.transformDexFile(dex, new DexCodecModule(decoder));
 	}
 
 	private final class ErrorHandler extends MemberContext implements StringDecoder.ErrorHandler {

@@ -17,12 +17,13 @@ import java.util.Locale;
 import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.DexPatcher;
 import lanchon.dexpatcher.core.logger.Logger;
-import lanchon.dexpatcher.transform.DexProvider;
+import lanchon.dexpatcher.transform.DexTransform;
 import lanchon.dexpatcher.transform.DexVisitor;
 import lanchon.dexpatcher.transform.anonymizer.DexAnonymizer;
 import lanchon.dexpatcher.transform.anonymizer.TypeAnonymizer;
 import lanchon.dexpatcher.transform.codec.decoder.DexDecoder;
 import lanchon.dexpatcher.transform.codec.decoder.StringDecoder;
+import lanchon.dexpatcher.transform.wrappers.WrapperDexFile;
 import lanchon.multidexlib2.BasicDexFileNamer;
 import lanchon.multidexlib2.DexFileNamer;
 import lanchon.multidexlib2.DexIO;
@@ -87,20 +88,20 @@ public class Processor {
 		if (config.apiLevel > 0) opcodes = Opcodes.forApi(config.apiLevel);
 		stringDecoder = new StringDecoder(config.codeMarker);
 
-		DexProvider dex = readDex(new File(config.sourceFile));
+		DexFile dex = readDex(new File(config.sourceFile));
 		dex = anonymizeDex(dex, config.deanonSourcePlan, false, "deanonymize source");
 		dex = decodeDex(dex, config.decodeSource, "decode source");
 		dex = anonymizeDex(dex, config.reanonSourcePlan, true, "reanonymize source");
 		if (config.preTransform == PreTransform.INOUT) preTransformDex(dex, "transform source");
-		int types = dex.getDexFile().getClasses().size();
+		int types = dex.getClasses().size();
 
 		for (String patchFile : config.patchFiles) {
-			DexProvider patchDex = readDex(new File(patchFile));
+			DexFile patchDex = readDex(new File(patchFile));
 			patchDex = anonymizeDex(patchDex, config.deanonPatchesPlan, false, "deanonymize patch");
 			patchDex = decodeDex(patchDex, config.decodePatches, "decode patch");
 			patchDex = anonymizeDex(patchDex, config.reanonPatchesPlan, true, "reanonymize patch");
 			if (config.preTransform == PreTransform.INOUT) preTransformDex(patchDex, "transform patch");
-			types += patchDex.getDexFile().getClasses().size();
+			types += patchDex.getClasses().size();
 			dex = patchDex(dex, patchDex);
 		}
 
@@ -132,7 +133,7 @@ public class Processor {
 
 	}
 
-	private DexProvider anonymizeDex(DexProvider dex, String plan, boolean reanonymize, String logPrefix) {
+	private DexFile anonymizeDex(DexFile dex, String plan, boolean reanonymize, String logPrefix) {
 		if (plan != null) {
 			dex = DexAnonymizer.anonymize(dex, new TypeAnonymizer(plan, reanonymize), logger, logPrefix, DEBUG,
 					config.treatReanonymizeErrorsAsWarnings ? WARN : ERROR);
@@ -141,7 +142,7 @@ public class Processor {
 		return dex;
 	}
 
-	private DexProvider decodeDex(DexProvider dex, boolean enabled, String logPrefix) {
+	private DexFile decodeDex(DexFile dex, boolean enabled, String logPrefix) {
 		if (enabled) {
 			dex = DexDecoder.decode(dex, stringDecoder, logger, logPrefix, DEBUG,
 					config.treatDecodeErrorsAsWarnings ? WARN : ERROR);
@@ -150,13 +151,13 @@ public class Processor {
 		return dex;
 	}
 
-	private void preTransformDex(DexProvider dex, String logPrefix) {
-		if (dex.isLogging()) {
+	private void preTransformDex(DexFile dex, String logPrefix) {
+		if (DexTransform.isLogging(dex)) {
 			long time = System.nanoTime();
-			new DexVisitor().visitDexFile(dex.getDexFile());
+			new DexVisitor().visitDexFile(dex);
 			time = System.nanoTime() - time;
-			logStats(logPrefix, dex.getDexFile().getClasses().size(), time);
-			dex.stopLogging();
+			logStats(logPrefix, dex.getClasses().size(), time);
+			DexTransform.stopLogging(dex);
 		}
 	}
 
@@ -168,14 +169,38 @@ public class Processor {
 			.build();
 	}
 
-	private DexProvider patchDex(DexProvider sourceDex, DexProvider patchDex) {
+	private static class PatchedDexFile extends WrapperDexFile implements DexTransform.Transform {
+		private final DexFile sourceDex;
+		private final DexFile patchDex;
+		public PatchedDexFile(DexFile sourceDex, DexFile patchDex, DexFile patchedDex) {
+			super(patchedDex);
+			this.sourceDex = sourceDex;
+			this.patchDex = patchDex;
+		}
+		@Override
+		public DexFile getSourceDexFile() {
+			return sourceDex;
+		}
+		public DexFile getPatchDexFile() {
+			return patchDex;
+		}
+		@Override
+		public boolean isLogging() {
+			return DexTransform.isLogging(sourceDex) || DexTransform.isLogging(patchDex);
+		}
+		@Override
+		public void stopLogging() {
+			DexTransform.stopLogging(sourceDex);
+			DexTransform.stopLogging(patchDex);
+		}
+	}
+
+	private DexFile patchDex(DexFile sourceDex, DexFile patchDex) {
 		long time = System.nanoTime();
-		DexFile sourceDexFile = sourceDex.getDexFile();
-		DexFile patchDexFile = patchDex.getDexFile();
 		Opcodes patchedOpcodes = opcodes;
 		if (patchedOpcodes == null) {
-			Opcodes sourceOpcodes = sourceDexFile.getOpcodes();
-			patchedOpcodes = OpcodeUtils.getNewestOpcodes(sourceOpcodes, patchDexFile.getOpcodes(), true);
+			Opcodes sourceOpcodes = sourceDex.getOpcodes();
+			patchedOpcodes = OpcodeUtils.getNewestOpcodes(sourceOpcodes, patchDex.getOpcodes(), true);
 			if (sourceOpcodes != null && patchedOpcodes != null && sourceOpcodes != patchedOpcodes) {
 				int sourceDexVersion = OpcodeUtils.getDexVersionFromOpcodes(sourceOpcodes);
 				int patchedDexVersion = OpcodeUtils.getDexVersionFromOpcodes(patchedOpcodes);
@@ -185,13 +210,13 @@ public class Processor {
 				}
 			}
 		}
-		DexFile patchedDexFile = DexPatcher.process(createContext(), sourceDexFile, patchDexFile, patchedOpcodes);
+		DexFile patchedDex = DexPatcher.process(createContext(), sourceDex, patchDex, patchedOpcodes);
 		time = System.nanoTime() - time;
-		logStats("patch process", sourceDexFile.getClasses().size() + patchDexFile.getClasses().size(), time);
-		return new DexProvider.FromTransform(patchedDexFile, sourceDex, patchDex);
+		logStats("patch process", sourceDex.getClasses().size() + patchDex.getClasses().size(), time);
+		return new PatchedDexFile(sourceDex, patchDex, patchedDex);
 	}
 
-	private DexProvider readDex(File file) throws IOException {
+	private DexFile readDex(File file) throws IOException {
 		String message = "read '" + file + "'";
 		logger.log(INFO, message);
 		long time = System.nanoTime();
@@ -202,22 +227,21 @@ public class Processor {
 			logger.log(DEBUG, String.format(message + ": dex version '%03d'", dexVersion));
 		}
 		logStats(message, dex.getClasses().size(), time);
-		return new DexProvider.FromDexFile(dex);
+		return dex;
 	}
 
-	private void writeDex(File file, DexProvider dex) throws IOException {
-		DexFile dexFile = dex.getDexFile();
+	private void writeDex(File file, DexFile dex) throws IOException {
 		String message = "write '" + file + "'";
 		logger.log(INFO, message);
-		if (logger.isLogging(DEBUG) && dexFile.getOpcodes() != null) {
-			int dexVersion = OpcodeUtils.getDexVersionFromOpcodes(dexFile.getOpcodes());
+		if (logger.isLogging(DEBUG) && dex.getOpcodes() != null) {
+			int dexVersion = OpcodeUtils.getDexVersionFromOpcodes(dex.getOpcodes());
 			logger.log(DEBUG, String.format(message + ": dex version '%03d'", dexVersion));
 		}
 		long time = System.nanoTime();
 		MultiDexIO.writeDexFile(config.multiDex, config.multiDexJobs, file, dexFileNamer,
-				dexFile, config.maxDexPoolSize, getIOLogger(message));
+				dex, config.maxDexPoolSize, getIOLogger(message));
 		time = System.nanoTime() - time;
-		logStats(message, dexFile.getClasses().size(), time);
+		logStats(message, dex.getClasses().size(), time);
 	}
 
 	private DexIO.Logger getIOLogger(final String header) {
