@@ -10,6 +10,8 @@
 
 package lanchon.dexpatcher.transform;
 
+import lanchon.dexpatcher.transform.wrappers.WrapperDexFile;
+
 import org.jf.dexlib2.iface.DexFile;
 import org.jf.dexlib2.rewriter.DexRewriter;
 import org.jf.dexlib2.rewriter.RewriterModule;
@@ -22,31 +24,23 @@ public abstract class DexTransform {
 		void stopLogging();
 	}
 
-	protected class TransformRewriter extends DexRewriter {
-		protected class TransformedDexFile extends RewrittenDexFile implements Transform {
-			public TransformedDexFile(DexFile dex)
-			{
-				super(dex);
-			}
-			@Override
-			public DexFile getSourceDexFile() {
-				return dexFile;
-			}
-			@Override
-			public boolean isLogging() {
-				return DexTransform.this.isLogging(this);
-			}
-			@Override
-			public void stopLogging() {
-				DexTransform.this.stopLogging(this);
-			}
-		}
-		public TransformRewriter(RewriterModule module) {
-			super(module);
+	protected class TransformedDexFile extends WrapperDexFile implements Transform {
+		protected final DexFile sourceDex;
+		public TransformedDexFile(DexFile sourceDex, DexFile transformedDex) {
+			super(transformedDex);
+			this.sourceDex = sourceDex;
 		}
 		@Override
-		public DexFile rewriteDexFile(DexFile dex) {
-			return new TransformedDexFile(dex);
+		public DexFile getSourceDexFile() {
+			return sourceDex;
+		}
+		@Override
+		public boolean isLogging() {
+			return DexTransform.this.isLogging(this);
+		}
+		@Override
+		public void stopLogging() {
+			DexTransform.this.stopLogging(this);
 		}
 	}
 
@@ -70,8 +64,8 @@ public abstract class DexTransform {
 		DexTransform.stopLogging(dex.getSourceDexFile());
 	}
 
-	protected DexFile transformDexFile(DexFile dex, RewriterModule module) {
-		return new TransformRewriter(module).rewriteDexFile(dex);
+	protected TransformedDexFile transformDexFile(DexFile dex, RewriterModule module) {
+		return new TransformedDexFile(dex, new DexRewriter(module).rewriteDexFile(dex));
 	}
 
 }
