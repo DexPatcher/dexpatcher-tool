@@ -172,6 +172,7 @@ public class Processor {
 	private void preTransformDex(DexFile dex, TransformLogger logger, String logPrefix) {
 		if (logger.isInUse()) {
 			long time = System.nanoTime();
+			// TODO: Implement multi-threaded visitor.
 			//logger.setSync(...);
 			new DexVisitor().visitDexFile(dex);
 			time = System.nanoTime() - time;
