@@ -15,7 +15,6 @@ import lanchon.dexpatcher.core.util.Label;
 import lanchon.dexpatcher.transform.RewriterDexTransform;
 import lanchon.dexpatcher.transform.TransformLogger;
 
-import org.jf.dexlib2.iface.DexFile;
 import org.jf.dexlib2.rewriter.Rewriter;
 import org.jf.dexlib2.rewriter.RewriterModule;
 import org.jf.dexlib2.rewriter.Rewriters;
@@ -23,29 +22,26 @@ import org.jf.dexlib2.rewriter.Rewriters;
 public final class DexAnonymizer extends RewriterDexTransform
 		implements Rewriter<String>, TypeAnonymizer.ErrorHandler {
 
-	public static DexFile anonymize(DexFile dex, TypeAnonymizer typeAnonymizer, TransformLogger logger,
-			String logPrefix, Logger.Level infoLevel, Logger.Level errorLevel) {
-		final DexAnonymizer anonymizer = new DexAnonymizer(typeAnonymizer, logger, logPrefix, infoLevel, errorLevel);
-		return rewriteDexFile(dex, anonymizer.new DexAnonymizerModule());
-	}
-
-	private class DexAnonymizerModule extends RewriterModule {
-		@Override
-		public Rewriter<String> getTypeRewriter(Rewriters rewriters) {
-			return DexAnonymizer.this;
-		}
-	}
-
 	private final TypeAnonymizer typeAnonymizer;
 	private final Logger.Level infoLevel;
 	private final Logger.Level errorLevel;
 
-	private DexAnonymizer(TypeAnonymizer typeAnonymizer, TransformLogger logger, String logPrefix,
+	public DexAnonymizer(TypeAnonymizer typeAnonymizer, TransformLogger logger, String logPrefix,
 			Logger.Level infoLevel, Logger.Level errorLevel) {
 		super(logger, logPrefix);
 		this.typeAnonymizer = typeAnonymizer;
 		this.infoLevel = infoLevel;
 		this.errorLevel = errorLevel;
+	}
+
+	@Override
+	public RewriterModule getRewriterModule() {
+		return new RewriterModule() {
+			@Override
+			public Rewriter<String> getTypeRewriter(Rewriters rewriters) {
+				return DexAnonymizer.this;
+			}
+		};
 	}
 
 	@Override

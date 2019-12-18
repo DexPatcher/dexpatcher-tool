@@ -16,15 +16,9 @@ import lanchon.dexpatcher.transform.TransformLogger;
 import lanchon.dexpatcher.transform.codec.DexCodecModule;
 import lanchon.dexpatcher.transform.codec.DexCodecModule.ItemType;
 
-import org.jf.dexlib2.iface.DexFile;
+import org.jf.dexlib2.rewriter.RewriterModule;
 
 public final class DexDecoder extends RewriterDexTransform implements DexCodecModule.ItemRewriter {
-
-	public static DexFile decode(DexFile dex, StringDecoder stringDecoder, TransformLogger logger, String logPrefix,
-			Logger.Level infoLevel, Logger.Level errorLevel) {
-		DexDecoder decoder = new DexDecoder(stringDecoder, logger, logPrefix, infoLevel, errorLevel);
-		return rewriteDexFile(dex, new DexCodecModule(decoder));
-	}
 
 	private final class ErrorHandler extends MemberContext implements StringDecoder.ErrorHandler {
 
@@ -71,12 +65,17 @@ public final class DexDecoder extends RewriterDexTransform implements DexCodecMo
 	private final Logger.Level infoLevel;
 	private final Logger.Level errorLevel;
 
-	private DexDecoder(StringDecoder stringDecoder, TransformLogger logger, String logPrefix, Logger.Level infoLevel,
+	public DexDecoder(StringDecoder stringDecoder, TransformLogger logger, String logPrefix, Logger.Level infoLevel,
 			Logger.Level errorLevel) {
 		super(logger, logPrefix);
 		this.stringDecoder = stringDecoder;
 		this.infoLevel = infoLevel;
 		this.errorLevel = errorLevel;
+	}
+
+	@Override
+	public RewriterModule getRewriterModule() {
+		return new DexCodecModule(this);
 	}
 
 	@Override

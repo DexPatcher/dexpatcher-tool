@@ -18,6 +18,7 @@ import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.DexPatcher;
 import lanchon.dexpatcher.core.logger.Logger;
 import lanchon.dexpatcher.transform.DexVisitor;
+import lanchon.dexpatcher.transform.RewriterDexTransform;
 import lanchon.dexpatcher.transform.TransformLogger;
 import lanchon.dexpatcher.transform.anonymizer.DexAnonymizer;
 import lanchon.dexpatcher.transform.anonymizer.TypeAnonymizer;
@@ -32,6 +33,7 @@ import lanchon.multidexlib2.SingletonDexContainer;
 
 import org.jf.dexlib2.Opcodes;
 import org.jf.dexlib2.iface.DexFile;
+import org.jf.dexlib2.rewriter.DexRewriter;
 
 import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 
@@ -64,6 +66,10 @@ public class Processor {
 
 	public static boolean processFiles(Logger logger, Configuration config) throws IOException {
 		return new Processor(logger, config).processFiles();
+	}
+
+	private static DexFile transformDex(DexFile dex, RewriterDexTransform transform) {
+		return new DexRewriter(transform.getRewriterModule()).rewriteDexFile(dex);
 	}
 
 	private final Logger logger;
@@ -143,8 +149,9 @@ public class Processor {
 		if (plan != null) {
 			boolean preTransformAll = config.preTransform == PreTransform.ALL;
 			TransformLogger privateLogger = logger.cloneIf(preTransformAll);
-			dex = DexAnonymizer.anonymize(dex, new TypeAnonymizer(plan, reanonymize), privateLogger, logPrefix, DEBUG,
-					config.treatReanonymizeErrorsAsWarnings ? WARN : ERROR);
+			DexAnonymizer anonymizer = new DexAnonymizer(new TypeAnonymizer(plan, reanonymize), privateLogger,
+					logPrefix, DEBUG, config.treatReanonymizeErrorsAsWarnings ? WARN : ERROR);
+			dex = transformDex(dex, anonymizer);
 			if (preTransformAll) preTransformDex(dex, privateLogger, logPrefix);
 		}
 		return dex;
@@ -154,8 +161,9 @@ public class Processor {
 		if (enabled) {
 			boolean preTransformAll = config.preTransform == PreTransform.ALL;
 			TransformLogger privateLogger = logger.cloneIf(preTransformAll);
-			dex = DexDecoder.decode(dex, stringDecoder, privateLogger, logPrefix, DEBUG,
+			DexDecoder decoder = new DexDecoder(stringDecoder, privateLogger, logPrefix, DEBUG,
 					config.treatDecodeErrorsAsWarnings ? WARN : ERROR);
+			dex = transformDex(dex, decoder);
 			if (preTransformAll) preTransformDex(dex, privateLogger, logPrefix);
 		}
 		return dex;

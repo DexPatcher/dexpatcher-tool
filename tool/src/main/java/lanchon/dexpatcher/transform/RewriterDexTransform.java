@@ -12,17 +12,11 @@ package lanchon.dexpatcher.transform;
 
 import lanchon.dexpatcher.core.util.Label;
 
-import org.jf.dexlib2.iface.DexFile;
-import org.jf.dexlib2.rewriter.DexRewriter;
 import org.jf.dexlib2.rewriter.RewriterModule;
 
 public abstract class RewriterDexTransform extends BaseDexTransform {
 
 	private static final boolean LOG_REWRITTEN_TYPES = false;
-
-	public static DexFile rewriteDexFile(DexFile dex, RewriterModule module) {
-		return new DexRewriter(module).rewriteDexFile(dex);
-	}
 
 	protected abstract class MemberContext {
 
@@ -54,5 +48,7 @@ public abstract class RewriterDexTransform extends BaseDexTransform {
 	public RewriterDexTransform(TransformLogger logger, String logPrefix) {
 		super(logger, logPrefix);
 	}
+
+	public abstract RewriterModule getRewriterModule();
 
 }
