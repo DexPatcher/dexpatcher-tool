@@ -101,7 +101,7 @@ public class Processor {
 			patchDex = anonymizeDex(patchDex, config.reanonPatchesPlan, true, "reanonymize patch");
 			if (config.preTransform == PreTransform.INOUT) preTransformDex(patchDex, "transform patch");
 			types += patchDex.getClasses().size();
-			dex = processDex(dex, patchDex);
+			dex = patchDex(dex, patchDex);
 		}
 
 		dex = decodeDex(dex, config.decodeOutput, "decode output");
@@ -168,7 +168,7 @@ public class Processor {
 			.build();
 	}
 
-	private DexFile processDex(DexFile sourceDex, DexFile patchDex) {
+	private DexFile patchDex(DexFile sourceDex, DexFile patchDex) {
 		long time = System.nanoTime();
 		Opcodes patchedOpcodes = opcodes;
 		if (patchedOpcodes == null) {
