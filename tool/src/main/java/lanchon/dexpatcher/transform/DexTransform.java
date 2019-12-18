@@ -10,9 +10,6 @@
 
 package lanchon.dexpatcher.transform;
 
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-
 import org.jf.dexlib2.iface.DexFile;
 import org.jf.dexlib2.rewriter.DexRewriter;
 import org.jf.dexlib2.rewriter.RewriterModule;
@@ -21,44 +18,45 @@ public abstract class DexTransform {
 
 	public interface Transform extends DexFile {
 		DexFile getSourceDexFile();
+		void stopLogging();
 	}
 
-	protected static class TransformRewriter extends DexRewriter {
-		protected class Rewritten extends RewrittenDexFile implements Transform {
-			public Rewritten(DexFile dex) { super(dex); }
-			@Override public DexFile getSourceDexFile() { return dexFile; }
+	protected class TransformRewriter extends DexRewriter {
+		protected class TransformedDexFile extends RewrittenDexFile implements Transform {
+			public TransformedDexFile(DexFile dex)
+			{
+				super(dex);
+			}
+			@Override
+			public DexFile getSourceDexFile() {
+				return dexFile;
+			}
+			@Override
+			public void stopLogging() {
+				DexTransform.this.stopLogging(this);
+			}
 		}
-		public TransformRewriter(RewriterModule module) { super(module); }
-		@Override public DexFile rewriteDexFile(DexFile dex) { return new Rewritten(dex); }
+		public TransformRewriter(RewriterModule module) {
+			super(module);
+		}
+		@Override
+		public DexFile rewriteDexFile(DexFile dex) {
+			return new TransformedDexFile(dex);
+		}
+	}
+
+	public static void stopLogging(DexFile dex) {
+		if (dex instanceof Transform) {
+			((Transform) dex).stopLogging();
+		}
+	}
+
+	public void stopLogging(Transform dex) {
+		DexTransform.stopLogging(dex.getSourceDexFile());
 	}
 
 	protected DexFile transformDexFile(DexFile dex, RewriterModule module) {
 		return new TransformRewriter(module).rewriteDexFile(dex);
-	}
-
-	public static Iterable<Transform> getTransforms(final DexFile dex) {
-		return new Iterable<Transform>() {
-			@Override public Iterator<Transform> iterator() {
-				return new Iterator<Transform>() {
-					DexFile next = dex;
-					@Override public boolean hasNext() {
-						return next instanceof Transform;
-					}
-					@Override public Transform next() {
-						if (next instanceof Transform) {
-							Transform t = (Transform) next;
-							next = t.getSourceDexFile();
-							return t;
-						} else {
-							throw new NoSuchElementException();
-						}
-					}
-					@Override public void remove() {
-						throw new UnsupportedOperationException();
-					}
-				};
-			}
-		};
 	}
 
 }

@@ -19,7 +19,6 @@ import lanchon.dexpatcher.core.DexPatcher;
 import lanchon.dexpatcher.core.logger.Logger;
 import lanchon.dexpatcher.transform.DexTransform;
 import lanchon.dexpatcher.transform.DexVisitor;
-import lanchon.dexpatcher.transform.LoggingDexTransform;
 import lanchon.dexpatcher.transform.anonymizer.DexAnonymizer;
 import lanchon.dexpatcher.transform.anonymizer.TypeAnonymizer;
 import lanchon.dexpatcher.transform.codec.decoder.DexDecoder;
@@ -157,7 +156,7 @@ public class Processor {
 			new DexVisitor().visitDexFile(dex);
 			time = System.nanoTime() - time;
 			logStats(logPrefix, dex.getClasses().size(), time);
-			LoggingDexTransform.stopLogging(dex);
+			DexTransform.stopLogging(dex);
 		}
 	}
 

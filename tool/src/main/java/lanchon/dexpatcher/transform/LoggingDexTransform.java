@@ -15,31 +15,9 @@ import java.util.HashSet;
 import lanchon.dexpatcher.core.logger.Logger;
 import lanchon.dexpatcher.core.util.Label;
 
-import org.jf.dexlib2.iface.DexFile;
-import org.jf.dexlib2.rewriter.RewriterModule;
-
 public abstract class LoggingDexTransform extends DexTransform {
 
 	private static final boolean LOG_REWRITTEN_TYPES = false;
-
-	public interface LoggingTransform extends Transform {
-		void stopLogging();
-	}
-
-	public static void stopLogging(DexFile dex) {
-		for (Transform t : getTransforms(dex)) {
-			if (t instanceof LoggingTransform) ((LoggingTransform) t).stopLogging();
-		}
-	}
-
-	protected class LoggingTransformRewriter extends TransformRewriter {
-		protected class Rewritten extends TransformRewriter.Rewritten implements LoggingTransform {
-			public Rewritten(DexFile dex) { super(dex); }
-			@Override public void stopLogging() { LoggingDexTransform.this.stopLogging(); }
-		}
-		public LoggingTransformRewriter(RewriterModule module) { super(module); }
-		@Override public DexFile rewriteDexFile(DexFile dex) { return new Rewritten(dex); }
-	}
 
 	protected abstract class MemberContext {
 
@@ -78,10 +56,6 @@ public abstract class LoggingDexTransform extends DexTransform {
 		this.logPrefix = logPrefix;
 	}
 
-	protected DexFile transformDexFile(DexFile dex, RewriterModule module) {
-		return new LoggingTransformRewriter(module).rewriteDexFile(dex);
-	}
-
 	public final StringBuilder getBaseMessageHeader() {
 		StringBuilder sb = new StringBuilder();
 		if (logPrefix != null) sb.append(logPrefix).append(": ");
@@ -103,10 +77,12 @@ public abstract class LoggingDexTransform extends DexTransform {
 		}
 	}
 
-	public void stopLogging() {
+	@Override
+	public void stopLogging(Transform dex) {
 		logger = null;
 		logPrefix = null;
 		loggedMessages = null;
+		super.stopLogging(dex);
 	}
 
 }
