@@ -17,13 +17,12 @@ import java.util.Locale;
 import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.DexPatcher;
 import lanchon.dexpatcher.core.logger.Logger;
-import lanchon.dexpatcher.transform.DexTransform;
 import lanchon.dexpatcher.transform.DexVisitor;
+import lanchon.dexpatcher.transform.TransformLogger;
 import lanchon.dexpatcher.transform.anonymizer.DexAnonymizer;
 import lanchon.dexpatcher.transform.anonymizer.TypeAnonymizer;
 import lanchon.dexpatcher.transform.codec.decoder.DexDecoder;
 import lanchon.dexpatcher.transform.codec.decoder.StringDecoder;
-import lanchon.dexpatcher.transform.wrappers.WrapperDexFile;
 import lanchon.multidexlib2.BasicDexFileNamer;
 import lanchon.multidexlib2.DexFileNamer;
 import lanchon.multidexlib2.DexIO;
@@ -88,30 +87,35 @@ public class Processor {
 		if (config.apiLevel > 0) opcodes = Opcodes.forApi(config.apiLevel);
 		stringDecoder = new StringDecoder(config.codeMarker);
 
+		TransformLogger outputLogger = new TransformLogger(logger);
+		boolean preTransformInputs = config.preTransform == PreTransform.INOUT;
+
 		DexFile dex = readDex(new File(config.sourceFile));
-		dex = anonymizeDex(dex, config.deanonSourcePlan, false, "deanonymize source");
-		dex = decodeDex(dex, config.decodeSource, "decode source");
-		dex = anonymizeDex(dex, config.reanonSourcePlan, true, "reanonymize source");
-		if (config.preTransform == PreTransform.INOUT) preTransformDex(dex, "transform source");
+		TransformLogger sourceLogger = outputLogger.cloneIf(preTransformInputs);
+		dex = anonymizeDex(dex, config.deanonSourcePlan, false, sourceLogger, "deanonymize source");
+		dex = decodeDex(dex, config.decodeSource, sourceLogger, "decode source");
+		dex = anonymizeDex(dex, config.reanonSourcePlan, true, sourceLogger, "reanonymize source");
+		if (preTransformInputs) preTransformDex(dex, sourceLogger, "transform source");
 		int types = dex.getClasses().size();
 
 		for (String patchFile : config.patchFiles) {
 			DexFile patchDex = readDex(new File(patchFile));
-			patchDex = anonymizeDex(patchDex, config.deanonPatchesPlan, false, "deanonymize patch");
-			patchDex = decodeDex(patchDex, config.decodePatches, "decode patch");
-			patchDex = anonymizeDex(patchDex, config.reanonPatchesPlan, true, "reanonymize patch");
-			if (config.preTransform == PreTransform.INOUT) preTransformDex(patchDex, "transform patch");
+			TransformLogger patchLogger = outputLogger.cloneIf(preTransformInputs);
+			patchDex = anonymizeDex(patchDex, config.deanonPatchesPlan, false, patchLogger, "deanonymize patch");
+			patchDex = decodeDex(patchDex, config.decodePatches, patchLogger, "decode patch");
+			patchDex = anonymizeDex(patchDex, config.reanonPatchesPlan, true, patchLogger, "reanonymize patch");
+			if (preTransformInputs) preTransformDex(patchDex, patchLogger, "transform patch");
 			types += patchDex.getClasses().size();
 			dex = patchDex(dex, patchDex);
 		}
 
-		dex = decodeDex(dex, config.decodeOutput, "decode output");
-		dex = anonymizeDex(dex, config.reanonOutputPlan, true, "reanonymize output");
+		dex = decodeDex(dex, config.decodeOutput, outputLogger, "decode output");
+		dex = anonymizeDex(dex, config.reanonOutputPlan, true, outputLogger, "reanonymize output");
 
 		boolean writeDex = logger.hasNotLoggedErrors() && !config.dryRun && config.patchedFile != null;
 		boolean preTransformOutput = (config.preTransform == PreTransform.DRY && !writeDex) ||
 				config.preTransform == PreTransform.OUT || config.preTransform == PreTransform.INOUT;
-		if (preTransformOutput) preTransformDex(dex, "transform output");
+		if (preTransformOutput) preTransformDex(dex, outputLogger, "transform output");
 
 		if (logger.hasNotLoggedErrors()) {
 			if (config.dryRun) {
@@ -120,6 +124,7 @@ public class Processor {
 				if (config.patchedFile == null) {
 					logger.log(WARN, "dry run due to missing '--output' option");
 				} else {
+					outputLogger.setSync(config.multiDex && config.multiDexJobs != 1);
 					writeDex(new File(config.patchedFile), dex);
 				}
 			}
@@ -133,31 +138,37 @@ public class Processor {
 
 	}
 
-	private DexFile anonymizeDex(DexFile dex, String plan, boolean reanonymize, String logPrefix) {
+	private DexFile anonymizeDex(DexFile dex, String plan, boolean reanonymize, TransformLogger logger,
+			String logPrefix) {
 		if (plan != null) {
-			dex = DexAnonymizer.anonymize(dex, new TypeAnonymizer(plan, reanonymize), logger, logPrefix, DEBUG,
+			boolean preTransformAll = config.preTransform == PreTransform.ALL;
+			TransformLogger privateLogger = logger.cloneIf(preTransformAll);
+			dex = DexAnonymizer.anonymize(dex, new TypeAnonymizer(plan, reanonymize), privateLogger, logPrefix, DEBUG,
 					config.treatReanonymizeErrorsAsWarnings ? WARN : ERROR);
-			if (config.preTransform == PreTransform.ALL) preTransformDex(dex, logPrefix);
+			if (preTransformAll) preTransformDex(dex, privateLogger, logPrefix);
 		}
 		return dex;
 	}
 
-	private DexFile decodeDex(DexFile dex, boolean enabled, String logPrefix) {
+	private DexFile decodeDex(DexFile dex, boolean enabled, TransformLogger logger, String logPrefix) {
 		if (enabled) {
-			dex = DexDecoder.decode(dex, stringDecoder, logger, logPrefix, DEBUG,
+			boolean preTransformAll = config.preTransform == PreTransform.ALL;
+			TransformLogger privateLogger = logger.cloneIf(preTransformAll);
+			dex = DexDecoder.decode(dex, stringDecoder, privateLogger, logPrefix, DEBUG,
 					config.treatDecodeErrorsAsWarnings ? WARN : ERROR);
-			if (config.preTransform == PreTransform.ALL) preTransformDex(dex, logPrefix);
+			if (preTransformAll) preTransformDex(dex, privateLogger, logPrefix);
 		}
 		return dex;
 	}
 
-	private void preTransformDex(DexFile dex, String logPrefix) {
-		if (DexTransform.isLogging(dex)) {
+	private void preTransformDex(DexFile dex, TransformLogger logger, String logPrefix) {
+		if (logger.isInUse()) {
 			long time = System.nanoTime();
+			//logger.setSync(...);
 			new DexVisitor().visitDexFile(dex);
 			time = System.nanoTime() - time;
 			logStats(logPrefix, dex.getClasses().size(), time);
-			DexTransform.stopLogging(dex);
+			logger.stopLogging();
 		}
 	}
 
@@ -167,32 +178,6 @@ public class Processor {
 			.setConstructorAutoIgnoreDisabled(config.constructorAutoIgnoreDisabled)
 			.setSourceCodeRoot(config.sourceCodeRoot)
 			.build();
-	}
-
-	private static class PatchedDexFile extends WrapperDexFile implements DexTransform.Transform {
-		private final DexFile sourceDex;
-		private final DexFile patchDex;
-		public PatchedDexFile(DexFile sourceDex, DexFile patchDex, DexFile patchedDex) {
-			super(patchedDex);
-			this.sourceDex = sourceDex;
-			this.patchDex = patchDex;
-		}
-		@Override
-		public DexFile getSourceDexFile() {
-			return sourceDex;
-		}
-		public DexFile getPatchDexFile() {
-			return patchDex;
-		}
-		@Override
-		public boolean isLogging() {
-			return DexTransform.isLogging(sourceDex) || DexTransform.isLogging(patchDex);
-		}
-		@Override
-		public void stopLogging() {
-			DexTransform.stopLogging(sourceDex);
-			DexTransform.stopLogging(patchDex);
-		}
 	}
 
 	private DexFile patchDex(DexFile sourceDex, DexFile patchDex) {
@@ -213,7 +198,7 @@ public class Processor {
 		DexFile patchedDex = DexPatcher.process(createContext(), sourceDex, patchDex, patchedOpcodes);
 		time = System.nanoTime() - time;
 		logStats("patch process", sourceDex.getClasses().size() + patchDex.getClasses().size(), time);
-		return new PatchedDexFile(sourceDex, patchDex, patchedDex);
+		return patchedDex;
 	}
 
 	private DexFile readDex(File file) throws IOException {

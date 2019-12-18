@@ -12,20 +12,21 @@ package lanchon.dexpatcher.transform.anonymizer;
 
 import lanchon.dexpatcher.core.logger.Logger;
 import lanchon.dexpatcher.core.util.Label;
-import lanchon.dexpatcher.transform.LoggingDexTransform;
+import lanchon.dexpatcher.transform.RewriterDexTransform;
+import lanchon.dexpatcher.transform.TransformLogger;
 
 import org.jf.dexlib2.iface.DexFile;
 import org.jf.dexlib2.rewriter.Rewriter;
 import org.jf.dexlib2.rewriter.RewriterModule;
 import org.jf.dexlib2.rewriter.Rewriters;
 
-public final class DexAnonymizer extends LoggingDexTransform
+public final class DexAnonymizer extends RewriterDexTransform
 		implements Rewriter<String>, TypeAnonymizer.ErrorHandler {
 
-	public static DexFile anonymize(DexFile dex, TypeAnonymizer typeAnonymizer, Logger logger, String logPrefix,
-			Logger.Level infoLevel, Logger.Level errorLevel) {
+	public static DexFile anonymize(DexFile dex, TypeAnonymizer typeAnonymizer, TransformLogger logger,
+			String logPrefix, Logger.Level infoLevel, Logger.Level errorLevel) {
 		final DexAnonymizer anonymizer = new DexAnonymizer(typeAnonymizer, logger, logPrefix, infoLevel, errorLevel);
-		return anonymizer.transformDexFile(dex, anonymizer.new DexAnonymizerModule());
+		return rewriteDexFile(dex, anonymizer.new DexAnonymizerModule());
 	}
 
 	private class DexAnonymizerModule extends RewriterModule {
@@ -39,8 +40,8 @@ public final class DexAnonymizer extends LoggingDexTransform
 	private final Logger.Level infoLevel;
 	private final Logger.Level errorLevel;
 
-	private DexAnonymizer(TypeAnonymizer typeAnonymizer, Logger logger, String logPrefix, Logger.Level infoLevel,
-			Logger.Level errorLevel) {
+	private DexAnonymizer(TypeAnonymizer typeAnonymizer, TransformLogger logger, String logPrefix,
+			Logger.Level infoLevel, Logger.Level errorLevel) {
 		super(logger, logPrefix);
 		this.typeAnonymizer = typeAnonymizer;
 		this.infoLevel = infoLevel;
@@ -50,21 +51,21 @@ public final class DexAnonymizer extends LoggingDexTransform
 	@Override
 	public String rewrite(String type) {
 		String anonymizedType = typeAnonymizer.anonymizeType(type, this);
-		if (anonymizedType != type && isLogging(infoLevel) && !anonymizedType.equals(type)) {
+		if (anonymizedType != type && logger.isLogging(infoLevel) && !anonymizedType.equals(type)) {
 			StringBuilder sb = getMessageHeader(type);
 			String action = typeAnonymizer.isReanonymizer() ? "reanonymized to '" : "deanonymized to '";
 			sb.append(action).append(Label.fromClassDescriptor(anonymizedType)).append("'");
-			log(infoLevel, sb.toString());
+			logger.log(infoLevel, sb.toString());
 		}
 		return anonymizedType;
 	}
 
 	@Override
 	public void onError(String type, String message) {
-		if (isLogging(errorLevel)) {
+		if (logger.isLogging(errorLevel)) {
 			StringBuilder sb = getMessageHeader(type);
 			sb.append(message);
-			log(errorLevel, sb.toString());
+			logger.log(errorLevel, sb.toString());
 		}
 	}
 

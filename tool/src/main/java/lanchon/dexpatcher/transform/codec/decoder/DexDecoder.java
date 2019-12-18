@@ -11,18 +11,19 @@
 package lanchon.dexpatcher.transform.codec.decoder;
 
 import lanchon.dexpatcher.core.logger.Logger;
-import lanchon.dexpatcher.transform.LoggingDexTransform;
+import lanchon.dexpatcher.transform.RewriterDexTransform;
+import lanchon.dexpatcher.transform.TransformLogger;
 import lanchon.dexpatcher.transform.codec.DexCodecModule;
 import lanchon.dexpatcher.transform.codec.DexCodecModule.ItemType;
 
 import org.jf.dexlib2.iface.DexFile;
 
-public final class DexDecoder extends LoggingDexTransform implements DexCodecModule.ItemRewriter {
+public final class DexDecoder extends RewriterDexTransform implements DexCodecModule.ItemRewriter {
 
-	public static DexFile decode(DexFile dex, StringDecoder stringDecoder, Logger logger, String logPrefix,
+	public static DexFile decode(DexFile dex, StringDecoder stringDecoder, TransformLogger logger, String logPrefix,
 			Logger.Level infoLevel, Logger.Level errorLevel) {
 		DexDecoder decoder = new DexDecoder(stringDecoder, logger, logPrefix, infoLevel, errorLevel);
-		return decoder.transformDexFile(dex, new DexCodecModule(decoder));
+		return rewriteDexFile(dex, new DexCodecModule(decoder));
 	}
 
 	private final class ErrorHandler extends MemberContext implements StringDecoder.ErrorHandler {
@@ -38,13 +39,13 @@ public final class DexDecoder extends LoggingDexTransform implements DexCodecMod
 
 		@Override
 		public void onError(String message, String string, int codeStart, int codeEnd, int errorStart, int errorEnd) {
-			if (isLogging(errorLevel)) {
+			if (logger.isLogging(errorLevel)) {
 				StringBuilder sb = getMessageHeader();
 				sb.append(message);
 				sb.append(" in '").append(string, codeStart, errorStart)
 						.append("[->]").append(string, errorStart, errorEnd).append("[<-]")
 						.append(string, errorEnd, codeEnd).append("'");
-				log(errorLevel, sb.toString());
+				logger.log(errorLevel, sb.toString());
 			}
 		}
 
@@ -70,7 +71,7 @@ public final class DexDecoder extends LoggingDexTransform implements DexCodecMod
 	private final Logger.Level infoLevel;
 	private final Logger.Level errorLevel;
 
-	private DexDecoder(StringDecoder stringDecoder, Logger logger, String logPrefix, Logger.Level infoLevel,
+	private DexDecoder(StringDecoder stringDecoder, TransformLogger logger, String logPrefix, Logger.Level infoLevel,
 			Logger.Level errorLevel) {
 		super(logger, logPrefix);
 		this.stringDecoder = stringDecoder;
@@ -82,10 +83,10 @@ public final class DexDecoder extends LoggingDexTransform implements DexCodecMod
 	public String rewriteItem(String definingClass, ItemType itemType, String value) {
 		ErrorHandler errorHandler = new ErrorHandler(definingClass, itemType, value);
 		String decodedValue = stringDecoder.decodeString(value, errorHandler);
-		if (decodedValue != value && isLogging(infoLevel) && !decodedValue.equals(value)) {
+		if (decodedValue != value && logger.isLogging(infoLevel) && !decodedValue.equals(value)) {
 			StringBuilder sb = errorHandler.getMessageHeader();
 			sb.append("decoded to '").append(errorHandler.formatValue(decodedValue)).append("'");
-			log(infoLevel, sb.toString());
+			logger.log(infoLevel, sb.toString());
 		}
 		return decodedValue;
 	}
