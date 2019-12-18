@@ -72,7 +72,6 @@ public class Processor {
 	private DexFileNamer dexFileNamer;
 	private Opcodes opcodes;
 	private StringDecoder stringDecoder;
-	private boolean preTransformPending;
 
 	private Processor(Logger logger, Configuration config) {
 		this.logger = logger;
@@ -87,7 +86,6 @@ public class Processor {
 		dexFileNamer = new BasicDexFileNamer();
 		if (config.apiLevel > 0) opcodes = Opcodes.forApi(config.apiLevel);
 		stringDecoder = new StringDecoder(config.codeMarker);
-		preTransformPending = false;
 
 		DexFile dex = readDex(new File(config.sourceFile));
 		dex = anonymizeDex(dex, config.deanonSourcePlan, false, "deanonymize source");
@@ -138,7 +136,6 @@ public class Processor {
 		if (plan != null) {
 			dex = DexAnonymizer.anonymize(dex, new TypeAnonymizer(plan, reanonymize), logger, logPrefix, DEBUG,
 					config.treatReanonymizeErrorsAsWarnings ? WARN : ERROR);
-			preTransformPending = true;
 			if (config.preTransform == PreTransform.ALL) preTransformDex(dex, logPrefix);
 		}
 		return dex;
@@ -148,20 +145,18 @@ public class Processor {
 		if (enabled) {
 			dex = DexDecoder.decode(dex, stringDecoder, logger, logPrefix, DEBUG,
 					config.treatDecodeErrorsAsWarnings ? WARN : ERROR);
-			preTransformPending = true;
 			if (config.preTransform == PreTransform.ALL) preTransformDex(dex, logPrefix);
 		}
 		return dex;
 	}
 
 	private void preTransformDex(DexFile dex, String logPrefix) {
-		if (preTransformPending) {
+		if (dex instanceof DexTransform.Transform) {
 			long time = System.nanoTime();
 			new DexVisitor().visitDexFile(dex);
 			time = System.nanoTime() - time;
 			logStats(logPrefix, dex.getClasses().size(), time);
 			DexTransform.stopLogging(dex);
-			preTransformPending = false;
 		}
 	}
 
