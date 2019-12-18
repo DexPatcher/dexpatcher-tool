@@ -23,6 +23,7 @@ import lanchon.dexpatcher.transform.anonymizer.DexAnonymizer;
 import lanchon.dexpatcher.transform.anonymizer.TypeAnonymizer;
 import lanchon.dexpatcher.transform.codec.decoder.DexDecoder;
 import lanchon.dexpatcher.transform.codec.decoder.StringDecoder;
+import lanchon.dexpatcher.transform.wrappers.WrapperDexFile;
 import lanchon.multidexlib2.BasicDexFileNamer;
 import lanchon.multidexlib2.DexFileNamer;
 import lanchon.multidexlib2.DexIO;
@@ -168,6 +169,32 @@ public class Processor {
 			.build();
 	}
 
+	private static class PatchedDexFile extends WrapperDexFile implements DexTransform.Transform {
+		private final DexFile sourceDex;
+		private final DexFile patchDex;
+		public PatchedDexFile(DexFile sourceDex, DexFile patchDex, DexFile patchedDex) {
+			super(patchedDex);
+			this.sourceDex = sourceDex;
+			this.patchDex = patchDex;
+		}
+		@Override
+		public DexFile getSourceDexFile() {
+			return sourceDex;
+		}
+		public DexFile getPatchDexFile() {
+			return patchDex;
+		}
+		@Override
+		public boolean isLogging() {
+			return DexTransform.isLogging(sourceDex) || DexTransform.isLogging(patchDex);
+		}
+		@Override
+		public void stopLogging() {
+			DexTransform.stopLogging(sourceDex);
+			DexTransform.stopLogging(patchDex);
+		}
+	}
+
 	private DexFile patchDex(DexFile sourceDex, DexFile patchDex) {
 		long time = System.nanoTime();
 		Opcodes patchedOpcodes = opcodes;
@@ -186,7 +213,7 @@ public class Processor {
 		DexFile patchedDex = DexPatcher.process(createContext(), sourceDex, patchDex, patchedOpcodes);
 		time = System.nanoTime() - time;
 		logStats("patch process", sourceDex.getClasses().size() + patchDex.getClasses().size(), time);
-		return patchedDex;
+		return new PatchedDexFile(sourceDex, patchDex, patchedDex);
 	}
 
 	private DexFile readDex(File file) throws IOException {
