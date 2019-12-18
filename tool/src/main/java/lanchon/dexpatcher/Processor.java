@@ -18,7 +18,7 @@ import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.DexPatcher;
 import lanchon.dexpatcher.core.logger.Logger;
 import lanchon.dexpatcher.transform.DexVisitor;
-import lanchon.dexpatcher.transform.RewriterDexTransform;
+import lanchon.dexpatcher.transform.DexTransform;
 import lanchon.dexpatcher.transform.TransformLogger;
 import lanchon.dexpatcher.transform.anonymizer.DexAnonymizer;
 import lanchon.dexpatcher.transform.anonymizer.TypeAnonymizer;
@@ -68,7 +68,7 @@ public class Processor {
 		return new Processor(logger, config).processFiles();
 	}
 
-	private static DexFile transformDex(DexFile dex, RewriterDexTransform transform) {
+	private static DexFile transformDex(DexFile dex, DexTransform transform) {
 		return new DexRewriter(transform.getRewriterModule()).rewriteDexFile(dex);
 	}
 

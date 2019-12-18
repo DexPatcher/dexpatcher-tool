@@ -21,7 +21,7 @@ public abstract class BaseDexTransform {
 		logger.markAsInUse();
 	}
 
-	public final StringBuilder getBaseMessageHeader() {
+	public final StringBuilder getMessageHeader() {
 		StringBuilder sb = new StringBuilder();
 		if (logPrefix != null) sb.append(logPrefix).append(": ");
 		return sb;

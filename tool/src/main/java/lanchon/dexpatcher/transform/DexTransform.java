@@ -14,41 +14,38 @@ import lanchon.dexpatcher.core.util.Label;
 
 import org.jf.dexlib2.rewriter.RewriterModule;
 
-public abstract class RewriterDexTransform extends BaseDexTransform {
+public abstract class DexTransform extends BaseDexTransform {
 
 	private static final boolean LOG_REWRITTEN_TYPES = false;
 
-	protected abstract class MemberContext {
-
+	protected class MemberContext {
 		protected final String definingClass;
-
 		public MemberContext(String definingClass) {
 			this.definingClass = definingClass;
 		}
-
-		public StringBuilder getMessageHeader() {
-			StringBuilder sb = getBaseMessageHeader();
-			if (definingClass != null) {
-				sb.append("type '").append(Label.fromClassDescriptor(definingClass));
-				if (LOG_REWRITTEN_TYPES) {
-					String rewrittenDefiningClass = getRewrittenDefiningClass();
-					if (!rewrittenDefiningClass.equals(definingClass)) {
-						sb.append("' -> '").append(Label.fromClassDescriptor(rewrittenDefiningClass));
-					}
-				}
-				sb.append("': ");
-			}
-			return sb;
-		}
-
-		protected abstract String getRewrittenDefiningClass();
-
 	}
 
-	public RewriterDexTransform(TransformLogger logger, String logPrefix) {
+	public DexTransform(TransformLogger logger, String logPrefix) {
 		super(logger, logPrefix);
 	}
 
 	public abstract RewriterModule getRewriterModule();
+
+	public final StringBuilder getMessageHeader(String definingClass) {
+		StringBuilder sb = getMessageHeader();
+		if (definingClass != null) {
+			sb.append("type '").append(Label.fromClassDescriptor(definingClass));
+			if (LOG_REWRITTEN_TYPES) {
+				String rewrittenDefiningClass = getRewrittenDefiningClass(definingClass);
+				if (!rewrittenDefiningClass.equals(definingClass)) {
+					sb.append("' -> '").append(Label.fromClassDescriptor(rewrittenDefiningClass));
+				}
+			}
+			sb.append("': ");
+		}
+		return sb;
+	}
+
+	protected abstract String getRewrittenDefiningClass(String definingClass);
 
 }

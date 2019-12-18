@@ -11,52 +11,28 @@
 package lanchon.dexpatcher.transform.codec.decoder;
 
 import lanchon.dexpatcher.core.logger.Logger;
-import lanchon.dexpatcher.transform.RewriterDexTransform;
 import lanchon.dexpatcher.transform.TransformLogger;
-import lanchon.dexpatcher.transform.codec.DexCodecModule;
+import lanchon.dexpatcher.transform.codec.DexCodec;
 import lanchon.dexpatcher.transform.codec.DexCodecModule.ItemType;
 
-import org.jf.dexlib2.rewriter.RewriterModule;
-
-public final class DexDecoder extends RewriterDexTransform implements DexCodecModule.ItemRewriter {
+public final class DexDecoder extends DexCodec {
 
 	private final class ErrorHandler extends MemberContext implements StringDecoder.ErrorHandler {
 
-		private final ItemType itemType;
-		private final String value;
-
 		public ErrorHandler(String definingClass, ItemType itemType, String value) {
-			super(definingClass);
-			this.itemType = itemType;
-			this.value = value;
+			super(definingClass, itemType, value);
 		}
 
 		@Override
 		public void onError(String message, String string, int codeStart, int codeEnd, int errorStart, int errorEnd) {
 			if (logger.isLogging(errorLevel)) {
-				StringBuilder sb = getMessageHeader();
+				StringBuilder sb = getMessageHeader(definingClass, itemType, value);
 				sb.append(message);
 				sb.append(" in '").append(string, codeStart, errorStart)
 						.append("[->]").append(string, errorStart, errorEnd).append("[<-]")
 						.append(string, errorEnd, codeEnd).append("'");
 				logger.log(errorLevel, sb.toString());
 			}
-		}
-
-		@Override
-		public StringBuilder getMessageHeader() {
-			StringBuilder sb = super.getMessageHeader();
-			sb.append(itemType.label).append(" '").append(formatValue(value)).append("': ");
-			return sb;
-		}
-
-		public String formatValue(String value) {
-			return itemType == ItemType.NAKED_TYPE_NAME ? value.replace('/', '.') : value;
-		}
-
-		@Override
-		protected String getRewrittenDefiningClass() {
-			return stringDecoder.decodeString(definingClass);
 		}
 
 	}
@@ -74,8 +50,8 @@ public final class DexDecoder extends RewriterDexTransform implements DexCodecMo
 	}
 
 	@Override
-	public RewriterModule getRewriterModule() {
-		return new DexCodecModule(this);
+	protected String getRewrittenDefiningClass(String definingClass) {
+		return stringDecoder.decodeString(definingClass);
 	}
 
 	@Override
@@ -83,8 +59,8 @@ public final class DexDecoder extends RewriterDexTransform implements DexCodecMo
 		ErrorHandler errorHandler = new ErrorHandler(definingClass, itemType, value);
 		String decodedValue = stringDecoder.decodeString(value, errorHandler);
 		if (decodedValue != value && logger.isLogging(infoLevel) && !decodedValue.equals(value)) {
-			StringBuilder sb = errorHandler.getMessageHeader();
-			sb.append("decoded to '").append(errorHandler.formatValue(decodedValue)).append("'");
+			StringBuilder sb = getMessageHeader(definingClass, itemType, value);
+			sb.append("decoded to '").append(formatValue(itemType, decodedValue)).append("'");
 			logger.log(infoLevel, sb.toString());
 		}
 		return decodedValue;

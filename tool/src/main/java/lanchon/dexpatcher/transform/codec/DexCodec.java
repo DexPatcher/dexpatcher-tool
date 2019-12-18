@@ -1,0 +1,50 @@
+/*
+ * DexPatcher - Copyright 2015-2019 Rodrigo Balerdi
+ * (GNU General Public License version 3 or later)
+ *
+ * DexPatcher is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published
+ * by the Free Software Foundation, either version 3 of the License,
+ * or (at your option) any later version.
+ */
+
+package lanchon.dexpatcher.transform.codec;
+
+import lanchon.dexpatcher.transform.DexTransform;
+import lanchon.dexpatcher.transform.TransformLogger;
+import lanchon.dexpatcher.transform.codec.DexCodecModule.ItemType;
+
+import org.jf.dexlib2.rewriter.RewriterModule;
+
+public abstract class DexCodec extends DexTransform implements DexCodecModule.ItemRewriter {
+
+	public static String formatValue(ItemType itemType, String value) {
+		return itemType == ItemType.NAKED_TYPE_NAME ? value.replace('/', '.') : value;
+	}
+
+	protected class MemberContext extends DexTransform.MemberContext {
+		protected final ItemType itemType;
+		protected final String value;
+		public MemberContext(String definingClass, ItemType itemType, String value) {
+			super(definingClass);
+			this.itemType = itemType;
+			this.value = value;
+		}
+	}
+
+	public DexCodec(TransformLogger logger, String logPrefix) {
+		super(logger, logPrefix);
+	}
+
+	@Override
+	public final RewriterModule getRewriterModule() {
+		return new DexCodecModule(this);
+	}
+
+	public final StringBuilder getMessageHeader(String definingClass, ItemType itemType, String value) {
+		StringBuilder sb = getMessageHeader(definingClass);
+		sb.append(itemType.label).append(" '").append(formatValue(itemType, value)).append("': ");
+		return sb;
+	}
+
+}

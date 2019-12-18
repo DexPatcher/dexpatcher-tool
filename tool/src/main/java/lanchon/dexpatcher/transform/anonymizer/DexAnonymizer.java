@@ -12,15 +12,14 @@ package lanchon.dexpatcher.transform.anonymizer;
 
 import lanchon.dexpatcher.core.logger.Logger;
 import lanchon.dexpatcher.core.util.Label;
-import lanchon.dexpatcher.transform.RewriterDexTransform;
+import lanchon.dexpatcher.transform.DexTransform;
 import lanchon.dexpatcher.transform.TransformLogger;
 
 import org.jf.dexlib2.rewriter.Rewriter;
 import org.jf.dexlib2.rewriter.RewriterModule;
 import org.jf.dexlib2.rewriter.Rewriters;
 
-public final class DexAnonymizer extends RewriterDexTransform
-		implements Rewriter<String>, TypeAnonymizer.ErrorHandler {
+public final class DexAnonymizer extends DexTransform implements Rewriter<String>, TypeAnonymizer.ErrorHandler {
 
 	private final TypeAnonymizer typeAnonymizer;
 	private final Logger.Level infoLevel;
@@ -45,6 +44,11 @@ public final class DexAnonymizer extends RewriterDexTransform
 	}
 
 	@Override
+	protected String getRewrittenDefiningClass(String definingClass) {
+		return typeAnonymizer.anonymizeType(definingClass);
+	}
+
+	@Override
 	public String rewrite(String type) {
 		String anonymizedType = typeAnonymizer.anonymizeType(type, this);
 		if (anonymizedType != type && logger.isLogging(infoLevel) && !anonymizedType.equals(type)) {
@@ -63,12 +67,6 @@ public final class DexAnonymizer extends RewriterDexTransform
 			sb.append(message);
 			logger.log(errorLevel, sb.toString());
 		}
-	}
-
-	private StringBuilder getMessageHeader(String type) {
-		StringBuilder sb = getBaseMessageHeader();
-		sb.append("type '").append(Label.fromClassDescriptor(type)).append("': ");
-		return sb;
 	}
 
 }
