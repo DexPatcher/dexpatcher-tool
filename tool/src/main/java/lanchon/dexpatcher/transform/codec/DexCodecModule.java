@@ -10,7 +10,7 @@
 
 package lanchon.dexpatcher.transform.codec;
 
-import lanchon.dexpatcher.transform.util.NakedReferenceTypeRewriter;
+import lanchon.dexpatcher.transform.util.BinaryTypeNameRewriter;
 import lanchon.dexpatcher.transform.util.wrapper.WrapperRewriterModule;
 
 import org.jf.dexlib2.DebugItemType;
@@ -42,7 +42,7 @@ import org.jf.dexlib2.rewriter.Rewriters;
 public class DexCodecModule extends RewriterModule {
 
 	public enum ItemType {
-		NAKED_TYPE_NAME("type"),
+		BINARY_TYPE_NAME("type"),
 		FIELD_NAME("field"),
 		METHOD_NAME("method"),
 		PARAMETER_NAME("parameter"),
@@ -67,8 +67,8 @@ public class DexCodecModule extends RewriterModule {
 		this.itemRewriter = itemRewriter;
 	}
 
-	public final String rewriteNakedTypeName(String value) {
-		return itemRewriter.rewriteItem(null, ItemType.NAKED_TYPE_NAME, value);
+	public final String rewriteBinaryTypeName(String value) {
+		return itemRewriter.rewriteItem(null, ItemType.BINARY_TYPE_NAME, value);
 	}
 
 	public final String rewriteFieldName(String definingClass, String value) {
@@ -97,10 +97,10 @@ public class DexCodecModule extends RewriterModule {
 
 	@Override
 	public Rewriter<String> getTypeRewriter(Rewriters rewriters) {
-		return new NakedReferenceTypeRewriter() {
+		return new BinaryTypeNameRewriter() {
 			@Override
-			public String rewriteNakedReferenceType(String nakedReferenceType) {
-				return rewriteNakedTypeName(nakedReferenceType);
+			public String rewriteBinaryTypeName(String binaryTypeName) {
+				return DexCodecModule.this.rewriteBinaryTypeName(binaryTypeName);
 			}
 		};
 	}

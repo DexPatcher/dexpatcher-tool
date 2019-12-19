@@ -19,7 +19,7 @@ import org.jf.dexlib2.rewriter.RewriterModule;
 public abstract class DexCodec extends DexTransform implements DexCodecModule.ItemRewriter {
 
 	public static String formatValue(ItemType itemType, String value) {
-		return itemType == ItemType.NAKED_TYPE_NAME ? value.replace('/', '.') : value;
+		return itemType == ItemType.BINARY_TYPE_NAME ? value.replace('/', '.') : value;
 	}
 
 	protected class MemberContext extends DexTransform.MemberContext {

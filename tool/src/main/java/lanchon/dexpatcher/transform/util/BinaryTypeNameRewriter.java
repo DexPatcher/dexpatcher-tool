@@ -12,8 +12,8 @@ package lanchon.dexpatcher.transform.util;
 
 import org.jf.dexlib2.rewriter.TypeRewriter;
 
-// Naked reference type '<type>' (eg: 'java/lang/String') corresponds to type descriptor 'L<type>;'.
-public abstract class NakedReferenceTypeRewriter extends TypeRewriter {
+// Binary type name '<name>' (eg: 'java/lang/String') corresponds to type descriptor 'L<name>;'.
+public abstract class BinaryTypeNameRewriter extends TypeRewriter {
 
 	@Override
 	public String rewrite(String value) {
@@ -24,14 +24,14 @@ public abstract class NakedReferenceTypeRewriter extends TypeRewriter {
 		while ((c = value.charAt(start)) == '[') start++;
 		if (c != 'L') return value;
 		start++;
-		String nakedType = value.substring(start, end);
-		String rewrittenNakedType = rewriteNakedReferenceType(nakedType);
-		if (rewrittenNakedType.equals(nakedType)) return value;
-		StringBuilder sb = new StringBuilder(start + rewrittenNakedType.length() + 1);
-		sb.append(value, 0, start).append(rewrittenNakedType).append(';');
+		String binaryTypeName = value.substring(start, end);
+		String rewrittenBinaryTypeName = rewriteBinaryTypeName(binaryTypeName);
+		if (rewrittenBinaryTypeName.equals(binaryTypeName)) return value;
+		StringBuilder sb = new StringBuilder(start + rewrittenBinaryTypeName.length() + 1);
+		sb.append(value, 0, start).append(rewrittenBinaryTypeName).append(';');
 		return sb.toString();
 	}
 
-	public abstract String rewriteNakedReferenceType(String nakedReferenceType);
+	public abstract String rewriteBinaryTypeName(String binaryTypeName);
 
 }
