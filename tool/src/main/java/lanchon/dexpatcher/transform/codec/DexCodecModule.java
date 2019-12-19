@@ -10,7 +10,8 @@
 
 package lanchon.dexpatcher.transform.codec;
 
-import lanchon.dexpatcher.transform.wrappers.WrapperRewriterModule;
+import lanchon.dexpatcher.transform.util.NakedReferenceTypeRewriter;
+import lanchon.dexpatcher.transform.util.wrapper.WrapperRewriterModule;
 
 import org.jf.dexlib2.DebugItemType;
 import org.jf.dexlib2.ValueType;

@@ -8,7 +8,7 @@
  * or (at your option) any later version.
  */
 
-package lanchon.dexpatcher.transform.wrappers;
+package lanchon.dexpatcher.transform.util;
 
 import java.util.Set;
 
@@ -17,6 +17,14 @@ import lanchon.dexpatcher.core.ActionParser;
 import lanchon.dexpatcher.core.Marker;
 import lanchon.dexpatcher.core.util.DexUtils;
 import lanchon.dexpatcher.core.util.Target;
+import lanchon.dexpatcher.transform.util.wrapper.WrapperAnnotation;
+import lanchon.dexpatcher.transform.util.wrapper.WrapperAnnotationElement;
+import lanchon.dexpatcher.transform.util.wrapper.WrapperClassDef;
+import lanchon.dexpatcher.transform.util.wrapper.WrapperField;
+import lanchon.dexpatcher.transform.util.wrapper.WrapperFieldReference;
+import lanchon.dexpatcher.transform.util.wrapper.WrapperMethod;
+import lanchon.dexpatcher.transform.util.wrapper.WrapperMethodReference;
+import lanchon.dexpatcher.transform.util.wrapper.WrapperRewriterModule;
 
 import org.jf.dexlib2.base.value.BaseStringEncodedValue;
 import org.jf.dexlib2.iface.Annotatable;

@@ -17,7 +17,7 @@ import java.util.Locale;
 import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.DexPatcher;
 import lanchon.dexpatcher.core.logger.Logger;
-import lanchon.dexpatcher.transform.DexVisitor;
+import lanchon.dexpatcher.transform.util.DexVisitor;
 import lanchon.dexpatcher.transform.DexTransform;
 import lanchon.dexpatcher.transform.TransformLogger;
 import lanchon.dexpatcher.transform.anonymizer.DexAnonymizer;

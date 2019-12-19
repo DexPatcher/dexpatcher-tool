@@ -8,7 +8,7 @@
  * or (at your option) any later version.
  */
 
-package lanchon.dexpatcher.transform.wrappers;
+package lanchon.dexpatcher.transform.util.wrapper;
 
 import java.util.Iterator;
 import java.util.List;

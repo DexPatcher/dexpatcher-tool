@@ -8,7 +8,7 @@
  * or (at your option) any later version.
  */
 
-package lanchon.dexpatcher.transform.wrappers;
+package lanchon.dexpatcher.transform.util.wrapper;
 
 import org.jf.dexlib2.base.reference.BaseFieldReference;
 import org.jf.dexlib2.iface.reference.FieldReference;
