@@ -732,17 +732,56 @@ public class Main {
 
 	}
 
+	// DexPatcher tool v1.8.0 adds support for processing anonymous classes via
+	// optional code transform passes that deanonymize and reanonymize them.
+	// They allow easier patching of existing anonymous classes in the source.
+	// And they also allow defining new anonymous classes in the patch without
+	// risk of them name-clashing with existing ones in the source.
+
+	// The deanonymize and reanonymize transforms apply a configurable plan,
+	// which is a string that represents an anonymous class renaming template
+	// and has the form '<prefix>[<infix>]<suffix>'. The infix cannot be empty,
+	// and the prefix and suffix cannot be both empty. The brackets are literal
+	// characters in the string, and the characters immediately adjacent to the
+	// brackets cannot be digits.
+
+	// During deanonymization, an anonymous class named number 'N' in bytecode
+	// and nested 'L' levels deep will be renamed to '<prefix>N<suffix>' if L
+	// is 1 or to '<prefix>N<infix>L<suffix>' if L is larger than 1. The
+	// nesting level is included in the new name to support patching of nested
+	// anonymous classes and to avoid clashes with existing class names that
+	// happen to match the plan, should they exist.
+
+	// For example, to allow defining new anonymous classes in a patch, the
+	// patch could be deanonymized with plan '[_]_patch' to rename its
+	// anonymous classes and make sure they do not clash with the names of
+	// anonymous classes already existing in the source. In this case, a patch
+	// anonymous class named 'Main$1' would end up being called 'Main$1_patch'.
+
+	// Also, to make it easier to patch existing anonymous classes, the source
+	// could be deanonymized with plan 'Anon[_Level]'. This would cause a
+	// source anonymous class named 'Main$3' to be renamed to 'Main$Anon3' for
+	// easy targeting with DexPatcher tags. Additionally, the original
+	// anonymous class names can be restored after patching by reanonymizing
+	// the output using the same plan used to deanonymize the source.
+
+	// Finally, when it is time to publish the patch, the patch itself could be
+	// pre-transformed (so that it can be applied to the source by users
+	// without needing any further transforms) using this command:
+	// dexpatcher patch.dex --output release-patch.dex
+	//     --deanon-source [_]_patch --reanon-source Anon[_Level]
+
 	// Modify members of an anonymous class:
 	// Note: For this to work, the source dex file must be deanonymized using
-	// '--deanon-source Anon[]'. It is recommended to reanonymize the output
-	// dex using '--reanon-output Anon[]'. This restores the original names
-	// of the anonymous classes right after the patching step is done
+	// '--deanon-source Anon[_Level]'. It is recommended to reanonymize the
+	// output dex using '--reanon-output Anon[_Level]'. This restores the
+	// original names of the anonymous classes right after the patching step.
 	@DexEdit
 	public static class AnonymousClasses {
 		@DexEdit(contentOnly = true)
 		public static class Anon1 {
 			@DexEdit(contentOnly = true)
-			public static class AnonAnon1 implements Runnable {
+			public static class Anon1_Level2 implements Runnable {
 				@DexReplace
 				@Override public void run() {
 					p("replaced AnonymousClasses::<anon>::<anon>::run");
@@ -753,7 +792,7 @@ public class Main {
 		// Use anonymous classes in the patch:
 		// Note: Anonymous classes in the patch can name-clash with anonymous
 		// classes in the source. To avoid clashes, the patch dex file can be
-		// deanonymized using something like '--deanon-patch []_patch'.
+		// deanonymized using something like '--deanon-patch [_]_patch'.
 		@DexAppend
 		public static void print() {
 			new Runnable() {
@@ -765,7 +804,7 @@ public class Main {
 		}
 
 		// Test unexpected anonymous classes during reanonymization:
-		// Note: The output must be reanonymized using '--no-reanon-errors'.
+		// Note: The output must be reanonymized using '--no-anon-errors'.
 		// Note: When reanonymizing the output, all classes are expected to be
 		// deanonymized. This inserts an non-deanonymized anonymous class named
 		// '42' in the output to test the handling of this error condition.

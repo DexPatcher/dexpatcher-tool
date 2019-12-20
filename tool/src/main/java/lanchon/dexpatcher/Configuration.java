@@ -54,10 +54,10 @@ public class Configuration {
 	public boolean decodeOutput;
 	public String reanonOutputPlan;
 
-	public boolean treatReanonymizeErrorsAsWarnings;
+	public boolean treatAnonymizerErrorsAsWarnings;
 
 	public String codeMarker = StringCodec.DEFAULT_CODE_MARKER;
-	public boolean treatDecodeErrorsAsWarnings;
+	public boolean treatDecoderErrorsAsWarnings;
 
 	public PreTransform preTransform = Processor.DEFAULT_PRE_TRANSFORM;
 

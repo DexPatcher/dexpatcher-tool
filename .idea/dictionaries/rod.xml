@@ -4,10 +4,13 @@
       <w>annotatable</w>
       <w>anonymized</w>
       <w>anonymizer</w>
+      <w>anonymizing</w>
       <w>balerdi</w>
       <w>dalvik</w>
+      <w>deanonymization</w>
       <w>deanonymize</w>
       <w>deanonymized</w>
+      <w>deanonymizer</w>
       <w>dexlib</w>
       <w>dexpatcher</w>
       <w>lanchon</w>
@@ -15,8 +18,11 @@
       <w>nano</w>
       <w>opcode</w>
       <w>opcodes</w>
+      <w>precalculated</w>
       <w>reanonymize</w>
       <w>reanonymized</w>
+      <w>reanonymizer</w>
+      <w>reanonymizing</w>
       <w>smali</w>
     </words>
   </dictionary>

@@ -279,12 +279,13 @@ public class Main {
 			}.run();
 			Anon1.go();
 		}
-		// Note: When the source dex is deanonymized with plan 'Anon[]', the
-		// deanonymized classes from above would clash with the following inner
-		// classes. So these inner classes will also be renamed proactively by
-		// the deanonymizer and eventually restored by the reanonymizer.
+		// Note: When the source dex is deanonymized with plan 'Anon[_Level]',
+		// the deanonymized classes from above would clash with the following
+		// inner classes. To avoid clashes such as these, inner classes that
+		// are candidates for clashes will also be renamed proactively by the
+		// deanonymizer and eventually restored by the reanonymizer.
 		public static class Anon1 {
-			public static class AnonAnon1 {}
+			public static class Anon1_Level2 {}
 			public static void go() {
 				p("original AnonymousClasses::Anon1::go");
 				new Object() {};

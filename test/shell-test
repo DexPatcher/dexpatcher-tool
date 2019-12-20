@@ -34,7 +34,7 @@ dex-jar source
 dex-jar patch
 
 run dexpatcher --help
-run dexpatcher build/source.dex.zip build/patch.dex.zip --output build/patched.dex --deanon-source Anon[] --reanon-output Anon[] --deanon-patches []_patch --no-reanon-errors --decode-source --decode-patches --no-decode-errors --debug "$@"
+run dexpatcher build/source.dex.zip build/patch.dex.zip --output build/patched.dex --deanon-source Anon[_Level] --reanon-output Anon[_Level] --deanon-patches [_]_patch --no-anon-errors --decode-source --decode-patches --no-decode-errors --debug "$@"
 
 run dex2jar --force --output build/patched-dex2jar.jar build/patched.dex
 

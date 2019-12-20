@@ -92,7 +92,7 @@ public class Parser {
 		config.reanonPatchesPlan = getPlan(cl, "reanon-patches");
 		config.reanonOutputPlan = getPlan(cl, "reanon-output");
 
-		config.treatReanonymizeErrorsAsWarnings = cl.hasOption("no-reanon-errors");
+		config.treatAnonymizerErrorsAsWarnings = cl.hasOption("no-anon-errors");
 
 		config.decodeSource = cl.hasOption("decode-source");
 		config.decodePatches = cl.hasOption("decode-patches");
@@ -102,7 +102,7 @@ public class Parser {
 		if (!StringCodec.isValidCodeMarker(config.codeMarker)) {
 			throw new ParseException("Invalid code marker: '" + config.codeMarker + "'");
 		}
-		config.treatDecodeErrorsAsWarnings = cl.hasOption("no-decode-errors");
+		config.treatDecoderErrorsAsWarnings = cl.hasOption("no-decode-errors");
 
 		String preTransformSet = cl.getOptionValue("pre-transform", null);
 		if (preTransformSet != null) {
@@ -214,7 +214,7 @@ public class Parser {
 		o = new Option(null, "reanon-output", true, "reanonymize anonymous classes in output");
 		o.setArgName("plan"); options.addOption(o);
 
-		options.addOption(new Option(null, "no-reanon-errors", false, "treat reanonymize errors as warnings"));
+		options.addOption(new Option(null, "no-anon-errors", false, "treat anonymizer errors as warnings"));
 
 		options.addOption(new Option(null, "decode-source", false, "decode identifiers in source"));
 		options.addOption(new Option(null, "decode-patches", false, "decode identifiers in patches"));
@@ -223,7 +223,7 @@ public class Parser {
 		o = new Option(null, "code-marker", true, "identifier code marker (default: '" +
 				StringCodec.DEFAULT_CODE_MARKER + "')");
 		o.setArgName("marker"); options.addOption(o);
-		options.addOption(new Option(null, "no-decode-errors", false, "treat identifier decode errors as warnings"));
+		options.addOption(new Option(null, "no-decode-errors", false, "treat decoder errors as warnings"));
 
 		StringBuilder sb = new StringBuilder();
 		for (PreTransform pt : PreTransform.values()) {
