@@ -65,19 +65,19 @@ debug: type 'test.Main$Abstract': (Main.java:0): ignore
 debug: deanonymize patch: type 'test.Main$AnonymousClasses$1': deanonymized to 'test.Main$AnonymousClasses$1_patch'
 debug: type 'test.Main$AnonymousClasses$1_patch': (Main.java:0): add
 debug: type 'test.Main$AnonymousClasses$Anon1$Anon1_Level2': (Main.java:0): edit
-info: type 'test.Main$AnonymousClasses$Anon1$Anon1_Level2': method '<init>():void': (Main.java:784): implicit ignore of trivial default constructor
-debug: type 'test.Main$AnonymousClasses$Anon1$Anon1_Level2': method '<init>():void': (Main.java:784): ignore
-debug: type 'test.Main$AnonymousClasses$Anon1$Anon1_Level2': method 'run():void': (Main.java:787): replace
+info: type 'test.Main$AnonymousClasses$Anon1$Anon1_Level2': method '<init>():void': (Main.java:792): implicit ignore of trivial default constructor
+debug: type 'test.Main$AnonymousClasses$Anon1$Anon1_Level2': method '<init>():void': (Main.java:792): ignore
+debug: type 'test.Main$AnonymousClasses$Anon1$Anon1_Level2': method 'run():void': (Main.java:795): replace
 debug: type 'test.Main$AnonymousClasses$Anon1': (Main.java:0): edit
-info: type 'test.Main$AnonymousClasses$Anon1': method '<init>():void': (Main.java:782): implicit ignore of trivial default constructor
-debug: type 'test.Main$AnonymousClasses$Anon1': method '<init>():void': (Main.java:782): ignore
+info: type 'test.Main$AnonymousClasses$Anon1': method '<init>():void': (Main.java:790): implicit ignore of trivial default constructor
+debug: type 'test.Main$AnonymousClasses$Anon1': method '<init>():void': (Main.java:790): ignore
 debug: decode patch: type 'test.Main$AnonymousClasses$__UnexpectedAnonymousClass_$$_42__': decoded to 'test.Main$AnonymousClasses$42'
 debug: decode patch: annotation element value '__UnexpectedAnonymousClass_$$_42__': decoded to '42'
 debug: type 'test.Main$AnonymousClasses$42': (Main.java:0): add
 debug: type 'test.Main$AnonymousClasses': (Main.java:0): edit
-info: type 'test.Main$AnonymousClasses': method '<init>():void': (Main.java:780): implicit ignore of trivial default constructor
-debug: type 'test.Main$AnonymousClasses': method '<init>():void': (Main.java:780): ignore
-debug: type 'test.Main$AnonymousClasses': method 'print():void': (Main.java:798): append
+info: type 'test.Main$AnonymousClasses': method '<init>():void': (Main.java:788): implicit ignore of trivial default constructor
+debug: type 'test.Main$AnonymousClasses': method '<init>():void': (Main.java:788): ignore
+debug: type 'test.Main$AnonymousClasses': method 'print():void': (Main.java:806): append
 debug: type 'test.Main$B': (Main.java:0): edit
 debug: type 'test.Main$B': field 'staticField:int': (Main.java:0): add
 debug: type 'test.Main$B': field 'instanceField:int': (Main.java:0): add
@@ -189,27 +189,27 @@ debug: type 'test.Main$void': field '__bad_emptyCode_$$__:int': (Main.java:0): a
 warning: decode patch: type 'test.Main$__My_label_for_class_void_$$_void__': field '_bad_$$_noStartMark__': missing start of code in '[->]_bad_$$_[<-]noStartMark__'
 debug: type 'test.Main$void': field '_bad_$$_noStartMark__:int': (Main.java:0): add
 debug: decode source: type 'test.Main$__ClassVoid_$$_void__': method '__method42_$$_42__': decoded to '42'
-info: type 'test.Main$void': method '<init>():void': (Main.java:645): implicit ignore of trivial default constructor
-debug: type 'test.Main$void': method '<init>():void': (Main.java:645): ignore
-debug: type 'test.Main$void': method 'printMethod(java.lang.String):void': (Main.java:648): ignore
+info: type 'test.Main$void': method '<init>():void': (Main.java:650): implicit ignore of trivial default constructor
+debug: type 'test.Main$void': method '<init>():void': (Main.java:650): ignore
+debug: type 'test.Main$void': method 'printMethod(java.lang.String):void': (Main.java:653): ignore
 debug: decode patch: type 'test.Main$__My_label_for_class_void_$$_void__': method '__$$_withoutLabel__': decoded to 'withoutLabel'
-debug: type 'test.Main$void': method 'withoutLabel():void': (Main.java:698): add
+debug: type 'test.Main$void': method 'withoutLabel():void': (Main.java:706): add
 debug: decode patch: type 'test.Main$__My_label_for_class_void_$$_void__': method '__my_label_for_method_42_$$_42__': decoded to '42'
-debug: type 'test.Main$void': method '42():void': (Main.java:652): replace
+debug: type 'test.Main$void': method '42():void': (Main.java:657): replace
 debug: decode patch: type 'test.Main$__My_label_for_class_void_$$_void__': method '__ok_$$_with$SdollarEscape__': decoded to 'with$dollarEscape'
-debug: type 'test.Main$void': method 'with$dollarEscape():void': (Main.java:699): add
+debug: type 'test.Main$void': method 'with$dollarEscape():void': (Main.java:707): add
 debug: decode patch: type 'test.Main$__My_label_for_class_void_$$_void__': method '__ok_$$_with$UunderscoreEscape__': decoded to 'with_underscoreEscape'
-debug: type 'test.Main$void': method 'with_underscoreEscape():void': (Main.java:700): add
+debug: type 'test.Main$void': method 'with_underscoreEscape():void': (Main.java:708): add
 debug: decode patch: type 'test.Main$__My_label_for_class_void_$$_void__': method '__ok_$$_with$aB1asciiLatin1Escape__': decoded to 'with±asciiLatin1Escape'
-debug: type 'test.Main$void': method 'with±asciiLatin1Escape():void': (Main.java:701): add
+debug: type 'test.Main$void': method 'with±asciiLatin1Escape():void': (Main.java:709): add
 debug: decode patch: type 'test.Main$__My_label_for_class_void_$$_void__': method '__ok_$$_with$u00B1unicodeEscape__': decoded to 'with±unicodeEscape'
-debug: type 'test.Main$void': method 'with±unicodeEscape():void': (Main.java:702): add
+debug: type 'test.Main$void': method 'with±unicodeEscape():void': (Main.java:710): add
 warning: decode patch: type 'test.Main$__My_label_for_class_void_$$_void__': method '__prefix_$$_1____bad_infix_$$_$2__and__postfix_$$_3__': invalid escape sequence '$2' in '__bad_infix_$$_[->]$2[<-]__'
 debug: decode patch: type 'test.Main$__My_label_for_class_void_$$_void__': method '__prefix_$$_1____bad_infix_$$_$2__and__postfix_$$_3__': decoded to '1__bad_infix_$$_$2__and3'
-debug: type 'test.Main$void': method '1__bad_infix_$$_$2__and3():void': (Main.java:719): add
+debug: type 'test.Main$void': method '1__bad_infix_$$_$2__and3():void': (Main.java:727): add
 debug: decode patch: type 'test.Main$__My_label_for_class_void_$$_void__': method '__prefix_$$_1____infix_$$_2__and__postfix_$$_3__': decoded to '12and3'
-debug: type 'test.Main$void': method '12and3():void': (Main.java:703): add
-debug: type 'test.Main$void': method 'print():void': (Main.java:724): append
+debug: type 'test.Main$void': method '12and3():void': (Main.java:711): add
+debug: type 'test.Main$void': method 'print():void': (Main.java:732): append
 debug: type 'test.Main$source_CrossClassA': (Main.java:0): edit
 debug: type 'test.Main$source_CrossClassA': target 'test.Main$CrossClassA': (Main.java:0): 'public' modifier removed from renamed type
 debug: type 'test.Main$source_CrossClassA': target 'test.Main$CrossClassA': method '<init>(java.lang.String):void': (Main.java:582): ignore

@@ -639,6 +639,11 @@ public class Main {
 		public CrossClassCPatcher() { p("replaced CrossClassCPatcher::<init> (" + this.getClass() + ")"); }
 	}
 
+	// DexPatcher tool v1.8.0 adds support for patching obfuscated code via
+	// optional identifier decode code transform passes. They allow using the
+	// Java language to work with identifiers that are illegal in the language
+	// but legal in bytecode.
+
 	// Modify members of obfuscated class named 'void':
 	// Note: The patch dex file must be decoded using '--decode-patches'.
 	@DexEdit
@@ -673,10 +678,9 @@ public class Main {
 		// When instructed to decode dex files, DexPatcher will replace each
 		// occurrence of an identifier code with the unescaped version of its
 		// corresponding <escaped-string> field, ignoring the rest of the code
-		// (including its label). This mechanism allows using the java language
-		// to work with identifiers that are illegal in Java but legal in Java
-		// and Dalvik bytecode. This is often required when working with
-		// obfuscated code.
+		// (including its label). This mechanism allows using the Java language
+		// to work with identifiers that are illegal in the language but legal
+		// in bytecode. This is often required when patching obfuscated code.
 
 		// The <label> field of codes is optional and used for disambiguation
 		// and documentation purposes. If present, it must not be zero-length,
@@ -693,6 +697,10 @@ public class Main {
 		// - underscore: $U is replaced with the character _.
 		// - ASCII / Latin-1: $aNN is replaced with hex Unicode codepoint 0xNN.
 		// - Unicode: $uNNNN is replaced with hex Unicode codepoint 0xNNNN.
+
+		// Note that patches can be decoded at patch time, as would be typical
+		// during development, or ahead of time before publishing, so users can
+		// apply them without specifying transforms.
 
 		// Test valid identifier codes:
 		@DexAdd void    __$$_withoutLabel__() { printMethod("added"); };
