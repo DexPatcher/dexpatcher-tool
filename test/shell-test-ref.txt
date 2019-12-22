@@ -3,7 +3,7 @@ $ d8 --no-desugaring --output build/source.dex.zip source/build/libs/source.jar
 $ d8 --no-desugaring --output build/patch.dex.zip patch/build/libs/patch.jar
 
 $ dexpatcher --help
-DexPatcher version 1.8.0-alpha3 by Lanchon (https://dexpatcher.github.io/)
+DexPatcher version 1.8.0-alpha4 by Lanchon (https://dexpatcher.github.io/)
 
 usage: dexpatcher [<option> ...] [--output <patched-dex-or-dir>]
                   <source-dex-apk-or-dir> [<patch-dex-apk-or-dir> ...]
@@ -46,7 +46,7 @@ code transform options:
 
 
 $ dexpatcher build/source.dex.zip build/patch.dex.zip --output build/patched.dex --deanon-source Anon\[_Level\] --reanon-output Anon\[_Level\] --deanon-patches \[_\]_patch --no-anon-errors --decode-source --decode-patches --no-decode-errors --debug
-DexPatcher version 1.8.0-alpha3 by Lanchon (https://dexpatcher.github.io/)
+DexPatcher version 1.8.0-alpha4 by Lanchon (https://dexpatcher.github.io/)
 info: read 'build/source.dex.zip'
 debug: read 'build/source.dex.zip': file 'classes.dex': 33 types
 debug: read 'build/source.dex.zip': dex version '035'
