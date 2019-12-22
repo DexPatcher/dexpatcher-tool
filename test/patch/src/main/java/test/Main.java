@@ -699,8 +699,8 @@ public class Main {
 		// - Unicode: $uNNNN is replaced with hex Unicode codepoint 0xNNNN.
 
 		// Note that patches can be decoded at patch time, as would be typical
-		// during development, or ahead of time before publishing, so users can
-		// apply them without specifying transforms.
+		// during development, or ahead of time before publishing them, so
+		// users can apply them without specifying transforms.
 
 		// Test valid identifier codes:
 		@DexAdd void    __$$_withoutLabel__() { printMethod("added"); };
