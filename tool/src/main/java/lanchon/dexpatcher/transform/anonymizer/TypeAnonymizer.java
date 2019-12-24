@@ -52,7 +52,7 @@ public final class TypeAnonymizer {
 		int close = plan.indexOf(']');
 		prefix = plan.substring(0, open);
 		String in = plan.substring(open + 1, close);
-		//if (in.length() == 0) in = DEFAULT_MARKER_INFIX;
+		//if (in.isEmpty()) in = DEFAULT_MARKER_INFIX;
 		infix = in;
 		suffix = plan.substring(close + 1);
 		this.reanonymize = reanonymize;

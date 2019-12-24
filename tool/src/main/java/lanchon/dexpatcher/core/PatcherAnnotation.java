@@ -62,7 +62,7 @@ public class PatcherAnnotation implements ActionBasedPatcher.ActionContext {
 			case Marker.ELEM_TARGET: {
 				if (target != null) break;
 				String s = ((StringEncodedValue) value).getValue();
-				if (s.length() != 0) target = s;
+				if (!s.isEmpty()) target = s;
 				continue;
 			}
 			case Marker.ELEM_TARGET_CLASS: {

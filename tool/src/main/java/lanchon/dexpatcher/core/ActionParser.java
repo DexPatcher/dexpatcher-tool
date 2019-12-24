@@ -45,7 +45,7 @@ public class ActionParser {
 	private String getTypeDescriptorFromAction(Action action) {
 		String className = action.getClassName();
 		if (className == null) return null;
-		if (annotationPackage.length() != 0) className = annotationPackage + '.' + className;
+		if (!annotationPackage.isEmpty()) className = annotationPackage + '.' + className;
 		return TypeName.toClassDescriptor(className);
 	}
 

@@ -146,7 +146,7 @@ public class PatchRewriterModule extends WrapperRewriterModule<RewriterModule> {
 								@Override
 								public String getValue() {
 									String target = ((StringEncodedValue) elementValue).getValue();
-									if (target.length() == 0) return target;
+									if (target.isEmpty()) return target;
 									String baseDescriptor = classDef.getType();
 									String targetDescriptor = DexUtils.isPackageDescriptor(baseDescriptor) ?
 											Target.resolvePackageDescriptor(target) :
@@ -171,7 +171,7 @@ public class PatchRewriterModule extends WrapperRewriterModule<RewriterModule> {
 								@Override
 								public String getValue() {
 									final String target = ((StringEncodedValue) elementValue).getValue();
-									if (target.length() == 0) return target;
+									if (target.isEmpty()) return target;
 									FieldReference fieldReference = new WrapperFieldReference(field) {
 										@Override
 										public String getName() {
@@ -198,7 +198,7 @@ public class PatchRewriterModule extends WrapperRewriterModule<RewriterModule> {
 								@Override
 								public String getValue() {
 									final String target = ((StringEncodedValue) elementValue).getValue();
-									if (target.length() == 0) return target;
+									if (target.isEmpty()) return target;
 									MethodReference methodReference = new WrapperMethodReference(method) {
 										@Override
 										public String getName() {

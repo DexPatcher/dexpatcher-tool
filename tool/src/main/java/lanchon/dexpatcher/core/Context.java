@@ -71,7 +71,7 @@ public class Context extends ActionParser {
 		super(annotationPackage);
 		this.logger = logger;
 		this.constructorAutoIgnoreDisabled = constructorAutoIgnoreDisabled;
-		if (sourceCodeRoot != null && sourceCodeRoot.length() > 0 && !sourceCodeRoot.endsWith(File.separator)) {
+		if (sourceCodeRoot != null && !sourceCodeRoot.isEmpty() && !sourceCodeRoot.endsWith(File.separator)) {
 			sourceCodeRoot += File.separator;
 		}
 		this.sourceCodeRoot = sourceCodeRoot;

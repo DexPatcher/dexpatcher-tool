@@ -46,7 +46,7 @@ public class Target {
 		// Precondition: target is a non-zero length string.
 		if (!DexUtils.isClassDescriptor(target)) {
 			if (target.startsWith(".")) target = target.substring(1);
-			target = (target.length() == 0) ? Marker.NAME_PACKAGE_INFO : target + '.' + Marker.NAME_PACKAGE_INFO;
+			target = (target.isEmpty()) ? Marker.NAME_PACKAGE_INFO : target + '.' + Marker.NAME_PACKAGE_INFO;
 			target = TypeName.toClassDescriptor(target);
 		}
 		return target;
