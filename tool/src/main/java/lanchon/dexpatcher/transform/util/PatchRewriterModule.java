@@ -44,6 +44,14 @@ import org.jf.dexlib2.rewriter.Rewriters;
 
 public class PatchRewriterModule extends WrapperRewriterModule<RewriterModule> {
 
+	public static RewriterModule of(RewriterModule wrappedModule, String annotationPackage) {
+		if (annotationPackage != null) {
+			return new PatchRewriterModule(wrappedModule, new ActionParser(annotationPackage));
+		} else {
+			return wrappedModule;
+		}
+	}
+
 	protected final ActionParser actionParser;
 
 	public PatchRewriterModule(RewriterModule wrappedModule, ActionParser actionParser) {
