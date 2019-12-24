@@ -36,7 +36,7 @@ public class PatcherAnnotation implements ActionBasedPatcher.ActionContext {
 		Action action = null;
 		Set<Annotation> filteredAnnotations = new LinkedHashSet<>(annotations.size());
 		for (Annotation an : annotations) {
-			Action ac = actionParser.getActionFromTypeDescriptor(an.getType());
+			Action ac = actionParser.parseTypeDescriptor(an.getType());
 			if (ac != null) {
 				if (action != null) {
 					throw new PatchException("conflicting patcher annotations (" +

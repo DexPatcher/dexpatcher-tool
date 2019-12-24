@@ -17,8 +17,9 @@ import lanchon.dexpatcher.core.logger.Logger;
 
 import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 
-public class Context extends ActionParser {
+public class Context {
 
+	public static final String DEFAULT_ANNOTATION_PACKAGE = "lanchon.dexpatcher.annotation";
 	public static final Logger.Level DEFAULT_LOG_LEVEL = WARN;
 
 	public static class Builder {
@@ -63,13 +64,14 @@ public class Context extends ActionParser {
 	}
 
 	private final Logger logger;
+	private final ActionParser actionParser;
 	private final boolean constructorAutoIgnoreDisabled;
 	private final String sourceCodeRoot;
 
 	private Context(Logger logger, String annotationPackage, boolean constructorAutoIgnoreDisabled,
 			String sourceCodeRoot) {
-		super(annotationPackage);
 		this.logger = logger;
+		actionParser = new ActionParser(annotationPackage);
 		this.constructorAutoIgnoreDisabled = constructorAutoIgnoreDisabled;
 		if (sourceCodeRoot != null && !sourceCodeRoot.isEmpty() && !sourceCodeRoot.endsWith(File.separator)) {
 			sourceCodeRoot += File.separator;
@@ -79,6 +81,10 @@ public class Context extends ActionParser {
 
 	public Logger getLogger() {
 		return logger;
+	}
+
+	public ActionParser getActionParser() {
+		return actionParser;
 	}
 
 	public boolean isConstructorAutoIgnoreDisabled() {

@@ -108,7 +108,7 @@ public class PatchRewriterModule extends WrapperRewriterModule<RewriterModule> {
 		Rewriter<Annotation> annotationRewriter = new Rewriter<Annotation>() {
 			@Override
 			public Annotation rewrite(final Annotation annotation) {
-				final Action action = actionParser.getActionFromTypeDescriptor(annotation.getType());
+				final Action action = actionParser.parseTypeDescriptor(annotation.getType());
 				Annotation rewrittenAnnotation = rewriters.getAnnotationRewriter().rewrite(annotation);
 				if (action == null) return rewrittenAnnotation;
 				return new WrapperAnnotation(rewrittenAnnotation) {

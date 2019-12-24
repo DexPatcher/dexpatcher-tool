@@ -18,8 +18,6 @@ import lanchon.dexpatcher.core.util.TypeName;
 
 public class ActionParser {
 
-	public static final String DEFAULT_ANNOTATION_PACKAGE = "lanchon.dexpatcher.annotation";
-
 	private final String annotationPackage;
 	private final Map<String, Action> actionMap;
 
@@ -32,7 +30,7 @@ public class ActionParser {
 			int sizeFactor = 4;
 			actionMap = new HashMap<>(sizeFactor * actions.length);
 			for (Action action : actions) {
-				String actionTypeDescriptor = getTypeDescriptorFromAction(action);
+				String actionTypeDescriptor = getTypeDescriptor(action);
 				if (actionTypeDescriptor != null) actionMap.put(actionTypeDescriptor, action);
 			}
 		}
@@ -46,14 +44,14 @@ public class ActionParser {
 		return annotationPackage == null;
 	}
 
-	private String getTypeDescriptorFromAction(Action action) {
+	private String getTypeDescriptor(Action action) {
 		String className = action.getClassName();
 		if (className == null) return null;
 		if (!annotationPackage.isEmpty()) className = annotationPackage + '.' + className;
 		return TypeName.toClassDescriptor(className);
 	}
 
-	public Action getActionFromTypeDescriptor(String typeDescriptor) {
+	public Action parseTypeDescriptor(String typeDescriptor) {
 		return actionMap.get(typeDescriptor);
 	}
 
