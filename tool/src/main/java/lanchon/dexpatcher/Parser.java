@@ -70,6 +70,7 @@ public class Parser {
 		if (maxDexPoolSize != null) config.maxDexPoolSize = maxDexPoolSize.intValue();
 
 		config.annotationPackage = cl.getOptionValue("annotations", Context.DEFAULT_ANNOTATION_PACKAGE);
+		if (config.annotationPackage.length() == 0) config.annotationPackage = null;
 		config.constructorAutoIgnoreDisabled = cl.hasOption("no-auto-ignore");
 
 		config.logLevel = WARN;

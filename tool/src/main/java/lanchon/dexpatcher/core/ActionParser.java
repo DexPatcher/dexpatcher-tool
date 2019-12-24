@@ -10,7 +10,9 @@
 
 package lanchon.dexpatcher.core;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 import lanchon.dexpatcher.core.util.TypeName;
 
@@ -19,16 +21,20 @@ public class ActionParser {
 	public static final String DEFAULT_ANNOTATION_PACKAGE = "lanchon.dexpatcher.annotation";
 
 	private final String annotationPackage;
-	private final HashMap<String, Action> actionMap;
+	private final Map<String, Action> actionMap;
 
 	public ActionParser(String annotationPackage) {
 		this.annotationPackage = annotationPackage;
-		Action[] actions = Action.values();
-		int sizeFactor = 4;
-		actionMap = new HashMap<>(sizeFactor * actions.length);
-		for (Action action : actions) {
-			String actionTypeDescriptor = getTypeDescriptorFromAction(action);
-			if (actionTypeDescriptor != null) actionMap.put(actionTypeDescriptor, action);
+		if (annotationPackage == null) {
+			actionMap = Collections.emptyMap();
+		} else {
+			Action[] actions = Action.values();
+			int sizeFactor = 4;
+			actionMap = new HashMap<>(sizeFactor * actions.length);
+			for (Action action : actions) {
+				String actionTypeDescriptor = getTypeDescriptorFromAction(action);
+				if (actionTypeDescriptor != null) actionMap.put(actionTypeDescriptor, action);
+			}
 		}
 	}
 
