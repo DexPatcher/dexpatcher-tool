@@ -16,6 +16,7 @@ import lanchon.dexpatcher.core.Action;
 import lanchon.dexpatcher.core.ActionParser;
 import lanchon.dexpatcher.core.Marker;
 import lanchon.dexpatcher.core.util.DexUtils;
+import lanchon.dexpatcher.core.util.InvalidTypeDescriptorException;
 import lanchon.dexpatcher.core.util.Target;
 import lanchon.dexpatcher.transform.util.wrapper.WrapperAnnotation;
 import lanchon.dexpatcher.transform.util.wrapper.WrapperAnnotationElement;
@@ -156,10 +157,12 @@ public class PatchRewriterModule extends WrapperRewriterModule<RewriterModule> {
 									String target = ((StringEncodedValue) elementValue).getValue();
 									if (target.isEmpty()) return target;
 									String baseDescriptor = classDef.getType();
-									String targetDescriptor = DexUtils.isPackageDescriptor(baseDescriptor) ?
-											Target.resolvePackageDescriptor(target) :
-											Target.resolveClassDescriptor(baseDescriptor, target);
-									return rewriters.getTypeRewriter().rewrite(targetDescriptor);
+									try {
+										target = DexUtils.isPackageDescriptor(baseDescriptor) ?
+												Target.resolvePackageDescriptor(target) :
+												Target.resolveClassDescriptor(baseDescriptor, target);
+									} catch (InvalidTypeDescriptorException e) {}
+									return rewriters.getTypeRewriter().rewrite(target);
 								}
 							};
 						default:

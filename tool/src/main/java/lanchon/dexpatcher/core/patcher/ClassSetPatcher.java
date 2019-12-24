@@ -22,6 +22,7 @@ import lanchon.dexpatcher.core.model.BasicClassDef;
 import lanchon.dexpatcher.core.util.DexUtils;
 import lanchon.dexpatcher.core.util.ElementalTypeRewriter;
 import lanchon.dexpatcher.core.util.Id;
+import lanchon.dexpatcher.core.util.InvalidTypeDescriptorException;
 import lanchon.dexpatcher.core.util.Label;
 import lanchon.dexpatcher.core.util.Target;
 
@@ -87,7 +88,8 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 	}
 
 	@Override
-	protected String getTargetId(String patchId, ClassDef patch, PatcherAnnotation annotation) {
+	protected String getTargetId(String patchId, ClassDef patch, PatcherAnnotation annotation)
+			throws InvalidTypeDescriptorException {
 		String target = annotation.getTarget();
 		String targetClass = annotation.getTargetClass();
 		String targetId =

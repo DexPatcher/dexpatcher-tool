@@ -10,7 +10,9 @@
 
 package lanchon.dexpatcher.core.util;
 
-public class InvalidTypeDescriptorException extends RuntimeException {
+import lanchon.dexpatcher.core.PatchException;
+
+public class InvalidTypeDescriptorException extends PatchException {
 
 	public InvalidTypeDescriptorException(String descriptorType, String descriptor) {
 		super("Invalid " + descriptorType + " type descriptor (" + descriptor + ")");

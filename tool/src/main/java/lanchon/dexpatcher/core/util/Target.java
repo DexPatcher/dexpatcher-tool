@@ -14,7 +14,8 @@ import lanchon.dexpatcher.core.Marker;
 
 public class Target {
 
-	public static String resolveClassDescriptor(String baseDescriptor, String target) {
+	public static String resolveClassDescriptor(String baseDescriptor, String target)
+			throws InvalidTypeDescriptorException {
 		// Precondition: target is a non-zero length string.
 		if (!DexUtils.isClassDescriptor(target)) {
 			String baseName = TypeName.fromClassDescriptor(baseDescriptor);

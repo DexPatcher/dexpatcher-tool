@@ -30,8 +30,7 @@ public class TypeName {
 			.put("V", "void")
 			.build();
 
-	public static String fromClassDescriptor(String descriptor) {
-		// TODO: Catch invalid type descriptor exceptions in client code.
+	public static String fromClassDescriptor(String descriptor) throws InvalidTypeDescriptorException {
 		if (!DexUtils.isClassDescriptor(descriptor)) {
 			throw new InvalidTypeDescriptorException("class", descriptor);
 		}
@@ -60,7 +59,7 @@ public class TypeName {
 		return sb.toString();
 	}
 
-	public static String fromFieldDescriptor(String descriptor) {
+	public static String fromFieldDescriptor(String descriptor) throws InvalidTypeDescriptorException {
 		try {
 			if (descriptor.length() == 1) {
 				String name = fieldTypeToNameMap.get(descriptor);
@@ -74,7 +73,7 @@ public class TypeName {
 		}
 	}
 
-	public static String fromReturnDescriptor(String descriptor) {
+	public static String fromReturnDescriptor(String descriptor) throws InvalidTypeDescriptorException {
 		try {
 			// Void is only valid for return types.
 			return "V".equals(descriptor) ? "void" : fromFieldDescriptor(descriptor);
