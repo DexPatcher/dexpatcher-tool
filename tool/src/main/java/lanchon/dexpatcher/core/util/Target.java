@@ -35,9 +35,6 @@ public class Target {
 			if (baseNameEnd >= 0) {
 				target = baseName.substring(0, baseNameEnd + 1) + target;
 			}
-		} else if (targetDot == 0) {
-			// If fully qualified target starts with '.':
-			target = target.substring(1);
 		}
 		return target;
 	}

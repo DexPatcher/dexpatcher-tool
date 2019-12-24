@@ -10,8 +10,6 @@
 
 package lanchon.dexpatcher.core.util;
 
-import java.util.List;
-
 import lanchon.dexpatcher.core.Marker;
 
 import org.jf.dexlib2.iface.ClassDef;
@@ -52,7 +50,7 @@ public class Id {
 		return ofMethod(method.getParameters(), method.getReturnType(), name);
 	}
 
-	public static String ofMethod(List<? extends MethodParameter> parameters, String returnType, String name) {
+	public static String ofMethod(Iterable<? extends MethodParameter> parameters, String returnType, String name) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(name).append('.');
 		for (MethodParameter p : parameters) sb.append(p.getType());

@@ -10,25 +10,49 @@
 
 package lanchon.dexpatcher.core.util;
 
+import com.google.common.collect.ImmutableBiMap;
+
 public class TypeName {
+
+	private static final ImmutableBiMap<String, String> fieldTypeToNameMap = ImmutableBiMap.<String, String>builder()
+			.put("Z", "boolean")
+			.put("C", "char")
+			.put("B", "byte")
+			.put("S", "short")
+			.put("I", "int")
+			.put("J", "long")
+			.put("F", "float")
+			.put("D", "double")
+			.build();
+
+	private static final ImmutableBiMap<String, String> returnTypeToNameMap = ImmutableBiMap.<String, String>builder()
+			.putAll(fieldTypeToNameMap)
+			.put("V", "void")
+			.build();
 
 	public static String fromClassDescriptor(String descriptor) {
 		// TODO: Catch invalid type descriptor exceptions in client code.
-		if (!DexUtils.isClassDescriptor(descriptor)) throw invalidTypeDescriptor(descriptor);
-		int l = descriptor.length();
-		StringBuilder sb = new StringBuilder(l - 2);
-		for (int i = 1; i < l - 1; i++) {
+		if (!DexUtils.isClassDescriptor(descriptor)) {
+			throw new InvalidTypeDescriptorException("class", descriptor);
+		}
+		int length = descriptor.length();
+		StringBuilder sb = new StringBuilder(length - 2);
+		length--;
+		for (int i = 1; i < length; i++) {
 			char c = descriptor.charAt(i);
 			sb.append(c == '/' ? '.' : c);
 		}
-		return sb.toString();
+		String name = sb.toString();
+		if (returnTypeToNameMap.containsValue(name)) name = '.' + name;
+		return name;
 	}
 
 	public static String toClassDescriptor(String name) {
-		int l = name.length();
-		StringBuilder sb = new StringBuilder(l + 2);
+		int length = name.length();
+		int start = name.startsWith(".") ? 1 : 0;
+		StringBuilder sb = new StringBuilder(length - start + 2);
 		sb.append('L');
-		for (int i = 0; i < l; i++) {
+		for (int i = start; i < length; i++) {
 			char c = name.charAt(i);
 			sb.append(c == '.' ? '/' : c);
 		}
@@ -37,32 +61,26 @@ public class TypeName {
 	}
 
 	public static String fromFieldDescriptor(String descriptor) {
-		if (descriptor.length() == 1) {
-			switch (descriptor.charAt(0)) {
-				case 'Z': return "boolean";
-				case 'B': return "byte";
-				case 'S': return "short";
-				case 'C': return "char";
-				case 'I': return "int";
-				case 'J': return "long";
-				case 'F': return "float";
-				case 'D': return "double";
+		try {
+			if (descriptor.length() == 1) {
+				String name = fieldTypeToNameMap.get(descriptor);
+				if (name != null) return name;
+			} else if (descriptor.startsWith("[")) {
+				return fromFieldDescriptor(descriptor.substring(1)) + "[]";
 			}
-		}
-		if (descriptor.startsWith("[")) {
-			return fromFieldDescriptor(descriptor.substring(1)) + "[]";
-		} else {
 			return fromClassDescriptor(descriptor);
+		} catch (InvalidTypeDescriptorException e) {
+			throw new InvalidTypeDescriptorException("field", descriptor);
 		}
 	}
 
 	public static String fromReturnDescriptor(String descriptor) {
-		// Void is only valid for return types.
-		return "V".equals(descriptor) ? "void" : fromFieldDescriptor(descriptor);
-	}
-
-	private static RuntimeException invalidTypeDescriptor(String descriptor) {
-		return new RuntimeException("Invalid type descriptor (" + descriptor + ")");
+		try {
+			// Void is only valid for return types.
+			return "V".equals(descriptor) ? "void" : fromFieldDescriptor(descriptor);
+		} catch (InvalidTypeDescriptorException e) {
+			throw new InvalidTypeDescriptorException("return", descriptor);
+		}
 	}
 
 	private TypeName() {}

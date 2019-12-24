@@ -10,8 +10,6 @@
 
 package lanchon.dexpatcher.core.util;
 
-import java.util.List;
-
 import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.Field;
 import org.jf.dexlib2.iface.Method;
@@ -19,20 +17,36 @@ import org.jf.dexlib2.iface.MethodParameter;
 
 public class Label {
 
+	public static String fromClassDescriptor(String descriptor) {
+		try {
+			return TypeName.fromClassDescriptor(descriptor);
+		} catch (InvalidTypeDescriptorException e) {
+			return "[class-type:" + descriptor + "]";
+		}
+	}
+
+	public static String fromFieldDescriptor(String descriptor) {
+		try {
+			return TypeName.fromFieldDescriptor(descriptor);
+		} catch (InvalidTypeDescriptorException e) {
+			return "[field-type:" + descriptor + "]";
+		}
+	}
+
+	public static String fromReturnDescriptor(String descriptor) {
+		try {
+			return TypeName.fromReturnDescriptor(descriptor);
+		} catch (InvalidTypeDescriptorException e) {
+			return "[return-type:" + descriptor + "]";
+		}
+	}
+
 	public static String ofClass(ClassDef classDef) {
 		return fromClassDescriptor(classDef.getType());
 	}
 
 	public static String fromClassId(String id) {
 		return fromClassDescriptor(Id.toClassDescriptor(id));
-	}
-
-	public static String fromClassDescriptor(String descriptor) {
-		try {
-			return TypeName.fromClassDescriptor(descriptor);
-		} catch (RuntimeException e) {
-			return descriptor;
-		}
 	}
 
 	public static String ofTargetMember(String name) {
@@ -44,7 +58,7 @@ public class Label {
 	}
 
 	public static String ofField(Field field, String name) {
-		return name + ':' + TypeName.fromFieldDescriptor(field.getType());
+		return name + ':' + fromFieldDescriptor(field.getType());
 	}
 
 	public static String ofMethod(Method method) {
@@ -55,16 +69,16 @@ public class Label {
 		return ofMethod(method.getParameters(), method.getReturnType(), name);
 	}
 
-	public static String ofMethod(List<? extends MethodParameter> parameters, String returnType, String name) {
+	public static String ofMethod(Iterable<? extends MethodParameter> parameters, String returnType, String name) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(name).append('(');
 		boolean first = true;
 		for (MethodParameter p : parameters) {
 			if (!first) sb.append(", ");
-			sb.append(TypeName.fromFieldDescriptor(p.getType()));
+			sb.append(fromFieldDescriptor(p.getType()));
 			first = false;
 		}
-		sb.append("):").append(TypeName.fromReturnDescriptor(returnType));
+		sb.append("):").append(fromReturnDescriptor(returnType));
 		return sb.toString();
 	}
 
