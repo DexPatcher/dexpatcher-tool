@@ -30,6 +30,8 @@ public class PatcherAnnotation implements ActionBasedPatcher.ActionContext {
 	public static PatcherAnnotation parse(ActionParser actionParser, Set<? extends Annotation> annotations)
 			throws PatchException {
 
+		if (actionParser.isDisabled()) return null;
+
 		Annotation annotation = null;
 		Action action = null;
 		Set<Annotation> filteredAnnotations = new LinkedHashSet<>(annotations.size());

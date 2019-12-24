@@ -42,6 +42,10 @@ public class ActionParser {
 		return annotationPackage;
 	}
 
+	public boolean isDisabled() {
+		return annotationPackage == null;
+	}
+
 	private String getTypeDescriptorFromAction(Action action) {
 		String className = action.getClassName();
 		if (className == null) return null;
