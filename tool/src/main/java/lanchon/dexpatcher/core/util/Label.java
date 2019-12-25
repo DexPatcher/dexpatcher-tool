@@ -11,9 +11,8 @@
 package lanchon.dexpatcher.core.util;
 
 import org.jf.dexlib2.iface.ClassDef;
-import org.jf.dexlib2.iface.Field;
-import org.jf.dexlib2.iface.Method;
-import org.jf.dexlib2.iface.MethodParameter;
+import org.jf.dexlib2.iface.reference.FieldReference;
+import org.jf.dexlib2.iface.reference.MethodReference;
 
 public class Label {
 
@@ -53,29 +52,29 @@ public class Label {
 		return name;
 	}
 
-	public static String ofField(Field field) {
+	public static String ofField(FieldReference field) {
 		return ofField(field, field.getName());
 	}
 
-	public static String ofField(Field field, String name) {
+	public static String ofField(FieldReference field, String name) {
 		return name + ':' + fromFieldDescriptor(field.getType());
 	}
 
-	public static String ofMethod(Method method) {
+	public static String ofMethod(MethodReference method) {
 		return ofMethod(method, method.getName());
 	}
 
-	public static String ofMethod(Method method, String name) {
-		return ofMethod(method.getParameters(), method.getReturnType(), name);
+	public static String ofMethod(MethodReference method, String name) {
+		return ofMethod(method.getParameterTypes(), method.getReturnType(), name);
 	}
 
-	public static String ofMethod(Iterable<? extends MethodParameter> parameters, String returnType, String name) {
+	public static String ofMethod(Iterable<? extends CharSequence> parameterTypes, String returnType, String name) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(name).append('(');
 		boolean first = true;
-		for (MethodParameter p : parameters) {
+		for (CharSequence parameterType : parameterTypes) {
 			if (!first) sb.append(", ");
-			sb.append(fromFieldDescriptor(p.getType()));
+			sb.append(fromFieldDescriptor(parameterType.toString()));
 			first = false;
 		}
 		sb.append("):").append(fromReturnDescriptor(returnType));
