@@ -30,6 +30,8 @@ public class TypeName {
 			.put("V", "void")
 			.build();
 
+	private static final ImmutableBiMap<String, String> nameToFieldTypeMap = fieldTypeToNameMap.inverse();
+
 	public static String fromClassDescriptor(String descriptor) throws InvalidTypeDescriptorException {
 		if (!DexUtils.isClassDescriptor(descriptor)) {
 			throw new InvalidTypeDescriptorException("class", descriptor);
@@ -73,13 +75,24 @@ public class TypeName {
 		}
 	}
 
+	public static String toFieldDescriptor(String name) {
+		if (name.endsWith("[]")) {
+			return "[" + toFieldDescriptor(name.substring(0, name.length() - 2));
+		}
+		String type = nameToFieldTypeMap.get(name);
+		return type != null ? type : toClassDescriptor(name);
+	}
+
 	public static String fromReturnDescriptor(String descriptor) throws InvalidTypeDescriptorException {
 		try {
-			// Void is only valid for return types.
 			return "V".equals(descriptor) ? "void" : fromFieldDescriptor(descriptor);
 		} catch (InvalidTypeDescriptorException e) {
 			throw new InvalidTypeDescriptorException("return", descriptor);
 		}
+	}
+
+	public static String toReturnDescriptor(String name) {
+		return "void".equals(name) ? "V" : toFieldDescriptor(name);
 	}
 
 	private TypeName() {}
