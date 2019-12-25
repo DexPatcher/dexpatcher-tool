@@ -13,9 +13,8 @@ package lanchon.dexpatcher.core.util;
 import lanchon.dexpatcher.core.Marker;
 
 import org.jf.dexlib2.iface.ClassDef;
-import org.jf.dexlib2.iface.Field;
-import org.jf.dexlib2.iface.Method;
-import org.jf.dexlib2.iface.MethodParameter;
+import org.jf.dexlib2.iface.reference.FieldReference;
+import org.jf.dexlib2.iface.reference.MethodReference;
 
 public class Id {
 
@@ -34,26 +33,30 @@ public class Id {
 		return id;
 	}
 
-	public static String ofField(Field field) {
-		return ofField(field, field.getName());
+	public static String ofField(FieldReference field) {
+		return ofField(field.getType(), field.getName());
 	}
 
-	public static String ofField(Field field, String name) {
-		return name + '.' + field.getType();
+	public static String ofField(FieldReference field, String name) {
+		return ofField(field.getType(), name);
 	}
 
-	public static String ofMethod(Method method) {
-		return ofMethod(method, method.getName());
+	public static String ofField(String type, String name) {
+		return name + '.' + type;
 	}
 
-	public static String ofMethod(Method method, String name) {
-		return ofMethod(method.getParameters(), method.getReturnType(), name);
+	public static String ofMethod(MethodReference method) {
+		return ofMethod(method.getParameterTypes(), method.getReturnType(), method.getName());
 	}
 
-	public static String ofMethod(Iterable<? extends MethodParameter> parameters, String returnType, String name) {
+	public static String ofMethod(MethodReference method, String name) {
+		return ofMethod(method.getParameterTypes(), method.getReturnType(), name);
+	}
+
+	public static String ofMethod(Iterable<? extends CharSequence> parameterTypes, String returnType, String name) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(name).append('.');
-		for (MethodParameter p : parameters) sb.append(p.getType());
+		for (CharSequence parameterType : parameterTypes) sb.append(parameterType);
 		sb.append('.').append(returnType);
 		return sb.toString();
 	}
