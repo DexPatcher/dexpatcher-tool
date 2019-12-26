@@ -42,7 +42,7 @@ public abstract class DexCodec extends DexTransform implements DexCodecModule.It
 	}
 
 	public final StringBuilder getMessageHeader(String definingClass, ItemType itemType, String value) {
-		StringBuilder sb = getMessageHeader(definingClass);
+		StringBuilder sb = (definingClass != null) ? getMessageHeaderForMember(definingClass) : getMessageHeader();
 		sb.append(itemType.label).append(" '").append(formatValue(itemType, value)).append("': ");
 		return sb;
 	}

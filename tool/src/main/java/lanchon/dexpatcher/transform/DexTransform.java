@@ -12,11 +12,13 @@ package lanchon.dexpatcher.transform;
 
 import lanchon.dexpatcher.core.util.Label;
 
+import org.jf.dexlib2.iface.reference.FieldReference;
+import org.jf.dexlib2.iface.reference.MethodReference;
 import org.jf.dexlib2.rewriter.RewriterModule;
 
 public abstract class DexTransform extends BaseDexTransform {
 
-	private static final boolean LOG_REWRITTEN_TYPES = false;
+	private static final boolean LOG_REWRITTEN_DEFINING_CLASS = false;
 
 	protected class MemberContext {
 		protected final String definingClass;
@@ -31,18 +33,34 @@ public abstract class DexTransform extends BaseDexTransform {
 
 	public abstract RewriterModule getRewriterModule();
 
-	public final StringBuilder getMessageHeader(String definingClass) {
+	public final StringBuilder getMessageHeaderForClass(String descriptor) {
 		StringBuilder sb = getMessageHeader();
-		if (definingClass != null) {
-			sb.append("type '").append(Label.fromClassDescriptor(definingClass));
-			if (LOG_REWRITTEN_TYPES) {
-				String rewrittenDefiningClass = getRewrittenDefiningClass(definingClass);
-				if (rewrittenDefiningClass != null && !rewrittenDefiningClass.equals(definingClass)) {
-					sb.append("' -> '").append(Label.fromClassDescriptor(rewrittenDefiningClass));
-				}
+		sb.append("type '").append(Label.fromClassDescriptor(descriptor)).append("': ");
+		return sb;
+	}
+
+	public final StringBuilder getMessageHeaderForMember(String definingClass) {
+		StringBuilder sb = getMessageHeader();
+		sb.append("type '").append(Label.fromClassDescriptor(definingClass));
+		if (LOG_REWRITTEN_DEFINING_CLASS) {
+			String rewrittenDefiningClass = getRewrittenDefiningClass(definingClass);
+			if (rewrittenDefiningClass != null && !rewrittenDefiningClass.equals(definingClass)) {
+				sb.append("' -> '").append(Label.fromClassDescriptor(rewrittenDefiningClass));
 			}
-			sb.append("': ");
 		}
+		sb.append("': ");
+		return sb;
+	}
+
+	public final StringBuilder getMessageHeaderForField(FieldReference field) {
+		StringBuilder sb = getMessageHeaderForMember(field.getDefiningClass());
+		sb.append("field '").append(Label.ofField(field)).append("': ");
+		return sb;
+	}
+
+	public final StringBuilder getMessageHeaderForMethod(MethodReference method) {
+		StringBuilder sb = getMessageHeaderForMember(method.getDefiningClass());
+		sb.append("method '").append(Label.ofMethod(method)).append("': ");
 		return sb;
 	}
 

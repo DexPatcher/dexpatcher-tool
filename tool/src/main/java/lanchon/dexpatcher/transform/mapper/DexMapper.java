@@ -54,7 +54,7 @@ public final class DexMapper extends DexTransform implements DexMap {
 	public String getClassMapping(String descriptor) {
 		String mapping = dexMap.getClassMapping(descriptor);
 		if (mapping != null && logger.isLogging(infoLevel)) {
-			StringBuilder sb = getMessageHeader(descriptor);
+			StringBuilder sb = getMessageHeaderForClass(descriptor);
 			sb.append(isInverseMap ? "unmapped to '" : "mapped to '")
 					.append(Label.fromClassDescriptor(mapping)).append("'");
 			logger.log(infoLevel, sb.toString());
@@ -66,8 +66,7 @@ public final class DexMapper extends DexTransform implements DexMap {
 	public String getFieldMapping(FieldReference field) {
 		String mapping = dexMap.getFieldMapping(field);
 		if (mapping != null && logger.isLogging(infoLevel)) {
-			StringBuilder sb = getMessageHeader(field.getDefiningClass());
-			sb.append(Label.ofField(field)).append(": ");
+			StringBuilder sb = getMessageHeaderForField(field);
 			sb.append(isInverseMap ? "unmapped to '" : "mapped to '")
 					.append(Label.fromClassDescriptor(mapping)).append("'");
 			logger.log(infoLevel, sb.toString());
@@ -79,8 +78,7 @@ public final class DexMapper extends DexTransform implements DexMap {
 	public String getMethodMapping(MethodReference method) {
 		String mapping = dexMap.getMethodMapping(method);
 		if (mapping != null && logger.isLogging(infoLevel)) {
-			StringBuilder sb = getMessageHeader(method.getDefiningClass());
-			sb.append(Label.ofMethod(method)).append(": ");
+			StringBuilder sb = getMessageHeaderForMethod(method);
 			sb.append(isInverseMap ? "unmapped to '" : "mapped to '")
 					.append(Label.fromClassDescriptor(mapping)).append("'");
 			logger.log(infoLevel, sb.toString());
