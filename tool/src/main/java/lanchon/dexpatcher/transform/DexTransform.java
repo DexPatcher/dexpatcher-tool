@@ -37,7 +37,7 @@ public abstract class DexTransform extends BaseDexTransform {
 			sb.append("type '").append(Label.fromClassDescriptor(definingClass));
 			if (LOG_REWRITTEN_TYPES) {
 				String rewrittenDefiningClass = getRewrittenDefiningClass(definingClass);
-				if (!rewrittenDefiningClass.equals(definingClass)) {
+				if (rewrittenDefiningClass != null && !rewrittenDefiningClass.equals(definingClass)) {
 					sb.append("' -> '").append(Label.fromClassDescriptor(rewrittenDefiningClass));
 				}
 			}
