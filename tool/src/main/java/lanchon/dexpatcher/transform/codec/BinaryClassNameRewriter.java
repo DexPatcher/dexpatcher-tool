@@ -8,12 +8,12 @@
  * or (at your option) any later version.
  */
 
-package lanchon.dexpatcher.transform.util;
+package lanchon.dexpatcher.transform.codec;
 
 import org.jf.dexlib2.rewriter.TypeRewriter;
 
-// Binary type name '<name>' (eg: 'java/lang/String') corresponds to type descriptor 'L<name>;'.
-public abstract class BinaryTypeNameRewriter extends TypeRewriter {
+// Binary class name '<name>' (eg: 'java/lang/String') corresponds to type descriptor 'L<name>;'.
+public abstract class BinaryClassNameRewriter extends TypeRewriter {
 
 	@Override
 	public String rewrite(String value) {
@@ -24,14 +24,14 @@ public abstract class BinaryTypeNameRewriter extends TypeRewriter {
 		while ((c = value.charAt(start)) == '[') start++;
 		if (c != 'L') return value;
 		start++;
-		String binaryTypeName = value.substring(start, end);
-		String rewrittenBinaryTypeName = rewriteBinaryTypeName(binaryTypeName);
-		if (rewrittenBinaryTypeName.equals(binaryTypeName)) return value;
-		StringBuilder sb = new StringBuilder(start + rewrittenBinaryTypeName.length() + 1);
-		sb.append(value, 0, start).append(rewrittenBinaryTypeName).append(';');
+		String name = value.substring(start, end);
+		String rewrittenName = rewriteBinaryClassName(name);
+		if (rewrittenName.equals(name)) return value;
+		StringBuilder sb = new StringBuilder(start + rewrittenName.length() + 1);
+		sb.append(value, 0, start).append(rewrittenName).append(';');
 		return sb.toString();
 	}
 
-	public abstract String rewriteBinaryTypeName(String binaryTypeName);
+	public abstract String rewriteBinaryClassName(String binaryClassName);
 
 }

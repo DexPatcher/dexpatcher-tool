@@ -10,7 +10,6 @@
 
 package lanchon.dexpatcher.transform.codec;
 
-import lanchon.dexpatcher.transform.util.BinaryTypeNameRewriter;
 import lanchon.dexpatcher.transform.util.wrapper.WrapperRewriterModule;
 
 import org.jf.dexlib2.DebugItemType;
@@ -42,7 +41,7 @@ import org.jf.dexlib2.rewriter.Rewriters;
 public class DexCodecModule extends RewriterModule {
 
 	public enum ItemType {
-		BINARY_TYPE_NAME("type"),
+		BINARY_CLASS_NAME("type"),
 		FIELD_NAME("field"),
 		METHOD_NAME("method"),
 		PARAMETER_NAME("parameter"),
@@ -67,8 +66,8 @@ public class DexCodecModule extends RewriterModule {
 		this.itemRewriter = itemRewriter;
 	}
 
-	public final String rewriteBinaryTypeName(String value) {
-		return itemRewriter.rewriteItem(null, ItemType.BINARY_TYPE_NAME, value);
+	public final String rewriteBinaryClassName(String value) {
+		return itemRewriter.rewriteItem(null, ItemType.BINARY_CLASS_NAME, value);
 	}
 
 	public final String rewriteFieldName(String definingClass, String value) {
@@ -97,10 +96,10 @@ public class DexCodecModule extends RewriterModule {
 
 	@Override
 	public Rewriter<String> getTypeRewriter(Rewriters rewriters) {
-		return new BinaryTypeNameRewriter() {
+		return new BinaryClassNameRewriter() {
 			@Override
-			public String rewriteBinaryTypeName(String binaryTypeName) {
-				return DexCodecModule.this.rewriteBinaryTypeName(binaryTypeName);
+			public String rewriteBinaryClassName(String binaryClassName) {
+				return DexCodecModule.this.rewriteBinaryClassName(binaryClassName);
 			}
 		};
 	}
