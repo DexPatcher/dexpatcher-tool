@@ -10,10 +10,10 @@
 
 package lanchon.dexpatcher.transform.codec;
 
-import org.jf.dexlib2.rewriter.TypeRewriter;
+import org.jf.dexlib2.rewriter.Rewriter;
 
 // Binary class name '<name>' (eg: 'java/lang/String') corresponds to type descriptor 'L<name>;'.
-public abstract class BinaryClassNameRewriter extends TypeRewriter {
+public abstract class BinaryClassNameRewriter implements Rewriter<String> {
 
 	@Override
 	public String rewrite(String value) {

@@ -10,9 +10,9 @@
 
 package lanchon.dexpatcher.core.util;
 
-import org.jf.dexlib2.rewriter.TypeRewriter;
+import org.jf.dexlib2.rewriter.Rewriter;
 
-public abstract class ElementalTypeRewriter extends TypeRewriter {
+public abstract class ElementalTypeRewriter implements Rewriter<String> {
 
 	@Override
 	public String rewrite(String value) {
