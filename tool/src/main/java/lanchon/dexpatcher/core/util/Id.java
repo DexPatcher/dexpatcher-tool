@@ -22,10 +22,10 @@ public class Id {
 	public static final String DEFAULT_CONSTRUCTOR = Marker.NAME_INSTANCE_CONSTRUCTOR + "..V";
 
 	public static String ofClass(ClassDef classDef) {
-		return fromClassDescriptor(classDef.getType());
+		return ofClass(classDef.getType());
 	}
 
-	public static String fromClassDescriptor(String descriptor) {
+	public static String ofClass(String descriptor) {
 		return descriptor;
 	}
 

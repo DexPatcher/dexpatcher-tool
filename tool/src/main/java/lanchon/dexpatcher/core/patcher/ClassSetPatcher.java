@@ -93,8 +93,8 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 		String target = annotation.getTarget();
 		String targetClass = annotation.getTargetClass();
 		String targetId =
-				(target != null) ? Id.fromClassDescriptor(Target.resolveClassDescriptor(patch.getType(), target)) :
-				(targetClass != null) ? Id.fromClassDescriptor(targetClass) :
+				(target != null) ? Id.ofClass(Target.resolveClassDescriptor(patch.getType(), target)) :
+				(targetClass != null) ? Id.ofClass(targetClass) :
 				patchId;
 		if (shouldLogTarget(patchId, targetId)) {
 			extendLogPrefixWithTargetLabel(Label.fromClassId(targetId));

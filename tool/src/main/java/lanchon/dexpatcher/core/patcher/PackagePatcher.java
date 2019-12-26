@@ -73,7 +73,7 @@ public class PackagePatcher extends ClassSetPatcher {
 
 	private String getPackageTargetId(String patchId, ClassDef patch, PatcherAnnotation annotation) throws PatchException {
 		String target = annotation.getTarget();
-		String targetId = (target != null) ? Id.fromClassDescriptor(Target.resolvePackageDescriptor(target)) : patchId;
+		String targetId = (target != null) ? Id.ofClass(Target.resolvePackageDescriptor(target)) : patchId;
 		if (!DexUtils.isPackageId(targetId)) throw new PatchException("target is not a package");
 		if (shouldLogTarget(patchId, targetId)) {
 			extendLogPrefixWithTargetLabel(Label.fromClassId(targetId));
