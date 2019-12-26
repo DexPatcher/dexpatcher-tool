@@ -8,7 +8,7 @@
  * or (at your option) any later version.
  */
 
-package lanchon.dexpatcher.transform.util;
+package lanchon.dexpatcher.transform.mapper;
 
 import java.util.Set;
 
