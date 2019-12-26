@@ -44,7 +44,7 @@ public final class DexAnonymizer extends DexTransform implements Rewriter<String
 	}
 
 	@Override
-	protected String getRewrittenDefiningClass(String definingClass) {
+	protected String getTransformedDefiningClass(String definingClass) {
 		return typeAnonymizer.anonymizeType(definingClass);
 	}
 

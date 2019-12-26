@@ -46,7 +46,7 @@ public final class DexMapper extends DexTransform implements DexMap {
 	}
 
 	@Override
-	protected String getRewrittenDefiningClass(String definingClass) {
+	protected String getTransformedDefiningClass(String definingClass) {
 		return dexMap.getClassMapping(definingClass);
 	}
 

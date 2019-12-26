@@ -27,7 +27,7 @@ public final class DexEncoder extends DexCodec {
 	}
 
 	@Override
-	protected String getRewrittenDefiningClass(String definingClass) {
+	protected String getTransformedDefiningClass(String definingClass) {
 		return stringEncoder.encodeString(definingClass);
 	}
 

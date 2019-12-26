@@ -50,7 +50,7 @@ public final class DexDecoder extends DexCodec {
 	}
 
 	@Override
-	protected String getRewrittenDefiningClass(String definingClass) {
+	protected String getTransformedDefiningClass(String definingClass) {
 		return stringDecoder.decodeString(definingClass);
 	}
 

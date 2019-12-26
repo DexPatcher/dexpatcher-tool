@@ -18,7 +18,7 @@ import org.jf.dexlib2.rewriter.RewriterModule;
 
 public abstract class DexTransform extends BaseDexTransform {
 
-	private static final boolean LOG_REWRITTEN_DEFINING_CLASS = false;
+	private static final boolean LOG_TRANSFORMED_DEFINING_CLASS = false;
 
 	protected class MemberContext {
 		protected final String definingClass;
@@ -42,8 +42,8 @@ public abstract class DexTransform extends BaseDexTransform {
 	public final StringBuilder getMessageHeaderForMember(String definingClass) {
 		StringBuilder sb = getMessageHeader();
 		sb.append("type '").append(Label.fromClassDescriptor(definingClass));
-		if (LOG_REWRITTEN_DEFINING_CLASS) {
-			String rewrittenDefiningClass = getRewrittenDefiningClass(definingClass);
+		if (LOG_TRANSFORMED_DEFINING_CLASS) {
+			String rewrittenDefiningClass = getTransformedDefiningClass(definingClass);
 			if (rewrittenDefiningClass != null && !rewrittenDefiningClass.equals(definingClass)) {
 				sb.append("' -> '").append(Label.fromClassDescriptor(rewrittenDefiningClass));
 			}
@@ -64,6 +64,6 @@ public abstract class DexTransform extends BaseDexTransform {
 		return sb;
 	}
 
-	protected abstract String getRewrittenDefiningClass(String definingClass);
+	protected abstract String getTransformedDefiningClass(String definingClass);
 
 }
