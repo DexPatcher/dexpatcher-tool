@@ -47,6 +47,8 @@ import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 
 public class Processor {
 
+	private static final boolean ABORT_ON_EARLY_ERRORS = true;
+
 	public enum PreTransform {
 
 		NONE,
@@ -97,6 +99,7 @@ public class Processor {
 	private boolean processFiles() throws IOException {
 
 		long time = System.nanoTime();
+		int types = 0;
 
 		logger.setLogLevel(config.logLevel);
 		dexFileNamer = new BasicDexFileNamer();
@@ -105,51 +108,57 @@ public class Processor {
 
 		readMap();
 
-		TransformLogger outputLogger = new TransformLogger(logger);
-		boolean preTransformInputs = config.preTransform == PreTransform.INOUT;
+		if (logger.hasNotLoggedErrors() || !ABORT_ON_EARLY_ERRORS) {
 
-		DexFile dex = readDex(new File(config.sourceFile));
-		TransformLogger sourceLogger = outputLogger.cloneIf(preTransformInputs);
-		dex = mapDex(dex, config.mapSource, directMap, false, sourceLogger, "map source");
-		dex = anonymizeDex(dex, config.deanonSourcePlan, false, sourceLogger, "deanonymize source");
-		dex = decodeDex(dex, config.decodeSource, sourceLogger, "decode source");
-		dex = anonymizeDex(dex, config.reanonSourcePlan, true, sourceLogger, "reanonymize source");
-		dex = mapDex(dex, config.unmapSource, inverseMap, true, sourceLogger, "unmap source");
-		if (preTransformInputs) preTransformDex(dex, sourceLogger, "transform source");
-		int types = dex.getClasses().size();
+			TransformLogger outputLogger = new TransformLogger(logger);
+			boolean preTransformInputs = config.preTransform == PreTransform.INOUT;
 
-		for (String patchFile : config.patchFiles) {
-			DexFile patchDex = readDex(new File(patchFile));
-			TransformLogger patchLogger = outputLogger.cloneIf(preTransformInputs);
-			patchDex = anonymizeDex(patchDex, config.deanonPatchesPlan, false, patchLogger, "deanonymize patch");
-			patchDex = decodeDex(patchDex, config.decodePatches, patchLogger, "decode patch");
-			patchDex = anonymizeDex(patchDex, config.reanonPatchesPlan, true, patchLogger, "reanonymize patch");
-			patchDex = mapDex(patchDex, config.unmapPatches, inverseMap, true, patchLogger, "unmap patch");
-			if (preTransformInputs) preTransformDex(patchDex, patchLogger, "transform patch");
-			types += patchDex.getClasses().size();
-			dex = patchDex(dex, patchDex);
-		}
+			DexFile dex = readDex(new File(config.sourceFile));
+			TransformLogger sourceLogger = outputLogger.cloneIf(preTransformInputs);
+			dex = mapDex(dex, config.mapSource, directMap, false, sourceLogger, "map source");
+			dex = anonymizeDex(dex, config.deanonSourcePlan, false, sourceLogger, "deanonymize source");
+			dex = decodeDex(dex, config.decodeSource, sourceLogger, "decode source");
+			dex = anonymizeDex(dex, config.reanonSourcePlan, true, sourceLogger, "reanonymize source");
+			dex = mapDex(dex, config.unmapSource, inverseMap, true, sourceLogger, "unmap source");
+			if (preTransformInputs) preTransformDex(dex, sourceLogger, "transform source");
+			types += dex.getClasses().size();
 
-		dex = decodeDex(dex, config.decodeOutput, outputLogger, "decode output");
-		dex = anonymizeDex(dex, config.reanonOutputPlan, true, outputLogger, "reanonymize output");
-		dex = mapDex(dex, config.unmapOutput, inverseMap, true, outputLogger, "unmap output");
+			for (String patchFile : config.patchFiles) {
+				DexFile patchDex = readDex(new File(patchFile));
+				TransformLogger patchLogger = outputLogger.cloneIf(preTransformInputs);
+				patchDex = anonymizeDex(patchDex, config.deanonPatchesPlan, false, patchLogger, "deanonymize patch");
+				patchDex = decodeDex(patchDex, config.decodePatches, patchLogger, "decode patch");
+				patchDex = anonymizeDex(patchDex, config.reanonPatchesPlan, true, patchLogger, "reanonymize patch");
+				patchDex = mapDex(patchDex, config.unmapPatches, inverseMap, true, patchLogger, "unmap patch");
+				if (preTransformInputs) preTransformDex(patchDex, patchLogger, "transform patch");
+				types += patchDex.getClasses().size();
+				dex = patchDex(dex, patchDex);
+			}
 
-		boolean writeDex = logger.hasNotLoggedErrors() && !config.dryRun && config.patchedFile != null;
-		boolean preTransformOutput = (config.preTransform == PreTransform.DRY && !writeDex) ||
-				config.preTransform == PreTransform.OUT || config.preTransform == PreTransform.INOUT;
-		if (preTransformOutput) preTransformDex(dex, outputLogger, "transform output");
+			dex = decodeDex(dex, config.decodeOutput, outputLogger, "decode output");
+			dex = anonymizeDex(dex, config.reanonOutputPlan, true, outputLogger, "reanonymize output");
+			dex = mapDex(dex, config.unmapOutput, inverseMap, true, outputLogger, "unmap output");
 
-		if (logger.hasNotLoggedErrors()) {
-			if (config.dryRun) {
-				logger.log(INFO, "dry run due to '--dry-run' option");
-			} else {
-				if (config.patchedFile == null) {
-					logger.log(WARN, "dry run due to missing '--output' option");
+			boolean writeDex = logger.hasNotLoggedErrors() && !config.dryRun && config.patchedFile != null;
+			boolean preTransformOutput = (config.preTransform == PreTransform.DRY && !writeDex) ||
+					config.preTransform == PreTransform.OUT || config.preTransform == PreTransform.INOUT;
+			if (preTransformOutput) preTransformDex(dex, outputLogger, "transform output");
+
+			if (logger.hasNotLoggedErrors()) {
+				if (config.dryRun) {
+					logger.log(INFO, "dry run due to '--dry-run' option");
 				} else {
-					outputLogger.setSync(config.multiDex && config.multiDexJobs != 1);
-					writeDex(new File(config.patchedFile), dex);
+					if (config.patchedFile == null) {
+						logger.log(WARN, "dry run due to missing '--output' option");
+					} else {
+						outputLogger.setSync(config.multiDex && config.multiDexJobs != 1);
+						writeDex(new File(config.patchedFile), dex);
+					}
 				}
 			}
+
+		} else {
+			logger.log(FATAL, "aborting due to errors in setup phase");
 		}
 
 		time = System.nanoTime() - time;
