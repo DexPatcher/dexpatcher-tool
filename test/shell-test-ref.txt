@@ -272,6 +272,7 @@ debug: unmap output: type 'test.Main$Thing': unmapped to 'test.Main$ObfuscatedTh
 debug: unmap output: type 'test.Main$Thing': field 'field:int': unmapped to 'obfuscatedField'
 debug: unmap output: type 'test.Main$Thing': method 'someMethod():void': unmapped to 'obfuscatedMethod'
 debug: unmap output: type 'test.Main$Thing': method 'anotherMethodWithArgs(int, java.lang.String, java.lang.Object[]):float[][]': unmapped to 'obfuscatedMethod2'
+debug: unmap output: type 'test.Main$Thing': method 'makeFriendsWithOtherThings(test.Main$Thing[]):void': unmapped to 'yetAnotherObfuscatedMethod'
 info: write 'build/patched.dex'
 debug: write 'build/patched.dex': dex version '035'
 debug: write 'build/patched.dex': 36 types
@@ -496,7 +497,7 @@ added class AnonymousClasses$1_patch
 ObfuscatedThing::obfuscatedField: 42
 replaced ObfuscatedThing::obfuscatedMethod
 replaced ObfuscatedThing::obfuscatedMethod2
-replaced ObfuscatedThing::makeFriendsWithOtherThings
+replaced ObfuscatedThing::yetAnotherObfuscatedMethod
 
 --- end build/patched-dex2jar.jar ---
 

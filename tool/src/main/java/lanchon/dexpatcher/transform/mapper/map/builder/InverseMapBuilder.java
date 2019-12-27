@@ -10,18 +10,19 @@
 
 package lanchon.dexpatcher.transform.mapper.map.builder;
 
+import lanchon.dexpatcher.transform.mapper.map.DexMap;
+import lanchon.dexpatcher.transform.mapper.map.DexMaps;
+
 public class InverseMapBuilder implements MapBuilder {
 
 	private static final String EXCEPTION_HEADER = "on inverse map: ";
 
-	public static MapBuilder of(MapBuilder wrappedMapBuilder, boolean invert) {
-		return invert ? new InverseMapBuilder(wrappedMapBuilder) : wrappedMapBuilder;
-	}
-
 	protected final MapBuilder wrappedMapBuilder;
+	protected final DexMap directDexMap;
 
-	public InverseMapBuilder(MapBuilder wrappedMapBuilder) {
+	public InverseMapBuilder(MapBuilder wrappedMapBuilder, DexMap directDexMap) {
 		this.wrappedMapBuilder = wrappedMapBuilder;
+		this.directDexMap = directDexMap;
 	}
 
 	@Override
@@ -32,7 +33,8 @@ public class InverseMapBuilder implements MapBuilder {
 				@Override
 				public void addFieldMapping(String type, String name, String newName) {
 					try {
-						wrappedMemberMapBuilder.addFieldMapping(type, newName, name);
+						String mappedType = DexMaps.mapType(type, directDexMap);
+						wrappedMemberMapBuilder.addFieldMapping(mappedType, newName, name);
 					} catch (BuilderException e) {
 						throw new BuilderException(EXCEPTION_HEADER + e.getMessage());
 					}
@@ -40,7 +42,12 @@ public class InverseMapBuilder implements MapBuilder {
 				@Override
 				public void addMethodMapping(String[] parameterTypes, String returnType, String name, String newName) {
 					try {
-						wrappedMemberMapBuilder.addMethodMapping(parameterTypes, returnType, newName, name);
+						int length = parameterTypes.length;
+						String[] mappedParameterTypes = new String[length];
+						for (int i = 0; i < length; i++) {
+							mappedParameterTypes[i] = DexMaps.mapType(parameterTypes[i], directDexMap);
+						}
+						wrappedMemberMapBuilder.addMethodMapping(mappedParameterTypes, returnType, newName, name);
 					} catch (BuilderException e) {
 						throw new BuilderException(EXCEPTION_HEADER + e.getMessage());
 					}

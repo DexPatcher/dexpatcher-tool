@@ -21,7 +21,6 @@ import lanchon.dexpatcher.transform.mapper.DexMapper;
 import lanchon.dexpatcher.transform.mapper.map.DexMap;
 import lanchon.dexpatcher.transform.mapper.map.DexMapping;
 import lanchon.dexpatcher.transform.mapper.map.MapFileReader;
-import lanchon.dexpatcher.transform.mapper.map.builder.DuplicateMapBuilder;
 import lanchon.dexpatcher.transform.mapper.map.builder.InverseMapBuilder;
 import lanchon.dexpatcher.transform.mapper.map.builder.MapBuilder;
 import lanchon.dexpatcher.transform.mapper.map.builder.TypeDescriptorMapBuilder;
@@ -87,8 +86,8 @@ public class Processor {
 
 	private DexFileNamer dexFileNamer;
 	private Opcodes opcodes;
-	private DexMapping directMap;
-	private DexMapping inverseMap;
+	private DexMap directMap;
+	private DexMap inverseMap;
 	private StringDecoder stringDecoder;
 
 	private Processor(Logger logger, Configuration config) {
@@ -106,7 +105,7 @@ public class Processor {
 		if (config.apiLevel > 0) opcodes = Opcodes.forApi(config.apiLevel);
 		stringDecoder = new StringDecoder(config.codeMarker);
 
-		readMap();
+		configureMaps();
 
 		if (logger.hasNotLoggedErrors() || !ABORT_ON_EARLY_ERRORS) {
 
@@ -169,29 +168,39 @@ public class Processor {
 
 	}
 
-	private void readMap() throws IOException {
+	private void configureMaps() throws IOException {
+
 		boolean usesDirectMap = config.mapSource;
 		boolean usesInverseMap = config.unmapSource || config.unmapPatches || config.unmapOutput;
-		MapBuilder directBuilder = null;
-		if (usesDirectMap) {
-			directMap = new DexMapping();
-			directBuilder = InverseMapBuilder.of(directMap, config.invertMap);
-		};
-		MapBuilder inverseBuilder = null;
-		if (usesInverseMap) {
-			inverseMap = new DexMapping();
-			inverseBuilder = InverseMapBuilder.of(inverseMap, !config.invertMap);
-		}
-		MapBuilder builder =
-				usesDirectMap && usesInverseMap ? new DuplicateMapBuilder(directBuilder, inverseBuilder) :
-				usesDirectMap ? directBuilder :
-				usesInverseMap ? inverseBuilder :
-				null;
-		if (builder != null) {
-			builder = new TypeDescriptorMapBuilder(builder);
-			for (String mapFile : config.mapFiles) {
-				MapFileReader.read(new File(mapFile), true, builder, logger);
+
+		if (usesDirectMap || usesInverseMap) {
+
+			DexMapping directMapFile = new DexMapping();
+			DexMapping inverseMapFile = new DexMapping();
+			if (usesDirectMap) directMap = config.invertMap ? inverseMapFile : directMapFile;
+			if (usesInverseMap) inverseMap = config.invertMap ? directMapFile : inverseMapFile;
+			boolean usesInverseMapFile = (inverseMapFile == directMap || inverseMapFile == inverseMap);
+
+			// Always read the direct map. (It is used to read the inverse map, then discarded if not needed further.)
+			int errors = logger.getMessageCount(FATAL) + logger.getMessageCount(ERROR);
+			readMaps(config.mapFiles, directMapFile);
+			boolean hasNotLoggedNewErrors = (errors == (logger.getMessageCount(FATAL) + logger.getMessageCount(ERROR)));
+
+			// Read the inverse map only if needed. (It is more memory efficient to read it again from disk.)
+			if (usesInverseMapFile) {
+				if (hasNotLoggedNewErrors || !ABORT_ON_EARLY_ERRORS) {
+					readMaps(config.mapFiles, new InverseMapBuilder(inverseMapFile, directMapFile));
+				}
 			}
+
+		}
+
+	}
+
+	private void readMaps(Iterable<String> mapFiles, MapBuilder mapBuilder) throws IOException {
+		mapBuilder = new TypeDescriptorMapBuilder(mapBuilder);
+		for (String mapFile : mapFiles) {
+			MapFileReader.read(new File(mapFile), true, mapBuilder, logger);
 		}
 	}
 
