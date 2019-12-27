@@ -105,13 +105,23 @@ public class Parser {
 		}
 		config.invertMap = cl.hasOption("invert-map");
 
-		config.deanonSourcePlan = getPlan(cl, "deanon-source");
-		config.deanonPatchesPlan = getPlan(cl, "deanon-patches");
+		config.deanonSource = cl.hasOption("deanon-source");
+		config.deanonPatches = cl.hasOption("deanon-patches");
 
-		config.reanonSourcePlan = getPlan(cl, "reanon-source");
-		config.reanonPatchesPlan = getPlan(cl, "reanon-patches");
-		config.reanonOutputPlan = getPlan(cl, "reanon-output");
+		config.reanonSource = cl.hasOption("reanon-source");
+		config.reanonPatches = cl.hasOption("reanon-patches");
+		config.reanonOutput = cl.hasOption("reanon-output");
 
+		config.mainAnonymizationPlan = cl.getOptionValue("main-plan",
+				TypeAnonymizer.DEFAULT_MAIN_ANONYMIZATION_PLAN);
+		if (!TypeAnonymizer.isValidPlan(config.mainAnonymizationPlan)) {
+			throw new ParseException("Invalid main anonymization plan: '" + config.mainAnonymizationPlan + "'");
+		}
+		config.patchDeanonymizationPlan = cl.getOptionValue("patch-deanon-plan",
+				TypeAnonymizer.DEFAULT_PATCH_DEANONYMIZATION_PLAN);
+		if (!TypeAnonymizer.isValidPlan(config.patchDeanonymizationPlan)) {
+			throw new ParseException("Invalid patch deanonymization plan: '" + config.patchDeanonymizationPlan + "'");
+		}
 		config.treatAnonymizerErrorsAsWarnings = cl.hasOption("no-anon-errors");
 
 		config.decodeSource = cl.hasOption("decode-source");
@@ -134,14 +144,6 @@ public class Parser {
 
 		return config;
 
-	}
-
-	private static String getPlan(CommandLine cl, String opt) throws ParseException {
-		String plan = cl.getOptionValue(opt, null);
-		if (plan != null && !TypeAnonymizer.isValidPlan(plan)) {
-			throw new ParseException("Invalid plan for " + opt + ": '" + plan + "'");
-		}
-		return plan;
 	}
 
 	public static void printUsage() {
@@ -232,18 +234,18 @@ public class Parser {
 		o.setArgName("file"); options.addOption(o);
 		options.addOption(new Option(null, "invert-map", false, "use inverse of identifier map file"));
 
-		o = new Option(null, "deanon-source", true, "deanonymize anonymous classes in source");
-		o.setArgName("plan"); options.addOption(o);
-		o = new Option(null, "deanon-patches", true, "deanonymize anonymous classes in patches");
-		o.setArgName("plan"); options.addOption(o);
+		options.addOption(new Option(null, "deanon-source", false, "deanonymize anonymous classes in source"));
+		options.addOption(new Option(null, "deanon-patches", false, "deanonymize anonymous classes in patches"));
+		options.addOption(new Option(null, "reanon-source", false, "reanonymize anonymous classes in source"));
+		options.addOption(new Option(null, "reanon-patches", false, "reanonymize anonymous classes in patches"));
+		options.addOption(new Option(null, "reanon-output", false, "reanonymize anonymous classes in output"));
 
-		o = new Option(null, "reanon-source", true, "reanonymize anonymous classes in source");
-		o.setArgName("plan"); options.addOption(o);
-		o = new Option(null, "reanon-patches", true, "reanonymize anonymous classes in patches");
-		o.setArgName("plan"); options.addOption(o);
-		o = new Option(null, "reanon-output", true, "reanonymize anonymous classes in output");
-		o.setArgName("plan"); options.addOption(o);
-
+		o = new Option(null, "main-plan", true, "main anonymization plan (default: '" +
+				TypeAnonymizer.DEFAULT_MAIN_ANONYMIZATION_PLAN + "')");
+		o.setArgName("p"); options.addOption(o);
+		o = new Option(null, "patch-deanon-plan", true, "specific anonymization plan used only to deanonymize patches (default: '" +
+				TypeAnonymizer.DEFAULT_PATCH_DEANONYMIZATION_PLAN + "')");
+		o.setArgName("p"); options.addOption(o);
 		options.addOption(new Option(null, "no-anon-errors", false, "treat anonymizer errors as warnings"));
 
 		options.addOption(new Option(null, "decode-source", false, "decode identifiers in source"));

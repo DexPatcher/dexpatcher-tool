@@ -120,8 +120,7 @@ task portableTest(type:JavaExec) {
     classpath dexpatcherJar
     args '--verbose',
             '--map-source', '--unmap-output', '--map', mapFile.get(),
-            '--deanon-source', 'Anon[_Level]', '--reanon-output', 'Anon[_Level]', '--deanon-patches', '[_]_patch',
-                    '--no-anon-errors',
+            '--deanon-source', '--reanon-output', '--main-plan', 'Anon[_Level]', '--deanon-patches', '--no-anon-errors',
             '--decode-source', '--decode-patches', '--no-decode-errors',
             '--output', outputFile.get(),
             sourceFile.get(), patchFile.get()
