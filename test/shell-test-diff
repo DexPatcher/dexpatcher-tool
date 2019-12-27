@@ -29,7 +29,7 @@ diff shell-test-ref.txt build/shell-test-out.txt &>/dev/null || {
     echo
     echo "======  diff output  ======"
     echo
-    diff build/shell-test-ref-filtered.txt build/shell-test-out-filtered.txt --color=always -U10000 && {
+    diff build/shell-test-ref-filtered.txt build/shell-test-out-filtered.txt --color=always -U8 && {
         echo "info: shell-test: only source code line numbers differ"
     } || true
     echo
