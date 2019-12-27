@@ -43,16 +43,23 @@ public class Configuration {
 
 	// Code transform options:
 
+	public boolean mapSource;
 	public String deanonSourcePlan;
 	public boolean decodeSource;
 	public String reanonSourcePlan;
+	public boolean unmapSource;
 
 	public String deanonPatchesPlan;
 	public boolean decodePatches;
 	public String reanonPatchesPlan;
+	public boolean unmapPatches;
 
 	public boolean decodeOutput;
 	public String reanonOutputPlan;
+	public boolean unmapOutput;
+
+	public String mapFile;
+	public boolean invertMap;
 
 	public boolean treatAnonymizerErrorsAsWarnings;
 

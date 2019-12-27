@@ -17,6 +17,13 @@ import java.util.Locale;
 import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.DexPatcher;
 import lanchon.dexpatcher.core.logger.Logger;
+import lanchon.dexpatcher.transform.mapper.DexMapper;
+import lanchon.dexpatcher.transform.mapper.map.DexMap;
+import lanchon.dexpatcher.transform.mapper.map.DexMapping;
+import lanchon.dexpatcher.transform.mapper.map.MapFileReader;
+import lanchon.dexpatcher.transform.mapper.map.builder.DuplicateMapBuilder;
+import lanchon.dexpatcher.transform.mapper.map.builder.InverseMapBuilder;
+import lanchon.dexpatcher.transform.mapper.map.builder.MapBuilder;
 import lanchon.dexpatcher.transform.util.DexVisitor;
 import lanchon.dexpatcher.transform.DexTransform;
 import lanchon.dexpatcher.transform.TransformLogger;
@@ -77,6 +84,8 @@ public class Processor {
 
 	private DexFileNamer dexFileNamer;
 	private Opcodes opcodes;
+	private DexMapping directMap;
+	private DexMapping inverseMap;
 	private StringDecoder stringDecoder;
 
 	private Processor(Logger logger, Configuration config) {
@@ -93,14 +102,18 @@ public class Processor {
 		if (config.apiLevel > 0) opcodes = Opcodes.forApi(config.apiLevel);
 		stringDecoder = new StringDecoder(config.codeMarker);
 
+		readMap();
+
 		TransformLogger outputLogger = new TransformLogger(logger);
 		boolean preTransformInputs = config.preTransform == PreTransform.INOUT;
 
 		DexFile dex = readDex(new File(config.sourceFile));
 		TransformLogger sourceLogger = outputLogger.cloneIf(preTransformInputs);
+		dex = mapDex(dex, config.mapSource, directMap, false, sourceLogger, "map source");
 		dex = anonymizeDex(dex, config.deanonSourcePlan, false, sourceLogger, "deanonymize source");
 		dex = decodeDex(dex, config.decodeSource, sourceLogger, "decode source");
 		dex = anonymizeDex(dex, config.reanonSourcePlan, true, sourceLogger, "reanonymize source");
+		dex = mapDex(dex, config.unmapSource, inverseMap, true, sourceLogger, "unmap source");
 		if (preTransformInputs) preTransformDex(dex, sourceLogger, "transform source");
 		int types = dex.getClasses().size();
 
@@ -110,6 +123,7 @@ public class Processor {
 			patchDex = anonymizeDex(patchDex, config.deanonPatchesPlan, false, patchLogger, "deanonymize patch");
 			patchDex = decodeDex(patchDex, config.decodePatches, patchLogger, "decode patch");
 			patchDex = anonymizeDex(patchDex, config.reanonPatchesPlan, true, patchLogger, "reanonymize patch");
+			patchDex = mapDex(patchDex, config.unmapPatches, inverseMap, true, patchLogger, "unmap patch");
 			if (preTransformInputs) preTransformDex(patchDex, patchLogger, "transform patch");
 			types += patchDex.getClasses().size();
 			dex = patchDex(dex, patchDex);
@@ -117,6 +131,7 @@ public class Processor {
 
 		dex = decodeDex(dex, config.decodeOutput, outputLogger, "decode output");
 		dex = anonymizeDex(dex, config.reanonOutputPlan, true, outputLogger, "reanonymize output");
+		dex = mapDex(dex, config.unmapOutput, inverseMap, true, outputLogger, "unmap output");
 
 		boolean writeDex = logger.hasNotLoggedErrors() && !config.dryRun && config.patchedFile != null;
 		boolean preTransformOutput = (config.preTransform == PreTransform.DRY && !writeDex) ||
@@ -142,6 +157,42 @@ public class Processor {
 		logger.logErrorAndWarningCounts();
 		return logger.hasNotLoggedErrors();
 
+	}
+
+	private void readMap() throws IOException {
+		boolean usesDirectMap = config.mapSource;
+		boolean usesInverseMap = config.unmapSource || config.unmapPatches || config.unmapOutput;
+		MapBuilder directBuilder = null;
+		if (usesDirectMap) {
+			directMap = new DexMapping();
+			directBuilder = InverseMapBuilder.of(directMap, config.invertMap);
+		};
+		MapBuilder inverseBuilder = null;
+		if (usesInverseMap) {
+			inverseMap = new DexMapping();
+			inverseBuilder = InverseMapBuilder.of(inverseMap, !config.invertMap);
+		}
+		MapBuilder builder =
+				usesDirectMap && usesInverseMap ? new DuplicateMapBuilder(directBuilder, inverseBuilder) :
+				usesDirectMap ? directBuilder :
+				usesInverseMap ? inverseBuilder :
+				null;
+		if (builder != null) {
+			MapFileReader.read(new File(config.mapFile), builder, logger);
+		}
+	}
+
+	private DexFile mapDex(DexFile dex, boolean enabled, DexMap dexMap, boolean isInverseMap, TransformLogger logger,
+			String logPrefix) {
+		if (enabled) {
+			boolean preTransformAll = config.preTransform == PreTransform.ALL;
+			TransformLogger privateLogger = logger.cloneIf(preTransformAll);
+			DexMapper mapper = new DexMapper(null, dexMap, isInverseMap, config.annotationPackage, logger, logPrefix,
+					DEBUG);
+			dex = transformDex(dex, mapper);
+			if (preTransformAll) preTransformDex(dex, privateLogger, logPrefix);
+		}
+		return dex;
 	}
 
 	private DexFile anonymizeDex(DexFile dex, String plan, boolean reanonymize, TransformLogger logger,

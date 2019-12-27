@@ -88,6 +88,20 @@ public class Parser {
 
 		// Code transform options:
 
+		config.mapSource = cl.hasOption("map-source");
+
+		config.unmapSource = cl.hasOption("unmap-source");
+		config.unmapPatches = cl.hasOption("unmap-patches");
+		config.unmapOutput = cl.hasOption("unmap-output");
+
+		config.mapFile = cl.getOptionValue("map");
+		if (config.mapSource || config.unmapSource || config.unmapPatches || config.unmapOutput) {
+			if (config.mapFile == null) {
+				throw new ParseException("Missing option: map");
+			}
+		}
+		config.invertMap = cl.hasOption("invert-map");
+
 		config.deanonSourcePlan = getPlan(cl, "deanon-source");
 		config.deanonPatchesPlan = getPlan(cl, "deanon-patches");
 
@@ -204,6 +218,16 @@ public class Parser {
 	private static Options addTransformOptions(Options options) {
 
 		Option o;
+
+		options.addOption(new Option(null, "map-source", false, "apply map to identifiers in source"));
+
+		options.addOption(new Option(null, "unmap-source", false, "apply map inverse to identifiers in source"));
+		options.addOption(new Option(null, "unmap-patches", false, "apply map inverse to identifiers in patches"));
+		options.addOption(new Option(null, "unmap-output", false, "apply map inverse to identifiers in output"));
+
+		o = new Option(null, "map", true, "identifier map file");
+		o.setArgName("file"); options.addOption(o);
+		options.addOption(new Option(null, "invert-map", false, "use inverse of identifier map file"));
 
 		o = new Option(null, "deanon-source", true, "deanonymize anonymous classes in source");
 		o.setArgName("plan"); options.addOption(o);
