@@ -63,7 +63,7 @@ public final class MapFileReader {
 	private static final Pattern PATTERN_METHOD = Pattern.compile(
 			"\\s*(?<ret>\\S+)" +
 			"\\s+(?<old>\\S+)" +
-			"\\s*[(]\\s*(?:(?<args>[\\S&&[^(),]]+(?:\\s*,\\s*[\\S&&[^(),]]+)*)\\s*)?[)]" +
+			"\\s*[(]\\s*(?<args>(?:[\\S&&[^(),]]+(?:\\s*,\\s*[\\S&&[^(),]]+)*)?)\\s*[)]" +
 			PATTERN_PART_MAPPING
 	);
 
@@ -113,6 +113,7 @@ public final class MapFileReader {
 		Matcher method = PATTERN_METHOD.matcher(l);
 		if (method.matches()) {
 			String[] args = PATTERN_METHOD_PARAMETER_SEPARATOR.split(method.group("args"));
+			if (args.length == 1 && args[0].isEmpty()) args = new String[] {};
 			parseMethod(args, method.group("ret"), method.group("old"), method.group("new"));
 			return;
 		}

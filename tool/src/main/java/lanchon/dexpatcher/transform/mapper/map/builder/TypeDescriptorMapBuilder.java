@@ -28,16 +28,16 @@ public class TypeDescriptorMapBuilder implements MapBuilder {
 		return new MemberMapBuilder() {
 			@Override
 			public void addFieldMapping(String type, String name, String newName) {
-				type = TypeName.toClassDescriptor(type);
+				type = TypeName.toFieldDescriptor(type);
 				wrappedMemberMapBuilder.addFieldMapping(type, name, newName);
 			}
 			@Override
 			public void addMethodMapping(String[] parameterTypes, String returnType, String name, String newName) {
 				int length = parameterTypes.length;
 				for (int i = 0; i < length; i++) {
-					parameterTypes[i] = TypeName.toClassDescriptor(parameterTypes[i]);
+					parameterTypes[i] = TypeName.toFieldDescriptor(parameterTypes[i]);
 				}
-				returnType = TypeName.toClassDescriptor(returnType);
+				returnType = TypeName.toReturnDescriptor(returnType);
 				wrappedMemberMapBuilder.addMethodMapping(parameterTypes, returnType, name, newName);
 			}
 		};

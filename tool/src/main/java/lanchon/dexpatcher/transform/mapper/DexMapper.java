@@ -42,7 +42,7 @@ public final class DexMapper extends DexTransform implements DexMap {
 	public RewriterModule getRewriterModule() {
 		RewriterModule wrappedModule = (wrappedTransform) != null ? wrappedTransform.getRewriterModule() :
 				new RewriterModule();
-		return PatchRewriterModule.of(new DexMapperModule(wrappedModule, dexMap), annotationPackage);
+		return PatchRewriterModule.of(new DexMapperModule(wrappedModule, this), annotationPackage);
 	}
 
 	@Override
@@ -68,7 +68,7 @@ public final class DexMapper extends DexTransform implements DexMap {
 		if (mapping != null && logger.isLogging(infoLevel)) {
 			StringBuilder sb = getMessageHeaderForField(field);
 			sb.append(isInverseMap ? "unmapped to '" : "mapped to '")
-					.append(Label.fromClassDescriptor(mapping)).append("'");
+					.append(Label.ofTargetMember(mapping)).append("'");
 			logger.log(infoLevel, sb.toString());
 		}
 		return mapping;
@@ -80,7 +80,7 @@ public final class DexMapper extends DexTransform implements DexMap {
 		if (mapping != null && logger.isLogging(infoLevel)) {
 			StringBuilder sb = getMessageHeaderForMethod(method);
 			sb.append(isInverseMap ? "unmapped to '" : "mapped to '")
-					.append(Label.fromClassDescriptor(mapping)).append("'");
+					.append(Label.ofTargetMember(mapping)).append("'");
 			logger.log(infoLevel, sb.toString());
 		}
 		return mapping;

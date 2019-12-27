@@ -24,6 +24,7 @@ import lanchon.dexpatcher.transform.mapper.map.MapFileReader;
 import lanchon.dexpatcher.transform.mapper.map.builder.DuplicateMapBuilder;
 import lanchon.dexpatcher.transform.mapper.map.builder.InverseMapBuilder;
 import lanchon.dexpatcher.transform.mapper.map.builder.MapBuilder;
+import lanchon.dexpatcher.transform.mapper.map.builder.TypeDescriptorMapBuilder;
 import lanchon.dexpatcher.transform.util.DexVisitor;
 import lanchon.dexpatcher.transform.DexTransform;
 import lanchon.dexpatcher.transform.TransformLogger;
@@ -178,7 +179,7 @@ public class Processor {
 				usesInverseMap ? inverseBuilder :
 				null;
 		if (builder != null) {
-			MapFileReader.read(new File(config.mapFile), builder, logger);
+			MapFileReader.read(new File(config.mapFile), new TypeDescriptorMapBuilder(builder), logger);
 		}
 	}
 

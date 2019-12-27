@@ -101,7 +101,8 @@ public class DexMapping implements MapBuilder, DexMap {
 	}
 
 	protected final String getClassMappingById(String classId) {
-		return classMappings.get(classId).getMapping();
+		ClassMapping classMapping = classMappings.get(classId);
+		return classMapping != null ? classMapping.getMapping() : null;
 	}
 
 	protected final String getFieldMappingById(String classId, String fieldId) {
