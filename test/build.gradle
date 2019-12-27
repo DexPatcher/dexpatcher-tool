@@ -110,13 +110,21 @@ task portableTest(type:JavaExec) {
     ext.patchFile = patchDex.outputFile
     ext.outputFile = objects.fileProperty()
     outputFile.set layout.buildDirectory.file('portable-test/patched.dex')
+    ext.mapFile = objects.fileProperty()
+    mapFile.set layout.projectDirectory.file('mapping.txt')
 
     inputs.file sourceFile
     inputs.file patchFile
     outputs.file outputFile
 
     classpath dexpatcherJar
-    args '--verbose', '--deanon-source', 'Anon[_Level]', '--reanon-output', 'Anon[_Level]', '--deanon-patches', '[_]_patch', '--no-anon-errors', '--decode-source', '--decode-patches', '--no-decode-errors', '--output', outputFile.get(), sourceFile.get(), patchFile.get()
+    args '--verbose',
+            '--map-source', '--unmap-output', '--map', mapFile.get(),
+            '--deanon-source', 'Anon[_Level]', '--reanon-output', 'Anon[_Level]', '--deanon-patches', '[_]_patch',
+                    '--no-anon-errors',
+            '--decode-source', '--decode-patches', '--no-decode-errors',
+            '--output', outputFile.get(),
+            sourceFile.get(), patchFile.get()
 
 }
 

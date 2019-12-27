@@ -77,6 +77,8 @@ public class Main {
 		p();
 		AnonymousClasses.print();
 		p();
+		new ObfuscatedThing().print();
+		p();
 	}
 
 	public static class A {
@@ -313,6 +315,20 @@ public class Main {
 				pClass("original %s::go");
 				new Object() {};
 			}
+		}
+	}
+
+	// Supposedly obfuscated class to be deobfuscated with a map file.
+	// Note: The source dex must be mapped with '--map <map-file> --map-source'
+	// and the output should typically be inverse-mapped with '--unmap-output'.
+	public static class ObfuscatedThing {
+		public int obfuscatedField;
+		public void obfuscatedMethod() { pMethod("original %s"); }
+		public float obfuscatedMethodWithArgs(int i, String s, Object... args) { pMethod("original %s"); return 0; }
+		public void print() {
+			pClass("%s::obfuscatedField: " + obfuscatedField);
+			obfuscatedMethod();
+			obfuscatedMethodWithArgs(0, null);
 		}
 	}
 

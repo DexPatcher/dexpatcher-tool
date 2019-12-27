@@ -1,0 +1,5 @@
+test.Main$ObfuscatedThing -> test.Main$Thing:
+    int obfuscatedField -> field
+    .int obfuscatedField -> weirdField      ; the type of this field is the class named 'int' in the default package
+    void obfuscatedMethod() -> method
+    float obfuscatedMethodWithArgs(int, .java.lang.String, java.lang.Object[]) -> methodWithArgs

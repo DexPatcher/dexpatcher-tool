@@ -823,6 +823,21 @@ public class Main {
 		static class __UnexpectedAnonymousClass_$$_42__ {}
 	}
 
+	// Modify members of a class that has been deobfuscated with a map file.
+	// Note: The source dex must be mapped with '--map <map-file> --map-source'
+	// and the output should typically be inverse-mapped with '--unmap-output'.
+	@DexEdit
+	public static class Thing {
+		@DexIgnore
+		public int field;
+		@DexReplace
+		public void method() { pMethod("replaced %s"); }
+		@DexReplace
+		public float methodWithArgs(int i, String s, Object... args) { pMethod("replaced %s"); return 0; }
+		@DexPrepend
+		public void print() { field = 42; }
+	}
+
 	// Mini FAQ
 
 	// Q) My IDE outputs classes that clash with classes in my source app
