@@ -28,8 +28,9 @@ import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 
 public final class MapFileReader {
 
-	public static void read(File file, MapBuilder mapBuilder, Logger logger) throws IOException {
-		read(file, file.getName(), mapBuilder, logger);
+	public static void read(File file, boolean fileNameOnly, MapBuilder mapBuilder, Logger logger) throws IOException {
+		String fileName = fileNameOnly ? file.getName() : file.getPath();
+		read(file, fileName, mapBuilder, logger);
 	}
 
 	public static void read(File file, String fileName, MapBuilder mapBuilder, Logger logger) throws IOException {

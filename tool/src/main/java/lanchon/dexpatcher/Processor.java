@@ -188,7 +188,7 @@ public class Processor {
 				usesInverseMap ? inverseBuilder :
 				null;
 		if (builder != null) {
-			MapFileReader.read(new File(config.mapFile), new TypeDescriptorMapBuilder(builder), logger);
+			MapFileReader.read(new File(config.mapFile), true, new TypeDescriptorMapBuilder(builder), logger);
 		}
 	}
 
