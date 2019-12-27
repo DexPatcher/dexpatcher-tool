@@ -89,18 +89,18 @@ debug: type 'test.Main$B': field 'staticField:int': (Main.java:0): add
 debug: type 'test.Main$B': field 'instanceField:int': (Main.java:0): add
 debug: type 'test.Main$B': field 'privateKey:java.lang.String': (Main.java:0): edit
 info: type 'test.Main$B': field 'privateKey:java.lang.String': (Main.java:0): 'private' modifier changed to 'public' in edited field
-debug: type 'test.Main$B': method '<clinit>():void': (Main.java:101): add
-debug: type 'test.Main$B': method '<init>():void': (Main.java:144): ignore
-debug: type 'test.Main$B': method 'directMethod():void': (Main.java:153): replace
-debug: type 'test.Main$B': method 'privateStaticMethod(int):void': (Main.java:113): edit
-info: type 'test.Main$B': method 'privateStaticMethod(int):void': (Main.java:113): 'private' modifier changed to 'public' in edited method
-debug: type 'test.Main$B': method 'source_virtualMethod(java.lang.String):void': (Main.java:162): edit
-debug: type 'test.Main$B': method 'source_virtualMethod(java.lang.String):void': target 'virtualMethod': (Main.java:162): 'public' modifier changed to 'private' in renamed method
-debug: type 'test.Main$B': method 'addedMethod():void': (Main.java:148): add
-debug: type 'test.Main$B': method 'appendTestMethod(java.lang.String):void': (Main.java:210): append
-debug: type 'test.Main$B': method 'prependTestMethod(java.lang.String):void': (Main.java:204): prepend
-debug: type 'test.Main$B': method 'virtualMethod(java.lang.String):void': (Main.java:167): add
-debug: type 'test.Main$B': method 'wrapTestMethod(java.lang.String):void': (Main.java:186): wrap
+debug: type 'test.Main$B': method '<clinit>():void': (Main.java:104): add
+debug: type 'test.Main$B': method '<init>():void': (Main.java:147): ignore
+debug: type 'test.Main$B': method 'directMethod():void': (Main.java:156): replace
+debug: type 'test.Main$B': method 'privateStaticMethod(int):void': (Main.java:116): edit
+info: type 'test.Main$B': method 'privateStaticMethod(int):void': (Main.java:116): 'private' modifier changed to 'public' in edited method
+debug: type 'test.Main$B': method 'source_virtualMethod(java.lang.String):void': (Main.java:165): edit
+debug: type 'test.Main$B': method 'source_virtualMethod(java.lang.String):void': target 'virtualMethod': (Main.java:165): 'public' modifier changed to 'private' in renamed method
+debug: type 'test.Main$B': method 'addedMethod():void': (Main.java:151): add
+debug: type 'test.Main$B': method 'appendTestMethod(java.lang.String):void': (Main.java:213): append
+debug: type 'test.Main$B': method 'prependTestMethod(java.lang.String):void': (Main.java:207): prepend
+debug: type 'test.Main$B': method 'virtualMethod(java.lang.String):void': (Main.java:170): add
+debug: type 'test.Main$B': method 'wrapTestMethod(java.lang.String):void': (Main.java:189): wrap
 debug: type 'test.Main$Base': (Main.java:0): ignore
 debug: type 'test.Main$C': (Main.java:0): edit
 debug: type 'test.Main$C': field 'patchStaticField:int': (Main.java:0): add
@@ -109,67 +109,67 @@ debug: type 'test.Main$C': field 'redefinedSourceStaticField:int': (Main.java:0)
 warning: type 'test.Main$C': field 'redefinedSourceStaticField:int': (Main.java:0): static field will not be initialized as specified in patch because code of static constructor of class is being discarded
 debug: type 'test.Main$C': field 'patchField:int': (Main.java:0): add
 debug: type 'test.Main$C': field 'redefinedSourceField:int': (Main.java:0): edit
-debug: type 'test.Main$C': method '<clinit>():void': (Main.java:246): ignore
-debug: type 'test.Main$C': method '<init>():void': (Main.java:268): ignore
-debug: type 'test.Main$C': method 'print():void': (Main.java:276): append
+debug: type 'test.Main$C': method '<clinit>():void': (Main.java:249): ignore
+debug: type 'test.Main$C': method '<init>():void': (Main.java:271): ignore
+debug: type 'test.Main$C': method 'print():void': (Main.java:279): append
 debug: type 'test.Main$Concrete3': (Main.java:0): edit
-info: type 'test.Main$Concrete3': method '<init>():void': (Main.java:562): implicit ignore of trivial default constructor
-debug: type 'test.Main$Concrete3': method '<init>():void': (Main.java:562): ignore
-debug: type 'test.Main$Concrete3': method 'method():void': (Main.java:565): replace
+info: type 'test.Main$Concrete3': method '<init>():void': (Main.java:565): implicit ignore of trivial default constructor
+debug: type 'test.Main$Concrete3': method '<init>():void': (Main.java:565): ignore
+debug: type 'test.Main$Concrete3': method 'method():void': (Main.java:568): replace
 debug: type 'test.Main$CrossClassA': (Main.java:0): add
 debug: type 'test.Main$CrossClassAHelper': (Main.java:0): edit
-info: type 'test.Main$CrossClassAHelper': method '<init>():void': (Main.java:589): implicit ignore of trivial default constructor
-debug: type 'test.Main$CrossClassAHelper': method '<init>():void': (Main.java:589): ignore
-debug: type 'test.Main$CrossClassAHelper': method 'help2(test.Main$source_CrossClassA):void': (Main.java:591): add
+info: type 'test.Main$CrossClassAHelper': method '<init>():void': (Main.java:592): implicit ignore of trivial default constructor
+debug: type 'test.Main$CrossClassAHelper': method '<init>():void': (Main.java:592): ignore
+debug: type 'test.Main$CrossClassAHelper': method 'help2(test.Main$source_CrossClassA):void': (Main.java:594): add
 debug: type 'test.Main$CrossClassBPatcher': (Main.java:0): edit
-info: type 'test.Main$CrossClassBPatcher': target 'test.Main$CrossClassB': method '<init>():void': (Main.java:621): implicit ignore of trivial default constructor
-debug: type 'test.Main$CrossClassBPatcher': target 'test.Main$CrossClassB': method '<init>():void': (Main.java:621): ignore
-debug: type 'test.Main$CrossClassBPatcher': target 'test.Main$CrossClassB': method 'go():void': (Main.java:624): wrap
+info: type 'test.Main$CrossClassBPatcher': target 'test.Main$CrossClassB': method '<init>():void': (Main.java:624): implicit ignore of trivial default constructor
+debug: type 'test.Main$CrossClassBPatcher': target 'test.Main$CrossClassB': method '<init>():void': (Main.java:624): ignore
+debug: type 'test.Main$CrossClassBPatcher': target 'test.Main$CrossClassB': method 'go():void': (Main.java:627): wrap
 debug: type 'test.Main$CrossClassCPatcher': (Main.java:0): replace
 debug: type 'test.Main$D': (Main.java:0): edit
 debug: type 'test.Main$D': field 'patchStaticField:int': (Main.java:0): add
 debug: type 'test.Main$D': field 'redefinedSourceStaticField:int': (Main.java:0): edit
 debug: type 'test.Main$D': field 'patchField:int': (Main.java:0): add
 debug: type 'test.Main$D': field 'redefinedSourceField:int': (Main.java:0): edit
-debug: type 'test.Main$D': method '<clinit>():void': (Main.java:287): replace
-debug: type 'test.Main$D': method '<init>():void': (Main.java:313): replace
-debug: type 'test.Main$D': method 'print():void': (Main.java:322): append
+debug: type 'test.Main$D': method '<clinit>():void': (Main.java:290): replace
+debug: type 'test.Main$D': method '<init>():void': (Main.java:316): replace
+debug: type 'test.Main$D': method 'print():void': (Main.java:325): append
 debug: type 'test.Main$E': (Main.java:0): edit
 debug: type 'test.Main$E': field 'patchStaticField:int': (Main.java:0): add
 debug: type 'test.Main$E': field 'redefinedSourceStaticField:int': (Main.java:0): edit
 debug: type 'test.Main$E': field 'patchField:int': (Main.java:0): add
 debug: type 'test.Main$E': field 'redefinedSourceField:int': (Main.java:0): edit
-info: type 'test.Main$E': method '<clinit>():void': (Main.java:335): default add
-debug: type 'test.Main$E': method '<clinit>():void': (Main.java:335): add
-debug: type 'test.Main$E': method '<init>(java.lang.String):void': (Main.java:383): add
-debug: type 'test.Main$E': method '<init>(java.lang.String, java.lang.Void):void': (Main.java:370): edit
-debug: type 'test.Main$E': method '<init>(java.lang.String, java.lang.Void):void': target '<init>(java.lang.String):void': (Main.java:370): 'public' modifier changed to 'private' in renamed method
-debug: type 'test.Main$E': method 'source_static():void': (Main.java:346): edit
-debug: type 'test.Main$E': method 'source_static():void': target '<clinit>': (Main.java:346): 'private' modifier added to renamed method
-debug: type 'test.Main$E': method 'source_static():void': target '<clinit>': (Main.java:346): 'constructor' modifier removed from renamed method
-debug: type 'test.Main$E': method 'print():void': (Main.java:389): append
+info: type 'test.Main$E': method '<clinit>():void': (Main.java:338): default add
+debug: type 'test.Main$E': method '<clinit>():void': (Main.java:338): add
+debug: type 'test.Main$E': method '<init>(java.lang.String):void': (Main.java:386): add
+debug: type 'test.Main$E': method '<init>(java.lang.String, java.lang.Void):void': (Main.java:373): edit
+debug: type 'test.Main$E': method '<init>(java.lang.String, java.lang.Void):void': target '<init>(java.lang.String):void': (Main.java:373): 'public' modifier changed to 'private' in renamed method
+debug: type 'test.Main$E': method 'source_static():void': (Main.java:349): edit
+debug: type 'test.Main$E': method 'source_static():void': target '<clinit>': (Main.java:349): 'private' modifier added to renamed method
+debug: type 'test.Main$E': method 'source_static():void': target '<clinit>': (Main.java:349): 'constructor' modifier removed from renamed method
+debug: type 'test.Main$E': method 'print():void': (Main.java:392): append
 debug: type 'test.Main$F': (Main.java:0): edit
 debug: type 'test.Main$F': field 'patchStaticField:int': (Main.java:0): add
 debug: type 'test.Main$F': field 'redefinedSourceStaticField:int': (Main.java:0): edit
 debug: type 'test.Main$F': field 'patchField:int': (Main.java:0): add
 debug: type 'test.Main$F': field 'redefinedSourceField:int': (Main.java:0): edit
-debug: type 'test.Main$F': method '<clinit>():void': (Main.java:400): append
-debug: type 'test.Main$F': method '<init>():void': (Main.java:420): ignore
-debug: type 'test.Main$F': method 'print():void': (Main.java:428): append
+debug: type 'test.Main$F': method '<clinit>():void': (Main.java:403): append
+debug: type 'test.Main$F': method '<init>():void': (Main.java:423): ignore
+debug: type 'test.Main$F': method 'print():void': (Main.java:431): append
 debug: type 'test.Main$G': (Main.java:0): edit
 debug: type 'test.Main$G': field 'patchStaticField:int': (Main.java:0): add
 debug: type 'test.Main$G': field 'redefinedSourceStaticField:int': (Main.java:0): edit
-info: type 'test.Main$G': method '<clinit>():void': (Main.java:447): implicit append of static constructor
-debug: type 'test.Main$G': method '<clinit>():void': (Main.java:447): append
-info: type 'test.Main$G': method '<init>():void': (Main.java:444): implicit ignore of trivial default constructor
-debug: type 'test.Main$G': method '<init>():void': (Main.java:444): ignore
-debug: type 'test.Main$G': method 'print():void': (Main.java:458): append
+info: type 'test.Main$G': method '<clinit>():void': (Main.java:450): implicit append of static constructor
+debug: type 'test.Main$G': method '<clinit>():void': (Main.java:450): append
+info: type 'test.Main$G': method '<init>():void': (Main.java:447): implicit ignore of trivial default constructor
+debug: type 'test.Main$G': method '<init>():void': (Main.java:447): ignore
+debug: type 'test.Main$G': method 'print():void': (Main.java:461): append
 debug: type 'test.Main$H': (Main.java:0): edit
 debug: type 'test.Main$H': field 'patchStaticField:int': (Main.java:0): add
-info: type 'test.Main$H': method '<clinit>():void': (Main.java:473): implicit add of static constructor
-debug: type 'test.Main$H': method '<clinit>():void': (Main.java:473): add
-debug: type 'test.Main$H': method '<init>():void': (Main.java:481): ignore
-debug: type 'test.Main$H': method 'print():void': (Main.java:485): append
+info: type 'test.Main$H': method '<clinit>():void': (Main.java:476): implicit add of static constructor
+debug: type 'test.Main$H': method '<clinit>():void': (Main.java:476): add
+debug: type 'test.Main$H': method '<init>():void': (Main.java:484): ignore
+debug: type 'test.Main$H': method 'print():void': (Main.java:488): append
 debug: type 'test.Main$Interface': (Main.java:0): ignore
 debug: decode patch: type 'test.Main$__My_label_for_class_void_$$_void__': decoded to 'test.Main$void'
 debug: decode patch: annotation element value '__My_label_for_class_void_$$_void__': decoded to 'void'
@@ -195,9 +195,8 @@ debug: type 'test.Main$void': field '__bad_emptyCode_$$__:int': (Main.java:0): a
 warning: decode patch: type 'test.Main$__My_label_for_class_void_$$_void__': field '_bad_$$_noStartMark__': missing start of code in '[->]_bad_$$_[<-]noStartMark__'
 debug: type 'test.Main$void': field '_bad_$$_noStartMark__:int': (Main.java:0): add
 debug: decode source: type 'test.Main$__ClassVoid_$$_void__': method '__method42_$$_42__': decoded to '42'
-info: type 'test.Main$void': method '<init>():void': (Main.java:650): implicit ignore of trivial default constructor
-debug: type 'test.Main$void': method '<init>():void': (Main.java:650): ignore
-debug: type 'test.Main$void': method 'printMethod(java.lang.String):void': (Main.java:653): ignore
+info: type 'test.Main$void': method '<init>():void': (Main.java:653): implicit ignore of trivial default constructor
+debug: type 'test.Main$void': method '<init>():void': (Main.java:653): ignore
 debug: decode patch: type 'test.Main$__My_label_for_class_void_$$_void__': method '__$$_withoutLabel__': decoded to 'withoutLabel'
 debug: type 'test.Main$void': method 'withoutLabel():void': (Main.java:706): add
 debug: decode patch: type 'test.Main$__My_label_for_class_void_$$_void__': method '__my_label_for_method_42_$$_42__': decoded to '42'
@@ -218,8 +217,8 @@ debug: type 'test.Main$void': method '12and3():void': (Main.java:711): add
 debug: type 'test.Main$void': method 'print():void': (Main.java:732): append
 debug: type 'test.Main$source_CrossClassA': (Main.java:0): edit
 debug: type 'test.Main$source_CrossClassA': target 'test.Main$CrossClassA': (Main.java:0): 'public' modifier removed from renamed type
-debug: type 'test.Main$source_CrossClassA': target 'test.Main$CrossClassA': method '<init>(java.lang.String):void': (Main.java:582): ignore
-debug: type 'test.Main$source_CrossClassA': target 'test.Main$CrossClassA': method 'go():void': (Main.java:584): ignore
+debug: type 'test.Main$source_CrossClassA': target 'test.Main$CrossClassA': method '<init>(java.lang.String):void': (Main.java:585): ignore
+debug: type 'test.Main$source_CrossClassA': target 'test.Main$CrossClassA': method 'go():void': (Main.java:587): ignore
 debug: type 'test.Main': (Main.java:0): ignore
 debug: type 'test.info.package-info': (package-info.java:0): replace
 debug: type 'test.info.package-info': (package-info.java:0): replace package non-recursive
@@ -231,21 +230,21 @@ debug: type 'test.target.package-info': (package-info.java:0): remove
 debug: type 'test.target.package-info': target 'test.nonrec.package-info': (package-info.java:0): remove package non-recursive
 debug: type 'test.target.package-info': target 'test.nonrec.package-info': (package-info.java:0): remove type 'test.nonrec.NonRec'
 debug: type 'test.Main$Concrete1': (Main.java:0): edit
-info: type 'test.Main$Concrete1': method '<init>():void': (Main.java:514): implicit ignore of trivial default constructor
-debug: type 'test.Main$Concrete1': method '<init>():void': (Main.java:514): ignore
+info: type 'test.Main$Concrete1': method '<init>():void': (Main.java:517): implicit ignore of trivial default constructor
+debug: type 'test.Main$Concrete1': method '<init>():void': (Main.java:517): ignore
 debug: type 'test.Main$Concrete1': method 'abstractMethod():void': (Main.java:0): ignore
-debug: type 'test.Main$Concrete1': method 'interfaceMethod():void': (Main.java:523): ignore
-debug: type 'test.Main$Concrete1': method 'method():void': (Main.java:517): replace
+debug: type 'test.Main$Concrete1': method 'interfaceMethod():void': (Main.java:526): ignore
+debug: type 'test.Main$Concrete1': method 'method():void': (Main.java:520): replace
 debug: type 'test.Main$Concrete2': (Main.java:0): edit
-info: type 'test.Main$Concrete2': method '<init>():void': (Main.java:551): implicit ignore of trivial default constructor
-debug: type 'test.Main$Concrete2': method '<init>():void': (Main.java:551): ignore
-debug: type 'test.Main$Concrete2': method 'method():void': (Main.java:554): replace
+info: type 'test.Main$Concrete2': method '<init>():void': (Main.java:554): implicit ignore of trivial default constructor
+debug: type 'test.Main$Concrete2': method '<init>():void': (Main.java:554): ignore
+debug: type 'test.Main$Concrete2': method 'method():void': (Main.java:557): replace
 debug: type 'test.Main$Derived': (Main.java:0): edit
-info: type 'test.Main$Derived': method '<init>():void': (Main.java:224): default ignore
-debug: type 'test.Main$Derived': method '<init>():void': (Main.java:224): ignore
-debug: type 'test.Main$Derived': method 'source_method():void': (Main.java:231): edit
-debug: type 'test.Main$Derived': method 'source_method():void': target 'method': (Main.java:231): 'public' modifier changed to 'private' in renamed method
-debug: type 'test.Main$Derived': method 'method():void': (Main.java:234): add
+info: type 'test.Main$Derived': method '<init>():void': (Main.java:227): default ignore
+debug: type 'test.Main$Derived': method '<init>():void': (Main.java:227): ignore
+debug: type 'test.Main$Derived': method 'source_method():void': (Main.java:234): edit
+debug: type 'test.Main$Derived': method 'source_method():void': target 'method': (Main.java:234): 'public' modifier changed to 'private' in renamed method
+debug: type 'test.Main$Derived': method 'method():void': (Main.java:237): add
 debug: reanonymize output: type 'test.Main$AnonymousClasses$Anon1$Anon1_Level2$Inner': reanonymized to 'test.Main$AnonymousClasses$1$1$Inner'
 debug: reanonymize output: type 'test.Main$AnonymousClasses$Anon1$Anon1_Level2': reanonymized to 'test.Main$AnonymousClasses$1$1'
 debug: reanonymize output: type 'test.Main$AnonymousClasses$Anon1': reanonymized to 'test.Main$AnonymousClasses$1'
@@ -336,8 +335,8 @@ original CrossClassB::go: data (class test.Main$CrossClassB)
 original CrossClassC::<clinit>
 original CrossClassC::<init>
 
-original void::<init> (class test.Main$__ClassVoid_$$_void__)
-original void::__method42_$$_42__
+original __ClassVoid_$$_void__::<init>
+original __ClassVoid_$$_void__::__method42_$$_42__
 
 original AnonymousClasses::<anon>::run
 original AnonymousClasses::<anon>::<anon>::run
@@ -451,7 +450,7 @@ exiting wrapper CrossClassBPatcher::go
 replaced CrossClassCPatcher::<clinit> (class test.Main$CrossClassC)
 replaced CrossClassCPatcher::<init> (class test.Main$CrossClassC)
 
-original void::<init> (class test.Main$void)
+original void::<init>
 replaced void::42
 added void::withoutLabel
 added void::with$dollarEscape

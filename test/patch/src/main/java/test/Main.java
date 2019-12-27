@@ -50,15 +50,18 @@ import lanchon.dexpatcher.annotation.*;
 @DexIgnore
 public class Main {
 
-	// We declare this method here because we want to use the source's Main.p()
-	// method from the patch, so the compiler needs the symbol to be present
-	// while building the patch. But the real method invoked at runtime will
-	// be the one in the source. Class 'Main' in the patch and all its bytecode
-	// members will be ignored: they will not be included in the resulting
-	// patched code and will be discarded.
+	// We declare these methods because here in the patch we want to use the
+	// methods in the source that match these signatures, so the compiler needs
+	// these symbols to be present while building the patch. But the real
+	// methods invoked at runtime will be the ones in the source. Class 'Main'
+	// in the patch and all its bytecode members will be ignored: they will not
+	// be included in the resulting patched code and will be discarded.
 	// Note: The recommended way to populate unused method bodies in the patch
 	// is with a single 'throw null;' statement.
-	static void p(String msg) { throw null; }
+	static void p() { throw null; }
+	static void p(String message) { throw null; }
+	static void pClass(String message) { throw null; }
+	static void pMethod(String message) { throw null; }
 
 	// Completely replace class 'A' with a new class:
 	// The targeted item must be a class and can be defined in various ways:
@@ -649,12 +652,9 @@ public class Main {
 	@DexEdit
 	public static class __My_label_for_class_void_$$_void__ {
 
-		@DexIgnore
-		private static void printMethod(String message) { throw null; }
-
 		// Replace obfuscated method named '42':
 		@DexReplace
-		public void __my_label_for_method_42_$$_42__() { printMethod("replaced"); }
+		public void __my_label_for_method_42_$$_42__() { pMethod("replaced %s"); }
 
 		// Identifier codes:
 
@@ -703,12 +703,12 @@ public class Main {
 		// users can apply them without specifying transforms.
 
 		// Test valid identifier codes:
-		@DexAdd void    __$$_withoutLabel__() { printMethod("added"); };
-		@DexAdd void __ok_$$_with$SdollarEscape__() { printMethod("added"); };
-		@DexAdd void __ok_$$_with$UunderscoreEscape__() { printMethod("added"); };
-		@DexAdd void __ok_$$_with$aB1asciiLatin1Escape__() { printMethod("added"); };
-		@DexAdd void __ok_$$_with$u00B1unicodeEscape__() { printMethod("added"); };
-		@DexAdd void __prefix_$$_1____infix_$$_2__and__postfix_$$_3__() { printMethod("added"); };
+		@DexAdd void    __$$_withoutLabel__() { pMethod("added %s"); };
+		@DexAdd void __ok_$$_with$SdollarEscape__() { pMethod("added %s"); };
+		@DexAdd void __ok_$$_with$UunderscoreEscape__() { pMethod("added %s"); };
+		@DexAdd void __ok_$$_with$aB1asciiLatin1Escape__() { pMethod("added %s"); };
+		@DexAdd void __ok_$$_with$u00B1unicodeEscape__() { pMethod("added %s"); };
+		@DexAdd void __prefix_$$_1____infix_$$_2__and__postfix_$$_3__() { pMethod("added %s"); };
 
 		// Test invalid identifier codes:
 		// Note: The patch dex file must be decoded using '--no-decode-errors'.
@@ -724,7 +724,7 @@ public class Main {
 		@DexAdd int __bad_$$_truncatedEscape$__;
 		@DexAdd int __bad_$$_truncatedAsciiLatin1Escape$aB__;
 		@DexAdd int __bad_$$_truncatedUnicodeEscape$uB1__;
-		@DexAdd void __prefix_$$_1____bad_infix_$$_$2__and__postfix_$$_3__() { printMethod("added"); };
+		@DexAdd void __prefix_$$_1____bad_infix_$$_$2__and__postfix_$$_3__() { pMethod("added %s"); };
 
 		// Print the decoded identifiers:
 		@DexAppend

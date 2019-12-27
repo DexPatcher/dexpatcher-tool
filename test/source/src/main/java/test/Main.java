@@ -12,12 +12,32 @@ package test;
 
 public class Main {
 
+	private static final String CLASS_NAME_PREFIX = Main.class.getName() + '$';
+
+	private static String formatClassName(String className) {
+		if (className.startsWith(CLASS_NAME_PREFIX)) className = className.substring(CLASS_NAME_PREFIX.length());
+		return className;
+
+	}
+
 	static void p() {
 		System.out.println();
 	}
 
-	static void p(String msg) {
-		System.out.println(msg);
+	static void p(String message) {
+		System.out.println(message);
+	}
+
+	static void pClass(String message) {
+		StackTraceElement element = new Throwable().getStackTrace()[1];
+		String className = formatClassName(element.getClassName());
+		p(String.format(message, className));
+	}
+
+	static void pMethod(String message) {
+		StackTraceElement element = new Throwable().getStackTrace()[1];
+		String methodName = formatClassName(element.getClassName()) + "::" + element.getMethodName();
+		p(String.format(message, methodName));
 	}
 
 	public static void main(String args[]) {
@@ -256,11 +276,8 @@ public class Main {
 	// Define obfuscated class named 'void' containing method named '42':
 	// Note: The source dex file must be decoded using '--decode-source'.
 	public static class __ClassVoid_$$_void__ {
-		private static void printMethod(String message) {
-			p(message + " void::" + new Throwable().getStackTrace()[1].getMethodName());
-		}
-		public __ClassVoid_$$_void__() { p("original void::<init> (" + this.getClass() + ")"); }
-		public void __method42_$$_42__() { printMethod("original"); }
+		public __ClassVoid_$$_void__() { pClass("original %s::<init>"); }
+		public void __method42_$$_42__() { pMethod("original %s"); }
 		public void print() { __method42_$$_42__(); }
 	}
 
