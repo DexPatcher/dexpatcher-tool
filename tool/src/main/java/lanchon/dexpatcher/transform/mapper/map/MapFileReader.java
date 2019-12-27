@@ -117,7 +117,7 @@ public final class MapFileReader {
 			parseMethod(args, method.group("ret"), method.group("old"), method.group("new"));
 			return;
 		}
-		log(ERROR, "cannot parse map file line");
+		log(ERROR, "syntax error");
 		memberMapBuilder = null;
 	}
 
