@@ -54,10 +54,10 @@ code transform options:
 $ dexpatcher build/source.dex.zip build/patch.dex.zip --output build/patched.dex --deanon-source Anon\[_Level\] --reanon-output Anon\[_Level\] --deanon-patches \[_\]_patch --no-anon-errors --decode-source --decode-patches --no-decode-errors --debug
 DexPatcher version 1.8.0-alpha4 by Lanchon (https://dexpatcher.github.io/)
 info: read 'build/source.dex.zip'
-debug: read 'build/source.dex.zip': file 'classes.dex': 33 types
+debug: read 'build/source.dex.zip': file 'classes.dex': 34 types
 debug: read 'build/source.dex.zip': dex version '035'
 info: read 'build/patch.dex.zip'
-debug: read 'build/patch.dex.zip': file 'classes.dex': 30 types
+debug: read 'build/patch.dex.zip': file 'classes.dex': 31 types
 debug: read 'build/patch.dex.zip': dex version '035'
 debug: deanonymize source: type 'test.Main$AnonymousClasses$1$1$Inner': deanonymized to 'test.Main$AnonymousClasses$Anon1$Anon1_Level2$Inner'
 debug: deanonymize source: type 'test.Main$AnonymousClasses$1$1': deanonymized to 'test.Main$AnonymousClasses$Anon1$Anon1_Level2'
@@ -71,19 +71,19 @@ debug: type 'test.Main$Abstract': (Main.java:0): ignore
 debug: deanonymize patch: type 'test.Main$AnonymousClasses$1': deanonymized to 'test.Main$AnonymousClasses$1_patch'
 debug: type 'test.Main$AnonymousClasses$1_patch': (Main.java:0): add
 debug: type 'test.Main$AnonymousClasses$Anon1$Anon1_Level2': (Main.java:0): edit
-info: type 'test.Main$AnonymousClasses$Anon1$Anon1_Level2': method '<init>():void': (Main.java:792): implicit ignore of trivial default constructor
-debug: type 'test.Main$AnonymousClasses$Anon1$Anon1_Level2': method '<init>():void': (Main.java:792): ignore
-debug: type 'test.Main$AnonymousClasses$Anon1$Anon1_Level2': method 'run():void': (Main.java:795): replace
+info: type 'test.Main$AnonymousClasses$Anon1$Anon1_Level2': method '<init>():void': (Main.java:796): implicit ignore of trivial default constructor
+debug: type 'test.Main$AnonymousClasses$Anon1$Anon1_Level2': method '<init>():void': (Main.java:796): ignore
+debug: type 'test.Main$AnonymousClasses$Anon1$Anon1_Level2': method 'run():void': (Main.java:799): replace
 debug: type 'test.Main$AnonymousClasses$Anon1': (Main.java:0): edit
-info: type 'test.Main$AnonymousClasses$Anon1': method '<init>():void': (Main.java:790): implicit ignore of trivial default constructor
-debug: type 'test.Main$AnonymousClasses$Anon1': method '<init>():void': (Main.java:790): ignore
+info: type 'test.Main$AnonymousClasses$Anon1': method '<init>():void': (Main.java:794): implicit ignore of trivial default constructor
+debug: type 'test.Main$AnonymousClasses$Anon1': method '<init>():void': (Main.java:794): ignore
 debug: decode patch: type 'test.Main$AnonymousClasses$__UnexpectedAnonymousClass_$$_42__': decoded to 'test.Main$AnonymousClasses$42'
 debug: decode patch: annotation element value '__UnexpectedAnonymousClass_$$_42__': decoded to '42'
 debug: type 'test.Main$AnonymousClasses$42': (Main.java:0): add
 debug: type 'test.Main$AnonymousClasses': (Main.java:0): edit
-info: type 'test.Main$AnonymousClasses': method '<init>():void': (Main.java:788): implicit ignore of trivial default constructor
-debug: type 'test.Main$AnonymousClasses': method '<init>():void': (Main.java:788): ignore
-debug: type 'test.Main$AnonymousClasses': method 'print():void': (Main.java:806): append
+info: type 'test.Main$AnonymousClasses': method '<init>():void': (Main.java:792): implicit ignore of trivial default constructor
+debug: type 'test.Main$AnonymousClasses': method '<init>():void': (Main.java:792): ignore
+debug: type 'test.Main$AnonymousClasses': method 'print():void': (Main.java:810): append
 debug: type 'test.Main$B': (Main.java:0): edit
 debug: type 'test.Main$B': field 'staticField:int': (Main.java:0): add
 debug: type 'test.Main$B': field 'instanceField:int': (Main.java:0): add
@@ -170,51 +170,54 @@ info: type 'test.Main$H': method '<clinit>():void': (Main.java:476): implicit ad
 debug: type 'test.Main$H': method '<clinit>():void': (Main.java:476): add
 debug: type 'test.Main$H': method '<init>():void': (Main.java:484): ignore
 debug: type 'test.Main$H': method 'print():void': (Main.java:488): append
+debug: type 'test.Main$IdentifierCodes': (Main.java:0): edit
+warning: decode patch: type 'test.Main$IdentifierCodes': field '__bad_$$_invalid$aX1asciiLatin1Escape__': invalid escape sequence '$aX' in '__bad_$$_invalid[->]$aX[<-]1asciiLatin1Escape__'
+debug: type 'test.Main$IdentifierCodes': field '__bad_$$_invalid$aX1asciiLatin1Escape__:int': (Main.java:0): add
+warning: decode patch: type 'test.Main$IdentifierCodes': field '__bad_$$_invalid$sescape__': invalid escape sequence '$s' in '__bad_$$_invalid[->]$s[<-]escape__'
+debug: type 'test.Main$IdentifierCodes': field '__bad_$$_invalid$sescape__:int': (Main.java:0): add
+warning: decode patch: type 'test.Main$IdentifierCodes': field '__bad_$$_invalid$uB1unicodeEscape__': invalid escape sequence '$uB1u' in '__bad_$$_invalid[->]$uB1u[<-]nicodeEscape__'
+debug: type 'test.Main$IdentifierCodes': field '__bad_$$_invalid$uB1unicodeEscape__:int': (Main.java:0): add
+warning: decode patch: type 'test.Main$IdentifierCodes': field '__bad_$$_invalid_character__': invalid character '_' in '__bad_$$_invalid[->]_[<-]character__'
+debug: type 'test.Main$IdentifierCodes': field '__bad_$$_invalid_character__:int': (Main.java:0): add
+warning: decode patch: type 'test.Main$IdentifierCodes': field '__bad_$$_noEndMark_': missing end of code in '__bad[->]_$$_noEndMark_[<-]'
+debug: type 'test.Main$IdentifierCodes': field '__bad_$$_noEndMark_:int': (Main.java:0): add
+warning: decode patch: type 'test.Main$IdentifierCodes': field '__bad_$$_truncatedAsciiLatin1Escape$aB__': invalid escape sequence '$aB' in '__bad_$$_truncatedAsciiLatin1Escape[->]$aB[<-]__'
+debug: type 'test.Main$IdentifierCodes': field '__bad_$$_truncatedAsciiLatin1Escape$aB__:int': (Main.java:0): add
+warning: decode patch: type 'test.Main$IdentifierCodes': field '__bad_$$_truncatedEscape$__': invalid escape sequence '$' in '__bad_$$_truncatedEscape[->]$[<-]__'
+debug: type 'test.Main$IdentifierCodes': field '__bad_$$_truncatedEscape$__:int': (Main.java:0): add
+warning: decode patch: type 'test.Main$IdentifierCodes': field '__bad_$$_truncatedUnicodeEscape$uB1__': invalid escape sequence '$uB1' in '__bad_$$_truncatedUnicodeEscape[->]$uB1[<-]__'
+debug: type 'test.Main$IdentifierCodes': field '__bad_$$_truncatedUnicodeEscape$uB1__:int': (Main.java:0): add
+warning: decode patch: type 'test.Main$IdentifierCodes': field '__bad_emptyCode_$$__': empty code in '__bad_emptyCode[->]_$$__[<-]'
+debug: type 'test.Main$IdentifierCodes': field '__bad_emptyCode_$$__:int': (Main.java:0): add
+warning: decode patch: type 'test.Main$IdentifierCodes': field '_bad_$$_noStartMark__': missing start of code in '[->]_bad_$$_[<-]noStartMark__'
+debug: type 'test.Main$IdentifierCodes': field '_bad_$$_noStartMark__:int': (Main.java:0): add
+info: type 'test.Main$IdentifierCodes': method '<init>():void': (Main.java:661): implicit ignore of trivial default constructor
+debug: type 'test.Main$IdentifierCodes': method '<init>():void': (Main.java:661): ignore
+debug: decode patch: type 'test.Main$IdentifierCodes': method '__$$_withoutLabel__': decoded to 'withoutLabel'
+debug: type 'test.Main$IdentifierCodes': method 'withoutLabel():void': (Main.java:710): add
+debug: decode patch: type 'test.Main$IdentifierCodes': method '__ok_$$_with$SdollarEscape__': decoded to 'with$dollarEscape'
+debug: type 'test.Main$IdentifierCodes': method 'with$dollarEscape():void': (Main.java:711): add
+debug: decode patch: type 'test.Main$IdentifierCodes': method '__ok_$$_with$UunderscoreEscape__': decoded to 'with_underscoreEscape'
+debug: type 'test.Main$IdentifierCodes': method 'with_underscoreEscape():void': (Main.java:712): add
+debug: decode patch: type 'test.Main$IdentifierCodes': method '__ok_$$_with$aB1asciiLatin1Escape__': decoded to 'with±asciiLatin1Escape'
+debug: type 'test.Main$IdentifierCodes': method 'with±asciiLatin1Escape():void': (Main.java:713): add
+debug: decode patch: type 'test.Main$IdentifierCodes': method '__ok_$$_with$u00B1unicodeEscape__': decoded to 'with±unicodeEscape'
+debug: type 'test.Main$IdentifierCodes': method 'with±unicodeEscape():void': (Main.java:714): add
+warning: decode patch: type 'test.Main$IdentifierCodes': method '__prefix_$$_1____bad_infix_$$_$2__and__postfix_$$_3__': invalid escape sequence '$2' in '__bad_infix_$$_[->]$2[<-]__'
+debug: decode patch: type 'test.Main$IdentifierCodes': method '__prefix_$$_1____bad_infix_$$_$2__and__postfix_$$_3__': decoded to '1__bad_infix_$$_$2__and3'
+debug: type 'test.Main$IdentifierCodes': method '1__bad_infix_$$_$2__and3():void': (Main.java:731): add
+debug: decode patch: type 'test.Main$IdentifierCodes': method '__prefix_$$_1____infix_$$_2__and__postfix_$$_3__': decoded to '12and3'
+debug: type 'test.Main$IdentifierCodes': method '12and3():void': (Main.java:715): add
+debug: type 'test.Main$IdentifierCodes': method 'print():void': (Main.java:736): replace
 debug: type 'test.Main$Interface': (Main.java:0): ignore
 debug: decode patch: type 'test.Main$__My_label_for_class_void_$$_void__': decoded to 'test.Main$void'
 debug: decode patch: annotation element value '__My_label_for_class_void_$$_void__': decoded to 'void'
 debug: type 'test.Main$void': (Main.java:0): edit
-warning: decode patch: type 'test.Main$__My_label_for_class_void_$$_void__': field '__bad_$$_invalid$aX1asciiLatin1Escape__': invalid escape sequence '$aX' in '__bad_$$_invalid[->]$aX[<-]1asciiLatin1Escape__'
-debug: type 'test.Main$void': field '__bad_$$_invalid$aX1asciiLatin1Escape__:int': (Main.java:0): add
-warning: decode patch: type 'test.Main$__My_label_for_class_void_$$_void__': field '__bad_$$_invalid$sescape__': invalid escape sequence '$s' in '__bad_$$_invalid[->]$s[<-]escape__'
-debug: type 'test.Main$void': field '__bad_$$_invalid$sescape__:int': (Main.java:0): add
-warning: decode patch: type 'test.Main$__My_label_for_class_void_$$_void__': field '__bad_$$_invalid$uB1unicodeEscape__': invalid escape sequence '$uB1u' in '__bad_$$_invalid[->]$uB1u[<-]nicodeEscape__'
-debug: type 'test.Main$void': field '__bad_$$_invalid$uB1unicodeEscape__:int': (Main.java:0): add
-warning: decode patch: type 'test.Main$__My_label_for_class_void_$$_void__': field '__bad_$$_invalid_character__': invalid character '_' in '__bad_$$_invalid[->]_[<-]character__'
-debug: type 'test.Main$void': field '__bad_$$_invalid_character__:int': (Main.java:0): add
-warning: decode patch: type 'test.Main$__My_label_for_class_void_$$_void__': field '__bad_$$_noEndMark_': missing end of code in '__bad[->]_$$_noEndMark_[<-]'
-debug: type 'test.Main$void': field '__bad_$$_noEndMark_:int': (Main.java:0): add
-warning: decode patch: type 'test.Main$__My_label_for_class_void_$$_void__': field '__bad_$$_truncatedAsciiLatin1Escape$aB__': invalid escape sequence '$aB' in '__bad_$$_truncatedAsciiLatin1Escape[->]$aB[<-]__'
-debug: type 'test.Main$void': field '__bad_$$_truncatedAsciiLatin1Escape$aB__:int': (Main.java:0): add
-warning: decode patch: type 'test.Main$__My_label_for_class_void_$$_void__': field '__bad_$$_truncatedEscape$__': invalid escape sequence '$' in '__bad_$$_truncatedEscape[->]$[<-]__'
-debug: type 'test.Main$void': field '__bad_$$_truncatedEscape$__:int': (Main.java:0): add
-warning: decode patch: type 'test.Main$__My_label_for_class_void_$$_void__': field '__bad_$$_truncatedUnicodeEscape$uB1__': invalid escape sequence '$uB1' in '__bad_$$_truncatedUnicodeEscape[->]$uB1[<-]__'
-debug: type 'test.Main$void': field '__bad_$$_truncatedUnicodeEscape$uB1__:int': (Main.java:0): add
-warning: decode patch: type 'test.Main$__My_label_for_class_void_$$_void__': field '__bad_emptyCode_$$__': empty code in '__bad_emptyCode[->]_$$__[<-]'
-debug: type 'test.Main$void': field '__bad_emptyCode_$$__:int': (Main.java:0): add
-warning: decode patch: type 'test.Main$__My_label_for_class_void_$$_void__': field '_bad_$$_noStartMark__': missing start of code in '[->]_bad_$$_[<-]noStartMark__'
-debug: type 'test.Main$void': field '_bad_$$_noStartMark__:int': (Main.java:0): add
 debug: decode source: type 'test.Main$__ClassVoid_$$_void__': method '__method42_$$_42__': decoded to '42'
 info: type 'test.Main$void': method '<init>():void': (Main.java:653): implicit ignore of trivial default constructor
 debug: type 'test.Main$void': method '<init>():void': (Main.java:653): ignore
-debug: decode patch: type 'test.Main$__My_label_for_class_void_$$_void__': method '__$$_withoutLabel__': decoded to 'withoutLabel'
-debug: type 'test.Main$void': method 'withoutLabel():void': (Main.java:706): add
 debug: decode patch: type 'test.Main$__My_label_for_class_void_$$_void__': method '__my_label_for_method_42_$$_42__': decoded to '42'
-debug: type 'test.Main$void': method '42():void': (Main.java:657): replace
-debug: decode patch: type 'test.Main$__My_label_for_class_void_$$_void__': method '__ok_$$_with$SdollarEscape__': decoded to 'with$dollarEscape'
-debug: type 'test.Main$void': method 'with$dollarEscape():void': (Main.java:707): add
-debug: decode patch: type 'test.Main$__My_label_for_class_void_$$_void__': method '__ok_$$_with$UunderscoreEscape__': decoded to 'with_underscoreEscape'
-debug: type 'test.Main$void': method 'with_underscoreEscape():void': (Main.java:708): add
-debug: decode patch: type 'test.Main$__My_label_for_class_void_$$_void__': method '__ok_$$_with$aB1asciiLatin1Escape__': decoded to 'with±asciiLatin1Escape'
-debug: type 'test.Main$void': method 'with±asciiLatin1Escape():void': (Main.java:709): add
-debug: decode patch: type 'test.Main$__My_label_for_class_void_$$_void__': method '__ok_$$_with$u00B1unicodeEscape__': decoded to 'with±unicodeEscape'
-debug: type 'test.Main$void': method 'with±unicodeEscape():void': (Main.java:710): add
-warning: decode patch: type 'test.Main$__My_label_for_class_void_$$_void__': method '__prefix_$$_1____bad_infix_$$_$2__and__postfix_$$_3__': invalid escape sequence '$2' in '__bad_infix_$$_[->]$2[<-]__'
-debug: decode patch: type 'test.Main$__My_label_for_class_void_$$_void__': method '__prefix_$$_1____bad_infix_$$_$2__and__postfix_$$_3__': decoded to '1__bad_infix_$$_$2__and3'
-debug: type 'test.Main$void': method '1__bad_infix_$$_$2__and3():void': (Main.java:727): add
-debug: decode patch: type 'test.Main$__My_label_for_class_void_$$_void__': method '__prefix_$$_1____infix_$$_2__and__postfix_$$_3__': decoded to '12and3'
-debug: type 'test.Main$void': method '12and3():void': (Main.java:711): add
-debug: type 'test.Main$void': method 'print():void': (Main.java:732): append
+debug: type 'test.Main$void': method '42():void': (Main.java:656): replace
 debug: type 'test.Main$source_CrossClassA': (Main.java:0): edit
 debug: type 'test.Main$source_CrossClassA': target 'test.Main$CrossClassA': (Main.java:0): 'public' modifier removed from renamed type
 debug: type 'test.Main$source_CrossClassA': target 'test.Main$CrossClassA': method '<init>(java.lang.String):void': (Main.java:585): ignore
@@ -254,7 +257,7 @@ debug: reanonymize output: type 'test.Main$AnonymousClasses$Anon1_Level2$Anon1_L
 warning: reanonymize output: type 'test.Main$AnonymousClasses$42': cannot reanonymize 'Main$AnonymousClasses$42' by 1 level
 info: write 'build/patched.dex'
 debug: write 'build/patched.dex': dex version '035'
-debug: write 'build/patched.dex': 34 types
+debug: write 'build/patched.dex': 35 types
 0 error(s), 14 warning(s)
 
 $ dex2jar --force --output build/patched-dex2jar.jar build/patched.dex
@@ -337,6 +340,8 @@ original CrossClassC::<init>
 
 original __ClassVoid_$$_void__::<init>
 original __ClassVoid_$$_void__::__method42_$$_42__
+
+original IdentifierCodes::print
 
 original AnonymousClasses::<anon>::run
 original AnonymousClasses::<anon>::<anon>::run
@@ -452,13 +457,14 @@ replaced CrossClassC::<init> (originally in CrossClassCPatcher)
 
 original void::<init>
 replaced void::42
-added void::withoutLabel
-added void::with$dollarEscape
-added void::with_underscoreEscape
-added void::with±asciiLatin1Escape
-added void::with±unicodeEscape
-added void::12and3
-added void::1__bad_infix_$$_$2__and3
+
+added IdentifierCodes::withoutLabel
+added IdentifierCodes::with$dollarEscape
+added IdentifierCodes::with_underscoreEscape
+added IdentifierCodes::with±asciiLatin1Escape
+added IdentifierCodes::with±unicodeEscape
+added IdentifierCodes::12and3
+added IdentifierCodes::1__bad_infix_$$_$2__and3
 
 original AnonymousClasses::<anon>::run
 replaced AnonymousClasses::<anon>::<anon>::run

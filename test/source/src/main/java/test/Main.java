@@ -73,6 +73,8 @@ public class Main {
 		p();
 		new __ClassVoid_$$_void__().print();
 		p();
+		new IdentifierCodes().print();
+		p();
 		AnonymousClasses.print();
 		p();
 	}
@@ -279,6 +281,10 @@ public class Main {
 		public __ClassVoid_$$_void__() { pClass("original %s::<init>"); }
 		public void __method42_$$_42__() { pMethod("original %s"); }
 		public void print() { __method42_$$_42__(); }
+	}
+
+	public static class IdentifierCodes {
+		public void print() { p("original IdentifierCodes::print"); }
 	}
 
 	public static class AnonymousClasses {

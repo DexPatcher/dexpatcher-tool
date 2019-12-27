@@ -651,10 +651,14 @@ public class Main {
 	// Note: The patch dex file must be decoded using '--decode-patches'.
 	@DexEdit
 	public static class __My_label_for_class_void_$$_void__ {
-
 		// Replace obfuscated method named '42':
 		@DexReplace
 		public void __my_label_for_method_42_$$_42__() { pMethod("replaced %s"); }
+	}
+
+	// Test identifier codes:
+	@DexEdit
+	public static class IdentifierCodes {
 
 		// Identifier codes:
 
@@ -727,7 +731,7 @@ public class Main {
 		@DexAdd void __prefix_$$_1____bad_infix_$$_$2__and__postfix_$$_3__() { pMethod("added %s"); };
 
 		// Print the decoded identifiers:
-		@DexAppend
+		@DexReplace
 		public void print() {
 			__$$_withoutLabel__();
 			__ok_$$_with$SdollarEscape__();
