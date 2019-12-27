@@ -291,11 +291,11 @@ public class Main {
 		public static void print() {
 			new Runnable() {
 				@Override public void run() {
-					p("original AnonymousClasses::<anon>::run");
+					pClass("original %s::run");
 					new Runnable() {
 						class Inner {}
 						@Override public void run() {
-							p("original AnonymousClasses::<anon>::<anon>::run");
+							pClass("original %s::run");
 						}
 					}.run();
 				}
@@ -310,7 +310,7 @@ public class Main {
 		public static class Anon1 {
 			public static class Anon1_Level2 {}
 			public static void go() {
-				p("original AnonymousClasses::Anon1::go");
+				pClass("original %s::go");
 				new Object() {};
 			}
 		}

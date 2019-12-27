@@ -810,7 +810,7 @@ public class Main {
 			new Runnable() {
 				@Override
 				public void run() {
-					p("added AnonymousClasses::<anon> (" + this.getClass() + ")");
+					pClass("added class %s");
 				}
 			}.run();
 		}

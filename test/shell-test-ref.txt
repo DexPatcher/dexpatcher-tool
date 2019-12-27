@@ -343,9 +343,9 @@ original __ClassVoid_$$_void__::__method42_$$_42__
 
 original IdentifierCodes::print
 
-original AnonymousClasses::<anon>::run
-original AnonymousClasses::<anon>::<anon>::run
-original AnonymousClasses::Anon1::go
+original AnonymousClasses$1::run
+original AnonymousClasses$1$1::run
+original AnonymousClasses$Anon1::go
 
 --- end source/build/libs/source.jar ---
 
@@ -466,10 +466,10 @@ added IdentifierCodes::with±unicodeEscape
 added IdentifierCodes::12and3
 added IdentifierCodes::1__bad_infix_$$_$2__and3
 
-original AnonymousClasses::<anon>::run
+original AnonymousClasses$1::run
 replaced AnonymousClasses::<anon>::<anon>::run
-original AnonymousClasses::Anon1::go
-added AnonymousClasses::<anon> (class test.Main$AnonymousClasses$1_patch)
+original AnonymousClasses$Anon1::go
+added class AnonymousClasses$1_patch
 
 --- end build/patched-dex2jar.jar ---
 
