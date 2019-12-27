@@ -8,7 +8,9 @@ mkdir -p build
     echo "error: shell-test: execution failed"
     echo
     echo "======  full output  ======"
+    echo
     cat build/shell-test-out.txt
+    echo
     exit 1
 }
 
@@ -16,7 +18,9 @@ diff shell-test-ref.txt build/shell-test-out.txt &>/dev/null || {
     echo "error: shell-test: unexpected output"
     #echo
     #echo "======  full output  ======"
+    #echo
     #cat build/shell-test-out.txt
+    #echo
 
     sedcmd='s|\(Main\.java\:[0-9]+\)\:|\(Main\.java\:\<\?\>\)\:|g'
     sed -r "$sedcmd" shell-test-ref.txt >build/shell-test-ref-filtered.txt
@@ -24,8 +28,10 @@ diff shell-test-ref.txt build/shell-test-out.txt &>/dev/null || {
 
     echo
     echo "======  diff output  ======"
+    echo
     diff build/shell-test-ref-filtered.txt build/shell-test-out-filtered.txt --color=always -U10000 && {
         echo "info: shell-test: only source code line numbers differ"
     } || true
+    echo
     exit 2
 }
