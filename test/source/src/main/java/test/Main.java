@@ -324,11 +324,13 @@ public class Main {
 	public static class ObfuscatedThing {
 		public int obfuscatedField;
 		public void obfuscatedMethod() { pMethod("original %s"); }
-		public float obfuscatedMethodWithArgs(int i, String s, Object... args) { pMethod("original %s"); return 0; }
+		public float[][] obfuscatedMethod2(int i, String s, Object... args) { pMethod("original %s"); return null; }
+		public void yetAnotherObfuscatedMethod(ObfuscatedThing[] x) { pMethod("original %s"); }
 		public void print() {
 			pClass("%s::obfuscatedField: " + obfuscatedField);
 			obfuscatedMethod();
-			obfuscatedMethodWithArgs(0, null);
+			obfuscatedMethod2(0, null);
+			yetAnotherObfuscatedMethod(null);
 		}
 	}
 

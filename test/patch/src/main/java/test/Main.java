@@ -831,9 +831,11 @@ public class Main {
 		@DexIgnore
 		public int field;
 		@DexReplace
-		public void method() { pMethod("replaced %s"); }
+		public void someMethod() { pMethod("replaced %s"); }
 		@DexReplace
-		public float methodWithArgs(int i, String s, Object... args) { pMethod("replaced %s"); return 0; }
+		public float[][] anotherMethodWithArgs(int i, String s, Object... args) { pMethod("replaced %s"); return null; }
+		@DexReplace
+		public void makeFriendsWithOtherThings(Thing[] things) { pMethod("replaced %s"); }
 		@DexPrepend
 		public void print() { field = 42; }
 	}
