@@ -10,8 +10,6 @@
 
 package lanchon.dexpatcher;
 
-import java.util.List;
-
 import lanchon.dexpatcher.Processor.PreTransform;
 import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.logger.Logger;
@@ -21,7 +19,7 @@ import lanchon.multidexlib2.DexIO;
 public class Configuration {
 
 	public String sourceFile;
-	public List<String> patchFiles;
+	public Iterable<String> patchFiles;
 	public String patchedFile;
 
 	public int apiLevel;
