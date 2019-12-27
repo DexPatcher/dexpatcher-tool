@@ -126,7 +126,7 @@ public final class MapFileReader {
 			memberMapBuilder = null;
 			memberMapBuilder = mapBuilder.addClassMapping(name, newName);
 		} catch (MapBuilder.BuilderException e) {
-			log(ERROR, e.getMessage());
+			logBuilderException(e);
 		}
 	}
 
@@ -135,7 +135,7 @@ public final class MapFileReader {
 			try {
 				memberMapBuilder.addFieldMapping(type, name, newName);
 			} catch (MapBuilder.BuilderException e) {
-				log(ERROR, e.getMessage());
+				logBuilderException(e);
 			}
 		} else {
 			log(ERROR, "unexpected field mapping");
@@ -147,11 +147,15 @@ public final class MapFileReader {
 			try {
 				memberMapBuilder.addMethodMapping(parameterTypes, returnType, name, newName);
 			} catch (MapBuilder.BuilderException e) {
-				log(ERROR, e.getMessage());
+				logBuilderException(e);
 			}
 		} else {
 			log(ERROR, "unexpected method mapping");
 		}
+	}
+
+	private void logBuilderException(MapBuilder.BuilderException exception) {
+		log(ERROR, exception.getMessage());
 	}
 
 	private void log(Logger.Level level, String message) {
