@@ -56,7 +56,7 @@ public class Configuration {
 	public String reanonOutputPlan;
 	public boolean unmapOutput;
 
-	public String mapFile;
+	public Iterable<String> mapFiles;
 	public boolean invertMap;
 
 	public boolean treatAnonymizerErrorsAsWarnings;

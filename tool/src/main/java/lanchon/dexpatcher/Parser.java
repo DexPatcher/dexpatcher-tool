@@ -12,6 +12,7 @@ package lanchon.dexpatcher;
 
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import lanchon.dexpatcher.Processor.PreTransform;
@@ -94,10 +95,12 @@ public class Parser {
 		config.unmapPatches = cl.hasOption("unmap-patches");
 		config.unmapOutput = cl.hasOption("unmap-output");
 
-		config.mapFile = cl.getOptionValue("map");
+		String[] mapFiles = cl.getOptionValues("map");
 		if (config.mapSource || config.unmapSource || config.unmapPatches || config.unmapOutput) {
-			if (config.mapFile == null) {
+			if (mapFiles == null) {
 				throw new ParseException("Missing option: map");
+			} else {
+				config.mapFiles = Arrays.asList(mapFiles);
 			}
 		}
 		config.invertMap = cl.hasOption("invert-map");
@@ -225,7 +228,7 @@ public class Parser {
 		options.addOption(new Option(null, "unmap-patches", false, "apply map inverse to identifiers in patches"));
 		options.addOption(new Option(null, "unmap-output", false, "apply map inverse to identifiers in output"));
 
-		o = new Option(null, "map", true, "identifier map file");
+		o = new Option(null, "map", true, "identifier map file (repeatable option)");
 		o.setArgName("file"); options.addOption(o);
 		options.addOption(new Option(null, "invert-map", false, "use inverse of identifier map file"));
 
