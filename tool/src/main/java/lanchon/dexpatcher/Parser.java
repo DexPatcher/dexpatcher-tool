@@ -53,7 +53,9 @@ public class Parser {
 
 		@SuppressWarnings("unchecked")
 		List<String> files = cl.getArgList();
-		if (files.isEmpty()) throw new ParseException("Missing argument: <source-dex-apk-or-dir>");
+		if (files.isEmpty()) {
+			throw new ParseException("Missing argument: <source-dex-apk-or-dir>");
+		}
 		config.sourceFile = files.get(0);
 		config.patchFiles = new ArrayList<>(files.subList(1, files.size()));
 		config.patchedFile = cl.getOptionValue("output");
