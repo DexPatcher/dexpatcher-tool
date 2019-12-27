@@ -248,21 +248,21 @@ public class Main {
 		private String data;
 		public CrossClassA(String data) { this.data = data; }
 		public void go() {
-			p("original CrossClassA::go: " + data + " (" + this.getClass() + ")");
+			pClass("original %s::go: " + data);
 			help1(this);
 			CrossClassAHelper.help2(this);
 		}
-		public static void help1(CrossClassA a) { p("original CrossClassA::help1 (" + a.getClass() + ")"); }
+		public static void help1(CrossClassA a) { pClass("original %s::help1"); }
 	}
 	public static class CrossClassAHelper {
 		public static void print() { new CrossClassA("data").go(); }
-		public static void help2(CrossClassA a) { p("original CrossClassAHelper::help2(CrossClassA)"); }
+		public static void help2(CrossClassA a) { pClass("original %s::help2(CrossClassA)"); }
 	}
 
 	public static class CrossClassB {
 		private String data;
 		public CrossClassB(String data) { this.data = data; }
-		public void go() { p("original CrossClassB::go: " + data + " (" + this.getClass() + ")"); }
+		public void go() { pClass("original %s::go: " + data); }
 	}
 	public static class CrossClassBHelper {
 		public static void print() { new CrossClassB("data").go(); }

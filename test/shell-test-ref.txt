@@ -326,11 +326,11 @@ Concrete3::interfaceMethod
 Concrete3::abstractMethod
 original Concrete3::method
 
-original CrossClassA::go: data (class test.Main$CrossClassA)
-original CrossClassA::help1 (class test.Main$CrossClassA)
+original CrossClassA::go: data
+original CrossClassA::help1
 original CrossClassAHelper::help2(CrossClassA)
 
-original CrossClassB::go: data (class test.Main$CrossClassB)
+original CrossClassB::go: data
 
 original CrossClassC::<clinit>
 original CrossClassC::<init>
@@ -434,21 +434,21 @@ Concrete3::interfaceMethod
 Concrete3::abstractMethod
 replaced Concrete3::method
 
-entering replaced CrossClassA::go (class test.Main$CrossClassA)
-original CrossClassA::go: filtered data for a1 (class test.Main$source_CrossClassA)
-original CrossClassA::help1 (class test.Main$source_CrossClassA)
+entering replaced CrossClassA::go
+original source_CrossClassA::go: filtered data for a1
+original source_CrossClassA::help1
 added CrossClassAHelper::help2(source_CrossClassA)
-original CrossClassA::go: filtered data for a2 (class test.Main$source_CrossClassA)
-original CrossClassA::help1 (class test.Main$source_CrossClassA)
+original source_CrossClassA::go: filtered data for a2
+original source_CrossClassA::help1
 added CrossClassAHelper::help2(source_CrossClassA)
 exiting replaced CrossClassA::go
 
-entering wrapper CrossClassBPatcher::go (class test.Main$CrossClassB)
-original CrossClassB::go: data (class test.Main$CrossClassB)
-exiting wrapper CrossClassBPatcher::go
+entering wrapper CrossClassB::go (originally in CrossClassBPatcher)
+original CrossClassB::go: data
+exiting wrapper CrossClassB::go (originally in CrossClassBPatcher)
 
-replaced CrossClassCPatcher::<clinit> (class test.Main$CrossClassC)
-replaced CrossClassCPatcher::<init> (class test.Main$CrossClassC)
+replaced CrossClassC::<clinit> (originally in CrossClassCPatcher)
+replaced CrossClassC::<init> (originally in CrossClassCPatcher)
 
 original void::<init>
 replaced void::42

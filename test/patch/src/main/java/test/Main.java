@@ -604,10 +604,10 @@ public class Main {
 			a2 = new source_CrossClassA("filtered " + data + " for a2");
 		}
 		public void go() {
-			p("entering replaced CrossClassA::go (" + this.getClass() + ")");
+			pClass("entering replaced %s::go");
 			a1.go();
 			a2.go();
-			p("exiting replaced CrossClassA::go");
+			pClass("exiting replaced %s::go");
 		}
 	}
 
@@ -624,10 +624,10 @@ public class Main {
 	public static class CrossClassBPatcher {
 		@DexWrap
 		public void go() {
-			p("entering wrapper CrossClassBPatcher::go (" + this.getClass() + ")");
+			pClass("entering wrapper %s::go (originally in CrossClassBPatcher)");
 			new CrossClassBPatcher[] {}.hashCode();     // array rewrite test
 			go();
-			p("exiting wrapper CrossClassBPatcher::go");
+			pClass("exiting wrapper %s::go (originally in CrossClassBPatcher)");
 		}
 	}
 
@@ -638,8 +638,8 @@ public class Main {
 	// In particular, the 'this' references within the patch class change type.
 	@DexReplace(target = "CrossClassC", contentOnly = true)
 	public static class CrossClassCPatcher {
-		static { p("replaced CrossClassCPatcher::<clinit> (" + CrossClassCPatcher.class + ")"); }
-		public CrossClassCPatcher() { p("replaced CrossClassCPatcher::<init> (" + this.getClass() + ")"); }
+		static { pClass("replaced %s::<clinit> (originally in CrossClassCPatcher)"); }
+		public CrossClassCPatcher() { pClass("replaced %s::<init> (originally in CrossClassCPatcher)"); }
 	}
 
 	// DexPatcher tool v1.8.0 adds support for patching obfuscated code via
