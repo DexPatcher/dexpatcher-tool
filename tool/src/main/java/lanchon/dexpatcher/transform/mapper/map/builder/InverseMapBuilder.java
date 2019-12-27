@@ -12,7 +12,7 @@ package lanchon.dexpatcher.transform.mapper.map.builder;
 
 public class InverseMapBuilder implements MapBuilder {
 
-	private static final String EXCEPTION_HEADER = "inverse map: ";
+	private static final String EXCEPTION_HEADER = "on inverse map: ";
 
 	public static MapBuilder of(MapBuilder wrappedMapBuilder, boolean invert) {
 		return invert ? new InverseMapBuilder(wrappedMapBuilder) : wrappedMapBuilder;
