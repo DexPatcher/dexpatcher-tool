@@ -311,8 +311,8 @@ public class Processor {
 		if (config.timingStats) {
 			logger.log(NONE, "stats: " + header + ": " +
 					typeCount + " types, " +
-					((nanoTime + 500000) / 1000000) + " ms, " +
-					(((nanoTime / typeCount) + 500) / 1000) + " us/type");
+					((nanoTime + 500000) / 1000000) + " ms" +
+					(typeCount != 0 ? ", " + (((nanoTime / typeCount) + 500) / 1000) + " us/type" : ""));
 		}
 	}
 
