@@ -41,9 +41,9 @@ public class DexMapping implements MapBuilder, DexMap {
 		public void addFieldMapping(String type, String name, String newName) {
 			if (newName == null) throw new NullPointerException("newName");
 			String id = Id.ofField(type, name);
-			String current = fieldMappings.put(id, newName);
-			if (current != null) {
-				fieldMappings.put(id, current);
+			String currentName = fieldMappings.put(id, newName);
+			if (currentName != null) {
+				fieldMappings.put(id, currentName);
 				throw new BuilderException("duplicate field mapping");
 			}
 		}
@@ -56,9 +56,9 @@ public class DexMapping implements MapBuilder, DexMap {
 		public void addMethodMapping(String[] parameterTypes, String returnType, String name, String newName) {
 			if (newName == null) throw new NullPointerException("newName");
 			String id = Id.ofMethod(Arrays.asList(parameterTypes), returnType, name);
-			String current = methodMappings.put(id, newName);
-			if (current != null) {
-				methodMappings.put(id, current);
+			String currentName = methodMappings.put(id, newName);
+			if (currentName != null) {
+				methodMappings.put(id, currentName);
 				throw new BuilderException("duplicate method mapping");
 			}
 		}
@@ -75,13 +75,13 @@ public class DexMapping implements MapBuilder, DexMap {
 	public MemberMapBuilder addClassMapping(String name, String newName) {
 		if (newName == null) throw new NullPointerException("newName");
 		String id = Id.ofClass(name);
-		ClassMapping classMapping = new ClassMapping(newName);
-		ClassMapping current = classMappings.put(id, classMapping);
-		if (current != null) {
-			classMappings.put(id, current);
+		ClassMapping newMapping = new ClassMapping(newName);
+		ClassMapping currentMapping = classMappings.put(id, newMapping);
+		if (currentMapping != null) {
+			classMappings.put(id, currentMapping);
 			throw new BuilderException("duplicate type mapping");
 		}
-		return classMapping;
+		return newMapping;
 	}
 
 	@Override
