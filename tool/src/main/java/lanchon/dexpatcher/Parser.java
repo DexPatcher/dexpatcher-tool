@@ -39,8 +39,6 @@ public class Parser {
 		Options options = getOptions();
 		CommandLine cl = new DefaultParser().parse(options, args);
 
-		// Main options:
-
 		if (cl.hasOption("help")) {
 			printUsage();
 			return null;
