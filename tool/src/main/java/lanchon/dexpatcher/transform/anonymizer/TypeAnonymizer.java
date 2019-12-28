@@ -16,9 +16,6 @@ public final class TypeAnonymizer {
 		void onError(String type, String message);
 	}
 
-	public static final String DEFAULT_MAIN_ANONYMIZATION_PLAN = "Anon[_]";
-	public static final String DEFAULT_PATCH_DEANONYMIZATION_PLAN = "[_]_patch";
-
 	//public static final String DEFAULT_MARKER_INFIX = "_";
 
 	public static final ErrorHandler NULL_ERROR_HANDLER = new ErrorHandler() {

@@ -115,9 +115,9 @@ public class Processor {
 			DexFile dex = readDex(new File(config.sourceFile));
 			TransformLogger sourceLogger = outputLogger.cloneIf(preTransformInputs);
 			dex = mapDex(dex, config.mapSource, directMap, false, sourceLogger, "map source");
-			dex = anonymizeDex(dex, config.deanonSource, config.mainAnonymizationPlan, false, sourceLogger, "deanonymize source");
+			dex = anonymizeDex(dex, config.deanonSourcePlan, false, sourceLogger, "deanonymize source");
 			dex = decodeDex(dex, config.decodeSource, sourceLogger, "decode source");
-			dex = anonymizeDex(dex, config.reanonSource, config.mainAnonymizationPlan, true, sourceLogger, "reanonymize source");
+			dex = anonymizeDex(dex, config.reanonSourcePlan, true, sourceLogger, "reanonymize source");
 			dex = mapDex(dex, config.unmapSource, inverseMap, true, sourceLogger, "unmap source");
 			if (preTransformInputs) preTransformDex(dex, sourceLogger, "transform source");
 			types += dex.getClasses().size();
@@ -125,9 +125,9 @@ public class Processor {
 			for (String patchFile : config.patchFiles) {
 				DexFile patchDex = readDex(new File(patchFile));
 				TransformLogger patchLogger = outputLogger.cloneIf(preTransformInputs);
-				patchDex = anonymizeDex(patchDex, config.deanonPatches, config.patchDeanonymizationPlan, false, patchLogger, "deanonymize patch");
+				patchDex = anonymizeDex(patchDex, config.deanonPatchesPlan, false, patchLogger, "deanonymize patch");
 				patchDex = decodeDex(patchDex, config.decodePatches, patchLogger, "decode patch");
-				patchDex = anonymizeDex(patchDex, config.reanonPatches, config.mainAnonymizationPlan, true, patchLogger, "reanonymize patch");
+				patchDex = anonymizeDex(patchDex, config.reanonPatchesPlan, true, patchLogger, "reanonymize patch");
 				patchDex = mapDex(patchDex, config.unmapPatches, inverseMap, true, patchLogger, "unmap patch");
 				if (preTransformInputs) preTransformDex(patchDex, patchLogger, "transform patch");
 				types += patchDex.getClasses().size();
@@ -135,7 +135,7 @@ public class Processor {
 			}
 
 			dex = decodeDex(dex, config.decodeOutput, outputLogger, "decode output");
-			dex = anonymizeDex(dex, config.reanonOutput, config.mainAnonymizationPlan, true, outputLogger, "reanonymize output");
+			dex = anonymizeDex(dex, config.reanonOutputPlan, true, outputLogger, "reanonymize output");
 			dex = mapDex(dex, config.unmapOutput, inverseMap, true, outputLogger, "unmap output");
 
 			boolean writeDex = logger.hasNotLoggedErrors() && !config.dryRun && config.patchedFile != null;
@@ -217,9 +217,9 @@ public class Processor {
 		return dex;
 	}
 
-	private DexFile anonymizeDex(DexFile dex, boolean enabled, String plan, boolean reanonymize, TransformLogger logger,
+	private DexFile anonymizeDex(DexFile dex, String plan, boolean reanonymize, TransformLogger logger,
 			String logPrefix) {
-		if (enabled) {
+		if (plan != null) {
 			boolean preTransformAll = config.preTransform == PreTransform.ALL;
 			TransformLogger privateLogger = logger.cloneIf(preTransformAll);
 			DexAnonymizer anonymizer = new DexAnonymizer(new TypeAnonymizer(plan, reanonymize), privateLogger,
