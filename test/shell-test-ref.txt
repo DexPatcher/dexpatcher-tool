@@ -26,7 +26,7 @@ main options:
  -p,--path                    output relative paths of source code files
  -P,--path-root <root>        output absolute paths of source code files
     --stats                   output timing statistics
- -?,--help                    print this help message and exit
+ -h,--help                    print this help message and exit
     --version                 print version information and exit
 
 code transform options:

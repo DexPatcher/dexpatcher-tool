@@ -224,7 +224,7 @@ public class Parser {
 		options.addOption(Option.builder("P").longOpt("path-root").hasArg().argName("root").desc("output absolute paths of source code files").build());
 		options.addOption(Option.builder().longOpt("stats").desc("output timing statistics").build());
 
-		options.addOption(Option.builder("?").longOpt("help").desc("print this help message and exit").build());
+		options.addOption(Option.builder("h").longOpt("help").desc("print this help message and exit").build());
 		options.addOption(Option.builder().longOpt("version").desc("print version information and exit").build());
 
 		return options;
