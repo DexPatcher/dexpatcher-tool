@@ -14,20 +14,30 @@ import lanchon.dexpatcher.transform.codec.StringCodec;
 
 public final class StringEscaper extends StringCodec {
 
-	protected final String escapedCodeMarker;
+	private static boolean ENCODE_UNDERSCORE_ONLY = true;
+
+	protected final String encodedCodeMarker;
 
 	public StringEscaper(String codeMarker) {
 		super(codeMarker);
-		escapedCodeMarker = "_" + codeMarker + minimalEscape(codeMarker) + "__";
+		encodedCodeMarker = ENCODE_UNDERSCORE_ONLY ? encodeCodeMarkerUnderscoreOnly() : encode(codeMarker);
 	}
 
-	// TODO: Replace with proper escaping function when implemented.
-	private static String minimalEscape(String s) {
+	private String encodeCodeMarkerUnderscoreOnly() {
+		return "_" + codeMarker + "$U__" + codeMarker.substring(1);
+	}
+
+	private String encode(String s) {
+		return "_" + codeMarker + escape(s) + "__";
+	}
+
+	// TODO: Maybe replace with proper escaping function when implemented.
+	private static String escape(String s) {
 		return s.replace("$", "$S").replace("_", "$U");
 	}
 
 	public String encodeString(String string) {
-		return string != null ? string.replace(codeMarker, escapedCodeMarker) : null;
+		return string != null ? string.replace(codeMarker, encodedCodeMarker) : null;
 	}
 
 }
