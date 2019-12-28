@@ -12,11 +12,11 @@ package lanchon.dexpatcher.transform.codec.encoder;
 
 import lanchon.dexpatcher.transform.codec.StringCodec;
 
-public final class StringEncoder extends StringCodec {
+public final class StringEscaper extends StringCodec {
 
 	protected final String escapedCodeMarker;
 
-	public StringEncoder(String codeMarker) {
+	public StringEscaper(String codeMarker) {
 		super(codeMarker);
 		escapedCodeMarker = "_" + codeMarker + minimalEscape(codeMarker) + "__";
 	}
