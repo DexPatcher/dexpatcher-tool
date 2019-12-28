@@ -121,7 +121,7 @@ task portableTest(type:JavaExec) {
     args '--verbose',
             '--map-source', '--unmap-output', '--map', mapFile.get(),
             '--deanon-source', '--reanon-output', '--main-plan', 'Anon[_Level]', '--deanon-patches-alt',
-                    '--no-anon-errors',
+                    '--no-reanon-errors',
             '--decode-source', '--decode-patches', '--no-decode-errors',
             '--output', outputFile.get(),
             sourceFile.get(), patchFile.get()

@@ -43,8 +43,8 @@ code transform options:
     --main-plan <main-plan>   main anonymization plan (default: 'Anon[_]')
     --map <file>              identifier map file (repeatable option)
     --map-source              apply map to identifiers in source
-    --no-anon-errors          treat anonymizer errors as warnings
-    --no-decode-errors        treat decoder errors as warnings
+    --no-decode-errors        treat decode errors as warnings
+    --no-reanon-errors        treat reanonymize errors as warnings
     --pre-transform <set>     add pre-transform stages (default: 'out')
                               (<set>: 'none'|'dry'|'out'|'inout'|'all')
     --reanon-output           reanonymize anonymous classes in output
@@ -55,7 +55,7 @@ code transform options:
     --unmap-source            apply map inverse to identifiers in source
 
 
-$ dexpatcher build/source.dex.zip build/patch.dex.zip --output build/patched.dex --map-source --unmap-output --map mapping.txt --deanon-source --reanon-output --main-plan Anon\[_Level\] --deanon-patches-alt --no-anon-errors --decode-source --decode-patches --no-decode-errors --debug
+$ dexpatcher build/source.dex.zip build/patch.dex.zip --output build/patched.dex --map-source --unmap-output --map mapping.txt --deanon-source --reanon-output --main-plan Anon\[_Level\] --deanon-patches-alt --no-reanon-errors --decode-source --decode-patches --no-decode-errors --debug
 DexPatcher version 1.8.0-alpha4 by Lanchon (https://dexpatcher.github.io/)
 info: read 'build/source.dex.zip'
 debug: read 'build/source.dex.zip': file 'classes.dex': 35 types

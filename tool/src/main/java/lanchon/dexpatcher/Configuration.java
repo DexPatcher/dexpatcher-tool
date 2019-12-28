@@ -64,10 +64,10 @@ public class Configuration {
 
 	public String mainAnonymizationPlan = TypeAnonymizer.DEFAULT_MAIN_ANONYMIZATION_PLAN;
 	public String alternateAnonymizationPlan = TypeAnonymizer.DEFAULT_ALTERNATE_ANONYMIZATION_PLAN;
-	public boolean treatAnonymizerErrorsAsWarnings;
+	public boolean treatReanonymizeErrorsAsWarnings;
 
 	public String codeMarker = StringCodec.DEFAULT_CODE_MARKER;
-	public boolean treatDecoderErrorsAsWarnings;
+	public boolean treatDecodeErrorsAsWarnings;
 
 	public PreTransform preTransform = Processor.DEFAULT_PRE_TRANSFORM;
 

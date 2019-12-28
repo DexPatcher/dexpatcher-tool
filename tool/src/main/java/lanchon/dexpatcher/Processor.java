@@ -227,7 +227,7 @@ public class Processor {
 			boolean preTransformAll = config.preTransform == PreTransform.ALL;
 			TransformLogger privateLogger = logger.cloneIf(preTransformAll);
 			DexAnonymizer anonymizer = new DexAnonymizer(new TypeAnonymizer(plan, reanonymize), privateLogger,
-					logPrefix, DEBUG, config.treatAnonymizerErrorsAsWarnings ? WARN : ERROR);
+					logPrefix, DEBUG, config.treatReanonymizeErrorsAsWarnings ? WARN : ERROR);
 			dex = transformDex(dex, anonymizer);
 			if (preTransformAll) preTransformDex(dex, privateLogger, logPrefix);
 		}
@@ -239,7 +239,7 @@ public class Processor {
 			boolean preTransformAll = config.preTransform == PreTransform.ALL;
 			TransformLogger privateLogger = logger.cloneIf(preTransformAll);
 			DexDecoder decoder = new DexDecoder(stringDecoder, privateLogger, logPrefix, DEBUG,
-					config.treatDecoderErrorsAsWarnings ? WARN : ERROR);
+					config.treatDecodeErrorsAsWarnings ? WARN : ERROR);
 			dex = transformDex(dex, decoder);
 			if (preTransformAll) preTransformDex(dex, privateLogger, logPrefix);
 		}

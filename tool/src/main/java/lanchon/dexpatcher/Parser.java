@@ -130,7 +130,7 @@ public class Parser {
 		if (!TypeAnonymizer.isValidPlan(config.alternateAnonymizationPlan)) {
 			throw new ParseException("Invalid alternate anonymization plan: '" + config.alternateAnonymizationPlan + "'");
 		}
-		config.treatAnonymizerErrorsAsWarnings = cl.hasOption("no-anon-errors");
+		config.treatReanonymizeErrorsAsWarnings = cl.hasOption("no-reanon-errors");
 
 		config.decodeSource = cl.hasOption("decode-source");
 		config.decodePatches = cl.hasOption("decode-patches");
@@ -140,7 +140,7 @@ public class Parser {
 		if (!StringCodec.isValidCodeMarker(config.codeMarker)) {
 			throw new ParseException("Invalid code marker: '" + config.codeMarker + "'");
 		}
-		config.treatDecoderErrorsAsWarnings = cl.hasOption("no-decode-errors");
+		config.treatDecodeErrorsAsWarnings = cl.hasOption("no-decode-errors");
 
 		String preTransformSet = cl.getOptionValue("pre-transform", null);
 		if (preTransformSet != null) {
@@ -257,7 +257,7 @@ public class Parser {
 		o = new Option(null, "alt-plan", true, "alternate plan (default: '" +
 				TypeAnonymizer.DEFAULT_ALTERNATE_ANONYMIZATION_PLAN + "')");
 		o.setArgName("alt-plan"); options.addOption(o);
-		options.addOption(new Option(null, "no-anon-errors", false, "treat anonymizer errors as warnings"));
+		options.addOption(new Option(null, "no-reanon-errors", false, "treat reanonymize errors as warnings"));
 
 		options.addOption(new Option(null, "decode-source", false, "decode identifiers in source"));
 		options.addOption(new Option(null, "decode-patches", false, "decode identifiers in patches"));
@@ -266,7 +266,7 @@ public class Parser {
 		o = new Option(null, "code-marker", true, "identifier code marker (default: '" +
 				StringCodec.DEFAULT_CODE_MARKER + "')");
 		o.setArgName("marker"); options.addOption(o);
-		options.addOption(new Option(null, "no-decode-errors", false, "treat decoder errors as warnings"));
+		options.addOption(new Option(null, "no-decode-errors", false, "treat decode errors as warnings"));
 
 		StringBuilder sb = new StringBuilder();
 		for (PreTransform pt : PreTransform.values()) {

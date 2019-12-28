@@ -817,7 +817,7 @@ public class Main {
 		}
 
 		// Test unexpected anonymous classes during reanonymization:
-		// Note: The output must be reanonymized using '--no-anon-errors'.
+		// Note: The output must be reanonymized using '--no-reanon-errors'.
 		// Note: When reanonymizing the output, all classes are expected to be
 		// deanonymized. This inserts an non-deanonymized anonymous class named
 		// '42' in the output to test the handling of this error condition.

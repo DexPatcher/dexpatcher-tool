@@ -36,7 +36,7 @@ dex-jar patch
 run dexpatcher --help
 run dexpatcher build/source.dex.zip build/patch.dex.zip --output build/patched.dex\
  --map-source --unmap-output --map mapping.txt\
- --deanon-source --reanon-output --main-plan Anon[_Level] --deanon-patches-alt --no-anon-errors\
+ --deanon-source --reanon-output --main-plan Anon[_Level] --deanon-patches-alt --no-reanon-errors\
  --decode-source --decode-patches --no-decode-errors\
  --debug "$@"
 
