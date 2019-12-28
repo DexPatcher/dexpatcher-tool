@@ -43,7 +43,7 @@ def multidexlib2VersionSuffix = '.r2'
 def multidexlib2Version = dexlib2Version + multidexlib2VersionSuffix
 
 dependencies {
-    implementation 'commons-cli:commons-cli:1.2'
+    implementation 'commons-cli:commons-cli:1.4'
     implementation 'com.github.lanchon.dexpatcher:multidexlib2:' + multidexlib2Version
     api 'org.smali:dexlib2:' + dexlib2Version
 }

@@ -23,11 +23,11 @@ import lanchon.multidexlib2.DexIO;
 import lanchon.multidexlib2.MultiDexIO;
 
 import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.DefaultParser;
 import org.apache.commons.cli.HelpFormatter;
 import org.apache.commons.cli.Option;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
-import org.apache.commons.cli.PosixParser;
 
 import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 
@@ -38,7 +38,7 @@ public class Parser {
 		Configuration config = new Configuration();
 
 		Options options = getOptions();
-		CommandLine cl = new PosixParser().parse(options, args);
+		CommandLine cl = new DefaultParser().parse(options, args);
 
 		// Main options:
 
@@ -52,7 +52,6 @@ public class Parser {
 			return null;
 		}
 
-		@SuppressWarnings("unchecked")
 		List<String> files = cl.getArgList();
 		if (files.isEmpty()) {
 			throw new ParseException("Missing argument: <source-dex-apk-or-dir>");
