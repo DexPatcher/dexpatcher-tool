@@ -30,7 +30,7 @@ main options:
     --version                 print version information and exit
 
 code transform options:
-    --alt-plan <alt-plan>     alternate plan (default: '[_]_patch')
+    --alt-plan <anon-plan>    alternate plan (default: '[_]_patch')
     --code-marker <marker>    identifier code marker (default: '_$$_')
     --deanon-patches          deanonymize anonymous classes in patches
     --deanon-patches-alt      deanonymize patches with alternate plan
@@ -40,7 +40,7 @@ code transform options:
     --decode-patches          decode identifiers in patches
     --decode-source           decode identifiers in source
     --invert-map              use inverse of identifier map file
-    --main-plan <main-plan>   main anonymization plan (default: 'Anon[_]')
+    --main-plan <anon-plan>   main anonymization plan (default: 'Anon[_]')
     --map <file>              identifier map file (repeatable option)
     --map-source              apply map to identifiers in source
     --no-decode-errors        treat decode errors as warnings

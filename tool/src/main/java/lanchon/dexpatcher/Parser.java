@@ -253,10 +253,10 @@ public class Parser {
 
 		o = new Option(null, "main-plan", true, "main anonymization plan (default: '" +
 				TypeAnonymizer.DEFAULT_MAIN_ANONYMIZATION_PLAN + "')");
-		o.setArgName("main-plan"); options.addOption(o);
+		o.setArgName("anon-plan"); options.addOption(o);
 		o = new Option(null, "alt-plan", true, "alternate plan (default: '" +
 				TypeAnonymizer.DEFAULT_ALTERNATE_ANONYMIZATION_PLAN + "')");
-		o.setArgName("alt-plan"); options.addOption(o);
+		o.setArgName("anon-plan"); options.addOption(o);
 		options.addOption(new Option(null, "no-reanon-errors", false, "treat reanonymize errors as warnings"));
 
 		options.addOption(new Option(null, "decode-source", false, "decode identifiers in source"));
