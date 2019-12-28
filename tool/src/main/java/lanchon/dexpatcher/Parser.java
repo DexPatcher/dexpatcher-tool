@@ -56,8 +56,19 @@ public class Parser {
 		if (files.isEmpty()) {
 			throw new ParseException("Missing argument: <source-dex-apk-or-dir>");
 		}
+
 		config.sourceFile = files.get(0);
 		config.patchFiles = new ArrayList<>(files.subList(1, files.size()));
+
+		parseMainOptions(cl, config);
+		parseTransformOptions(cl, config);
+
+		return config;
+
+	}
+
+	private static void parseMainOptions(CommandLine cl, Configuration config) throws ParseException {
+
 		config.patchedFile = cl.getOptionValue("output");
 
 		Number apiLevel = (Number) cl.getParsedOptionValue("api-level");
@@ -86,7 +97,9 @@ public class Parser {
 
 		config.dryRun = cl.hasOption("dry-run");
 
-		// Code transform options:
+	}
+
+	private static void parseTransformOptions(CommandLine cl, Configuration config) throws ParseException {
 
 		config.mapSource = cl.hasOption("map-source");
 
@@ -148,8 +161,6 @@ public class Parser {
 				throw new ParseException("Invalid pre-transform set: '" + preTransformSet + "'");
 			}
 		}
-
-		return config;
 
 	}
 
