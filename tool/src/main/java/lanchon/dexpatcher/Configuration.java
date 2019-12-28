@@ -13,6 +13,7 @@ package lanchon.dexpatcher;
 import lanchon.dexpatcher.Processor.PreTransform;
 import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.logger.Logger;
+import lanchon.dexpatcher.transform.anonymizer.TypeAnonymizer;
 import lanchon.dexpatcher.transform.codec.StringCodec;
 import lanchon.multidexlib2.DexIO;
 
@@ -42,23 +43,27 @@ public class Configuration {
 	// Code transform options:
 
 	public boolean mapSource;
-	public String deanonSourcePlan;
+	public boolean deanonSource;
+	public boolean deanonSourceAlternate;
 	public boolean decodeSource;
-	public String reanonSourcePlan;
+	public boolean reanonSource;
 	public boolean unmapSource;
 
-	public String deanonPatchesPlan;
+	public boolean deanonPatches;
+	public boolean deanonPatchesAlternate;
 	public boolean decodePatches;
-	public String reanonPatchesPlan;
+	public boolean reanonPatches;
 	public boolean unmapPatches;
 
 	public boolean decodeOutput;
-	public String reanonOutputPlan;
+	public boolean reanonOutput;
 	public boolean unmapOutput;
 
 	public Iterable<String> mapFiles;
 	public boolean invertMap;
 
+	public String mainAnonymizationPlan = TypeAnonymizer.DEFAULT_MAIN_ANONYMIZATION_PLAN;
+	public String alternateAnonymizationPlan = TypeAnonymizer.DEFAULT_ALTERNATE_ANONYMIZATION_PLAN;
 	public boolean treatAnonymizerErrorsAsWarnings;
 
 	public String codeMarker = StringCodec.DEFAULT_CODE_MARKER;
