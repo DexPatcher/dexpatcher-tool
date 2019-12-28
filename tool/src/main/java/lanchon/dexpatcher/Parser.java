@@ -10,6 +10,7 @@
 
 package lanchon.dexpatcher;
 
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,8 +36,6 @@ public class Parser {
 
 	public static Configuration parseCommandLine(String[] args) throws ParseException {
 
-		Configuration config = new Configuration();
-
 		Options options = getOptions();
 		CommandLine cl = new DefaultParser().parse(options, args);
 
@@ -51,6 +50,14 @@ public class Parser {
 			System.out.println(Main.getVersion());
 			return null;
 		}
+
+		return parseCommandLine(cl);
+
+	}
+
+	public static Configuration parseCommandLine(CommandLine cl) throws ParseException {
+
+		Configuration config = new Configuration();
 
 		List<String> files = cl.getArgList();
 		if (files.isEmpty()) {
@@ -108,12 +115,9 @@ public class Parser {
 		config.unmapOutput = cl.hasOption("unmap-output");
 
 		String[] mapFiles = cl.getOptionValues("map");
-		if (config.mapSource || config.unmapSource || config.unmapPatches || config.unmapOutput) {
-			if (mapFiles == null) {
-				throw new ParseException("Missing option: map");
-			} else {
-				config.mapFiles = Arrays.asList(mapFiles);
-			}
+		if (mapFiles != null) config.mapFiles = Arrays.asList(mapFiles);
+		if (config.mapFiles == null && (config.mapSource || config.unmapSource || config.unmapPatches || config.unmapOutput)) {
+			throw new ParseException("Missing option: map");
 		}
 		config.invertMap = cl.hasOption("invert-map");
 
@@ -132,13 +136,11 @@ public class Parser {
 		config.reanonPatches = cl.hasOption("reanon-patches");
 		config.reanonOutput = cl.hasOption("reanon-output");
 
-		config.mainAnonymizationPlan = cl.getOptionValue("main-plan",
-				TypeAnonymizer.DEFAULT_MAIN_ANONYMIZATION_PLAN);
+		config.mainAnonymizationPlan = cl.getOptionValue("main-plan", TypeAnonymizer.DEFAULT_MAIN_ANONYMIZATION_PLAN);
 		if (!TypeAnonymizer.isValidPlan(config.mainAnonymizationPlan)) {
 			throw new ParseException("Invalid main anonymization plan: '" + config.mainAnonymizationPlan + "'");
 		}
-		config.alternateAnonymizationPlan = cl.getOptionValue("alt-plan",
-				TypeAnonymizer.DEFAULT_ALTERNATE_ANONYMIZATION_PLAN);
+		config.alternateAnonymizationPlan = cl.getOptionValue("alt-plan", TypeAnonymizer.DEFAULT_ALTERNATE_ANONYMIZATION_PLAN);
 		if (!TypeAnonymizer.isValidPlan(config.alternateAnonymizationPlan)) {
 			throw new ParseException("Invalid alternate anonymization plan: '" + config.alternateAnonymizationPlan + "'");
 		}
@@ -165,7 +167,11 @@ public class Parser {
 	}
 
 	public static void printUsage() {
-		PrintWriter writer = new PrintWriter(System.out);
+		printUsage(System.out);
+	}
+
+	public static void printUsage(PrintStream out) {
+		PrintWriter writer = new PrintWriter(out);
 		HelpFormatter formatter = new HelpFormatter();
 		printUsage(writer, formatter);
 		writer.flush();
