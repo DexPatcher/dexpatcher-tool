@@ -75,19 +75,19 @@ debug: type 'test.Main$Abstract': (Main.java:0): ignore
 debug: deanonymize patch: type 'test.Main$AnonymousClasses$1': deanonymized to 'test.Main$AnonymousClasses$1_patch'
 debug: type 'test.Main$AnonymousClasses$1_patch': (Main.java:0): add
 debug: type 'test.Main$AnonymousClasses$Anon1$Anon1_Level2': (Main.java:0): edit
-info: type 'test.Main$AnonymousClasses$Anon1$Anon1_Level2': method '<init>():void': (Main.java:796): implicit ignore of trivial default constructor
-debug: type 'test.Main$AnonymousClasses$Anon1$Anon1_Level2': method '<init>():void': (Main.java:796): ignore
-debug: type 'test.Main$AnonymousClasses$Anon1$Anon1_Level2': method 'run():void': (Main.java:799): replace
+info: type 'test.Main$AnonymousClasses$Anon1$Anon1_Level2': method '<init>():void': (Main.java:790): implicit ignore of trivial default constructor
+debug: type 'test.Main$AnonymousClasses$Anon1$Anon1_Level2': method '<init>():void': (Main.java:790): ignore
+debug: type 'test.Main$AnonymousClasses$Anon1$Anon1_Level2': method 'run():void': (Main.java:793): replace
 debug: type 'test.Main$AnonymousClasses$Anon1': (Main.java:0): edit
-info: type 'test.Main$AnonymousClasses$Anon1': method '<init>():void': (Main.java:794): implicit ignore of trivial default constructor
-debug: type 'test.Main$AnonymousClasses$Anon1': method '<init>():void': (Main.java:794): ignore
+info: type 'test.Main$AnonymousClasses$Anon1': method '<init>():void': (Main.java:788): implicit ignore of trivial default constructor
+debug: type 'test.Main$AnonymousClasses$Anon1': method '<init>():void': (Main.java:788): ignore
 debug: decode patch: type 'test.Main$AnonymousClasses$__UnexpectedAnonymousClass_$$_42__': decoded to 'test.Main$AnonymousClasses$42'
 debug: decode patch: annotation element value '__UnexpectedAnonymousClass_$$_42__': decoded to '42'
 debug: type 'test.Main$AnonymousClasses$42': (Main.java:0): add
 debug: type 'test.Main$AnonymousClasses': (Main.java:0): edit
-info: type 'test.Main$AnonymousClasses': method '<init>():void': (Main.java:792): implicit ignore of trivial default constructor
-debug: type 'test.Main$AnonymousClasses': method '<init>():void': (Main.java:792): ignore
-debug: type 'test.Main$AnonymousClasses': method 'print():void': (Main.java:810): append
+info: type 'test.Main$AnonymousClasses': method '<init>():void': (Main.java:786): implicit ignore of trivial default constructor
+debug: type 'test.Main$AnonymousClasses': method '<init>():void': (Main.java:786): ignore
+debug: type 'test.Main$AnonymousClasses': method 'print():void': (Main.java:804): append
 debug: type 'test.Main$B': (Main.java:0): edit
 debug: type 'test.Main$B': field 'staticField:int': (Main.java:0): add
 debug: type 'test.Main$B': field 'instanceField:int': (Main.java:0): add
@@ -220,12 +220,12 @@ debug: type 'test.Main$Thing': field 'field:int': (Main.java:0): ignore
 debug: map source: type 'test.Main$ObfuscatedThing': method 'obfuscatedMethod():void': mapped to 'someMethod'
 debug: map source: type 'test.Main$ObfuscatedThing': method 'obfuscatedMethod2(int, java.lang.String, java.lang.Object[]):float[][]': mapped to 'anotherMethodWithArgs'
 debug: map source: type 'test.Main$ObfuscatedThing': method 'yetAnotherObfuscatedMethod(test.Main$ObfuscatedThing[]):void': mapped to 'makeFriendsWithOtherThings'
-info: type 'test.Main$Thing': method '<init>():void': (Main.java:830): implicit ignore of trivial default constructor
-debug: type 'test.Main$Thing': method '<init>():void': (Main.java:830): ignore
-debug: type 'test.Main$Thing': method 'anotherMethodWithArgs(int, java.lang.String, java.lang.Object[]):float[][]': (Main.java:836): replace
-debug: type 'test.Main$Thing': method 'makeFriendsWithOtherThings(test.Main$Thing[]):void': (Main.java:838): replace
-debug: type 'test.Main$Thing': method 'print():void': (Main.java:840): prepend
-debug: type 'test.Main$Thing': method 'someMethod():void': (Main.java:834): replace
+info: type 'test.Main$Thing': method '<init>():void': (Main.java:824): implicit ignore of trivial default constructor
+debug: type 'test.Main$Thing': method '<init>():void': (Main.java:824): ignore
+debug: type 'test.Main$Thing': method 'anotherMethodWithArgs(int, java.lang.String, java.lang.Object[]):float[][]': (Main.java:830): replace
+debug: type 'test.Main$Thing': method 'makeFriendsWithOtherThings(test.Main$Thing[]):void': (Main.java:832): replace
+debug: type 'test.Main$Thing': method 'print():void': (Main.java:834): prepend
+debug: type 'test.Main$Thing': method 'someMethod():void': (Main.java:828): replace
 debug: decode patch: type 'test.Main$__My_label_for_class_void_$$_void__': decoded to 'test.Main$void'
 debug: decode patch: annotation element value '__My_label_for_class_void_$$_void__': decoded to 'void'
 debug: type 'test.Main$void': (Main.java:0): edit

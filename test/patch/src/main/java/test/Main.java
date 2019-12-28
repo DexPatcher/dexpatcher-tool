@@ -775,18 +775,12 @@ public class Main {
 	// source anonymous class named 'Main$3' to be renamed to 'Main$Anon3' for
 	// easy targeting with DexPatcher tags. Additionally, the original
 	// anonymous class names can be restored after patching by reanonymizing
-	// the output using the same plan used to deanonymize the source.
-
-	// Finally, when it is time to publish the patch, the patch itself could be
-	// pre-transformed (so that it can be applied to the source by users
-	// without needing any further transforms) using this command:
-	// dexpatcher patch.dex --output release-patch.dex
-	//     --deanon-source [_]_patch --reanon-source Anon[_Level]
+	// the output.
 
 	// Modify members of an anonymous class:
 	// Note: For this to work, the source dex file must be deanonymized using
-	// '--deanon-source Anon[_Level]'. It is recommended to reanonymize the
-	// output dex using '--reanon-output Anon[_Level]'. This restores the
+	// '--deanon-source --main-plan Anon[_Level]'. It is recommended to
+	// reanonymize the output dex using '--reanon-output'. This restores the
 	// original names of the anonymous classes right after the patching step.
 	@DexEdit
 	public static class AnonymousClasses {
@@ -804,7 +798,7 @@ public class Main {
 		// Use anonymous classes in the patch:
 		// Note: Anonymous classes in the patch can name-clash with anonymous
 		// classes in the source. To avoid clashes, the patch dex file can be
-		// deanonymized using something like '--deanon-patch [_]_patch'.
+		// deanonymized using '--deanon-patch'.
 		@DexAppend
 		public static void print() {
 			new Runnable() {
