@@ -18,8 +18,12 @@ public final class StringEncoder extends StringCodec {
 
 	public StringEncoder(String codeMarker) {
 		super(codeMarker);
-		// TODO: Replace with escaping function when implemented.
-		escapedCodeMarker = codeMarker.replace("$", "$S").replace("_", "$U");
+		escapedCodeMarker = "_" + codeMarker + minimalEscape(codeMarker) + "__";
+	}
+
+	// TODO: Replace with proper escaping function when implemented.
+	private static String minimalEscape(String s) {
+		return s.replace("$", "$S").replace("_", "$U");
 	}
 
 	public String encodeString(String string) {
