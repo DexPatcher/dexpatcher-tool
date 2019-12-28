@@ -76,8 +76,6 @@ public class Parser {
 
 	private static void parseMainOptions(CommandLine cl, Configuration config) throws ParseException {
 
-		config.patchedFile = cl.getOptionValue("output");
-
 		Number apiLevel = (Number) cl.getParsedOptionValue("api-level");
 		if (apiLevel != null) config.apiLevel = apiLevel.intValue();
 
@@ -93,6 +91,9 @@ public class Parser {
 		if (config.annotationPackage.isEmpty()) config.annotationPackage = null;
 		config.constructorAutoIgnoreDisabled = cl.hasOption("no-auto-ignore");
 
+		config.patchedFile = cl.getOptionValue("output");
+		config.dryRun = cl.hasOption("dry-run");
+
 		config.logLevel = WARN;
 		if (cl.hasOption("quiet")) config.logLevel = ERROR;
 		if (cl.hasOption("verbose")) config.logLevel = INFO;
@@ -101,8 +102,6 @@ public class Parser {
 		if (cl.hasOption("path")) config.sourceCodeRoot = "";
 		config.sourceCodeRoot = cl.getOptionValue("path-root", config.sourceCodeRoot);
 		config.timingStats = cl.hasOption("stats");
-
-		config.dryRun = cl.hasOption("dry-run");
 
 	}
 
@@ -173,6 +172,7 @@ public class Parser {
 	public static void printUsage(PrintStream out) {
 		PrintWriter writer = new PrintWriter(out);
 		HelpFormatter formatter = new HelpFormatter();
+		formatter.setOptionComparator(null);
 		printUsage(writer, formatter);
 		writer.flush();
 	}
@@ -204,8 +204,6 @@ public class Parser {
 
 	private static Options addMainOptions(Options options) {
 
-		options.addOption(Option.builder("o").longOpt("output").hasArg().argName("dex-or-dir").desc("name of output file or directory").build());
-
 		options.addOption(Option.builder("a").longOpt("api-level").hasArg().argName("n").type(Number.class).desc("android api level (default: auto-detect)").build());
 
 		options.addOption(Option.builder("m").longOpt("multi-dex").desc("enable multi-dex support").build());
@@ -217,6 +215,9 @@ public class Parser {
 		options.addOption(Option.builder().longOpt("annotations").hasArg().argName("package").desc("package name of DexPatcher annotations (default: '" + Context.DEFAULT_ANNOTATION_PACKAGE + "')").build());
 		options.addOption(Option.builder().longOpt("no-auto-ignore").desc("no trivial default constructor auto-ignore").build());
 
+		options.addOption(Option.builder("o").longOpt("output").hasArg().argName("dex-or-dir").desc("name of output file or directory").build());
+		options.addOption(Option.builder().longOpt("dry-run").desc("do not write output files (much faster)").build());
+
 		options.addOption(Option.builder("q").longOpt("quiet").desc("do not output warnings").build());
 		options.addOption(Option.builder("v").longOpt("verbose").desc("output extra information").build());
 		options.addOption(Option.builder("d").longOpt("debug").desc("output debugging information").build());
@@ -225,10 +226,8 @@ public class Parser {
 		options.addOption(Option.builder("P").longOpt("path-root").hasArg().argName("root").desc("output absolute paths of source code files").build());
 		options.addOption(Option.builder().longOpt("stats").desc("output timing statistics").build());
 
-		options.addOption(Option.builder().longOpt("dry-run").desc("do not write output files (much faster)").build());
-
-		options.addOption(Option.builder().longOpt("version").desc("print version information and exit").build());
 		options.addOption(Option.builder("?").longOpt("help").desc("print this help message and exit").build());
+		options.addOption(Option.builder().longOpt("version").desc("print version information and exit").build());
 
 		return options;
 

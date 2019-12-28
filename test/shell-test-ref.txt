@@ -9,50 +9,50 @@ usage: dexpatcher [<option> ...] [--output <patched-dex-or-dir>]
                   <source-dex-apk-or-dir> [<patch-dex-apk-or-dir> ...]
 
 main options:
- -?,--help                    print this help message and exit
  -a,--api-level <n>           android api level (default: auto-detect)
-    --annotations <package>   package name of DexPatcher annotations
-                              (default: 'lanchon.dexpatcher.annotation')
- -d,--debug                   output debugging information
-    --dry-run                 do not write output files (much faster)
- -J,--multi-dex-jobs <n>      multi-dex thread count (implies: -m -M)
-                              (default: available processors up to 4)
  -m,--multi-dex               enable multi-dex support
  -M,--multi-dex-threaded      multi-threaded multi-dex (implies: -m)
+ -J,--multi-dex-jobs <n>      multi-dex thread count (implies: -m -M)
+                              (default: available processors up to 4)
     --max-dex-pool-size <n>   maximum size of dex pools (default: 65536)
+    --annotations <package>   package name of DexPatcher annotations
+                              (default: 'lanchon.dexpatcher.annotation')
     --no-auto-ignore          no trivial default constructor auto-ignore
  -o,--output <dex-or-dir>     name of output file or directory
+    --dry-run                 do not write output files (much faster)
+ -q,--quiet                   do not output warnings
+ -v,--verbose                 output extra information
+ -d,--debug                   output debugging information
  -p,--path                    output relative paths of source code files
  -P,--path-root <root>        output absolute paths of source code files
- -q,--quiet                   do not output warnings
     --stats                   output timing statistics
- -v,--verbose                 output extra information
+ -?,--help                    print this help message and exit
     --version                 print version information and exit
 
 code transform options:
-    --alt-plan <anon-plan>    alternate plan (default: '[_]_patch')
-    --code-marker <marker>    identifier code marker (default: '_$$_')
-    --deanon-patches          deanonymize anonymous classes in patches
-    --deanon-patches-alt      deanonymize patches with alternate plan
+    --map-source              apply map to identifiers in source
+    --unmap-source            apply map inverse to identifiers in source
+    --unmap-patches           apply map inverse to identifiers in patches
+    --unmap-output            apply map inverse to identifiers in output
+    --map <file>              identifier map file (repeatable option)
+    --invert-map              use inverse of identifier map file
     --deanon-source           deanonymize anonymous classes in source
     --deanon-source-alt       deanonymize source with alternate plan
-    --decode-output           decode identifiers in output
-    --decode-patches          decode identifiers in patches
-    --decode-source           decode identifiers in source
-    --invert-map              use inverse of identifier map file
+    --deanon-patches          deanonymize anonymous classes in patches
+    --deanon-patches-alt      deanonymize patches with alternate plan
+    --reanon-source           reanonymize anonymous classes in source
+    --reanon-patches          reanonymize anonymous classes in patches
+    --reanon-output           reanonymize anonymous classes in output
     --main-plan <anon-plan>   main anonymization plan (default: 'Anon[_]')
-    --map <file>              identifier map file (repeatable option)
-    --map-source              apply map to identifiers in source
-    --no-decode-errors        treat decode errors as warnings
+    --alt-plan <anon-plan>    alternate plan (default: '[_]_patch')
     --no-reanon-errors        treat reanonymize errors as warnings
+    --decode-source           decode identifiers in source
+    --decode-patches          decode identifiers in patches
+    --decode-output           decode identifiers in output
+    --code-marker <marker>    identifier code marker (default: '_$$_')
+    --no-decode-errors        treat decode errors as warnings
     --pre-transform <set>     add pre-transform stages (default: 'out')
                               (<set>: 'none'|'dry'|'out'|'inout'|'all')
-    --reanon-output           reanonymize anonymous classes in output
-    --reanon-patches          reanonymize anonymous classes in patches
-    --reanon-source           reanonymize anonymous classes in source
-    --unmap-output            apply map inverse to identifiers in output
-    --unmap-patches           apply map inverse to identifiers in patches
-    --unmap-source            apply map inverse to identifiers in source
 
 
 $ dexpatcher build/source.dex.zip build/patch.dex.zip --output build/patched.dex --map-source --unmap-output --map mapping.txt --deanon-source --reanon-output --main-plan Anon\[_Level\] --deanon-patches-alt --no-reanon-errors --decode-source --decode-patches --no-decode-errors --debug
