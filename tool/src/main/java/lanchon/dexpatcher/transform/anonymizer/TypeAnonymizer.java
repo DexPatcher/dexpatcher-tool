@@ -10,6 +10,8 @@
 
 package lanchon.dexpatcher.transform.anonymizer;
 
+import java.math.BigInteger;
+
 public final class TypeAnonymizer {
 
 	public interface ErrorHandler {
@@ -109,7 +111,7 @@ public final class TypeAnonymizer {
 
 		// Detect an anonymous inner class and find its anonymous class number and deanonymization level.
 		boolean anonymous = false;
-		int currentLevel = 0;
+		BigInteger currentLevel = BigInteger.ZERO;
 		int numberStart, numberEnd;
 		if (isAllDigits(type, innerStart, innerEnd)) {
 			anonymous = true;
@@ -122,7 +124,7 @@ public final class TypeAnonymizer {
 			if (numberStart < numberEnd && type.startsWith(prefix, innerStart) && type.startsWith(suffix, numberEnd)) {
 				if (isAllDigits(type, numberStart, numberEnd)) {
 					anonymous = true;
-					currentLevel = 1;
+					currentLevel = BigInteger.ONE;
 				} else {
 					int levelEnd = numberEnd;
 					numberEnd = type.indexOf(infix, numberStart);
@@ -131,10 +133,11 @@ public final class TypeAnonymizer {
 						if (isAllDigits(type, numberStart, numberEnd) && isAllDigits(type, levelStart, levelEnd)) {
 							String levelString = type.substring(levelStart, levelEnd);
 							try {
-								currentLevel = Integer.parseInt(levelString);
+								currentLevel = new BigInteger(levelString);
 							} catch (NumberFormatException e) {}
 							// Test levelString reconstruction.
-							if (currentLevel > 1 && levelString.equals(Integer.toString(currentLevel))) {
+							if (currentLevel.compareTo(BigInteger.ONE) > 0 &&
+									levelString.equals(currentLevel.toString())) {
 								anonymous = true;
 							}
 						}
@@ -146,11 +149,12 @@ public final class TypeAnonymizer {
 		//if (anonymous && !(numberStart < numberEnd)) throw new AssertionError("Bad anonymous class number indexes");
 
 		// Decide whether this inner class name has to be rewritten.
-		int newLevel = reanonymize ? currentLevel - level : currentLevel + level;
+		BigInteger newLevel = null;
 		if (anonymous) {
-			if (newLevel < 0) {
-				String message = reanonymize ? "cannot reanonymize '" : "cannot deanonymize '";
-				errorHandler.onError(type, message + type.substring(simpleStart, innerEnd) + "' by " +
+			newLevel = reanonymize ? currentLevel.subtract(BigInteger.valueOf(level)) :
+					currentLevel.add(BigInteger.valueOf(level));
+			if (reanonymize && newLevel.compareTo(BigInteger.ZERO) < 0) {
+				errorHandler.onError(type, "cannot reanonymize '" + type.substring(simpleStart, innerEnd) + "' by " +
 						level + (level == 1 ? " level" : "levels"));
 				anonymous = false;
 			}
@@ -166,22 +170,24 @@ public final class TypeAnonymizer {
 		String rewrittenTail = hasNestedInner ?
 				anonymizeTypeTail(type, level + 1, simpleStart, innerEnd, innerEnd, errorHandler) : null;
 		int rewrittenLength = hasNestedInner ? innerEnd + rewrittenTail.length() : length;
-		String newLevelString = newLevel > 1 ? Integer.toString(newLevel) : null;
+		boolean newLevelZero = newLevel.compareTo(BigInteger.ZERO) == 0;
+		boolean newLevelOne = newLevel.compareTo(BigInteger.ONE) == 0;
+		String newLevelString = (!newLevelZero && !newLevelOne) ? newLevel.toString() : null;
 		int currentInnerLength = innerEnd - innerStart;
 		int newInnerLength = numberEnd - numberStart + (
-				newLevel == 0 ? 0 :
-				newLevel == 1 ? prefix.length() + suffix.length() :
+				newLevelZero ? 0 :
+				newLevelOne ? prefix.length() + suffix.length() :
 						prefix.length() + infix.length() + newLevelString.length() + suffix.length()
 		);
 		int newLength = rewrittenLength - currentInnerLength + newInnerLength - start;
 		StringBuilder sb = new StringBuilder(newLength);
 		sb.append(type, start, innerStart);
-		if (newLevel == 0) {
+		if (newLevelZero) {
 			sb.append(type, numberStart, numberEnd);
 		} else {
 			sb.append(prefix);
 			sb.append(type, numberStart, numberEnd);
-			if (newLevel != 1) sb.append(infix).append(newLevelString);
+			if (!newLevelOne) sb.append(infix).append(newLevelString);
 			sb.append((suffix));
 		}
 		if (hasNestedInner) {
