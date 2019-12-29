@@ -39,7 +39,7 @@ public class Parser {
 		Options options = getOptions();
 		CommandLine cl = new DefaultParser().parse(options, args);
 
-		if (cl.hasOption("help")) {
+		if (cl.hasOption("help") || cl.hasOption("?")) {
 			printUsage();
 			return null;
 		}
@@ -197,6 +197,7 @@ public class Parser {
 		Options options = new Options();
 		addMainOptions(options);
 		addTransformOptions(options);
+		options.addOption(Option.builder("?").build());
 		return options;
 	}
 
