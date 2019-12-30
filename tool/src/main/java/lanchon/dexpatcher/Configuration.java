@@ -23,7 +23,6 @@ public class Configuration {
 
 	public String sourceFile;
 	public Iterable<String> patchFiles = Collections.emptyList();
-	public String patchedFile;
 
 	public int apiLevel;
 
@@ -35,12 +34,13 @@ public class Configuration {
 	public String annotationPackage = Context.DEFAULT_ANNOTATION_PACKAGE;
 	public boolean constructorAutoIgnoreDisabled;
 
+	public String patchedFile;
+	public boolean dryRun;
+
 	public Logger.Level logLevel = Context.DEFAULT_LOG_LEVEL;
 
 	public String sourceCodeRoot;
 	public boolean timingStats;
-
-	public boolean dryRun;
 
 	// Code transform options:
 
