@@ -41,7 +41,12 @@ public final class MapFileReader {
 	}
 
 	public static void read(Reader reader, String fileName, MapBuilder mapBuilder, Logger logger) throws IOException {
-		new MapFileReader(new LineNumberReader(reader), fileName, mapBuilder, logger).read();
+		read(new LineNumberReader(reader), fileName, mapBuilder, logger);
+	}
+
+	public static void read(LineNumberReader reader, String fileName, MapBuilder mapBuilder, Logger logger)
+			throws IOException {
+		new MapFileReader(reader, fileName, mapBuilder, logger).read();
 	}
 
 	private static final String PATTERN_PART_MAPPING = "\\s*->\\s*(?<new>\\S+)\\s*";
