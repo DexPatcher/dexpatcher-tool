@@ -283,7 +283,7 @@ public class Processor {
 				int sourceDexVersion = OpcodeUtils.getDexVersionFromOpcodes(sourceOpcodes);
 				int patchedDexVersion = OpcodeUtils.getDexVersionFromOpcodes(patchedOpcodes);
 				if (sourceDexVersion != patchedDexVersion) {
-					logger.log(INFO, String.format("patch changes dex version from '%03d' to '%03d'",
+					logger.log(INFO, String.format(Locale.ROOT, "patch changes dex version from '%03d' to '%03d'",
 							sourceDexVersion, patchedDexVersion));
 				}
 			}
@@ -302,7 +302,7 @@ public class Processor {
 		time = System.nanoTime() - time;
 		if (logger.isLogging(DEBUG) && opcodes == null && dex.getOpcodes() != null) {
 			int dexVersion = OpcodeUtils.getDexVersionFromOpcodes(dex.getOpcodes());
-			logger.log(DEBUG, String.format(message + ": dex version '%03d'", dexVersion));
+			logger.log(DEBUG, String.format(Locale.ROOT, message + ": dex version '%03d'", dexVersion));
 		}
 		logStats(message, dex.getClasses().size(), time);
 		return dex;
@@ -313,7 +313,7 @@ public class Processor {
 		logger.log(INFO, message);
 		if (logger.isLogging(DEBUG) && dex.getOpcodes() != null) {
 			int dexVersion = OpcodeUtils.getDexVersionFromOpcodes(dex.getOpcodes());
-			logger.log(DEBUG, String.format(message + ": dex version '%03d'", dexVersion));
+			logger.log(DEBUG, String.format(Locale.ROOT, message + ": dex version '%03d'", dexVersion));
 		}
 		long time = System.nanoTime();
 		MultiDexIO.writeDexFile(config.multiDex, config.multiDexJobs, file, dexFileNamer,

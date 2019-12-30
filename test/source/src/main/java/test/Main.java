@@ -10,6 +10,8 @@
 
 package test;
 
+import java.util.Locale;
+
 public class Main {
 
 	private static final String CLASS_NAME_PREFIX = Main.class.getName() + '$';
@@ -31,13 +33,13 @@ public class Main {
 	static void pClass(String message) {
 		StackTraceElement element = new Throwable().getStackTrace()[1];
 		String className = formatClassName(element.getClassName());
-		p(String.format(message, className));
+		p(String.format(Locale.ROOT, message, className));
 	}
 
 	static void pMethod(String message) {
 		StackTraceElement element = new Throwable().getStackTrace()[1];
 		String methodName = formatClassName(element.getClassName()) + "::" + element.getMethodName();
-		p(String.format(message, methodName));
+		p(String.format(Locale.ROOT, message, methodName));
 	}
 
 	public static void main(String args[]) {
