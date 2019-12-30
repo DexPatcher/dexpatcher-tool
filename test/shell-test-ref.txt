@@ -282,6 +282,9 @@ debug: write 'build/patched.dex': dex version '035'
 debug: write 'build/patched.dex': 36 types
 0 error(s), 14 warning(s)
 
+$ sha1sum build/patched.dex
+c68d05642f11d1bc460aeb28dcf5e2af3e113310  build/patched.dex
+
 $ dex2jar --force --output build/patched-dex2jar.jar build/patched.dex
 dex2jar build/patched.dex -> build/patched-dex2jar.jar
 WARN: ignored invalid inner class name , treat as anonymous inner class.

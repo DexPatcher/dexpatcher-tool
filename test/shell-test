@@ -40,6 +40,8 @@ run dexpatcher build/source.dex.zip build/patch.dex.zip --output build/patched.d
  --decode-source --decode-patches --no-decode-errors\
  --debug "$@"
 
+run sha1sum build/patched.dex
+
 run dex2jar --force --output build/patched-dex2jar.jar build/patched.dex
 
 run-jar source/build/libs/source.jar
