@@ -161,12 +161,7 @@ public class Processor {
 							writeDex(new File(config.patchedFile), dex);
 						}
 						if (config.templateMapFile != null) {
-							try {
-								TemplateMapFileWriter.write(new File(config.templateMapFile), dex, "#");
-							} catch (InvalidTypeDescriptorException e) {
-								logger.log(FATAL, "create template map: invalid " + e.getDescriptorType() +
-										" type descriptor (" + e.getDescriptor() + ")");
-							}
+							TemplateMapFileWriter.write(new File(config.templateMapFile), dex, "#");
 						}
 					}
 				}

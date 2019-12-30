@@ -29,31 +29,27 @@ public class TemplateMapFileWriter {
 
 	private static String MEMBER_INDENTATION = "    ";
 
-	public static void write(File file, DexFile dexFile, String prefix)
-			throws InvalidTypeDescriptorException, IOException {
+	public static void write(File file, DexFile dexFile, String prefix) throws IOException {
 		try (OutputStream outputStream = new FileOutputStream(file)) {
 			Writer writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8);
 			write(writer, dexFile, prefix);
 		}
 	}
 
-	public static void write(Writer writer, DexFile dexFile, String prefix)
-			throws InvalidTypeDescriptorException, IOException {
+	public static void write(Writer writer, DexFile dexFile, String prefix) throws IOException {
 		write(new BufferedWriter(writer), dexFile, prefix);
 	}
 
-	public static void write(BufferedWriter writer, DexFile dexFile, String prefix)
-			throws InvalidTypeDescriptorException, IOException {
+	public static void write(BufferedWriter writer, DexFile dexFile, String prefix) throws IOException {
 		write(new PrintWriter(writer), dexFile, prefix);
 	}
 
-	public static void write(PrintWriter writer, DexFile dexFile, String prefix)
-			throws InvalidTypeDescriptorException, IOException {
+	public static void write(PrintWriter writer, DexFile dexFile, String prefix) throws IOException {
 		if (prefix == null) prefix = "";
 		for (ClassDef classDef : dexFile.getClasses()) {
 			String classDescriptor = classDef.getType();
 			if (DexUtils.isPackageDescriptor(classDescriptor)) continue;
-			String className = TypeName.fromClassDescriptor(classDescriptor);
+			String className = Label.fromClassDescriptor(classDescriptor);
 			writer.print(prefix);
 			writer.print(className);
 			writer.print(" -> ");
@@ -64,7 +60,7 @@ public class TemplateMapFileWriter {
 				String fieldName = field.getName();
 				writer.print(prefix);
 				writer.print(MEMBER_INDENTATION);
-				writer.print(TypeName.fromFieldDescriptor(field.getType()));
+				writer.print(Label.fromFieldDescriptor(field.getType()));
 				writer.print(" ");
 				writer.print(fieldName);
 				writer.print(" -> ");
@@ -76,14 +72,14 @@ public class TemplateMapFileWriter {
 				String methodName = method.getName();
 				writer.print(prefix);
 				writer.print(MEMBER_INDENTATION);
-				writer.print(TypeName.fromReturnDescriptor(method.getReturnType()));
+				writer.print(Label.fromReturnDescriptor(method.getReturnType()));
 				writer.print(" ");
 				writer.print(methodName);
 				writer.print("(");
 				boolean first = true;
 				for (CharSequence parameterType : method.getParameterTypes()) {
 					if (!first) writer.print(", ");
-					writer.print(TypeName.fromFieldDescriptor(parameterType.toString()));
+					writer.print(Label.fromFieldDescriptor(parameterType.toString()));
 					first = false;
 				}
 				writer.print(") -> ");
