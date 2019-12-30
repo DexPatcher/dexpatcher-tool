@@ -42,6 +42,7 @@ public class Marker {
 	public static final String TYPE_VOID = "V";
 	public static final String TYPE_INNER_CLASS = TypeName.toClassDescriptor("dalvik.annotation.InnerClass");
 	public static final String ELEM_ACCESS_FLAGS = "accessFlags";
+	public static final String NAME_VOID = "void";
 	public static final String NAME_STATIC_CONSTRUCTOR = "<clinit>";
 	public static final String NAME_INSTANCE_CONSTRUCTOR = "<init>";
 	public static final String NAME_PACKAGE_INFO = "package-info";

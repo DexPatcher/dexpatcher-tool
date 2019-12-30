@@ -283,10 +283,10 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 		if (DexUtils.isInstanceConstructor(patchId, patch)) {
 			throw action.invalidAction();
 		}
-
-		if (!"V".equals(patch.getReturnType())) {
+		if (!Marker.TYPE_VOID.equals(patch.getReturnType())) {
 			throw new PatchException(action.getLabel() + " action can only be applied to methods that return void");
 		}
+
 		boolean prepend = (action == Action.PREPEND);
 		Method target = findTargetNonNative(patchId, patch, annotation);
 

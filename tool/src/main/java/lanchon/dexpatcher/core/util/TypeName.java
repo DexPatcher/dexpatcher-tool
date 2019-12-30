@@ -10,6 +10,8 @@
 
 package lanchon.dexpatcher.core.util;
 
+import lanchon.dexpatcher.core.Marker;
+
 import com.google.common.collect.ImmutableBiMap;
 
 public class TypeName {
@@ -27,7 +29,7 @@ public class TypeName {
 
 	private static final ImmutableBiMap<String, String> returnTypeToNameMap = ImmutableBiMap.<String, String>builder()
 			.putAll(fieldTypeToNameMap)
-			.put("V", "void")
+			.put(Marker.TYPE_VOID, Marker.NAME_VOID)
 			.build();
 
 	private static final ImmutableBiMap<String, String> nameToFieldTypeMap = fieldTypeToNameMap.inverse();
@@ -85,14 +87,14 @@ public class TypeName {
 
 	public static String fromReturnDescriptor(String descriptor) throws InvalidTypeDescriptorException {
 		try {
-			return "V".equals(descriptor) ? "void" : fromFieldDescriptor(descriptor);
+			return Marker.TYPE_VOID.equals(descriptor) ? Marker.NAME_VOID : fromFieldDescriptor(descriptor);
 		} catch (InvalidTypeDescriptorException e) {
 			throw new InvalidTypeDescriptorException("return", descriptor);
 		}
 	}
 
 	public static String toReturnDescriptor(String name) {
-		return "void".equals(name) ? "V" : toFieldDescriptor(name);
+		return Marker.NAME_VOID.equals(name) ? Marker.TYPE_VOID : toFieldDescriptor(name);
 	}
 
 	private TypeName() {}
