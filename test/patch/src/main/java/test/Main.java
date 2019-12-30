@@ -697,10 +697,11 @@ public class Main {
 		// of escape sequences.
 
 		// The allowed escape sequences are:
-		// - dollar sign: $S is replaced with the character $.
-		// - underscore: $U is replaced with the character _.
-		// - ASCII / Latin-1: $aNN is replaced with hex Unicode codepoint 0xNN.
-		// - Unicode: $uNNNN is replaced with hex Unicode codepoint 0xNNNN.
+		// - dollar sign: $S is replaced with the dollar sign character ($).
+		// - underscore: $U is replaced with the underscore character (_).
+		// - ASCII / Latin-1: $aNN is replaced with Unicode code unit U+00NN.
+		// - Unicode code unit: $uNNNN is replaced with code unit U+NNNN.
+		// - Unicode code point: $pNNNNNN is replaced with code point U+NNNNNN.
 
 		// Note that patches can be decoded at patch time, as would be typical
 		// during development, or ahead of time before publishing them, so
@@ -711,7 +712,8 @@ public class Main {
 		@DexAdd void __ok_$$_with$SdollarEscape__() { pMethod("added %s"); };
 		@DexAdd void __ok_$$_with$UunderscoreEscape__() { pMethod("added %s"); };
 		@DexAdd void __ok_$$_with$aB1asciiLatin1Escape__() { pMethod("added %s"); };
-		@DexAdd void __ok_$$_with$u00B1unicodeEscape__() { pMethod("added %s"); };
+		@DexAdd void __ok_$$_with$u00B1unicodeCodeUnitEscape__() { pMethod("added %s"); };
+		@DexAdd void __ok_$$_with$p0000B1unicodeCodePointEscape__() { pMethod("added %s"); };
 		@DexAdd void __prefix_$$_1____infix_$$_2__and__postfix_$$_3__() { pMethod("added %s"); };
 
 		// Test invalid identifier codes:
@@ -724,10 +726,13 @@ public class Main {
 		@DexAdd int __bad_$$_invalid_character__;
 		@DexAdd int __bad_$$_invalid$sescape__;
 		@DexAdd int __bad_$$_invalid$aX1asciiLatin1Escape__;
-		@DexAdd int __bad_$$_invalid$uB1unicodeEscape__;
+		@DexAdd int __bad_$$_invalid$uB1unicodeCodeUnitEscape__;
+		@DexAdd int __bad_$$_invalid$p00B1unicodeCodePointEscape__;
+		@DexAdd int __bad_$$_invalid$p110000unicodeCodePointEscape__;
 		@DexAdd int __bad_$$_truncatedEscape$__;
 		@DexAdd int __bad_$$_truncatedAsciiLatin1Escape$aB__;
-		@DexAdd int __bad_$$_truncatedUnicodeEscape$uB1__;
+		@DexAdd int __bad_$$_truncatedUnicodeCodeUnitEscape$uB1__;
+		@DexAdd int __bad_$$_truncatedUnicodeCodePointEscape$p00B1__;
 		@DexAdd void __prefix_$$_1____bad_infix_$$_$2__and__postfix_$$_3__() { pMethod("added %s"); };
 
 		// Print the decoded identifiers:
@@ -737,7 +742,8 @@ public class Main {
 			__ok_$$_with$SdollarEscape__();
 			__ok_$$_with$UunderscoreEscape__();
 			__ok_$$_with$aB1asciiLatin1Escape__();
-			__ok_$$_with$u00B1unicodeEscape__();
+			__ok_$$_with$u00B1unicodeCodeUnitEscape__();
+			__ok_$$_with$p0000B1unicodeCodePointEscape__();
 			__prefix_$$_1____infix_$$_2__and__postfix_$$_3__();
 			__prefix_$$_1____bad_infix_$$_$2__and__postfix_$$_3__();
 		}

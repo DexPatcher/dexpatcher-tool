@@ -94,7 +94,8 @@ public final class StringDecoder extends StringCodec {
 									continue;
 								case 'a':
 								case 'u':
-									int n = (e == 'a' ? 2 : 4);
+								case 'p':
+									int n = (e == 'a' ? 2 : e == 'u' ? 4 : 6);
 									int value = 0;
 									for (; n != 0; n--) {
 										if (i + 1 >= escapeEnd) break;
@@ -103,8 +104,10 @@ public final class StringDecoder extends StringCodec {
 										value = (value << 4 | digit);
 									}
 									if (n == 0) {
-										sb.append((char) value);
-										continue;
+										if (Character.isValidCodePoint(value)) {
+											sb.appendCodePoint(value);
+											continue;
+										}
 									}
 							}
 						}

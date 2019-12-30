@@ -132,13 +132,16 @@
 
 #test.Main$IdentifierCodes -> test.Main$IdentifierCodes:
 #    int __bad_$$_invalid$aX1asciiLatin1Escape__ -> __bad_$$_invalid$aX1asciiLatin1Escape__
+#    int __bad_$$_invalid$p00B1unicodeCodePointEscape__ -> __bad_$$_invalid$p00B1unicodeCodePointEscape__
+#    int __bad_$$_invalid$p110000unicodeCodePointEscape__ -> __bad_$$_invalid$p110000unicodeCodePointEscape__
 #    int __bad_$$_invalid$sescape__ -> __bad_$$_invalid$sescape__
-#    int __bad_$$_invalid$uB1unicodeEscape__ -> __bad_$$_invalid$uB1unicodeEscape__
+#    int __bad_$$_invalid$uB1unicodeCodeUnitEscape__ -> __bad_$$_invalid$uB1unicodeCodeUnitEscape__
 #    int __bad_$$_invalid_character__ -> __bad_$$_invalid_character__
 #    int __bad_$$_noEndMark_ -> __bad_$$_noEndMark_
 #    int __bad_$$_truncatedAsciiLatin1Escape$aB__ -> __bad_$$_truncatedAsciiLatin1Escape$aB__
 #    int __bad_$$_truncatedEscape$__ -> __bad_$$_truncatedEscape$__
-#    int __bad_$$_truncatedUnicodeEscape$uB1__ -> __bad_$$_truncatedUnicodeEscape$uB1__
+#    int __bad_$$_truncatedUnicodeCodePointEscape$p00B1__ -> __bad_$$_truncatedUnicodeCodePointEscape$p00B1__
+#    int __bad_$$_truncatedUnicodeCodeUnitEscape$uB1__ -> __bad_$$_truncatedUnicodeCodeUnitEscape$uB1__
 #    int __bad_emptyCode_$$__ -> __bad_emptyCode_$$__
 #    int _bad_$$_noStartMark__ -> _bad_$$_noStartMark__
 #    void print() -> print
@@ -146,7 +149,8 @@
 #    void with$dollarEscape() -> with$dollarEscape
 #    void with_underscoreEscape() -> with_underscoreEscape
 #    void with±asciiLatin1Escape() -> with±asciiLatin1Escape
-#    void with±unicodeEscape() -> with±unicodeEscape
+#    void with±unicodeCodePointEscape() -> with±unicodeCodePointEscape
+#    void with±unicodeCodeUnitEscape() -> with±unicodeCodeUnitEscape
 #    void 1__bad_infix_$$_$2__and3() -> 1__bad_infix_$$_$2__and3
 #    void 12and3() -> 12and3
 
