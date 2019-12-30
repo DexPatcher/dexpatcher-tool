@@ -35,6 +35,7 @@ public class Configuration {
 	public boolean constructorAutoIgnoreDisabled;
 
 	public String patchedFile;
+	public String templateMapFile;
 	public boolean dryRun;
 
 	public Logger.Level logLevel = Context.DEFAULT_LOG_LEVEL;

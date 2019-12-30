@@ -17,6 +17,8 @@ import java.util.Locale;
 import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.DexPatcher;
 import lanchon.dexpatcher.core.logger.Logger;
+import lanchon.dexpatcher.core.util.InvalidTypeDescriptorException;
+import lanchon.dexpatcher.core.util.TemplateMapFileWriter;
 import lanchon.dexpatcher.transform.mapper.DexMapper;
 import lanchon.dexpatcher.transform.mapper.map.DexMap;
 import lanchon.dexpatcher.transform.mapper.map.DexMapping;
@@ -151,11 +153,21 @@ public class Processor {
 				if (config.dryRun) {
 					logger.log(INFO, "dry run due to '--dry-run' option");
 				} else {
-					if (config.patchedFile == null) {
-						logger.log(WARN, "dry run due to missing '--output' option");
+					if (config.patchedFile == null && config.templateMapFile == null) {
+						logger.log(WARN, "dry run due to missing '--output' and '--create-map' options");
 					} else {
-						outputLogger.setSync(config.multiDex && config.multiDexJobs != 1);
-						writeDex(new File(config.patchedFile), dex);
+						if (config.patchedFile != null) {
+							outputLogger.setSync(config.multiDex && config.multiDexJobs != 1);
+							writeDex(new File(config.patchedFile), dex);
+						}
+						if (config.templateMapFile != null) {
+							try {
+								TemplateMapFileWriter.write(new File(config.templateMapFile), dex, "#");
+							} catch (InvalidTypeDescriptorException e) {
+								logger.log(FATAL, "create template map: invalid " + e.getDescriptorType() +
+										" type descriptor (" + e.getDescriptor() + ")");
+							}
+						}
 					}
 				}
 			}

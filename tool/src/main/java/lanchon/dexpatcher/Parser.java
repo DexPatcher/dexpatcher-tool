@@ -90,6 +90,7 @@ public class Parser {
 		config.constructorAutoIgnoreDisabled = cl.hasOption("no-auto-ignore");
 
 		config.patchedFile = cl.getOptionValue("output");
+		config.templateMapFile = cl.getOptionValue("create-map");
 		config.dryRun = cl.hasOption("dry-run");
 
 		config.logLevel = WARN;
@@ -215,6 +216,7 @@ public class Parser {
 		options.addOption(Option.builder().longOpt("no-auto-ignore").desc("no trivial default constructor auto-ignore").build());
 
 		options.addOption(Option.builder("o").longOpt("output").hasArg().argName("dex-or-dir").desc("name of output file or directory").build());
+		options.addOption(Option.builder().longOpt("create-map").hasArg().argName("file").desc("create template map file based on output").build());
 		options.addOption(Option.builder().longOpt("dry-run").desc("do not write output files (much faster)").build());
 
 		options.addOption(Option.builder("q").longOpt("quiet").desc("do not output warnings").build());

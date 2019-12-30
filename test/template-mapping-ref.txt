@@ -1,0 +1,208 @@
+#test.Main$A -> test.Main$A:
+
+#test.Main$Abstract -> test.Main$Abstract:
+#    void abstractMethod() -> abstractMethod
+
+#test.Main$AnonymousClasses$1$1$Inner -> test.Main$AnonymousClasses$1$1$Inner:
+#    test.Main$AnonymousClasses$1$1 this$1 -> this$1
+
+#test.Main$AnonymousClasses$1$1 -> test.Main$AnonymousClasses$1$1:
+#    test.Main$AnonymousClasses$1 this$0 -> this$0
+#    void run() -> run
+
+#test.Main$AnonymousClasses$1 -> test.Main$AnonymousClasses$1:
+#    void run() -> run
+
+#test.Main$AnonymousClasses$Anon1$1 -> test.Main$AnonymousClasses$Anon1$1:
+
+#test.Main$AnonymousClasses$Anon1$Anon1_Level2 -> test.Main$AnonymousClasses$Anon1$Anon1_Level2:
+
+#test.Main$AnonymousClasses$Anon1 -> test.Main$AnonymousClasses$Anon1:
+#    void go() -> go
+
+#test.Main$AnonymousClasses -> test.Main$AnonymousClasses:
+#    void print() -> print
+#    void print__$appendSource() -> print__$appendSource
+#    void print__$appendPatch() -> print__$appendPatch
+
+#test.Main$B -> test.Main$B:
+#    int staticField -> staticField
+#    java.lang.String privateKey -> privateKey
+#    int instanceField -> instanceField
+#    void directMethod() -> directMethod
+#    void privateStaticMethod(int) -> privateStaticMethod
+#    void source_virtualMethod(java.lang.String) -> source_virtualMethod
+#    void appendTestMethod__$appendSource(java.lang.String) -> appendTestMethod__$appendSource
+#    void appendTestMethod__$appendPatch(java.lang.String) -> appendTestMethod__$appendPatch
+#    void prependTestMethod__$prependSource(java.lang.String) -> prependTestMethod__$prependSource
+#    void prependTestMethod__$prependPatch(java.lang.String) -> prependTestMethod__$prependPatch
+#    void wrapTestMethod__$wrapSource(java.lang.String) -> wrapTestMethod__$wrapSource
+#    void appendTestMethod(java.lang.String) -> appendTestMethod
+#    void prependTestMethod(java.lang.String) -> prependTestMethod
+#    void print() -> print
+#    void virtualMethod(java.lang.String) -> virtualMethod
+#    void wrapTestMethod(java.lang.String) -> wrapTestMethod
+#    void addedMethod() -> addedMethod
+
+#test.Main$Base -> test.Main$Base:
+#    void method() -> method
+
+#test.Main$C -> test.Main$C:
+#    int redefinedSourceStaticField -> redefinedSourceStaticField
+#    int sourceStaticField -> sourceStaticField
+#    int patchStaticField -> patchStaticField
+#    int redefinedSourceField -> redefinedSourceField
+#    int sourceField -> sourceField
+#    int patchField -> patchField
+#    void print__$appendSource() -> print__$appendSource
+#    void print__$appendPatch() -> print__$appendPatch
+#    void print() -> print
+
+#test.Main$CrossClassA -> test.Main$CrossClassA:
+#    test.Main$source_CrossClassA a1 -> a1
+#    test.Main$source_CrossClassA a2 -> a2
+#    void go() -> go
+
+#test.Main$CrossClassAHelper -> test.Main$CrossClassAHelper:
+#    void help2(test.Main$CrossClassA) -> help2
+#    void print() -> print
+#    void help2(test.Main$source_CrossClassA) -> help2
+
+#test.Main$CrossClassB -> test.Main$CrossClassB:
+#    java.lang.String data -> data
+#    void go__$wrapSource() -> go__$wrapSource
+#    void go() -> go
+
+#test.Main$CrossClassBHelper -> test.Main$CrossClassBHelper:
+#    void print() -> print
+
+#test.Main$CrossClassC -> test.Main$CrossClassC:
+
+#test.Main$D -> test.Main$D:
+#    int redefinedSourceStaticField -> redefinedSourceStaticField
+#    int sourceStaticField -> sourceStaticField
+#    int patchStaticField -> patchStaticField
+#    int redefinedSourceField -> redefinedSourceField
+#    int sourceField -> sourceField
+#    int patchField -> patchField
+#    void print__$appendSource() -> print__$appendSource
+#    void print__$appendPatch() -> print__$appendPatch
+#    void print() -> print
+
+#test.Main$E -> test.Main$E:
+#    int redefinedSourceStaticField -> redefinedSourceStaticField
+#    int sourceStaticField -> sourceStaticField
+#    int patchStaticField -> patchStaticField
+#    int redefinedSourceField -> redefinedSourceField
+#    int sourceField -> sourceField
+#    int patchField -> patchField
+#    void source_static() -> source_static
+#    void print__$appendSource() -> print__$appendSource
+#    void print__$appendPatch() -> print__$appendPatch
+#    void print() -> print
+
+#test.Main$F -> test.Main$F:
+#    int redefinedSourceStaticField -> redefinedSourceStaticField
+#    int sourceStaticField -> sourceStaticField
+#    int patchStaticField -> patchStaticField
+#    int redefinedSourceField -> redefinedSourceField
+#    int sourceField -> sourceField
+#    int patchField -> patchField
+#    void __$clinit__$appendSource() -> __$clinit__$appendSource
+#    void __$clinit__$appendPatch() -> __$clinit__$appendPatch
+#    void print__$appendSource() -> print__$appendSource
+#    void print__$appendPatch() -> print__$appendPatch
+#    void print() -> print
+
+#test.Main$G -> test.Main$G:
+#    int redefinedSourceStaticField -> redefinedSourceStaticField
+#    int sourceStaticField -> sourceStaticField
+#    int patchStaticField -> patchStaticField
+#    void __$clinit__$appendSource() -> __$clinit__$appendSource
+#    void __$clinit__$appendPatch() -> __$clinit__$appendPatch
+#    void print__$appendSource() -> print__$appendSource
+#    void print__$appendPatch() -> print__$appendPatch
+#    void print() -> print
+
+#test.Main$H -> test.Main$H:
+#    int patchStaticField -> patchStaticField
+#    void print__$appendSource() -> print__$appendSource
+#    void print__$appendPatch() -> print__$appendPatch
+#    void print() -> print
+
+#test.Main$IdentifierCodes -> test.Main$IdentifierCodes:
+#    int __bad_$$_invalid$aX1asciiLatin1Escape__ -> __bad_$$_invalid$aX1asciiLatin1Escape__
+#    int __bad_$$_invalid$sescape__ -> __bad_$$_invalid$sescape__
+#    int __bad_$$_invalid$uB1unicodeEscape__ -> __bad_$$_invalid$uB1unicodeEscape__
+#    int __bad_$$_invalid_character__ -> __bad_$$_invalid_character__
+#    int __bad_$$_noEndMark_ -> __bad_$$_noEndMark_
+#    int __bad_$$_truncatedAsciiLatin1Escape$aB__ -> __bad_$$_truncatedAsciiLatin1Escape$aB__
+#    int __bad_$$_truncatedEscape$__ -> __bad_$$_truncatedEscape$__
+#    int __bad_$$_truncatedUnicodeEscape$uB1__ -> __bad_$$_truncatedUnicodeEscape$uB1__
+#    int __bad_emptyCode_$$__ -> __bad_emptyCode_$$__
+#    int _bad_$$_noStartMark__ -> _bad_$$_noStartMark__
+#    void print() -> print
+#    void withoutLabel() -> withoutLabel
+#    void with$dollarEscape() -> with$dollarEscape
+#    void with_underscoreEscape() -> with_underscoreEscape
+#    void with±asciiLatin1Escape() -> with±asciiLatin1Escape
+#    void with±unicodeEscape() -> with±unicodeEscape
+#    void 1__bad_infix_$$_$2__and3() -> 1__bad_infix_$$_$2__and3
+#    void 12and3() -> 12and3
+
+#test.Main$Interface -> test.Main$Interface:
+#    void interfaceMethod() -> interfaceMethod
+
+#test.Main$ObfuscatedThing -> test.Main$ObfuscatedThing:
+#    int obfuscatedField -> obfuscatedField
+#    void print__$prependSource() -> print__$prependSource
+#    void print__$prependPatch() -> print__$prependPatch
+#    void obfuscatedMethod() -> obfuscatedMethod
+#    float[][] obfuscatedMethod2(int, java.lang.String, java.lang.Object[]) -> obfuscatedMethod2
+#    void print() -> print
+#    void yetAnotherObfuscatedMethod(test.Main$ObfuscatedThing[]) -> yetAnotherObfuscatedMethod
+
+#test.Main$void -> test.Main$void:
+#    void 42() -> 42
+#    void print() -> print
+
+#test.Main -> test.Main:
+#    java.lang.String CLASS_NAME_PREFIX -> CLASS_NAME_PREFIX
+#    java.lang.String formatClassName(java.lang.String) -> formatClassName
+#    void main(java.lang.String[]) -> main
+#    void p() -> p
+#    void p(java.lang.String) -> p
+#    void pClass(java.lang.String) -> pClass
+#    void pMethod(java.lang.String) -> pMethod
+
+#test.nonrec.inner.NonRecInner -> test.nonrec.inner.NonRecInner:
+
+#test.Main$Concrete1 -> test.Main$Concrete1:
+#    void abstractMethod() -> abstractMethod
+#    void interfaceMethod() -> interfaceMethod
+#    void method() -> method
+
+#test.Main$Concrete2 -> test.Main$Concrete2:
+#    void abstractMethod() -> abstractMethod
+#    void interfaceMethod() -> interfaceMethod
+#    void method() -> method
+
+#test.Main$Concrete3 -> test.Main$Concrete3:
+#    void abstractMethod() -> abstractMethod
+#    void interfaceMethod() -> interfaceMethod
+#    void method() -> method
+
+#test.Main$Derived -> test.Main$Derived:
+#    void source_method() -> source_method
+#    void method() -> method
+
+#test.Main$AnonymousClasses$1_patch -> test.Main$AnonymousClasses$1_patch:
+#    void run() -> run
+
+#test.Main$AnonymousClasses$42 -> test.Main$AnonymousClasses$42:
+
+#test.Main$source_CrossClassA -> test.Main$source_CrossClassA:
+#    java.lang.String data -> data
+#    void help1(test.Main$source_CrossClassA) -> help1
+#    void go() -> go
+

@@ -19,6 +19,7 @@ main options:
                               (default: 'lanchon.dexpatcher.annotation')
     --no-auto-ignore          no trivial default constructor auto-ignore
  -o,--output <dex-or-dir>     name of output file or directory
+    --create-map <file>       create template map file based on output
     --dry-run                 do not write output files (much faster)
  -q,--quiet                   do not output warnings
  -v,--verbose                 output extra information
@@ -55,7 +56,7 @@ code transform options:
                               (<set>: 'none'|'dry'|'out'|'inout'|'all')
 
 
-$ dexpatcher build/source.dex.zip build/patch.dex.zip --output build/patched.dex --map-source --unmap-output --map mapping.txt --deanon-source --reanon-output --main-plan Anon\[_Level\] --deanon-patches-alt --no-reanon-errors --decode-source --decode-patches --no-decode-errors --debug
+$ dexpatcher build/source.dex.zip build/patch.dex.zip --output build/patched.dex --create-map build/template-mapping.txt --map-source --unmap-output --map mapping.txt --deanon-source --reanon-output --main-plan Anon\[_Level\] --deanon-patches-alt --no-reanon-errors --decode-source --decode-patches --no-decode-errors --debug
 DexPatcher version 1.8.0-alpha4 by Lanchon (https://dexpatcher.github.io/)
 info: read 'build/source.dex.zip'
 debug: read 'build/source.dex.zip': file 'classes.dex': 35 types
@@ -284,6 +285,9 @@ debug: write 'build/patched.dex': 36 types
 
 $ sha1sum build/patched.dex
 c68d05642f11d1bc460aeb28dcf5e2af3e113310  build/patched.dex
+
+$ sha1sum build/template-mapping.txt
+fd05ed51205e5461737756d0b2ba521069d4f3c1  build/template-mapping.txt
 
 $ dex2jar --force --output build/patched-dex2jar.jar build/patched.dex
 dex2jar build/patched.dex -> build/patched-dex2jar.jar

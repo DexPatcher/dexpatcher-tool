@@ -20,6 +20,14 @@ dex-jar() {
     #run dex2jar --force --output $name-dex2jar.jar $dex
 }
 
+cat-file() {
+    file="$1"
+    echo "--- cat $file ---"
+    cat $file
+    echo "--- end $file ---"
+    echo
+}
+
 run-jar() {
     jar="$1"
     echo "--- run $jar ---"
@@ -35,12 +43,16 @@ dex-jar patch
 
 run dexpatcher --help
 run dexpatcher build/source.dex.zip build/patch.dex.zip --output build/patched.dex\
+ --create-map build/template-mapping.txt\
  --map-source --unmap-output --map mapping.txt\
  --deanon-source --reanon-output --main-plan Anon[_Level] --deanon-patches-alt --no-reanon-errors\
  --decode-source --decode-patches --no-decode-errors\
  --debug "$@"
 
 run sha1sum build/patched.dex
+
+#cat-file build/template-mapping.txt
+run sha1sum build/template-mapping.txt
 
 run dex2jar --force --output build/patched-dex2jar.jar build/patched.dex
 

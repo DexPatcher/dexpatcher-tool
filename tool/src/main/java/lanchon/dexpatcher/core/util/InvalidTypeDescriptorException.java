@@ -14,8 +14,21 @@ import lanchon.dexpatcher.core.PatchException;
 
 public class InvalidTypeDescriptorException extends PatchException {
 
+	protected final String descriptorType;
+	protected final String descriptor;
+
 	public InvalidTypeDescriptorException(String descriptorType, String descriptor) {
 		super("Invalid " + descriptorType + " type descriptor (" + descriptor + ")");
+		this.descriptorType = descriptorType;
+		this.descriptor = descriptor;
+	}
+
+	public String getDescriptorType() {
+		return descriptorType;
+	}
+
+	public String getDescriptor() {
+		return descriptor;
 	}
 
 }

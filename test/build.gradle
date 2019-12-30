@@ -110,6 +110,8 @@ task portableTest(type:JavaExec) {
     ext.patchFile = patchDex.outputFile
     ext.outputFile = objects.fileProperty()
     outputFile.set layout.buildDirectory.file('portable-test/patched.dex')
+    ext.templateMapFile = objects.fileProperty()
+    templateMapFile.set layout.buildDirectory.file('portable-test/template-mapping.txt')
     ext.mapFile = objects.fileProperty()
     mapFile.set layout.projectDirectory.file('mapping.txt')
 
@@ -124,6 +126,7 @@ task portableTest(type:JavaExec) {
                     '--no-reanon-errors',
             '--decode-source', '--decode-patches', '--no-decode-errors',
             '--output', outputFile.get(),
+            '--create-map', templateMapFile.get(),
             sourceFile.get(), patchFile.get()
 
 }
