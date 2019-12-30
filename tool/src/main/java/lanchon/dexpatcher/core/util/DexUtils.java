@@ -14,6 +14,7 @@ import java.util.Iterator;
 
 import lanchon.dexpatcher.core.Marker;
 
+import org.jf.dexlib2.AccessFlags;
 import org.jf.dexlib2.Opcode;
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.AnnotationElement;
@@ -68,25 +69,24 @@ public class DexUtils {
 
 	// Constructors
 
-	public static boolean isStaticConstructor(String methodId, Method method) {
-		int bits = CONSTRUCTOR.getValue() | STATIC.getValue();
-		int mask = bits;
-		return (method.getAccessFlags() & mask) == bits &&
-				Id.STATIC_CONSTRUCTOR.equals(methodId);
+	public static boolean isStaticConstructor(Method method) {
+		int flags = method.getAccessFlags();
+		return CONSTRUCTOR.isSet(flags) && STATIC.isSet(flags) &&
+				Marker.NAME_STATIC_CONSTRUCTOR.equals(method.getName()) &&
+				Marker.TYPE_VOID.equals(method.getReturnType()) &&
+				method.getParameterTypes().isEmpty();
 	}
 
-	public static boolean isInstanceConstructor(String methodId, Method method) {
-		int bits = CONSTRUCTOR.getValue();
-		int mask = bits | STATIC.getValue();
-		return (method.getAccessFlags() & mask) == bits &&
-				Marker.NAME_INSTANCE_CONSTRUCTOR.equals(method.getName());
+	public static boolean isInstanceConstructor(Method method) {
+		int flags = method.getAccessFlags();
+		return CONSTRUCTOR.isSet(flags) && !STATIC.isSet(flags) &&
+				Marker.NAME_INSTANCE_CONSTRUCTOR.equals(method.getName()) &&
+				Marker.TYPE_VOID.equals(method.getReturnType());
 	}
 
-	public static boolean isDefaultConstructor(String methodId, Method method) {
-		int bits = CONSTRUCTOR.getValue();
-		int mask = bits | STATIC.getValue();
-		return (method.getAccessFlags() & mask) == bits &&
-				Id.DEFAULT_CONSTRUCTOR.equals(methodId);
+	public static boolean isDefaultConstructor(Method method) {
+		return isInstanceConstructor(method) &&
+				method.getParameterTypes().isEmpty();
 	}
 
 	public static boolean hasTrivialConstructorImplementation(Method method) {

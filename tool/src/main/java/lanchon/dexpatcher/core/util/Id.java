@@ -19,7 +19,6 @@ import org.jf.dexlib2.iface.reference.MethodReference;
 public class Id {
 
 	public static final String STATIC_CONSTRUCTOR = Marker.NAME_STATIC_CONSTRUCTOR + "..V";
-	public static final String DEFAULT_CONSTRUCTOR = Marker.NAME_INSTANCE_CONSTRUCTOR + "..V";
 
 	public static String ofClass(ClassDef classDef) {
 		return ofClass(classDef.getType());

@@ -133,7 +133,7 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 
 	@Override
 	protected Action getDefaultAction(String patchId, Method patch) throws PatchException {
-		if (DexUtils.isStaticConstructor(patchId, patch)) {
+		if (DexUtils.isStaticConstructor(patch)) {
 			staticConstructorFound = true;
 			if (resolvedStaticConstructorAction == Action.NONE) {
 				Action action = targetExists(Id.STATIC_CONSTRUCTOR) ? Action.APPEND : Action.ADD;
@@ -141,7 +141,7 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 				return action;
 			}
 			if (explicitStaticConstructorAction != null) return explicitStaticConstructorAction;
-		} else if (DexUtils.isDefaultConstructor(patchId, patch) && resolvedDefaultAction == Action.NONE &&
+		} else if (DexUtils.isDefaultConstructor(patch) && resolvedDefaultAction == Action.NONE &&
 				!getContext().isConstructorAutoIgnoreDisabled()) {
 			if (DexUtils.hasTrivialConstructorImplementation(patch)) {
 				log(INFO, "implicit ignore of trivial default constructor");
@@ -246,7 +246,7 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 	@Override
 	protected void onWrap(String patchId, Method patch, PatcherAnnotation annotation) throws PatchException {
 
-		if (DexUtils.isStaticConstructor(patchId, patch) || DexUtils.isInstanceConstructor(patchId, patch)) {
+		if (DexUtils.isStaticConstructor(patch) || DexUtils.isInstanceConstructor(patch)) {
 			throw Action.WRAP.invalidAction();
 		}
 
@@ -280,7 +280,7 @@ public class MethodSetPatcher extends MemberSetPatcher<Method> {
 	protected void onSplice(String patchId, Method patch, PatcherAnnotation annotation, Action action)
 			throws PatchException {
 
-		if (DexUtils.isInstanceConstructor(patchId, patch)) {
+		if (DexUtils.isInstanceConstructor(patch)) {
 			throw action.invalidAction();
 		}
 		if (!Marker.TYPE_VOID.equals(patch.getReturnType())) {
