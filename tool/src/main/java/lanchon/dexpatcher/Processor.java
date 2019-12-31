@@ -27,6 +27,7 @@ import lanchon.dexpatcher.transform.codec.decoder.StringDecoder;
 import lanchon.dexpatcher.transform.mapper.DexMapper;
 import lanchon.dexpatcher.transform.mapper.map.DexMap;
 import lanchon.dexpatcher.transform.mapper.map.DexMapping;
+import lanchon.dexpatcher.transform.mapper.map.LoggingDexMap;
 import lanchon.dexpatcher.transform.mapper.map.MapFileReader;
 import lanchon.dexpatcher.transform.mapper.map.builder.InverseMapBuilder;
 import lanchon.dexpatcher.transform.mapper.map.builder.MapBuilder;
@@ -219,8 +220,8 @@ public class Processor {
 		if (enabled) {
 			boolean preTransformAll = config.preTransform == PreTransform.ALL;
 			TransformLogger privateLogger = logger.cloneIf(preTransformAll);
-			DexMapper mapper = new DexMapper(null, dexMap, isInverseMap, config.annotationPackage, logger, logPrefix,
-					DEBUG);
+			DexMap loggingDexMap = new LoggingDexMap(dexMap, isInverseMap, privateLogger, logPrefix, DEBUG);
+			DexMapper mapper = new DexMapper(null, loggingDexMap, config.annotationPackage);
 			dex = transformDex(dex, mapper);
 			if (preTransformAll) preTransformDex(dex, privateLogger, logPrefix);
 		}
