@@ -12,28 +12,18 @@ package lanchon.dexpatcher.transform.codec.encoder;
 
 import lanchon.dexpatcher.transform.codec.StringCodec;
 
-public final class StringEncoder extends StringCodec {
-
-	private static boolean ENCODE_UNDERSCORE_ONLY = true;
+public final class BasicStringEncoder extends StringCodec {
 
 	protected final String encodedCodeMarker;
 
-	public StringEncoder(String codeMarker) {
+	public BasicStringEncoder(String codeMarker) {
 		super(codeMarker);
-		encodedCodeMarker = ENCODE_UNDERSCORE_ONLY ? encodeCodeMarkerUnderscoreOnly() : encode(codeMarker);
+		encodedCodeMarker = "_" + codeMarker + "$U__" + codeMarker.substring(1);
 	}
 
-	private String encodeCodeMarkerUnderscoreOnly() {
-		return "_" + codeMarker + "$U__" + codeMarker.substring(1);
-	}
-
-	private String encode(String s) {
-		return "_" + codeMarker + escape(s) + "__";
-	}
-
-	// TODO: Maybe replace with proper escaping function when implemented.
-	private static String escape(String s) {
-		return s.replace("$", "$S").replace("_", "$U");
+	public BasicStringEncoder(String codeMarker, String encodedCodeMarker) {
+		super(codeMarker);
+		this.encodedCodeMarker = encodedCodeMarker;
 	}
 
 	public String encodeString(String string) {

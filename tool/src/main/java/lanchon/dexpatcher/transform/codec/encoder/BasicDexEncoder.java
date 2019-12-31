@@ -15,28 +15,29 @@ import lanchon.dexpatcher.transform.TransformLogger;
 import lanchon.dexpatcher.transform.codec.DexCodec;
 import lanchon.dexpatcher.transform.codec.DexCodecModule.ItemType;
 
-public final class DexEncoder extends DexCodec {
+public final class BasicDexEncoder extends DexCodec {
 
-	private final StringEncoder stringEncoder;
+	private final BasicStringEncoder basicStringEncoder;
 	private final Logger.Level infoLevel;
 
-	public DexEncoder(StringEncoder stringEncoder, TransformLogger logger, String logPrefix, Logger.Level infoLevel) {
+	public BasicDexEncoder(BasicStringEncoder basicStringEncoder, TransformLogger logger, String logPrefix,
+			Logger.Level infoLevel) {
 		super(logger, logPrefix);
-		this.stringEncoder = stringEncoder;
+		this.basicStringEncoder = basicStringEncoder;
 		this.infoLevel = infoLevel;
 	}
 
 	@Override
 	protected String getTransformedDefiningClass(String definingClass) {
-		return stringEncoder.encodeString(definingClass);
+		return basicStringEncoder.encodeString(definingClass);
 	}
 
 	@Override
 	public String rewriteItem(String definingClass, ItemType itemType, String value) {
-		String encodedValue = stringEncoder.encodeString(value);
+		String encodedValue = basicStringEncoder.encodeString(value);
 		if (encodedValue != value && logger.isLogging(infoLevel) && !encodedValue.equals(value)) {
 			StringBuilder sb = getMessageHeader(definingClass, itemType, value);
-			sb.append("encoded to '").append(formatValue(itemType, encodedValue)).append("'");
+			sb.append("escaped to '").append(formatValue(itemType, encodedValue)).append("'");
 			logger.log(infoLevel, sb.toString());
 		}
 		return encodedValue;
