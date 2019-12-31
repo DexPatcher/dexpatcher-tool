@@ -12,13 +12,13 @@ package lanchon.dexpatcher.transform.codec.encoder;
 
 import lanchon.dexpatcher.transform.codec.StringCodec;
 
-public final class StringEscaper extends StringCodec {
+public final class StringEncoder extends StringCodec {
 
 	private static boolean ENCODE_UNDERSCORE_ONLY = true;
 
 	protected final String encodedCodeMarker;
 
-	public StringEscaper(String codeMarker) {
+	public StringEncoder(String codeMarker) {
 		super(codeMarker);
 		encodedCodeMarker = ENCODE_UNDERSCORE_ONLY ? encodeCodeMarkerUnderscoreOnly() : encode(codeMarker);
 	}
