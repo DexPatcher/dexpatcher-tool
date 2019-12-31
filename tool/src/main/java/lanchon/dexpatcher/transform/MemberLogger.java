@@ -15,7 +15,7 @@ import lanchon.dexpatcher.core.util.Label;
 import org.jf.dexlib2.iface.reference.FieldReference;
 import org.jf.dexlib2.iface.reference.MethodReference;
 
-public abstract class MemberLogger extends TypeLogger {
+public abstract class MemberLogger extends BaseLogger {
 
 	private static final boolean LOG_TRANSFORMED_DEFINING_CLASS = false;
 

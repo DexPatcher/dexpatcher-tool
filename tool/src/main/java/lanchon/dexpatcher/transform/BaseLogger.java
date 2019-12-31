@@ -12,12 +12,12 @@ package lanchon.dexpatcher.transform;
 
 import lanchon.dexpatcher.core.util.Label;
 
-public abstract class TypeLogger {
+public abstract class BaseLogger {
 
 	public final TransformLogger logger;
 	private final String logPrefix;
 
-	protected TypeLogger(TransformLogger logger, String logPrefix) {
+	protected BaseLogger(TransformLogger logger, String logPrefix) {
 		this.logger = logger;
 		this.logPrefix = logPrefix;
 		logger.markAsInUse();
