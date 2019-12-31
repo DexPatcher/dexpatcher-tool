@@ -35,7 +35,7 @@ public final class BasicDexEncoder extends DexCodec {
 	@Override
 	public String rewriteItem(String definingClass, ItemType itemType, String value) {
 		String encodedValue = basicStringEncoder.encodeString(value);
-		if (encodedValue != value && logger.isLogging(infoLevel) && !encodedValue.equals(value)) {
+		if (logger.isLogging(infoLevel) && !encodedValue.equals(value)) {
 			StringBuilder sb = getMessageHeader(definingClass, itemType, value);
 			sb.append("escaped to '").append(formatValue(itemType, encodedValue)).append("'");
 			logger.log(infoLevel, sb.toString());

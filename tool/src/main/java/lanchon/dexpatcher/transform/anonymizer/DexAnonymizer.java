@@ -48,7 +48,7 @@ public final class DexAnonymizer extends TypeLogger implements DexTransform, Rew
 	@Override
 	public String rewrite(String type) {
 		String anonymizedType = typeAnonymizer.anonymizeType(type, this);
-		if (anonymizedType != type && logger.isLogging(infoLevel) && !anonymizedType.equals(type)) {
+		if (logger.isLogging(infoLevel) && !anonymizedType.equals(type)) {
 			StringBuilder sb = getMessageHeaderForClass(type);
 			sb.append(typeAnonymizer.isReanonymizer() ? "reanonymized to '" : "deanonymized to '")
 					.append(Label.fromClassDescriptor(anonymizedType)).append("'");

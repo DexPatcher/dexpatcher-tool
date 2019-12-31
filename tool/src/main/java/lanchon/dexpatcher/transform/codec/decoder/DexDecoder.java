@@ -50,7 +50,7 @@ public final class DexDecoder extends DexCodec {
 				}
 			}
 		});
-		if (decodedValue != value && logger.isLogging(infoLevel) && !decodedValue.equals(value)) {
+		if (logger.isLogging(infoLevel) && !decodedValue.equals(value)) {
 			StringBuilder sb = getMessageHeader(definingClass, itemType, value);
 			sb.append("decoded to '").append(formatValue(itemType, decodedValue)).append("'");
 			logger.log(infoLevel, sb.toString());
