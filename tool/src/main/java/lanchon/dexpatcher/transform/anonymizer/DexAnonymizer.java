@@ -12,14 +12,16 @@ package lanchon.dexpatcher.transform.anonymizer;
 
 import lanchon.dexpatcher.core.logger.Logger;
 import lanchon.dexpatcher.core.util.Label;
-import lanchon.dexpatcher.transform.LoggingDexTransform;
+import lanchon.dexpatcher.transform.DexTransform;
 import lanchon.dexpatcher.transform.TransformLogger;
+import lanchon.dexpatcher.transform.TypeLogger;
 
 import org.jf.dexlib2.rewriter.Rewriter;
 import org.jf.dexlib2.rewriter.RewriterModule;
 import org.jf.dexlib2.rewriter.Rewriters;
 
-public final class DexAnonymizer extends LoggingDexTransform implements Rewriter<String>, TypeAnonymizer.ErrorHandler {
+public final class DexAnonymizer extends TypeLogger implements DexTransform, Rewriter<String>,
+		TypeAnonymizer.ErrorHandler {
 
 	private final TypeAnonymizer typeAnonymizer;
 	private final Logger.Level infoLevel;
@@ -41,11 +43,6 @@ public final class DexAnonymizer extends LoggingDexTransform implements Rewriter
 				return DexAnonymizer.this;
 			}
 		};
-	}
-
-	@Override
-	protected String getTransformedDefiningClass(String definingClass) {
-		return typeAnonymizer.anonymizeType(definingClass);
 	}
 
 	@Override

@@ -17,26 +17,6 @@ import lanchon.dexpatcher.transform.codec.DexCodecModule.ItemType;
 
 public final class DexDecoder extends DexCodec {
 
-	private final class ErrorHandler extends MemberContext implements StringDecoder.ErrorHandler {
-
-		public ErrorHandler(String definingClass, ItemType itemType, String value) {
-			super(definingClass, itemType, value);
-		}
-
-		@Override
-		public void onError(String message, String string, int codeStart, int codeEnd, int errorStart, int errorEnd) {
-			if (logger.isLogging(errorLevel)) {
-				StringBuilder sb = getMessageHeader(definingClass, itemType, value);
-				sb.append(message);
-				sb.append(" in '").append(string, codeStart, errorStart)
-						.append("[->]").append(string, errorStart, errorEnd).append("[<-]")
-						.append(string, errorEnd, codeEnd).append("'");
-				logger.log(errorLevel, sb.toString());
-			}
-		}
-
-	}
-
 	private final StringDecoder stringDecoder;
 	private final Logger.Level infoLevel;
 	private final Logger.Level errorLevel;
@@ -55,9 +35,21 @@ public final class DexDecoder extends DexCodec {
 	}
 
 	@Override
-	public String rewriteItem(String definingClass, ItemType itemType, String value) {
-		ErrorHandler errorHandler = new ErrorHandler(definingClass, itemType, value);
-		String decodedValue = stringDecoder.decodeString(value, errorHandler);
+	public String rewriteItem(final String definingClass, final ItemType itemType, final String value) {
+		String decodedValue = stringDecoder.decodeString(value, new StringDecoder.ErrorHandler() {
+			@Override
+			public void onError(String message, String string, int codeStart, int codeEnd, int errorStart,
+					int errorEnd) {
+				if (logger.isLogging(errorLevel)) {
+					StringBuilder sb = getMessageHeader(definingClass, itemType, value);
+					sb.append(message);
+					sb.append(" in '").append(string, codeStart, errorStart)
+							.append("[->]").append(string, errorStart, errorEnd).append("[<-]")
+							.append(string, errorEnd, codeEnd).append("'");
+					logger.log(errorLevel, sb.toString());
+				}
+			}
+		});
 		if (decodedValue != value && logger.isLogging(infoLevel) && !decodedValue.equals(value)) {
 			StringBuilder sb = getMessageHeader(definingClass, itemType, value);
 			sb.append("decoded to '").append(formatValue(itemType, decodedValue)).append("'");

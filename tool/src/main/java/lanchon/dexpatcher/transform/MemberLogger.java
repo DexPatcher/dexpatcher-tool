@@ -15,25 +15,12 @@ import lanchon.dexpatcher.core.util.Label;
 import org.jf.dexlib2.iface.reference.FieldReference;
 import org.jf.dexlib2.iface.reference.MethodReference;
 
-public abstract class LoggingDexTransform extends BaseLoggingDexTransform {
+public abstract class MemberLogger extends TypeLogger {
 
 	private static final boolean LOG_TRANSFORMED_DEFINING_CLASS = false;
 
-	protected class MemberContext {
-		protected final String definingClass;
-		public MemberContext(String definingClass) {
-			this.definingClass = definingClass;
-		}
-	}
-
-	public LoggingDexTransform(TransformLogger logger, String logPrefix) {
+	public MemberLogger(TransformLogger logger, String logPrefix) {
 		super(logger, logPrefix);
-	}
-
-	public final StringBuilder getMessageHeaderForClass(String descriptor) {
-		StringBuilder sb = getMessageHeader();
-		sb.append("type '").append(Label.fromClassDescriptor(descriptor)).append("': ");
-		return sb;
 	}
 
 	public final StringBuilder getMessageHeaderForMember(String definingClass) {

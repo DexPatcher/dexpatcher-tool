@@ -15,7 +15,7 @@ import java.util.Locale;
 import lanchon.dexpatcher.core.logger.Logger;
 import lanchon.dexpatcher.core.util.Label;
 import lanchon.dexpatcher.transform.DexTransform;
-import lanchon.dexpatcher.transform.LoggingDexTransform;
+import lanchon.dexpatcher.transform.MemberLogger;
 import lanchon.dexpatcher.transform.TransformLogger;
 import lanchon.dexpatcher.transform.mapper.map.DexMap;
 
@@ -23,7 +23,7 @@ import org.jf.dexlib2.iface.reference.FieldReference;
 import org.jf.dexlib2.iface.reference.MethodReference;
 import org.jf.dexlib2.rewriter.RewriterModule;
 
-public class DexMapper extends LoggingDexTransform implements DexMap {
+public class DexMapper extends MemberLogger implements DexTransform, DexMap {
 
 	protected final DexTransform wrappedTransform;
 	protected final DexMap dexMap;
@@ -54,8 +54,12 @@ public class DexMapper extends LoggingDexTransform implements DexMap {
 
 	@Override
 	public RewriterModule getRewriterModule() {
-		RewriterModule wrappedModule = (wrappedTransform) != null ? wrappedTransform.getRewriterModule() :
+		RewriterModule wrappedModule = (wrappedTransform != null) ? wrappedTransform.getRewriterModule() :
 				new RewriterModule();
+		return getRewriterModule(wrappedModule);
+	}
+
+	public RewriterModule getRewriterModule(RewriterModule wrappedModule) {
 		return PatchRewriterModule.of(new DexMapperModule(wrappedModule, this), annotationPackage);
 	}
 

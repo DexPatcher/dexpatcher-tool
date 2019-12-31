@@ -10,12 +10,14 @@
 
 package lanchon.dexpatcher.transform;
 
-public abstract class BaseLoggingDexTransform implements DexTransform {
+import lanchon.dexpatcher.core.util.Label;
+
+public abstract class TypeLogger {
 
 	public final TransformLogger logger;
 	private final String logPrefix;
 
-	protected BaseLoggingDexTransform(TransformLogger logger, String logPrefix) {
+	protected TypeLogger(TransformLogger logger, String logPrefix) {
 		this.logger = logger;
 		this.logPrefix = logPrefix;
 		logger.markAsInUse();
@@ -24,6 +26,12 @@ public abstract class BaseLoggingDexTransform implements DexTransform {
 	public final StringBuilder getMessageHeader() {
 		StringBuilder sb = new StringBuilder();
 		if (logPrefix != null) sb.append(logPrefix).append(": ");
+		return sb;
+	}
+
+	public final StringBuilder getMessageHeaderForClass(String descriptor) {
+		StringBuilder sb = getMessageHeader();
+		sb.append("type '").append(Label.fromClassDescriptor(descriptor)).append("': ");
 		return sb;
 	}
 
