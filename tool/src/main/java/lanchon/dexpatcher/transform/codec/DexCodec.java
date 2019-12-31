@@ -10,14 +10,13 @@
 
 package lanchon.dexpatcher.transform.codec;
 
-import lanchon.dexpatcher.transform.DexTransform;
 import lanchon.dexpatcher.transform.MemberLogger;
 import lanchon.dexpatcher.transform.TransformLogger;
 import lanchon.dexpatcher.transform.codec.DexCodecModule.ItemType;
 
 import org.jf.dexlib2.rewriter.RewriterModule;
 
-public abstract class DexCodec extends MemberLogger implements DexTransform, DexCodecModule.ItemRewriter {
+public abstract class DexCodec extends MemberLogger implements DexCodecModule.ItemRewriter {
 
 	public static String formatValue(ItemType itemType, String value) {
 		return itemType == ItemType.BINARY_CLASS_NAME ? value.replace('/', '.') : value;
@@ -27,8 +26,7 @@ public abstract class DexCodec extends MemberLogger implements DexTransform, Dex
 		super(logger, logPrefix);
 	}
 
-	@Override
-	public final RewriterModule getRewriterModule() {
+	public final RewriterModule getModule() {
 		return new DexCodecModule(this);
 	}
 

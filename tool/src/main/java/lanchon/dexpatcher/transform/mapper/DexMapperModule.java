@@ -27,7 +27,11 @@ public class DexMapperModule extends WrapperRewriterModule<RewriterModule> {
 
 	protected final DexMap dexMap;
 
-	public DexMapperModule(RewriterModule wrappedModule, DexMap dexMap) {
+	public DexMapperModule(DexMap dexMap) {
+		this(dexMap, new RewriterModule());
+	}
+
+	public DexMapperModule(DexMap dexMap, RewriterModule wrappedModule) {
 		super(wrappedModule);
 		this.dexMap = dexMap;
 	}

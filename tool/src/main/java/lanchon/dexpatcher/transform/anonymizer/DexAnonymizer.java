@@ -12,7 +12,6 @@ package lanchon.dexpatcher.transform.anonymizer;
 
 import lanchon.dexpatcher.core.logger.Logger;
 import lanchon.dexpatcher.core.util.Label;
-import lanchon.dexpatcher.transform.DexTransform;
 import lanchon.dexpatcher.transform.TransformLogger;
 import lanchon.dexpatcher.transform.TypeLogger;
 
@@ -20,8 +19,7 @@ import org.jf.dexlib2.rewriter.Rewriter;
 import org.jf.dexlib2.rewriter.RewriterModule;
 import org.jf.dexlib2.rewriter.Rewriters;
 
-public final class DexAnonymizer extends TypeLogger implements DexTransform, Rewriter<String>,
-		TypeAnonymizer.ErrorHandler {
+public final class DexAnonymizer extends TypeLogger implements Rewriter<String>, TypeAnonymizer.ErrorHandler {
 
 	private final TypeAnonymizer typeAnonymizer;
 	private final Logger.Level infoLevel;
@@ -35,8 +33,7 @@ public final class DexAnonymizer extends TypeLogger implements DexTransform, Rew
 		this.errorLevel = errorLevel;
 	}
 
-	@Override
-	public RewriterModule getRewriterModule() {
+	public RewriterModule getModule() {
 		return new RewriterModule() {
 			@Override
 			public Rewriter<String> getTypeRewriter(Rewriters rewriters) {

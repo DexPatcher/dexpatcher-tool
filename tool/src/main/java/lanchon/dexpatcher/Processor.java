@@ -18,13 +18,13 @@ import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.DexPatcher;
 import lanchon.dexpatcher.core.logger.Logger;
 import lanchon.dexpatcher.core.util.TemplateMapFileWriter;
-import lanchon.dexpatcher.transform.DexTransform;
 import lanchon.dexpatcher.transform.TransformLogger;
 import lanchon.dexpatcher.transform.anonymizer.DexAnonymizer;
 import lanchon.dexpatcher.transform.anonymizer.TypeAnonymizer;
 import lanchon.dexpatcher.transform.codec.decoder.DexDecoder;
 import lanchon.dexpatcher.transform.codec.decoder.StringDecoder;
-import lanchon.dexpatcher.transform.mapper.DexMapper;
+import lanchon.dexpatcher.transform.mapper.DexMapperModule;
+import lanchon.dexpatcher.transform.mapper.PatchRewriterModule;
 import lanchon.dexpatcher.transform.mapper.map.DexMap;
 import lanchon.dexpatcher.transform.mapper.map.DexMapping;
 import lanchon.dexpatcher.transform.mapper.map.LoggingDexMap;
@@ -43,6 +43,7 @@ import lanchon.multidexlib2.SingletonDexContainer;
 import org.jf.dexlib2.Opcodes;
 import org.jf.dexlib2.iface.DexFile;
 import org.jf.dexlib2.rewriter.DexRewriter;
+import org.jf.dexlib2.rewriter.RewriterModule;
 
 import static lanchon.dexpatcher.core.logger.Logger.Level.*;
 
@@ -79,8 +80,8 @@ public class Processor {
 		return new Processor(logger, config).processFiles();
 	}
 
-	private static DexFile transformDex(DexFile dex, DexTransform transform) {
-		return new DexRewriter(transform.getRewriterModule()).rewriteDexFile(dex);
+	private static DexFile transformDex(DexFile dex, RewriterModule module) {
+		return new DexRewriter(module).rewriteDexFile(dex);
 	}
 
 	private final Logger logger;
@@ -221,7 +222,8 @@ public class Processor {
 			boolean preTransformAll = config.preTransform == PreTransform.ALL;
 			TransformLogger privateLogger = logger.cloneIf(preTransformAll);
 			DexMap loggingDexMap = new LoggingDexMap(dexMap, isInverseMap, privateLogger, logPrefix, DEBUG);
-			DexMapper mapper = new DexMapper(null, loggingDexMap, config.annotationPackage);
+			RewriterModule mapper = PatchRewriterModule.of(new DexMapperModule(loggingDexMap),
+					config.annotationPackage);
 			dex = transformDex(dex, mapper);
 			if (preTransformAll) preTransformDex(dex, privateLogger, logPrefix);
 		}
@@ -233,8 +235,8 @@ public class Processor {
 		if (enabled) {
 			boolean preTransformAll = config.preTransform == PreTransform.ALL;
 			TransformLogger privateLogger = logger.cloneIf(preTransformAll);
-			DexAnonymizer anonymizer = new DexAnonymizer(new TypeAnonymizer(plan, reanonymize), privateLogger,
-					logPrefix, DEBUG, config.treatReanonymizeErrorsAsWarnings ? WARN : ERROR);
+			RewriterModule anonymizer = new DexAnonymizer(new TypeAnonymizer(plan, reanonymize), privateLogger,
+					logPrefix, DEBUG, config.treatReanonymizeErrorsAsWarnings ? WARN : ERROR).getModule();
 			dex = transformDex(dex, anonymizer);
 			if (preTransformAll) preTransformDex(dex, privateLogger, logPrefix);
 		}
@@ -245,8 +247,8 @@ public class Processor {
 		if (enabled) {
 			boolean preTransformAll = config.preTransform == PreTransform.ALL;
 			TransformLogger privateLogger = logger.cloneIf(preTransformAll);
-			DexDecoder decoder = new DexDecoder(stringDecoder, privateLogger, logPrefix, DEBUG,
-					config.treatDecodeErrorsAsWarnings ? WARN : ERROR);
+			RewriterModule decoder = new DexDecoder(stringDecoder, privateLogger, logPrefix, DEBUG,
+					config.treatDecodeErrorsAsWarnings ? WARN : ERROR).getModule();
 			dex = transformDex(dex, decoder);
 			if (preTransformAll) preTransformDex(dex, privateLogger, logPrefix);
 		}
