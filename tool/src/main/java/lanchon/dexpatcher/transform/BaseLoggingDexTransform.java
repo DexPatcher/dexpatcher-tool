@@ -10,12 +10,12 @@
 
 package lanchon.dexpatcher.transform;
 
-public abstract class BaseDexTransform {
+public abstract class BaseLoggingDexTransform implements DexTransform {
 
 	public final TransformLogger logger;
 	private final String logPrefix;
 
-	protected BaseDexTransform(TransformLogger logger, String logPrefix) {
+	protected BaseLoggingDexTransform(TransformLogger logger, String logPrefix) {
 		this.logger = logger;
 		this.logPrefix = logPrefix;
 		logger.markAsInUse();

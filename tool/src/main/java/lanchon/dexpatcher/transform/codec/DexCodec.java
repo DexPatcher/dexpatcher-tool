@@ -10,19 +10,19 @@
 
 package lanchon.dexpatcher.transform.codec;
 
-import lanchon.dexpatcher.transform.DexTransform;
+import lanchon.dexpatcher.transform.LoggingDexTransform;
 import lanchon.dexpatcher.transform.TransformLogger;
 import lanchon.dexpatcher.transform.codec.DexCodecModule.ItemType;
 
 import org.jf.dexlib2.rewriter.RewriterModule;
 
-public abstract class DexCodec extends DexTransform implements DexCodecModule.ItemRewriter {
+public abstract class DexCodec extends LoggingDexTransform implements DexCodecModule.ItemRewriter {
 
 	public static String formatValue(ItemType itemType, String value) {
 		return itemType == ItemType.BINARY_CLASS_NAME ? value.replace('/', '.') : value;
 	}
 
-	protected class MemberContext extends DexTransform.MemberContext {
+	protected class MemberContext extends LoggingDexTransform.MemberContext {
 		protected final ItemType itemType;
 		protected final String value;
 		public MemberContext(String definingClass, ItemType itemType, String value) {
