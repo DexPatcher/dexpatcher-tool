@@ -14,7 +14,6 @@ import java.util.Iterator;
 
 import lanchon.dexpatcher.core.Marker;
 
-import org.jf.dexlib2.AccessFlags;
 import org.jf.dexlib2.Opcode;
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.AnnotationElement;
