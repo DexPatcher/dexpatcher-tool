@@ -10,6 +10,8 @@
 
 package lanchon.dexpatcher.transform.mapper;
 
+import java.util.Locale;
+
 import lanchon.dexpatcher.core.logger.Logger;
 import lanchon.dexpatcher.core.util.Label;
 import lanchon.dexpatcher.transform.DexTransform;
@@ -20,20 +22,31 @@ import org.jf.dexlib2.iface.reference.FieldReference;
 import org.jf.dexlib2.iface.reference.MethodReference;
 import org.jf.dexlib2.rewriter.RewriterModule;
 
-public final class DexMapper extends DexTransform implements DexMap {
+public class DexMapper extends DexTransform implements DexMap {
 
-	private final DexTransform wrappedTransform;
-	private final DexMap dexMap;
-	private final boolean isInverseMap;
-	private final String annotationPackage;
-	private final Logger.Level infoLevel;
+	protected final DexTransform wrappedTransform;
+	protected final DexMap dexMap;
+	protected final String message;
+	protected final String annotationPackage;
+	protected final Logger.Level infoLevel;
+
+	public DexMapper(DexTransform wrappedTransform, DexMap dexMap, String annotationPackage, TransformLogger logger,
+			String logPrefix, Logger.Level infoLevel) {
+		this(wrappedTransform, dexMap, "mapped to '%s'", annotationPackage, logger, logPrefix, infoLevel);
+	}
 
 	public DexMapper(DexTransform wrappedTransform, DexMap dexMap, boolean isInverseMap, String annotationPackage,
+			TransformLogger logger, String logPrefix, Logger.Level infoLevel) {
+		this(wrappedTransform, dexMap, isInverseMap ? "unmapped to '%s'" : "mapped to '%s'", annotationPackage,
+				logger, logPrefix, infoLevel);
+	}
+
+	public DexMapper(DexTransform wrappedTransform, DexMap dexMap, String message, String annotationPackage,
 			TransformLogger logger, String logPrefix, Logger.Level infoLevel) {
 		super(logger, logPrefix);
 		this.wrappedTransform = wrappedTransform;
 		this.dexMap = dexMap;
-		this.isInverseMap = isInverseMap;
+		this.message = message;
 		this.annotationPackage = annotationPackage;
 		this.infoLevel = infoLevel;
 	}
@@ -55,8 +68,7 @@ public final class DexMapper extends DexTransform implements DexMap {
 		String mapping = dexMap.getClassMapping(descriptor);
 		if (mapping != null && logger.isLogging(infoLevel)) {
 			StringBuilder sb = getMessageHeaderForClass(descriptor);
-			sb.append(isInverseMap ? "unmapped to '" : "mapped to '")
-					.append(Label.fromClassDescriptor(mapping)).append("'");
+			sb.append(String.format(Locale.ROOT, message, Label.fromClassDescriptor(mapping)));
 			logger.log(infoLevel, sb.toString());
 		}
 		return mapping;
@@ -67,8 +79,7 @@ public final class DexMapper extends DexTransform implements DexMap {
 		String mapping = dexMap.getFieldMapping(field);
 		if (mapping != null && logger.isLogging(infoLevel)) {
 			StringBuilder sb = getMessageHeaderForField(field);
-			sb.append(isInverseMap ? "unmapped to '" : "mapped to '")
-					.append(Label.ofTargetMember(mapping)).append("'");
+			sb.append(String.format(Locale.ROOT, message, Label.ofTargetMember(mapping)));
 			logger.log(infoLevel, sb.toString());
 		}
 		return mapping;
@@ -79,8 +90,7 @@ public final class DexMapper extends DexTransform implements DexMap {
 		String mapping = dexMap.getMethodMapping(method);
 		if (mapping != null && logger.isLogging(infoLevel)) {
 			StringBuilder sb = getMessageHeaderForMethod(method);
-			sb.append(isInverseMap ? "unmapped to '" : "mapped to '")
-					.append(Label.ofTargetMember(mapping)).append("'");
+			sb.append(String.format(Locale.ROOT, message, Label.ofTargetMember(mapping)));
 			logger.log(infoLevel, sb.toString());
 		}
 		return mapping;
