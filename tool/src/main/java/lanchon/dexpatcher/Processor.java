@@ -31,7 +31,6 @@ import lanchon.dexpatcher.transform.mapper.map.LoggingDexMap;
 import lanchon.dexpatcher.transform.mapper.map.MapFileReader;
 import lanchon.dexpatcher.transform.mapper.map.builder.InverseMapBuilder;
 import lanchon.dexpatcher.transform.mapper.map.builder.MapBuilder;
-import lanchon.dexpatcher.transform.mapper.map.builder.TypeDescriptorMapBuilder;
 import lanchon.dexpatcher.transform.util.DexVisitor;
 import lanchon.multidexlib2.BasicDexFileNamer;
 import lanchon.multidexlib2.DexFileNamer;
@@ -210,7 +209,6 @@ public class Processor {
 	}
 
 	private void readMaps(Iterable<String> mapFiles, MapBuilder mapBuilder) throws IOException {
-		mapBuilder = new TypeDescriptorMapBuilder(mapBuilder);
 		for (String mapFile : mapFiles) {
 			MapFileReader.read(new File(mapFile), true, mapBuilder, logger);
 		}

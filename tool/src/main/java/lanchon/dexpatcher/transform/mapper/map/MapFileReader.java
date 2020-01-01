@@ -22,6 +22,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import lanchon.dexpatcher.core.logger.Logger;
+import lanchon.dexpatcher.core.util.TypeName;
 import lanchon.dexpatcher.transform.mapper.map.builder.MapBuilder;
 
 import static lanchon.dexpatcher.core.logger.Logger.Level.*;
@@ -107,20 +108,27 @@ public final class MapFileReader {
 		if (type.matches()) {
 			String name = type.group("old");
 			String newName = type.group("new");
-			if (newName == null) newName = name;
+			name = TypeName.toClassDescriptor(name);
+			newName = (newName != null) ? TypeName.toClassDescriptor(newName) : name;
 			parseType(name, newName);
 			return;
 		}
 		Matcher field = PATTERN_FIELD.matcher(l);
 		if (field.matches()) {
-			parseField(field.group("type"), field.group("old"), field.group("new"));
+			String fieldType = TypeName.toFieldDescriptor(field.group("type"));
+			parseField(fieldType, field.group("old"), field.group("new"));
 			return;
 		}
 		Matcher method = PATTERN_METHOD.matcher(l);
 		if (method.matches()) {
-			String[] args = PATTERN_METHOD_PARAMETER_SEPARATOR.split(method.group("args"));
-			if (args.length == 1 && args[0].isEmpty()) args = new String[] {};
-			parseMethod(args, method.group("ret"), method.group("old"), method.group("new"));
+			String[] parameterTypes = PATTERN_METHOD_PARAMETER_SEPARATOR.split(method.group("args"));
+			if (parameterTypes.length == 1 && parameterTypes[0].isEmpty()) parameterTypes = new String[] {};
+			int length = parameterTypes.length;
+			for (int i = 0; i < length; i++) {
+				parameterTypes[i] = TypeName.toFieldDescriptor(parameterTypes[i]);
+			}
+			String returnType = TypeName.toReturnDescriptor(method.group("ret"));
+			parseMethod(parameterTypes, returnType, method.group("old"), method.group("new"));
 			return;
 		}
 		log(ERROR, "syntax error");
