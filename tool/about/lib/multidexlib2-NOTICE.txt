@@ -1,5 +1,5 @@
 ********************************************************************
-multidexlib2 - Copyright 2015-2019 Rodrigo Balerdi
+multidexlib2 - Copyright 2015-2020 Rodrigo Balerdi
 (GNU General Public License version 3 or later)
 ********************************************************************
 multidexlib2 is free software: you can redistribute it and/or modify
