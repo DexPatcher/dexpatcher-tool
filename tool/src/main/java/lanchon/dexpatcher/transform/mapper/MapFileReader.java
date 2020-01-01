@@ -8,7 +8,7 @@
  * or (at your option) any later version.
  */
 
-package lanchon.dexpatcher.transform.mapper.map;
+package lanchon.dexpatcher.transform.mapper;
 
 import java.io.File;
 import java.io.FileInputStream;

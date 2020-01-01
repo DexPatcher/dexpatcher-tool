@@ -8,14 +8,14 @@
  * or (at your option) any later version.
  */
 
-package lanchon.dexpatcher.transform.mapper.map;
+package lanchon.dexpatcher.transform.mapper.map.builder;
 
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 import lanchon.dexpatcher.core.util.Id;
-import lanchon.dexpatcher.transform.mapper.map.builder.MapBuilder;
+import lanchon.dexpatcher.transform.mapper.map.DexMap;
 
 import org.jf.dexlib2.iface.reference.FieldReference;
 import org.jf.dexlib2.iface.reference.MethodReference;
