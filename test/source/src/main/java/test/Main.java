@@ -320,7 +320,7 @@ public class Main {
 		}
 	}
 
-	// Supposedly obfuscated class to be deobfuscated with a map file.
+	// Supposedly obfuscated class to be deobfuscated with a map file:
 	// Note: The source dex must be mapped with '--map <map-file> --map-source'
 	// and the output should typically be inverse-mapped with '--unmap-output'.
 	public static class ObfuscatedThing {
