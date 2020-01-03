@@ -157,12 +157,15 @@ public class PatchRewriterModule extends WrapperRewriterModule<RewriterModule> {
 									String target = ((StringEncodedValue) elementValue).getValue();
 									if (target.isEmpty()) return target;
 									String baseDescriptor = classDef.getType();
+									String resolvedDescriptor;
 									try {
-										target = DexUtils.isPackageDescriptor(baseDescriptor) ?
+										resolvedDescriptor = DexUtils.isPackageDescriptor(baseDescriptor) ?
 												Target.resolvePackageDescriptor(target) :
 												Target.resolveClassDescriptor(baseDescriptor, target);
-									} catch (InvalidTypeDescriptorException e) {}
-									return rewriters.getTypeRewriter().rewrite(target);
+									} catch (InvalidTypeDescriptorException e) {
+										return target;
+									}
+									return rewriters.getTypeRewriter().rewrite(resolvedDescriptor);
 								}
 							};
 						default:
