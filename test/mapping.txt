@@ -6,3 +6,10 @@ test.Main$ObfuscatedThing -> test.Main$Thing:
     void yetAnotherObfuscatedMethod(test.Main$ObfuscatedThing[]) -> makeFriendsWithOtherThings
     int obfuscatedFieldForTargeting -> targetedField
     void obfuscatedMethodForTargeting() -> targetedMethod
+
+test.Main$ObfuscatedClassForTargeting -> test.Main$TargetedClass
+    int obfuscatedField -> field
+    void obfuscatedMethod() -> method
+    void obfuscatedMethodWithArg(test.Main$ObfuscatedClassForTargeting) -> methodWithArg
+    int obfuscatedFieldForTargeting -> targetedField
+    void obfuscatedMethodForTargeting() -> targetedMethod

@@ -864,6 +864,39 @@ public class Main {
 		public void print() { field = 42; }
 	}
 
+	// Test inverse mapping of patches that use explicit class targeting:
+	// Note: The value of the tag's 'target' element has to be unmapped by
+	// '--unmap-patches' as if it were a class reference. Inside the class,
+	// type references, members, and member annotations have to be unmapped
+	// as if they existed in the target class.
+	@DexEdit(target = "TargetedClass", contentOnly = true)
+	public static class TargetedClassPatcher {
+		@DexRemove
+		public int field;
+		@DexReplace
+		public void method() { pMethod("replaced %s"); }
+		@DexReplace
+		public void methodWithArg(TargetedClassPatcher x) { pMethod("replaced %s"); }
+		// Test inverse mapping of patches that use explicit field targeting:
+		// Note: The value of the tag's 'target' element has to be unmapped by
+		// '--unmap-patches' as if it were an 'int Thing::targetedField'
+		// reference.
+		@DexRemove(target = "targetedField")
+		public int source_targetedField;
+		// Test inverse mapping of patches that use explicit method targeting:
+		// Note: The value of the tag's 'target' element has to be unmapped by
+		// '--unmap-patches' as if it were a 'void Thing::targetedMethod()'
+		// reference.
+		@DexEdit(target = "targetedMethod")
+		private void source_targetedMethod() { throw null; }
+		@DexAdd
+		public void targetedMethod() {
+			pMethod("entering replaced %s");
+			source_targetedMethod();
+			pMethod("exiting replaced %s");
+		}
+	}
+
 	// Mini FAQ
 
 	// Q) My IDE outputs classes that clash with classes in my source app

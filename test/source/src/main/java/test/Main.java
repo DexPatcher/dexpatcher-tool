@@ -81,6 +81,8 @@ public class Main {
 		p();
 		new ObfuscatedThing().print();
 		p();
+		new ObfuscatedClassForTargeting().print();
+		p();
 	}
 
 	public static class A {
@@ -334,6 +336,19 @@ public class Main {
 			obfuscatedMethod();
 			obfuscatedMethod2(0, null);
 			yetAnotherObfuscatedMethod(null);
+			obfuscatedMethodForTargeting();
+		}
+	}
+
+	public static class ObfuscatedClassForTargeting {
+		public int obfuscatedField;
+		public void obfuscatedMethod() { pMethod("original %s"); }
+		public void obfuscatedMethodWithArg(ObfuscatedClassForTargeting x) { pMethod("original %s"); }
+		public int obfuscatedFieldForTargeting;
+		public void obfuscatedMethodForTargeting() { pMethod("original %s"); }
+		public void print() {
+			obfuscatedMethod();
+			obfuscatedMethodWithArg(null);
 			obfuscatedMethodForTargeting();
 		}
 	}

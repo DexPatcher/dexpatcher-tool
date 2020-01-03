@@ -161,6 +161,13 @@
 #test.Main$Interface -> test.Main$Interface:
 #    void interfaceMethod() -> interfaceMethod
 
+#test.Main$ObfuscatedClassForTargeting -> test.Main$ObfuscatedClassForTargeting:
+#    void source_targetedMethod() -> source_targetedMethod
+#    void obfuscatedMethod() -> obfuscatedMethod
+#    void obfuscatedMethodForTargeting() -> obfuscatedMethodForTargeting
+#    void obfuscatedMethodWithArg(test.Main$ObfuscatedClassForTargeting) -> obfuscatedMethodWithArg
+#    void print() -> print
+
 #test.Main$ObfuscatedThing -> test.Main$ObfuscatedThing:
 #    int obfuscatedField -> obfuscatedField
 #    void source_targetedMethod() -> source_targetedMethod
