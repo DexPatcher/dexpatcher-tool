@@ -9,7 +9,9 @@ run() {
     printf " %q" "$@"
     echo
     "run-$@"
+    local ret="$?"
     echo
+    return "$ret"
 }
 
 dex-jar() {
