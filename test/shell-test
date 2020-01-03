@@ -56,6 +56,8 @@ run sha1sum build/patched.dex
 #cat-file build/template-mapping.txt
 run sha1sum build/template-mapping.txt
 
+if "$RUN_RELEASE_PATCH_TEST"; then
+
 run dexpatcher build/source.dex.zip build/patch.dex.zip --output build/patched-release.dex\
  --unmap-patches --map mapping.txt\
  --reanon-patches --main-plan Anon[_Level] --deanon-patches-alt --no-reanon-errors\
@@ -67,6 +69,8 @@ run cmp --quiet build/patched.dex build/patched-release.dex || {
     echo "error: patched-release.dex differs from patched.dex"
     exit 1
 }
+
+fi
 
 run dex2jar --force --output build/patched-dex2jar.jar build/patched.dex
 
