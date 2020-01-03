@@ -647,13 +647,12 @@ public class Main {
 	// Java language to work with identifiers that are illegal in the language
 	// but legal in bytecode.
 
-	// Modify members of obfuscated class named 'void':
+	// Modify members of supposedly obfuscated class using identifier codes:
 	// Note: The patch dex file must be decoded using '--decode-patches'.
 	@DexEdit
-	public static class __My_label_for_class_void_$$_void__ {
-		// Replace obfuscated method named '42':
+	public static class __My_label_for_this_class_$$_IllegalName__ {
 		@DexReplace
-		public void __my_label_for_method_42_$$_42__() { pMethod("replaced %s"); }
+		public void __my_label_for_this_method_$$_illegalName__() { pMethod("replaced %s"); }
 	}
 
 	// Test identifier codes:

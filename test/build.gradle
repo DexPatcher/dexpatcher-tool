@@ -124,7 +124,7 @@ task portableTest(type:JavaExec) {
             '--map-source', '--unmap-output', '--map', mapFile.get(),
             '--deanon-source', '--reanon-output', '--main-plan', 'Anon[_Level]', '--deanon-patches-alt',
                     '--no-reanon-errors',
-            '--decode-source', '--decode-patches', '--no-decode-errors',
+            '--decode-patches', '--no-decode-errors',
             '--output', outputFile.get(),
             '--create-map', templateMapFile.get(),
             sourceFile.get(), patchFile.get()

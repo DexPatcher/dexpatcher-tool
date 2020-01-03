@@ -48,7 +48,7 @@ run dexpatcher build/source.dex.zip build/patch.dex.zip --output build/patched.d
  --create-map build/template-mapping.txt\
  --map-source --unmap-output --map mapping.txt\
  --deanon-source --reanon-output --main-plan Anon[_Level] --deanon-patches-alt --no-reanon-errors\
- --decode-source --decode-patches --no-decode-errors\
+ --decode-patches --no-decode-errors\
  --debug "$@"
 
 run sha1sum build/patched.dex
@@ -59,7 +59,7 @@ run sha1sum build/template-mapping.txt
 run dexpatcher build/source.dex.zip build/patch.dex.zip --output build/patched-release.dex\
  --unmap-patches --map mapping.txt\
  --reanon-patches --main-plan Anon[_Level] --deanon-patches-alt --no-reanon-errors\
- --decode-source --decode-patches --no-decode-errors\
+ --decode-patches --no-decode-errors\
  --quiet "$@"
 
 #run sha1sum build/patched-release.dex

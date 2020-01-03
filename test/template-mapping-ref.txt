@@ -154,6 +154,10 @@
 #    void 1__bad_infix_$$_$2__and3() -> 1__bad_infix_$$_$2__and3
 #    void 12and3() -> 12and3
 
+#test.Main$IllegalName -> test.Main$IllegalName:
+#    void illegalName() -> illegalName
+#    void print() -> print
+
 #test.Main$Interface -> test.Main$Interface:
 #    void interfaceMethod() -> interfaceMethod
 
@@ -165,10 +169,6 @@
 #    float[][] obfuscatedMethod2(int, java.lang.String, java.lang.Object[]) -> obfuscatedMethod2
 #    void print() -> print
 #    void yetAnotherObfuscatedMethod(test.Main$ObfuscatedThing[]) -> yetAnotherObfuscatedMethod
-
-#test.Main$void -> test.Main$void:
-#    void 42() -> 42
-#    void print() -> print
 
 #test.Main -> test.Main:
 #    java.lang.String CLASS_NAME_PREFIX -> CLASS_NAME_PREFIX

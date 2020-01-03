@@ -73,7 +73,7 @@ public class Main {
 		p();
 		new CrossClassC();
 		p();
-		new __ClassVoid_$$_void__().print();
+		new IllegalName().print();
 		p();
 		new IdentifierCodes().print();
 		p();
@@ -279,12 +279,11 @@ public class Main {
 		public CrossClassC() { p("original CrossClassC::<init>"); }
 	}
 
-	// Define obfuscated class named 'void' containing method named '42':
-	// Note: The source dex file must be decoded using '--decode-source'.
-	public static class __ClassVoid_$$_void__ {
-		public __ClassVoid_$$_void__() { pClass("original %s::<init>"); }
-		public void __method42_$$_42__() { pMethod("original %s"); }
-		public void print() { __method42_$$_42__(); }
+	// Supposedly obfuscated class to be patched using identifier codes:
+	public static class IllegalName {
+		public IllegalName() { pClass("original %s::<init>"); }
+		public void illegalName() { pMethod("original %s"); }
+		public void print() { illegalName(); }
 	}
 
 	public static class IdentifierCodes {
