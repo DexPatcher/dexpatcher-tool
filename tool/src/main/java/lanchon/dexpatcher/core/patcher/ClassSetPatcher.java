@@ -24,6 +24,7 @@ import lanchon.dexpatcher.core.util.ElementalTypeRewriter;
 import lanchon.dexpatcher.core.util.Id;
 import lanchon.dexpatcher.core.util.InvalidTypeDescriptorException;
 import lanchon.dexpatcher.core.util.Label;
+import lanchon.dexpatcher.core.util.SimpleTypeRewriter;
 import lanchon.dexpatcher.core.util.Target;
 
 import org.jf.dexlib2.iface.Annotation;
@@ -132,13 +133,13 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 		if (annotation.getContentOnly()) {
 			source = target;
 			annotations = target.getAnnotations();
-			if (!inPlace) patch = renameClass(patch, target.getType());
+			if (!inPlace) patch = SimpleTypeRewriter.renameClass(patch, target.getType());
 		} else {
 			// Log class access flags before processing members.
 			super.onSimpleEdit(patch, annotation, target, inPlace);
 			source = patch;
 			annotations = annotation.getFilteredAnnotations();
-			if (!inPlace) target = renameClass(target, patch.getType());
+			if (!inPlace) target = SimpleTypeRewriter.renameClass(target, patch.getType());
 		}
 
 		return new BasicClassDef(
@@ -163,7 +164,7 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 		if (annotation.getContentOnly()) {
 			source = target;
 			annotations = target.getAnnotations();
-			if (!inPlace) patch = renameClass(patch, target.getType());
+			if (!inPlace) patch = SimpleTypeRewriter.renameClass(patch, target.getType());
 		} else {
 			source = patch;
 			annotations = annotation.getFilteredAnnotations();
@@ -182,24 +183,6 @@ public class ClassSetPatcher extends AnnotatableSetPatcher<ClassDef> {
 				patch.getDirectMethods(),
 				patch.getVirtualMethods());
 
-	}
-
-	// Helpers
-
-	private static ClassDef renameClass(ClassDef classDef, final String to) {
-		final String from = classDef.getType();
-		RewriterModule rewriterModule = new RewriterModule() {
-			@Override
-			public Rewriter<String> getTypeRewriter(Rewriters rewriters) {
-				return new ElementalTypeRewriter() {
-					@Override
-					public String rewriteElementalType(String elementalType) {
-						return elementalType.equals(from) ? to : elementalType;
-					}
-				};
-			}
-		};
-		return new DexRewriter(rewriterModule).getClassDefRewriter().rewrite(classDef);
 	}
 
 }
