@@ -297,6 +297,12 @@ cad5f8838e8b6eae600234f6342fbc3440ed92f4  build/patched.dex
 $ sha1sum build/template-mapping.txt
 df683fb165e337cb9ecea7f343e5abd0a7329245  build/template-mapping.txt
 
+$ dexpatcher build/source.dex.zip build/patch.dex.zip --output build/patched-release.dex --unmap-patches --map mapping.txt --reanon-patches --main-plan Anon\[_Level\] --deanon-patches-alt --no-reanon-errors --decode-source --decode-patches --no-decode-errors --quiet
+DexPatcher version 1.8.0-alpha4 by Lanchon (https://dexpatcher.github.io/)
+0 error(s), 0 warning(s)
+
+$ cmp --quiet build/patched.dex build/patched-release.dex
+
 $ dex2jar --force --output build/patched-dex2jar.jar build/patched.dex
 dex2jar build/patched.dex -> build/patched-dex2jar.jar
 WARN: ignored invalid inner class name , treat as anonymous inner class.
