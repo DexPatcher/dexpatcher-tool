@@ -39,10 +39,12 @@ public abstract class Logger implements Flushable, Closeable {
 	}
 
 	private Level logLevel;
+	private int logLevelOrdinal;
+	private int isLoggingOrdinal;
 	private int[] counts;
 
 	public Logger() {
-		this.logLevel = DEBUG;
+		setLogLevel(DEBUG);
 		clearMessageCounts();
 	}
 
@@ -52,8 +54,9 @@ public abstract class Logger implements Flushable, Closeable {
 
 	public final void log(Level level, String message, Throwable throwable) {
 		if (message == null) throw new NullPointerException("message");
-		counts[level.ordinal()]++;
-		if (isLogging(level)) doLog(level, message, throwable);
+		int levelOrdinal = level.ordinal();
+		counts[levelOrdinal]++;
+		if (levelOrdinal >= logLevelOrdinal) doLog(level, message, throwable);
 	}
 
 	public Level getLogLevel() {
@@ -62,10 +65,12 @@ public abstract class Logger implements Flushable, Closeable {
 
 	public void setLogLevel(Level logLevel) {
 		this.logLevel = logLevel;
+		logLevelOrdinal = logLevel.ordinal();
+		isLoggingOrdinal = Math.min(logLevelOrdinal, WARN.ordinal());
 	}
 
 	public final boolean isLogging(Level level) {
-		return level.ordinal() >= logLevel.ordinal();
+		return level.ordinal() >= isLoggingOrdinal;
 	}
 
 	public int getMessageCount(Level level) {
