@@ -79,7 +79,7 @@ public class TypeName {
 
 	public static String toFieldDescriptor(String name) {
 		if (name.endsWith("[]")) {
-			return "[" + toFieldDescriptor(name.substring(0, name.length() - 2));
+			return '[' + toFieldDescriptor(name.substring(0, name.length() - 2));
 		}
 		String type = nameToFieldTypeMap.get(name);
 		return type != null ? type : toClassDescriptor(name);
