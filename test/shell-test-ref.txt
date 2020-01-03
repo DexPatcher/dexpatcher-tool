@@ -278,11 +278,11 @@ debug: type 'test.Main$Derived': method '<init>():void': (Main.java:227): ignore
 debug: type 'test.Main$Derived': method 'source_method():void': (Main.java:234): edit
 debug: type 'test.Main$Derived': method 'source_method():void': target 'method': (Main.java:234): 'public' modifier changed to 'private' in renamed method
 debug: type 'test.Main$Derived': method 'method():void': (Main.java:237): add
-debug: reanonymize output: type 'test.Main$AnonymousClasses$Anon1$Anon1_Level2$Inner': reanonymized to 'test.Main$AnonymousClasses$1$1$Inner'
 debug: reanonymize output: type 'test.Main$AnonymousClasses$Anon1$Anon1_Level2': reanonymized to 'test.Main$AnonymousClasses$1$1'
+debug: reanonymize output: type 'test.Main$AnonymousClasses$Anon1$Anon1_Level2$Inner': reanonymized to 'test.Main$AnonymousClasses$1$1$Inner'
 debug: reanonymize output: type 'test.Main$AnonymousClasses$Anon1': reanonymized to 'test.Main$AnonymousClasses$1'
-debug: reanonymize output: type 'test.Main$AnonymousClasses$Anon1_Level2$Anon1_Level2': reanonymized to 'test.Main$AnonymousClasses$Anon1$1'
 debug: reanonymize output: type 'test.Main$AnonymousClasses$Anon1_Level2': reanonymized to 'test.Main$AnonymousClasses$Anon1'
+debug: reanonymize output: type 'test.Main$AnonymousClasses$Anon1_Level2$Anon1_Level2': reanonymized to 'test.Main$AnonymousClasses$Anon1$1'
 debug: reanonymize output: type 'test.Main$AnonymousClasses$Anon1_Level2$Anon1_Level4': reanonymized to 'test.Main$AnonymousClasses$Anon1$Anon1_Level2'
 warning: reanonymize output: type 'test.Main$AnonymousClasses$42': cannot reanonymize 'Main$AnonymousClasses$42' by 1 level
 debug: unmap output: type 'test.Main$Thing': unmapped to 'test.Main$ObfuscatedThing'

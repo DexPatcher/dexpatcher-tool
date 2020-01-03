@@ -15,8 +15,11 @@ import java.util.Set;
 import lanchon.dexpatcher.core.Action;
 import lanchon.dexpatcher.core.ActionParser;
 import lanchon.dexpatcher.core.Marker;
+import lanchon.dexpatcher.core.PatchException;
+import lanchon.dexpatcher.core.PatcherAnnotation;
 import lanchon.dexpatcher.core.util.DexUtils;
 import lanchon.dexpatcher.core.util.InvalidTypeDescriptorException;
+import lanchon.dexpatcher.core.util.SimpleTypeRewriter;
 import lanchon.dexpatcher.core.util.Target;
 import lanchon.dexpatcher.transform.util.wrapper.WrapperAnnotation;
 import lanchon.dexpatcher.transform.util.wrapper.WrapperAnnotationElement;
@@ -66,7 +69,32 @@ public class PatchRewriterModule extends WrapperRewriterModule<RewriterModule> {
 		return new Rewriter<ClassDef>() {
 			@Override
 			public ClassDef rewrite(final ClassDef classDef) {
-				return new WrapperClassDef(wrappedClassDefRewriter.rewrite(classDef)) {
+				PatcherAnnotation annotation = null;
+				try {
+					annotation = PatcherAnnotation.parse(actionParser, classDef.getAnnotations());
+				} catch (PatchException e) {}
+				if (annotation == null) return wrappedClassDefRewriter.rewrite(classDef);
+				String currentDescriptor = classDef.getType();
+				String targetDescriptor = null;
+				try {
+					String target = annotation.getTarget();
+					String targetClass = annotation.getTargetClass();
+					targetDescriptor =
+							(target != null) ? Target.resolveDescriptor(currentDescriptor, target) :
+							(targetClass != null) ? targetClass :
+							null;
+				} catch (InvalidTypeDescriptorException e) {
+					return wrappedClassDefRewriter.rewrite(classDef);
+				}
+				ClassDef rewrittenClass =
+						(targetDescriptor != null && !targetDescriptor.equals(currentDescriptor)) ?
+								SimpleTypeRewriter.renameClass(
+										wrappedClassDefRewriter.rewrite(
+												SimpleTypeRewriter.renameClass(
+														classDef, targetDescriptor)), currentDescriptor) :
+								wrappedClassDefRewriter.rewrite(
+										classDef);
+				return new WrapperClassDef(rewrittenClass) {
 					@Override
 					public Set<? extends Annotation> getAnnotations() {
 						return getRewrittenAnnotations(rewriters, classDef, CLASS_ANNOTATION_REWRITER);
