@@ -4,3 +4,5 @@ test.Main$ObfuscatedThing -> test.Main$Thing:
     void obfuscatedMethod() -> someMethod
     float[][] obfuscatedMethod2(int, .java.lang.String, java.lang.Object[]) -> anotherMethodWithArgs
     void yetAnotherObfuscatedMethod(test.Main$ObfuscatedThing[]) -> makeFriendsWithOtherThings
+    int obfuscatedFieldForTargeting -> targetedField
+    void obfuscatedMethodForTargeting() -> targetedMethod

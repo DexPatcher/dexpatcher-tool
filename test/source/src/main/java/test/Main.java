@@ -327,11 +327,14 @@ public class Main {
 		public void obfuscatedMethod() { pMethod("original %s"); }
 		public float[][] obfuscatedMethod2(int i, String s, Object... args) { pMethod("original %s"); return null; }
 		public void yetAnotherObfuscatedMethod(ObfuscatedThing[] x) { pMethod("original %s"); }
+		public int obfuscatedFieldForTargeting;
+		public void obfuscatedMethodForTargeting() { pMethod("original %s"); }
 		public void print() {
 			pClass("%s::obfuscatedField: " + obfuscatedField);
 			obfuscatedMethod();
 			obfuscatedMethod2(0, null);
 			yetAnotherObfuscatedMethod(null);
+			obfuscatedMethodForTargeting();
 		}
 	}
 

@@ -163,10 +163,12 @@
 
 #test.Main$ObfuscatedThing -> test.Main$ObfuscatedThing:
 #    int obfuscatedField -> obfuscatedField
+#    void source_targetedMethod() -> source_targetedMethod
 #    void print__$prependSource() -> print__$prependSource
 #    void print__$prependPatch() -> print__$prependPatch
 #    void obfuscatedMethod() -> obfuscatedMethod
 #    float[][] obfuscatedMethod2(int, java.lang.String, java.lang.Object[]) -> obfuscatedMethod2
+#    void obfuscatedMethodForTargeting() -> obfuscatedMethodForTargeting
 #    void print() -> print
 #    void yetAnotherObfuscatedMethod(test.Main$ObfuscatedThing[]) -> yetAnotherObfuscatedMethod
 
