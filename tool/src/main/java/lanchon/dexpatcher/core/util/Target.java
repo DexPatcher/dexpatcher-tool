@@ -14,6 +14,14 @@ import lanchon.dexpatcher.core.Marker;
 
 public class Target {
 
+	public static String resolveDescriptor(String baseDescriptor, String target)
+			throws InvalidTypeDescriptorException {
+		// Precondition: target is a non-zero length string.
+		return DexUtils.isPackageDescriptor(baseDescriptor) ?
+				Target.resolvePackageDescriptor(target) :
+				Target.resolveClassDescriptor(baseDescriptor, target);
+	}
+
 	public static String resolveClassDescriptor(String baseDescriptor, String target)
 			throws InvalidTypeDescriptorException {
 		// Precondition: target is a non-zero length string.
