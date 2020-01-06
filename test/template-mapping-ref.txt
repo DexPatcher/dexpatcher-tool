@@ -192,6 +192,10 @@
 
 #test.nonrec.inner.NonRecInner -> test.nonrec.inner.NonRecInner:
 
+#test.rec.Rec -> test.rec.Rec:
+
+#test.rec.inner.RecInner -> test.rec.inner.RecInner:
+
 #test.Main$Concrete1 -> test.Main$Concrete1:
 #    void abstractMethod() -> abstractMethod
 #    void interfaceMethod() -> interfaceMethod

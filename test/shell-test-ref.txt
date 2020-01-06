@@ -62,7 +62,7 @@ info: read 'build/source.dex.zip'
 debug: read 'build/source.dex.zip': file 'classes.dex': 37 types
 debug: read 'build/source.dex.zip': dex version '035'
 info: read 'build/patch.dex.zip'
-debug: read 'build/patch.dex.zip': file 'classes.dex': 33 types
+debug: read 'build/patch.dex.zip': file 'classes.dex': 35 types
 debug: read 'build/patch.dex.zip': dex version '035'
 debug: deanonymize source: type 'test.Main$AnonymousClasses$1$1$Inner': deanonymized to 'test.Main$AnonymousClasses$Anon1$Anon1_Level2$Inner'
 debug: deanonymize source: type 'test.Main$AnonymousClasses$1$1': deanonymized to 'test.Main$AnonymousClasses$Anon1$Anon1_Level2'
@@ -272,6 +272,8 @@ debug: type 'test.Main': (Main.java:0): ignore
 debug: type 'test.info.package-info': (package-info.java:0): replace
 debug: type 'test.info.package-info': (package-info.java:0): replace package non-recursive
 debug: type 'test.info.package-info': (package-info.java:0): remove type 'test.info.package-info'
+debug: type 'test.rec.Rec': (Rec.java:0): add
+debug: type 'test.rec.inner.RecInner': (RecInner.java:0): add
 debug: type 'test.rec.package-info': (package-info.java:0): remove
 debug: type 'test.rec.package-info': (package-info.java:0): remove package recursive
 debug: type 'test.rec.package-info': (package-info.java:0): remove type 'test.rec.Rec'
@@ -314,14 +316,14 @@ debug: unmap output: type 'test.Main$Thing': method 'makeFriendsWithOtherThings(
 debug: unmap output: type 'test.Main$Thing': method 'targetedMethod():void': unmapped to 'obfuscatedMethodForTargeting'
 info: write 'build/patched.dex'
 debug: write 'build/patched.dex': dex version '035'
-debug: write 'build/patched.dex': 37 types
+debug: write 'build/patched.dex': 39 types
 0 error(s), 17 warning(s)
 
 $ sha1sum build/patched.dex
-6330ea287dca0331a2d9cdcf93548b7d56089438  build/patched.dex
+d57fc807bc542d3c57795250eaea447a2c0b7961  build/patched.dex
 
 $ sha1sum build/template-mapping.txt
-75d101a7c7f6618674f8cbeb7d07dfce1efc9118  build/template-mapping.txt
+d42fe9fcfdf838707b30479ae2caf1332e43d8be  build/template-mapping.txt
 
 $ dexpatcher build/source.dex.zip build/patch.dex.zip --output build/patched-release.dex --unmap-patches --map mapping.txt --reanon-patches --main-plan Anon\[_Level\] --deanon-patches-alt --no-reanon-errors --decode-patches --no-decode-errors --quiet
 DexPatcher version 1.8.0-alpha4 by Lanchon (https://dexpatcher.github.io/)
