@@ -27,6 +27,11 @@ import org.jf.dexlib2.immutable.debug.ImmutableDebugItem;
 import org.jf.dexlib2.immutable.instruction.ImmutableInstruction;
 import org.jf.dexlib2.immutable.value.ImmutableEncodedValueFactory;
 
+// TODO: Maybe check for duplicate classes and members after code transforms.
+// Duplicate elements are currently caught by dex consumers (DexPatcher element
+// patching and dexlib2 dex file writing) but proper error handling and
+// reporting is not implemented.
+
 public class DexVisitor {
 
 	public void visitDexFile(DexFile dexFile) {
