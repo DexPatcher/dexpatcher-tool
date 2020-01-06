@@ -208,11 +208,13 @@ public class Parser {
 
 		options.addOption(Option.builder("m").longOpt("multi-dex").desc("enable multi-dex support").build());
 		options.addOption(Option.builder("M").longOpt("multi-dex-threaded").desc("multi-threaded multi-dex (implies: -m)").build());
-		options.addOption(Option.builder("J").longOpt("multi-dex-jobs").hasArg().argName("n").type(Number.class).desc("multi-dex thread count (implies: -m -M) (default: " + "available processors up to " + MultiDexIO.DEFAULT_MAX_THREADS + ")").build());
+		options.addOption(Option.builder("J").longOpt("multi-dex-jobs").hasArg().argName("n").type(Number.class).desc("multi-dex thread count (implies: -m -M)\n" +
+				"(default: " + "available processors up to " + MultiDexIO.DEFAULT_MAX_THREADS + ")").build());
 
 		options.addOption(Option.builder().longOpt("max-dex-pool-size").hasArg().argName("n").type(Number.class).desc("maximum size of dex pools (default: " + DexIO.DEFAULT_MAX_DEX_POOL_SIZE + ")").build());
 
-		options.addOption(Option.builder().longOpt("annotations").hasArg().argName("package").desc("package name of DexPatcher annotations (default: '" + Context.DEFAULT_ANNOTATION_PACKAGE + "')").build());
+		options.addOption(Option.builder().longOpt("annotations").hasArg().argName("package").desc("package name of DexPatcher annotations\n" +
+				"(default: '" + Context.DEFAULT_ANNOTATION_PACKAGE + "')").build());
 		options.addOption(Option.builder().longOpt("no-auto-ignore").desc("no trivial default constructor auto-ignore").build());
 
 		options.addOption(Option.builder("o").longOpt("output").hasArg().argName("dex-or-dir").desc("name of output file or directory").build());
@@ -269,7 +271,8 @@ public class Parser {
 			if (preTransformSets.length() != 0) preTransformSets.append("|");
 			preTransformSets.append("'").append(pt.format()).append("'");
 		}
-		options.addOption(Option.builder().longOpt("pre-transform").hasArg().argName("set").desc("add pre-transform stages (default: '" + Processor.DEFAULT_PRE_TRANSFORM.format() + "') (<set>: " + preTransformSets + ")").build());
+		options.addOption(Option.builder().longOpt("pre-transform").hasArg().argName("set").desc("add pre-transform stages (default: '" + Processor.DEFAULT_PRE_TRANSFORM.format() + "')\n" +
+				"(<set>: " + preTransformSets + ")").build());
 
 		return options;
 
