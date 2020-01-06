@@ -28,11 +28,11 @@ public final class StringEncoder {
 		this.disableCodePointEscapes = disableCodePointEscapes;
 	}
 
-	public StringEncoder(StringEncoderConfiguration flags) {
-		this.encodeNonAscii = flags.encodeNonAscii;
-		this.encodeNonAsciiLatin1 = flags.encodeNonAsciiLatin1;
-		this.disableAsciiLatin1Escapes = flags.disableAsciiLatin1Escapes;
-		this.disableCodePointEscapes = flags.disableCodePointEscapes;
+	public StringEncoder(StringEncoderConfiguration configuration) {
+		this.encodeNonAscii = configuration.encodeNonAscii;
+		this.encodeNonAsciiLatin1 = configuration.encodeNonAsciiLatin1;
+		this.disableAsciiLatin1Escapes = configuration.disableAsciiLatin1Escapes;
+		this.disableCodePointEscapes = configuration.disableCodePointEscapes;
 	}
 
 	public boolean shouldEncode(int codePoint) {
