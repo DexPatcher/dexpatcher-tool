@@ -219,3 +219,5 @@
 #    void help1(test.Main$source_CrossClassA) -> help1
 #    void go() -> go
 
+#test.info.package-info -> test.info.package-info:
+

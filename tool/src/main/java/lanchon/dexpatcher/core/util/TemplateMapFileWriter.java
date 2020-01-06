@@ -48,7 +48,7 @@ public class TemplateMapFileWriter {
 		if (prefix == null) prefix = "";
 		for (ClassDef classDef : dexFile.getClasses()) {
 			String classDescriptor = classDef.getType();
-			if (DexUtils.isPackageDescriptor(classDescriptor)) continue;
+			//if (DexUtils.isPackageDescriptor(classDescriptor)) continue;
 			String className = Label.fromClassDescriptor(classDescriptor);
 			writer.print(prefix);
 			writer.print(className);
