@@ -8,4 +8,5 @@
  * or (at your option) any later version.
  */
 
+@Deprecated
 package test.info;

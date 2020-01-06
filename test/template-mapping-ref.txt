@@ -188,6 +188,8 @@
 #    void pClass(java.lang.String) -> pClass
 #    void pMethod(java.lang.String) -> pMethod
 
+#test.info.package-info -> test.info.package-info:
+
 #test.nonrec.inner.NonRecInner -> test.nonrec.inner.NonRecInner:
 
 #test.Main$Concrete1 -> test.Main$Concrete1:
@@ -218,6 +220,4 @@
 #    java.lang.String data -> data
 #    void help1(test.Main$source_CrossClassA) -> help1
 #    void go() -> go
-
-#test.info.package-info -> test.info.package-info:
 
