@@ -2,11 +2,13 @@
   <dictionary name="rod">
     <words>
       <w>annotatable</w>
+      <w>anonymization</w>
       <w>anonymized</w>
       <w>anonymizer</w>
       <w>anonymizing</w>
       <w>balerdi</w>
       <w>dalvik</w>
+      <w>deanon</w>
       <w>deanonymization</w>
       <w>deanonymize</w>
       <w>deanonymized</w>
@@ -19,6 +21,7 @@
       <w>opcode</w>
       <w>opcodes</w>
       <w>precalculated</w>
+      <w>reanon</w>
       <w>reanonymize</w>
       <w>reanonymized</w>
       <w>reanonymizer</w>
