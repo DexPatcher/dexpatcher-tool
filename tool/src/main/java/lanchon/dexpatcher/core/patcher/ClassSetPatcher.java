@@ -20,7 +20,6 @@ import lanchon.dexpatcher.core.PatchException;
 import lanchon.dexpatcher.core.PatcherAnnotation;
 import lanchon.dexpatcher.core.model.BasicClassDef;
 import lanchon.dexpatcher.core.util.DexUtils;
-import lanchon.dexpatcher.core.util.ElementalTypeRewriter;
 import lanchon.dexpatcher.core.util.Id;
 import lanchon.dexpatcher.core.util.InvalidTypeDescriptorException;
 import lanchon.dexpatcher.core.util.Label;
@@ -29,10 +28,6 @@ import lanchon.dexpatcher.core.util.Target;
 
 import org.jf.dexlib2.iface.Annotation;
 import org.jf.dexlib2.iface.ClassDef;
-import org.jf.dexlib2.rewriter.DexRewriter;
-import org.jf.dexlib2.rewriter.Rewriter;
-import org.jf.dexlib2.rewriter.RewriterModule;
-import org.jf.dexlib2.rewriter.Rewriters;
 
 import static lanchon.dexpatcher.core.PatcherAnnotation.*;
 

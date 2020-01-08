@@ -17,7 +17,6 @@ import lanchon.dexpatcher.core.ActionParser;
 import lanchon.dexpatcher.core.Marker;
 import lanchon.dexpatcher.core.PatchException;
 import lanchon.dexpatcher.core.PatcherAnnotation;
-import lanchon.dexpatcher.core.util.DexUtils;
 import lanchon.dexpatcher.core.util.InvalidTypeDescriptorException;
 import lanchon.dexpatcher.core.util.SimpleTypeRewriter;
 import lanchon.dexpatcher.core.util.Target;
