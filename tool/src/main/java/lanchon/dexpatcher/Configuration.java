@@ -17,6 +17,7 @@ import lanchon.dexpatcher.core.Context;
 import lanchon.dexpatcher.core.logger.Logger;
 import lanchon.dexpatcher.transform.anonymizer.TypeAnonymizer;
 import lanchon.dexpatcher.transform.codec.StringCodec;
+import lanchon.dexpatcher.transform.codec.encoder.EncoderConfiguration;
 import lanchon.multidexlib2.DexIO;
 
 public class Configuration {
@@ -48,6 +49,7 @@ public class Configuration {
 	public boolean mapSource;
 	public boolean deanonSource;
 	public boolean deanonSourceAlternate;
+	public boolean encodeSource;
 	public boolean decodeSource;
 	public boolean reanonSource;
 	public boolean unmapSource;
@@ -70,6 +72,9 @@ public class Configuration {
 	public boolean treatReanonymizeErrorsAsWarnings;
 
 	public String codeMarker = StringCodec.DEFAULT_CODE_MARKER;
+	public Iterable<String> encodeMapFiles;
+	public boolean invertEncodeMap;
+	public EncoderConfiguration encoderConfiguration = new EncoderConfiguration();
 	public boolean treatDecodeErrorsAsWarnings;
 
 	public PreTransform preTransform = Processor.DEFAULT_PRE_TRANSFORM;

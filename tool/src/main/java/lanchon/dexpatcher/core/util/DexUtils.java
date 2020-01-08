@@ -71,7 +71,11 @@ public class DexUtils {
 	public static boolean isStaticConstructor(Method method) {
 		int flags = method.getAccessFlags();
 		return CONSTRUCTOR.isSet(flags) && STATIC.isSet(flags) &&
-				Marker.NAME_STATIC_CONSTRUCTOR.equals(method.getName()) &&
+				isStaticConstructorReference(method);
+	}
+
+	public static boolean isStaticConstructorReference(MethodReference method) {
+		return Marker.NAME_STATIC_CONSTRUCTOR.equals(method.getName()) &&
 				Marker.TYPE_VOID.equals(method.getReturnType()) &&
 				method.getParameterTypes().isEmpty();
 	}
@@ -79,7 +83,11 @@ public class DexUtils {
 	public static boolean isInstanceConstructor(Method method) {
 		int flags = method.getAccessFlags();
 		return CONSTRUCTOR.isSet(flags) && !STATIC.isSet(flags) &&
-				Marker.NAME_INSTANCE_CONSTRUCTOR.equals(method.getName()) &&
+				isInstanceConstructorReference(method);
+	}
+
+	public static boolean isInstanceConstructorReference(MethodReference method) {
+		return Marker.NAME_INSTANCE_CONSTRUCTOR.equals(method.getName()) &&
 				Marker.TYPE_VOID.equals(method.getReturnType());
 	}
 

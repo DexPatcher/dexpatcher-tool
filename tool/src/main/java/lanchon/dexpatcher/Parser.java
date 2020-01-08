@@ -14,12 +14,19 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import lanchon.dexpatcher.Processor.PreTransform;
 import lanchon.dexpatcher.core.Context;
+import lanchon.dexpatcher.core.util.TypeName;
 import lanchon.dexpatcher.transform.anonymizer.TypeAnonymizer;
 import lanchon.dexpatcher.transform.codec.StringCodec;
+import lanchon.dexpatcher.transform.codec.encoder.DefaultIgnoredHintTypes;
+import lanchon.dexpatcher.transform.codec.encoder.EncoderConfiguration;
 import lanchon.multidexlib2.DexIO;
 import lanchon.multidexlib2.MultiDexIO;
 
@@ -144,6 +151,8 @@ public class Parser {
 		}
 		config.treatReanonymizeErrorsAsWarnings = cl.hasOption("no-reanon-errors");
 
+		config.encodeSource = cl.hasOption("encode-source");
+
 		config.decodeSource = cl.hasOption("decode-source");
 		config.decodePatches = cl.hasOption("decode-patches");
 		config.decodeOutput = cl.hasOption("decode-output");
@@ -152,6 +161,10 @@ public class Parser {
 		if (!StringCodec.isValidCodeMarker(config.codeMarker)) {
 			throw new ParseException("Invalid code marker: '" + config.codeMarker + "'");
 		}
+		String[] encodeMapFiles = cl.getOptionValues("encode-map");
+		if (encodeMapFiles != null) config.encodeMapFiles = Arrays.asList(encodeMapFiles);
+		config.invertEncodeMap = cl.hasOption("invert-encode-map");
+		if (true || config.encodeSource) parseEncoderOptions(cl, config.encoderConfiguration);
 		config.treatDecodeErrorsAsWarnings = cl.hasOption("no-decode-errors");
 
 		String preTransformSet = cl.getOptionValue("pre-transform", null);
@@ -162,6 +175,69 @@ public class Parser {
 			}
 		}
 
+	}
+
+	private static void parseEncoderOptions(CommandLine cl, EncoderConfiguration encoderConfig) throws ParseException {
+
+		// StringEscaperConfiguration
+
+		encoderConfig.escapeNonAscii = cl.hasOption("escape-non-ascii");
+		encoderConfig.escapeNonAsciiLatin1 = cl.hasOption("escape-non-latin");
+
+		encoderConfig.disableAsciiLatin1Escapes = cl.hasOption("no-ascii-escapes");
+		encoderConfig.disableCodePointEscapes = cl.hasOption("no-code-point-escapes");
+
+		// EncoderConfiguration
+
+		encoderConfig.obfuscatedBinaryTypeNamePattern = getPattern(cl, "obfuscated-types", null);
+
+		encoderConfig.obfuscatedPackageNamePattern = getPattern(cl, "obfuscated-packages", null);
+		encoderConfig.obfuscatedClassNamePattern = getPattern(cl, "obfuscated-classes", null);
+		encoderConfig.obfuscatedMemberNamePattern = getPattern(cl, "obfuscated-members", null);
+
+		encoderConfig.encodeAllClasses = cl.hasOption("encode-all-classes");
+
+		encoderConfig.encodeObfuscatedPackages = cl.hasOption("encode-obfuscated-packages");
+		encoderConfig.encodeObfuscatedClasses = cl.hasOption("encode-obfuscated-classes");
+		encoderConfig.encodeObfuscatedMembers = cl.hasOption("encode-obfuscated-members");
+
+		encoderConfig.encodeReservedCharacters = cl.hasOption("encode-reserved-chars");
+		encoderConfig.encodeReservedWords = cl.hasOption("encode-reserved-words");
+
+		encoderConfig.encodeTypeHintsInClasses = cl.hasOption("encode-class-hints");
+		encoderConfig.encodeTypeHintsInMembers = cl.hasOption("encode-member-hints");
+		encoderConfig.encodeTypeInfoInMembers = cl.hasOption("encode-member-type");
+
+		encoderConfig.includeIdentifierType = !cl.hasOption("no-identifier-type");
+		encoderConfig.allowMultipleTypeHints = !cl.hasOption("no-multiple-hints");
+		encoderConfig.processNestedClasses = !cl.hasOption("no-nested-classes");
+
+		String[] ignoredHintTypes = cl.getOptionValues("ignored-hint-type");
+		if (ignoredHintTypes != null) {
+			Set<String> defaultSet = DefaultIgnoredHintTypes.SET;
+			HashSet<String> set = new HashSet<>(ignoredHintTypes.length + defaultSet.size());
+			boolean remove = false;
+			for (String type : ignoredHintTypes) {
+				if ("-".equals(type)) remove = true;
+				else set.add(TypeName.toClassDescriptor(type));
+			}
+			if (!remove) set.addAll(defaultSet);
+			encoderConfig.ignoredHintTypes = set;
+		}
+		encoderConfig.ignoredHintTypePattern = getPattern(cl, "ignored-hint-types", null);
+
+		if (cl.hasOption("encode-compilable")) encoderConfig.setEncodeCompilable();
+
+	}
+
+	private static Pattern getPattern(CommandLine cl, String opt, String description) throws ParseException {
+		if (description == null) description = opt.replace('-', ' ');
+		String value = cl.getOptionValue(opt);
+		try {
+			return (value != null) ? Pattern.compile(value) : null;
+		} catch (PatternSyntaxException e) {
+			throw new ParseException("Invalid " + description + ": " + e.getMessage());
+		}
 	}
 
 	public static void printUsage() {
@@ -192,12 +268,16 @@ public class Parser {
 		formatter.printWrapped(writer, width, "code transform options:");
 		formatter.printOptions(writer, width, addTransformOptions(new Options()), leftPadding, descPadding);
 		writer.println();
+		formatter.printWrapped(writer, width, "identifier encode options:");
+		formatter.printOptions(writer, width, addEncoderOptions(new Options()), leftPadding, descPadding);
+		writer.println();
 	}
 
 	private static Options getOptions() {
 		Options options = new Options();
 		addMainOptions(options);
 		addTransformOptions(options);
+		addEncoderOptions(options);
 		options.addOption(Option.builder("?").build());
 		return options;
 	}
@@ -273,6 +353,55 @@ public class Parser {
 		}
 		options.addOption(Option.builder().longOpt("pre-transform").hasArg().argName("set").desc("add pre-transform stages (default: '" + Processor.DEFAULT_PRE_TRANSFORM.format() + "')\n" +
 				"(<set>: " + preTransformSets + ")").build());
+
+		return options;
+
+	}
+
+	private static Options addEncoderOptions(Options options) {
+
+		options.addOption(Option.builder().longOpt("encode-source").desc("encode identifiers in source").build());
+
+		options.addOption(Option.builder().longOpt("encode-map").hasArgs().argName("file").desc("identifier encode map file\n(repeatable option)").build());
+		options.addOption(Option.builder().longOpt("invert-encode-map").desc("use inverse of encode map file").build());
+
+		// StringEscaperConfiguration
+
+		options.addOption(Option.builder().longOpt("escape-non-ascii").desc("escape non-ASCII characters").build());
+		options.addOption(Option.builder().longOpt("escape-non-latin").desc("escape non-ASCII/Latin-1 characters").build());
+
+		options.addOption(Option.builder().longOpt("no-ascii-escapes").desc("do not output ASCII escapes").build());
+		options.addOption(Option.builder().longOpt("no-code-point-escapes").desc("do not output code point escapes").build());
+
+		// EncoderConfiguration
+
+		options.addOption(Option.builder().longOpt("obfuscated-types").hasArg().argName("ptrn").desc("pattern for binary type names\n(form: '[<pkg>/...][<cls>$...]<cls>')").build());
+
+		options.addOption(Option.builder().longOpt("obfuscated-packages").hasArg().argName("ptrn").desc("pattern for non-qualified package names").build());
+		options.addOption(Option.builder().longOpt("obfuscated-classes").hasArg().argName("ptrn").desc("pattern for non-qualified class names\n(form: '[<cls>$...]<cls>')").build());
+		options.addOption(Option.builder().longOpt("obfuscated-members").hasArg().argName("ptrn").desc("pattern for member names").build());
+
+		options.addOption(Option.builder().longOpt("encode-all-classes").desc("encode all class names").build());
+
+		options.addOption(Option.builder().longOpt("encode-obfuscated-packages").desc("encode obfuscated package names").build());
+		options.addOption(Option.builder().longOpt("encode-obfuscated-classes").desc("encode obfuscated class names").build());
+		options.addOption(Option.builder().longOpt("encode-obfuscated-members").desc("encode obfuscated member names").build());
+
+		options.addOption(Option.builder().longOpt("encode-reserved-chars").desc("encode names with reserved characters").build());
+		options.addOption(Option.builder().longOpt("encode-reserved-words").desc("encode names matching reserved words").build());
+
+		options.addOption(Option.builder().longOpt("encode-class-hints").desc("encode type hints in classes").build());
+		options.addOption(Option.builder().longOpt("encode-member-hints").desc("encode type hints in members").build());
+		options.addOption(Option.builder().longOpt("encode-member-type").desc("encode member type in members").build());
+
+		options.addOption(Option.builder().longOpt("no-identifier-type").desc("do not encode identifier type").build());
+		options.addOption(Option.builder().longOpt("no-multiple-hints").desc("only allow unique type hints").build());
+		options.addOption(Option.builder().longOpt("no-nested-classes").desc("disable nested class processing").build());
+
+		options.addOption(Option.builder().longOpt("ignored-hint-type").hasArgs().argName("type").desc("fully qualified name of type\n(use '-' to remove defaults)\n(repeatable option)").build());
+		options.addOption(Option.builder().longOpt("ignored-hint-types").hasArg().argName("ptrn").desc("pattern for binary type names\n(form: '[<pkg>/...][<cls>$...]<cls>')").build());
+
+		options.addOption(Option.builder().longOpt("encode-compilable").desc("allow recompile of obfuscated code").build());
 
 		return options;
 

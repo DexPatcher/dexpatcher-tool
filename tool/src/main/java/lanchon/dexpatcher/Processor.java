@@ -23,6 +23,10 @@ import lanchon.dexpatcher.transform.anonymizer.DexAnonymizer;
 import lanchon.dexpatcher.transform.anonymizer.TypeAnonymizer;
 import lanchon.dexpatcher.transform.codec.decoder.DexDecoder;
 import lanchon.dexpatcher.transform.codec.decoder.StringDecoder;
+import lanchon.dexpatcher.transform.codec.encoder.BasicDexEncoder;
+import lanchon.dexpatcher.transform.codec.encoder.BasicStringEncoder;
+import lanchon.dexpatcher.transform.codec.encoder.EncoderConfiguration;
+import lanchon.dexpatcher.transform.codec.encoder.EncoderDexMap;
 import lanchon.dexpatcher.transform.mapper.DexMapperModule;
 import lanchon.dexpatcher.transform.mapper.MapFileReader;
 import lanchon.dexpatcher.transform.mapper.PatchRewriterModule;
@@ -90,6 +94,7 @@ public class Processor {
 	private Opcodes opcodes;
 	private DexMap directMap;
 	private DexMap inverseMap;
+	private DexMap encodeMap;
 	private StringDecoder stringDecoder;
 
 	private Processor(Logger logger, Configuration config) {
@@ -107,7 +112,8 @@ public class Processor {
 		if (config.apiLevel > 0) opcodes = Opcodes.forApi(config.apiLevel);
 		stringDecoder = new StringDecoder(config.codeMarker);
 
-		configureMaps();
+		configureDirectAndInverseMaps();
+		configureEncodeMap();
 
 		if (logger.hasNotLoggedErrors() || !ABORT_ON_EARLY_ERRORS) {
 
@@ -121,6 +127,8 @@ public class Processor {
 			dex = mapDex(dex, config.mapSource, directMap, false, sourceLogger, "map source");
 			dex = anonymizeDex(dex, config.deanonSource || config.deanonSourceAlternate,
 					config.deanonSourceAlternate ? altPlan : mainPlan, false, sourceLogger, "deanonymize source");
+			dex = encodeDex(dex, config.encodeSource, encodeMap, config.encoderConfiguration, sourceLogger,
+					"encode source");
 			dex = decodeDex(dex, config.decodeSource, sourceLogger, "decode source");
 			dex = anonymizeDex(dex, config.reanonSource, mainPlan, true, sourceLogger, "reanonymize source");
 			dex = mapDex(dex, config.unmapSource, inverseMap, true, sourceLogger, "unmap source");
@@ -179,7 +187,7 @@ public class Processor {
 
 	}
 
-	private void configureMaps() throws IOException {
+	private void configureDirectAndInverseMaps() throws IOException {
 		boolean usesDirectMap = config.mapSource;
 		boolean usesInverseMap = config.unmapSource || config.unmapPatches || config.unmapOutput;
 		if (usesDirectMap || usesInverseMap) {
@@ -189,6 +197,15 @@ public class Processor {
 			if (usesDirectMap) directMap = config.invertMap ? inverseMapFile : directMapFile;
 			if (usesInverseMap) inverseMap = config.invertMap ? directMapFile : inverseMapFile;
 			readMaps(config.mapFiles, directMapFile, inverseMapFile);
+		}
+	}
+
+	private void configureEncodeMap() throws IOException {
+		if (config.encodeSource && config.encodeMapFiles != null) {
+			DexMapping directMapFile = new DexMapping();
+			DexMapping inverseMapFile = config.invertEncodeMap ? new DexMapping() : null;
+			encodeMap = config.invertEncodeMap ? inverseMapFile : directMapFile;
+			readMaps(config.encodeMapFiles, directMapFile, inverseMapFile);
 		}
 	}
 
@@ -217,8 +234,8 @@ public class Processor {
 			boolean preTransformAll = config.preTransform == PreTransform.ALL;
 			TransformLogger privateLogger = logger.cloneIf(preTransformAll);
 			DexMap loggingDexMap = new LoggingDexMap(dexMap, isInverseMap, privateLogger, logPrefix, DEBUG);
-			RewriterModule mapper = PatchRewriterModule.of(new DexMapperModule(loggingDexMap),
-					config.annotationPackage);
+			RewriterModule mapper = new DexMapperModule(loggingDexMap);
+			mapper = PatchRewriterModule.of(mapper, config.annotationPackage);
 			dex = transformDex(dex, mapper);
 			if (preTransformAll) preTransformDex(dex, privateLogger, logPrefix);
 		}
@@ -233,6 +250,23 @@ public class Processor {
 			RewriterModule anonymizer = new DexAnonymizer(new TypeAnonymizer(plan, reanonymize), privateLogger,
 					logPrefix, DEBUG, config.treatReanonymizeErrorsAsWarnings ? WARN : ERROR).getModule();
 			dex = transformDex(dex, anonymizer);
+			if (preTransformAll) preTransformDex(dex, privateLogger, logPrefix);
+		}
+		return dex;
+	}
+
+	private DexFile encodeDex(DexFile dex, boolean enabled, DexMap dexMap, EncoderConfiguration encoderConfig,
+			TransformLogger logger, String logPrefix) {
+		if (enabled) {
+			boolean preTransformAll = config.preTransform == PreTransform.ALL;
+			TransformLogger privateLogger = logger.cloneIf(preTransformAll);
+			BasicStringEncoder basicStringEncoder = new BasicStringEncoder(config.codeMarker);
+			BasicDexEncoder basicDexEncoder = new BasicDexEncoder(basicStringEncoder, privateLogger, logPrefix, DEBUG);
+			EncoderDexMap encoderDexMap = new EncoderDexMap(dex, config.codeMarker, dexMap, encoderConfig);
+			DexMap loggingDexMap = new LoggingDexMap(encoderDexMap, "encoded to '%s'", privateLogger, logPrefix, DEBUG);
+			RewriterModule mapper = new DexMapperModule(loggingDexMap, basicDexEncoder.getModule());
+			mapper = PatchRewriterModule.of(mapper, config.annotationPackage);
+			dex = transformDex(dex, mapper);
 			if (preTransformAll) preTransformDex(dex, privateLogger, logPrefix);
 		}
 		return dex;

@@ -55,6 +55,40 @@ code transform options:
     --pre-transform <set>     add pre-transform stages (default: 'out')
                               (<set>: 'none'|'dry'|'out'|'inout'|'all')
 
+identifier encode options:
+    --encode-source                encode identifiers in source
+    --encode-map <file>            identifier encode map file
+                                   (repeatable option)
+    --invert-encode-map            use inverse of encode map file
+    --escape-non-ascii             escape non-ASCII characters
+    --escape-non-latin             escape non-ASCII/Latin-1 characters
+    --no-ascii-escapes             do not output ASCII escapes
+    --no-code-point-escapes        do not output code point escapes
+    --obfuscated-types <ptrn>      pattern for binary type names
+                                   (form: '[<pkg>/...][<cls>$...]<cls>')
+    --obfuscated-packages <ptrn>   pattern for non-qualified package names
+    --obfuscated-classes <ptrn>    pattern for non-qualified class names
+                                   (form: '[<cls>$...]<cls>')
+    --obfuscated-members <ptrn>    pattern for member names
+    --encode-all-classes           encode all class names
+    --encode-obfuscated-packages   encode obfuscated package names
+    --encode-obfuscated-classes    encode obfuscated class names
+    --encode-obfuscated-members    encode obfuscated member names
+    --encode-reserved-chars        encode names with reserved characters
+    --encode-reserved-words        encode names matching reserved words
+    --encode-class-hints           encode type hints in classes
+    --encode-member-hints          encode type hints in members
+    --encode-member-type           encode member type in members
+    --no-identifier-type           do not encode identifier type
+    --no-multiple-hints            only allow unique type hints
+    --no-nested-classes            disable nested class processing
+    --ignored-hint-type <type>     fully qualified name of type
+                                   (use '-' to remove defaults)
+                                   (repeatable option)
+    --ignored-hint-types <ptrn>    pattern for binary type names
+                                   (form: '[<pkg>/...][<cls>$...]<cls>')
+    --encode-compilable            allow recompile of obfuscated code
+
 
 $ dexpatcher build/source.dex.zip build/patch.dex.zip --output build/patched.dex --create-map build/template-mapping.txt --map-source --unmap-output --map mapping.txt --deanon-source --reanon-output --main-plan Anon\[_Level\] --deanon-patches-alt --no-reanon-errors --decode-patches --no-decode-errors --debug
 DexPatcher version 1.8.0-alpha4 by Lanchon (https://dexpatcher.github.io/)

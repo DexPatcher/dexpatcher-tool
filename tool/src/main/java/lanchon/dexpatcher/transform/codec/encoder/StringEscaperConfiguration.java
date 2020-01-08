@@ -10,10 +10,10 @@
 
 package lanchon.dexpatcher.transform.codec.encoder;
 
-public class StringEncoderConfiguration {
+public class StringEscaperConfiguration {
 
-	public boolean encodeNonAscii;
-	public boolean encodeNonAsciiLatin1;
+	public boolean escapeNonAscii;
+	public boolean escapeNonAsciiLatin1;
 
 	public boolean disableAsciiLatin1Escapes;
 	public boolean disableCodePointEscapes;
