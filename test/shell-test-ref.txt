@@ -90,14 +90,11 @@ identifier encode options:
     --encode-compilable            allow recompile of obfuscated code
 
 
-$ dexpatcher build/source.dex.zip build/patch.dex.zip --output build/patched.dex --create-map build/template-mapping.txt --map-source --unmap-output --map mapping.txt --deanon-source --reanon-output --main-plan Anon\[_Level\] --deanon-patches-alt --no-reanon-errors --decode-patches --no-decode-errors --debug
+$ dexpatcher build/source.dex.zip build/patch.dex.zip --output build/patched.dex --create-map build/template-mapping.txt --map-source --unmap-output --map mapping.txt --encode-source --encode-map encode-mapping.txt --escape-non-ascii --encode-reserved-chars --encode-obfuscated-classes --obfuscated-classes .\*OBF --encode-class-hints --encode-obfuscated-members --obfuscated-members .\*OBF --encode-member-hints --deanon-source --reanon-output --main-plan Anon\[_Level\] --deanon-patches-alt --no-reanon-errors --decode-patches --no-decode-errors --debug
 DexPatcher version 1.8.0-alpha4 by Lanchon (https://dexpatcher.github.io/)
 info: read 'build/source.dex.zip'
-debug: read 'build/source.dex.zip': file 'classes.dex': 37 types
+debug: read 'build/source.dex.zip': file 'classes.dex': 47 types
 debug: read 'build/source.dex.zip': dex version '035'
-info: read 'build/patch.dex.zip'
-debug: read 'build/patch.dex.zip': file 'classes.dex': 35 types
-debug: read 'build/patch.dex.zip': dex version '035'
 debug: deanonymize source: type 'test.Main$AnonymousClasses$1$1$Inner': deanonymized to 'test.Main$AnonymousClasses$Anon1$Anon1_Level2$Inner'
 debug: deanonymize source: type 'test.Main$AnonymousClasses$1$1': deanonymized to 'test.Main$AnonymousClasses$Anon1$Anon1_Level2'
 debug: deanonymize source: type 'test.Main$AnonymousClasses$1': deanonymized to 'test.Main$AnonymousClasses$Anon1'
@@ -106,6 +103,18 @@ debug: deanonymize source: type 'test.Main$AnonymousClasses$Anon1$Anon1_Level2':
 debug: deanonymize source: type 'test.Main$AnonymousClasses$Anon1': deanonymized to 'test.Main$AnonymousClasses$Anon1_Level2'
 debug: map source: type 'test.Main$ObfuscatedClassForTargeting': mapped to 'test.Main$TargetedClass'
 debug: map source: type 'test.Main$ObfuscatedThing': mapped to 'test.Main$Thing'
+info: read 'build/patch.dex.zip'
+debug: read 'build/patch.dex.zip': file 'classes.dex': 35 types
+debug: read 'build/patch.dex.zip': dex version '035'
+debug: encode source: type 'test.Main$Double_$$_Encoding': escaped to 'test.Main$Double__$$_$U__$$_Encoding'
+debug: encode source: type 'test.Main$HintOnInterfaceOBF': encoded to 'test.Main$__C1_H_Iterable_$$_HintOnInterfaceOBF__'
+debug: encode source: type 'test.Main$HintOnParentOBF$Inner': encoded to 'test.Main$__C1_H_HashMap_$$_HintOnParentOBF__$Inner'
+debug: encode source: type 'test.Main$HintOnParentOBF$InnerOBF': encoded to 'test.Main$__C1_H_HashMap_$$_HintOnParentOBF__$__C2_$$_InnerOBF__'
+debug: encode source: type 'test.Main$HintOnParentOBF': encoded to 'test.Main$__C1_H_HashMap_$$_HintOnParentOBF__'
+debug: encode source: type 'test.Main$NonAsciiCharacters$AnimalesAutóctonos': encoded to 'test.Main$NonAsciiCharacters$__C2_$$_AnimalesAut$aF3ctonos__'
+debug: encode source: type 'test.Main$ObfuscatedClassForEncodingWithMap': encoded to 'test.Main$__C1_EncodedClass_$$_ObfuscatedClassForEncodingWithMap__'
+debug: encode source: type 'test.Main$HintOnGrandparentOBF': encoded to 'test.Main$__C1_H_HashMap_$$_HintOnGrandparentOBF__'
+debug: encode source: type 'test.Main$HintOnParentInterfaceOBF': encoded to 'test.Main$__C1_H_Iterable_Runnable_$$_HintOnParentInterfaceOBF__'
 debug: type 'test.Main$A': (Main.java:0): replace
 debug: type 'test.Main$Abstract': (Main.java:0): ignore
 debug: deanonymize patch: type 'test.Main$AnonymousClasses$1': deanonymized to 'test.Main$AnonymousClasses$1_patch'
@@ -338,6 +347,23 @@ debug: reanonymize output: type 'test.Main$AnonymousClasses$Anon1_Level2': reano
 debug: reanonymize output: type 'test.Main$AnonymousClasses$Anon1_Level2$Anon1_Level2': reanonymized to 'test.Main$AnonymousClasses$Anon1$1'
 debug: reanonymize output: type 'test.Main$AnonymousClasses$Anon1_Level2$Anon1_Level4': reanonymized to 'test.Main$AnonymousClasses$Anon1$Anon1_Level2'
 warning: reanonymize output: type 'test.Main$AnonymousClasses$42': cannot reanonymize 'Main$AnonymousClasses$42' by 1 level
+debug: encode source: annotation element value 'Double_$$_Encoding': escaped to 'Double__$$_$U__$$_Encoding'
+debug: encode source: type 'test.Main$Double_$$_Encoding': field 'field_$$_': escaped to 'field__$$_$U__$$_'
+debug: encode source: type 'test.Main$Double_$$_Encoding': method 'method_$$_': escaped to 'method__$$_$U__$$_'
+debug: encode source: type 'test.Main$HintOnParentOBF': field 'grandparentOBF:test.Main$HintOnGrandparentOBF': encoded to '__f_H_HashMap_$$_grandparentOBF__'
+debug: encode source: type 'test.Main$HintOnParentOBF': field 'noHintOBF:test.Main$HintOnParentOBF$InnerOBF': encoded to '__f_$$_noHintOBF__'
+debug: encode source: type 'test.Main$HintOnParentOBF': field 'parentInterfaceOBF:test.Main$HintOnParentInterfaceOBF': encoded to '__f_H_Iterable_Runnable_$$_parentInterfaceOBF__'
+debug: encode source: type 'test.Main$HintOnParentOBF': field 'runnableOBF:java.lang.Runnable': encoded to '__f_H_Runnable_$$_runnableOBF__'
+debug: encode source: type 'test.Main$HintOnParentOBF': field 'stringOBF:java.lang.String': encoded to '__f_H_String_$$_stringOBF__'
+debug: encode source: type 'test.Main$HintOnParentOBF': method 'methodOBF():java.lang.String': encoded to '__m_H_String_$$_methodOBF__'
+debug: encode source: type 'test.Main$NonAsciiCharacters$AnimalesAutóctonos': field 'pingüino:test.Main$NonAsciiCharacters$AnimalesAutóctonos': encoded to '__f_$$_ping$aFCino__'
+debug: encode source: type 'test.Main$NonAsciiCharacters$AnimalesAutóctonos': field 'yacaré:test.Main$NonAsciiCharacters$AnimalesAutóctonos': encoded to '__f_$$_yacar$aE9__'
+debug: encode source: type 'test.Main$NonAsciiCharacters$AnimalesAutóctonos': field 'ñandú:test.Main$NonAsciiCharacters$AnimalesAutóctonos': encoded to '__f_$$_$aF1and$aFA__'
+debug: encode source: type 'test.Main$NonAsciiCharacters': field 'ΑΠΟΛΛΩΝ:java.lang.String': encoded to '__f_$$_$u0391$u03A0$u039F$u039B$u039B$u03A9$u039D__'
+debug: encode source: type 'test.Main$NonAsciiCharacters': field '𝒩𝒪:boolean': encoded to '__f_$$_$p01D4A9$p01D4AA__'
+debug: encode source: type 'test.Main$ObfuscatedClassForEncodingWithMap': field 'obfuscatedField:int': encoded to '__f_field_$$_obfuscatedField__'
+debug: encode source: type 'test.Main$ObfuscatedClassForEncodingWithMap': method 'obfuscatedMethod():void': encoded to '__m_method_$$_obfuscatedMethod__'
+debug: encode source: type 'test.Main$ObfuscatedClassForEncodingWithMap': method 'obfuscatedMethodWithArg(test.Main$ObfuscatedClassForEncodingWithMap):void': encoded to '__m_methodWithArg_$$_obfuscatedMethodWithArg__'
 debug: unmap output: type 'test.Main$TargetedClass': unmapped to 'test.Main$ObfuscatedClassForTargeting'
 debug: unmap output: type 'test.Main$TargetedClass': method 'method():void': unmapped to 'obfuscatedMethod'
 debug: unmap output: type 'test.Main$TargetedClass': method 'targetedMethod():void': unmapped to 'obfuscatedMethodForTargeting'
@@ -350,16 +376,16 @@ debug: unmap output: type 'test.Main$Thing': method 'makeFriendsWithOtherThings(
 debug: unmap output: type 'test.Main$Thing': method 'targetedMethod():void': unmapped to 'obfuscatedMethodForTargeting'
 info: write 'build/patched.dex'
 debug: write 'build/patched.dex': dex version '035'
-debug: write 'build/patched.dex': 39 types
+debug: write 'build/patched.dex': 49 types
 0 error(s), 17 warning(s)
 
 $ sha1sum build/patched.dex
-d57fc807bc542d3c57795250eaea447a2c0b7961  build/patched.dex
+8490502a9ce53e7fa9dffb64e39049077d61ffdb  build/patched.dex
 
 $ sha1sum build/template-mapping.txt
-d42fe9fcfdf838707b30479ae2caf1332e43d8be  build/template-mapping.txt
+470e71045e4ce02f5200de42789617cff05df8a1  build/template-mapping.txt
 
-$ dexpatcher build/source.dex.zip build/patch.dex.zip --output build/patched-release.dex --unmap-patches --map mapping.txt --reanon-patches --main-plan Anon\[_Level\] --deanon-patches-alt --no-reanon-errors --decode-patches --no-decode-errors --quiet
+$ dexpatcher build/source.dex.zip build/patch.dex.zip --output build/patched-release.dex --unmap-patches --map mapping.txt --encode-source --encode-map encode-mapping.txt --escape-non-ascii --encode-reserved-chars --encode-obfuscated-classes --obfuscated-classes .\*OBF --encode-class-hints --encode-obfuscated-members --obfuscated-members .\*OBF --encode-member-hints --reanon-patches --main-plan Anon\[_Level\] --deanon-patches-alt --no-reanon-errors --decode-patches --no-decode-errors --quiet
 DexPatcher version 1.8.0-alpha4 by Lanchon (https://dexpatcher.github.io/)
 0 error(s), 17 warning(s)
 
@@ -461,6 +487,11 @@ original ObfuscatedThing::obfuscatedMethodForTargeting
 original ObfuscatedClassForTargeting::obfuscatedMethod
 original ObfuscatedClassForTargeting::obfuscatedMethodWithArg
 original ObfuscatedClassForTargeting::obfuscatedMethodForTargeting
+
+original ObfuscatedClassForEncodingWithMap::obfuscatedMethod
+original ObfuscatedClassForEncodingWithMap::obfuscatedMethodWithArg
+
+original Double_$$_Encoding::method_$$_
 
 --- end source/build/libs/source.jar ---
 
@@ -600,6 +631,11 @@ replaced ObfuscatedClassForTargeting::obfuscatedMethodWithArg
 entering replaced ObfuscatedClassForTargeting::obfuscatedMethodForTargeting
 original ObfuscatedClassForTargeting::source_targetedMethod
 exiting replaced ObfuscatedClassForTargeting::obfuscatedMethodForTargeting
+
+original __C1_EncodedClass_$$_ObfuscatedClassForEncodingWithMap__::__m_method_$$_obfuscatedMethod__
+original __C1_EncodedClass_$$_ObfuscatedClassForEncodingWithMap__::__m_methodWithArg_$$_obfuscatedMethodWithArg__
+
+original Double__$$_$U__$$_Encoding::method__$$_$U__$$_
 
 --- end build/patched-dex2jar.jar ---
 

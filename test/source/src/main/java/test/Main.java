@@ -10,6 +10,8 @@
 
 package test;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Locale;
 
 public class Main {
@@ -82,6 +84,12 @@ public class Main {
 		new ObfuscatedThing().print();
 		p();
 		new ObfuscatedClassForTargeting().print();
+		p();
+		new ObfuscatedClassForEncodingWithMap().print();
+		p();
+		//new OverriddenOBF().print();
+		//p();
+		new Double_$$_Encoding().print();
 		p();
 	}
 
@@ -321,7 +329,7 @@ public class Main {
 		}
 	}
 
-	// Supposedly obfuscated class to be deobfuscated with a map file:
+	// Supposedly obfuscated classes to be deobfuscated with a map file:
 	// Note: The source dex must be mapped with '--map <map-file> --map-source'
 	// and the output should typically be inverse-mapped with '--unmap-output'.
 	public static class ObfuscatedThing {
@@ -351,6 +359,87 @@ public class Main {
 			obfuscatedMethodWithArg(null);
 			obfuscatedMethodForTargeting();
 		}
+	}
+
+	// Supposedly obfuscated class to be encoded with a map file:
+	// Note: Encoded with '--encode-source --encode-map <map-file>'.
+	public static class ObfuscatedClassForEncodingWithMap {
+		public int obfuscatedField;
+		public void obfuscatedMethod() { pMethod("original %s"); }
+		public void obfuscatedMethodWithArg(ObfuscatedClassForEncodingWithMap x) { pMethod("original %s"); }
+		public void print() {
+			obfuscatedField = 42;
+			obfuscatedMethod();
+			obfuscatedMethodWithArg(null);
+		}
+	}
+
+	// Supposedly obfuscated elements to be encoded by pattern matching:
+	// Note: Encoded with '--encode-source
+	// --encode-obfuscated-classes --obfuscated-classes '.*OBF'
+	// --encode-obfuscated-members --obfuscated-members '.*OBF''.
+	public static class HintOnParentOBF extends HashMap {
+		public static class Inner {};
+		public static class InnerOBF {};
+		public String stringOBF;
+		public Runnable runnableOBF;
+		public HintOnGrandparentOBF grandparentOBF;
+		public HintOnParentInterfaceOBF parentInterfaceOBF;
+		public InnerOBF noHintOBF;
+		public String methodOBF() { return null; }
+	}
+
+	public static class HintOnGrandparentOBF extends HintOnParentOBF {}
+
+	public static class HintOnInterfaceOBF implements Iterable<Object> {
+		@Override public Iterator<Object> iterator() { return null; }
+	}
+
+	public static class HintOnParentInterfaceOBF extends HintOnInterfaceOBF implements Runnable {
+		@Override public void run() {}
+	}
+
+	/*
+	// Encoding of elements overridden by mappings:
+	// Note: Encoded with '--map <map-file> --map-source --encode-source
+	// --encode-obfuscated-classes --obfuscated-classes '.*OBF'
+	// --encode-obfuscated-members --obfuscated-members '.*OBF''.
+	public static class OverriddenOBF {
+		public int overriddenFieldOBF;
+		public void overriddenMethodOBF() { pMethod("original %s"); }
+		public void print() {
+			overriddenFieldOBF = 42;
+			overriddenMethodOBF();
+		}
+	}
+	*/
+
+	// Double-encoding (escaping) of elements that contain the encode marker:
+	// Note: Encoded with '--encode-source'.
+	public static class Double_$$_Encoding {
+		public int field_$$_;
+		public void method_$$_() { pMethod("original %s"); }
+		public void print() {
+			field_$$_ = 42;
+			method_$$_();
+		}
+	}
+
+	// Encoding of elements that contain characters that should be escaped:
+	// Note: Encoded with '--encode-source --escape-non-ascii
+	// --encode-reserved-chars'.
+	public static class NonAsciiCharacters {
+		// Latin-1 Supplement:
+		public enum AnimalesAutóctonos {
+			puma,
+			ñandú,
+			yacaré,
+			pingüino
+		}
+		// Basic Multilingual Plane:
+		public static final String ΑΠΟΛΛΩΝ = "Apollo";
+		// Supplementary Planes:
+		public static final boolean 𝒩𝒪 = false;
 	}
 
 }

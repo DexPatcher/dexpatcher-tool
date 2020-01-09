@@ -1,0 +1,4 @@
+test.Main$ObfuscatedClassForEncodingWithMap -> test.EncodedClass
+    int obfuscatedField -> field
+    void obfuscatedMethod() -> method
+    void obfuscatedMethodWithArg(test.Main$ObfuscatedClassForEncodingWithMap) -> methodWithArg

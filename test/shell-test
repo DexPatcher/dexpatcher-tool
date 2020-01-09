@@ -47,6 +47,9 @@ run dexpatcher --help
 run dexpatcher build/source.dex.zip build/patch.dex.zip --output build/patched.dex\
  --create-map build/template-mapping.txt\
  --map-source --unmap-output --map mapping.txt\
+ --encode-source --encode-map encode-mapping.txt --escape-non-ascii --encode-reserved-chars\
+   --encode-obfuscated-classes --obfuscated-classes '.*OBF' --encode-class-hints\
+   --encode-obfuscated-members --obfuscated-members '.*OBF' --encode-member-hints\
  --deanon-source --reanon-output --main-plan Anon[_Level] --deanon-patches-alt --no-reanon-errors\
  --decode-patches --no-decode-errors\
  --debug "$@"
@@ -60,6 +63,9 @@ if "$RUN_RELEASE_PATCH_TEST"; then
 
 run dexpatcher build/source.dex.zip build/patch.dex.zip --output build/patched-release.dex\
  --unmap-patches --map mapping.txt\
+ --encode-source --encode-map encode-mapping.txt --escape-non-ascii --encode-reserved-chars\
+   --encode-obfuscated-classes --obfuscated-classes '.*OBF' --encode-class-hints\
+   --encode-obfuscated-members --obfuscated-members '.*OBF' --encode-member-hints\
  --reanon-patches --main-plan Anon[_Level] --deanon-patches-alt --no-reanon-errors\
  --decode-patches --no-decode-errors\
  --quiet "$@"

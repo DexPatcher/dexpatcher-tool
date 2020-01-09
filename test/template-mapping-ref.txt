@@ -89,6 +89,11 @@
 #    void print__$appendPatch() -> print__$appendPatch
 #    void print() -> print
 
+#test.Main$Double__$$_$U__$$_Encoding -> test.Main$Double__$$_$U__$$_Encoding:
+#    int field__$$_$U__$$_ -> field__$$_$U__$$_
+#    void method__$$_$U__$$_() -> method__$$_$U__$$_
+#    void print() -> print
+
 #test.Main$E -> test.Main$E:
 #    int redefinedSourceStaticField -> redefinedSourceStaticField
 #    int sourceStaticField -> sourceStaticField
@@ -130,6 +135,21 @@
 #    void print__$appendPatch() -> print__$appendPatch
 #    void print() -> print
 
+#test.Main$__C1_H_Iterable_$$_HintOnInterfaceOBF__ -> test.Main$__C1_H_Iterable_$$_HintOnInterfaceOBF__:
+#    java.util.Iterator iterator() -> iterator
+
+#test.Main$__C1_H_HashMap_$$_HintOnParentOBF__$Inner -> test.Main$__C1_H_HashMap_$$_HintOnParentOBF__$Inner:
+
+#test.Main$__C1_H_HashMap_$$_HintOnParentOBF__$__C2_$$_InnerOBF__ -> test.Main$__C1_H_HashMap_$$_HintOnParentOBF__$__C2_$$_InnerOBF__:
+
+#test.Main$__C1_H_HashMap_$$_HintOnParentOBF__ -> test.Main$__C1_H_HashMap_$$_HintOnParentOBF__:
+#    test.Main$__C1_H_HashMap_$$_HintOnGrandparentOBF__ __f_H_HashMap_$$_grandparentOBF__ -> __f_H_HashMap_$$_grandparentOBF__
+#    test.Main$__C1_H_HashMap_$$_HintOnParentOBF__$__C2_$$_InnerOBF__ __f_$$_noHintOBF__ -> __f_$$_noHintOBF__
+#    test.Main$__C1_H_Iterable_Runnable_$$_HintOnParentInterfaceOBF__ __f_H_Iterable_Runnable_$$_parentInterfaceOBF__ -> __f_H_Iterable_Runnable_$$_parentInterfaceOBF__
+#    java.lang.Runnable __f_H_Runnable_$$_runnableOBF__ -> __f_H_Runnable_$$_runnableOBF__
+#    java.lang.String __f_H_String_$$_stringOBF__ -> __f_H_String_$$_stringOBF__
+#    java.lang.String __m_H_String_$$_methodOBF__() -> __m_H_String_$$_methodOBF__
+
 #test.Main$IdentifierCodes -> test.Main$IdentifierCodes:
 #    int __bad_$$_invalid$aX1asciiLatin1Escape__ -> __bad_$$_invalid$aX1asciiLatin1Escape__
 #    int __bad_$$_invalid$p00B1unicodeCodePointEscape__ -> __bad_$$_invalid$p00B1unicodeCodePointEscape__
@@ -160,6 +180,25 @@
 
 #test.Main$Interface -> test.Main$Interface:
 #    void interfaceMethod() -> interfaceMethod
+
+#test.Main$NonAsciiCharacters$__C2_$$_AnimalesAut$aF3ctonos__ -> test.Main$NonAsciiCharacters$__C2_$$_AnimalesAut$aF3ctonos__:
+#    test.Main$NonAsciiCharacters$__C2_$$_AnimalesAut$aF3ctonos__[] $VALUES -> $VALUES
+#    test.Main$NonAsciiCharacters$__C2_$$_AnimalesAut$aF3ctonos__ __f_$$_ping$aFCino__ -> __f_$$_ping$aFCino__
+#    test.Main$NonAsciiCharacters$__C2_$$_AnimalesAut$aF3ctonos__ puma -> puma
+#    test.Main$NonAsciiCharacters$__C2_$$_AnimalesAut$aF3ctonos__ __f_$$_yacar$aE9__ -> __f_$$_yacar$aE9__
+#    test.Main$NonAsciiCharacters$__C2_$$_AnimalesAut$aF3ctonos__ __f_$$_$aF1and$aFA__ -> __f_$$_$aF1and$aFA__
+#    test.Main$NonAsciiCharacters$__C2_$$_AnimalesAut$aF3ctonos__ valueOf(java.lang.String) -> valueOf
+#    test.Main$NonAsciiCharacters$__C2_$$_AnimalesAut$aF3ctonos__[] values() -> values
+
+#test.Main$NonAsciiCharacters -> test.Main$NonAsciiCharacters:
+#    java.lang.String __f_$$_$u0391$u03A0$u039F$u039B$u039B$u03A9$u039D__ -> __f_$$_$u0391$u03A0$u039F$u039B$u039B$u03A9$u039D__
+#    boolean __f_$$_$p01D4A9$p01D4AA__ -> __f_$$_$p01D4A9$p01D4AA__
+
+#test.Main$__C1_EncodedClass_$$_ObfuscatedClassForEncodingWithMap__ -> test.Main$__C1_EncodedClass_$$_ObfuscatedClassForEncodingWithMap__:
+#    int __f_field_$$_obfuscatedField__ -> __f_field_$$_obfuscatedField__
+#    void __m_method_$$_obfuscatedMethod__() -> __m_method_$$_obfuscatedMethod__
+#    void __m_methodWithArg_$$_obfuscatedMethodWithArg__(test.Main$__C1_EncodedClass_$$_ObfuscatedClassForEncodingWithMap__) -> __m_methodWithArg_$$_obfuscatedMethodWithArg__
+#    void print() -> print
 
 #test.Main$ObfuscatedClassForTargeting -> test.Main$ObfuscatedClassForTargeting:
 #    void source_targetedMethod() -> source_targetedMethod
@@ -214,6 +253,11 @@
 #test.Main$Derived -> test.Main$Derived:
 #    void source_method() -> source_method
 #    void method() -> method
+
+#test.Main$__C1_H_HashMap_$$_HintOnGrandparentOBF__ -> test.Main$__C1_H_HashMap_$$_HintOnGrandparentOBF__:
+
+#test.Main$__C1_H_Iterable_Runnable_$$_HintOnParentInterfaceOBF__ -> test.Main$__C1_H_Iterable_Runnable_$$_HintOnParentInterfaceOBF__:
+#    void run() -> run
 
 #test.Main$AnonymousClasses$1_patch -> test.Main$AnonymousClasses$1_patch:
 #    void run() -> run
