@@ -87,8 +87,6 @@ public class Main {
 		p();
 		new ObfuscatedClassForEncodingWithMap().print();
 		p();
-		//new OverriddenOBF().print();
-		//p();
 		new Double_$$_Encoding().print();
 		p();
 	}
@@ -398,21 +396,6 @@ public class Main {
 	public static class HintOnParentInterfaceOBF extends HintOnInterfaceOBF implements Runnable {
 		@Override public void run() {}
 	}
-
-	/*
-	// Encoding of elements overridden by mappings:
-	// Note: Encoded with '--map <map-file> --map-source --encode-source
-	// --encode-obfuscated-classes --obfuscated-classes '.*OBF'
-	// --encode-obfuscated-members --obfuscated-members '.*OBF''.
-	public static class OverriddenOBF {
-		public int overriddenFieldOBF;
-		public void overriddenMethodOBF() { pMethod("original %s"); }
-		public void print() {
-			overriddenFieldOBF = 42;
-			overriddenMethodOBF();
-		}
-	}
-	*/
 
 	// Double-encoding (escaping) of elements that contain the encode marker:
 	// Note: Encoded with '--encode-source'.

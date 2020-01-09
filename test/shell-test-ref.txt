@@ -380,7 +380,7 @@ debug: write 'build/patched.dex': 49 types
 0 error(s), 17 warning(s)
 
 $ sha1sum build/patched.dex
-8490502a9ce53e7fa9dffb64e39049077d61ffdb  build/patched.dex
+22d86af0b6cd770ef83267bb23c5b1f1b40b9d28  build/patched.dex
 
 $ sha1sum build/template-mapping.txt
 470e71045e4ce02f5200de42789617cff05df8a1  build/template-mapping.txt
