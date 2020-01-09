@@ -36,6 +36,7 @@ public final class DexDecoder extends DexCodec {
 
 	@Override
 	public String rewriteItem(final String definingClass, final ItemType itemType, final String value) {
+		if (value == null) return null;
 		String decodedValue = stringDecoder.decodeString(value, new StringDecoder.ErrorHandler() {
 			@Override
 			public void onError(String message, String string, int codeStart, int codeEnd, int errorStart,

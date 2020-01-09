@@ -34,6 +34,7 @@ public final class BasicDexEncoder extends DexCodec {
 
 	@Override
 	public String rewriteItem(String definingClass, ItemType itemType, String value) {
+		if (value == null) return null;
 		String encodedValue = basicStringEncoder.encodeString(value);
 		if (logger.isLogging(infoLevel) && !encodedValue.equals(value)) {
 			StringBuilder sb = getMessageHeader(definingClass, itemType, value);
