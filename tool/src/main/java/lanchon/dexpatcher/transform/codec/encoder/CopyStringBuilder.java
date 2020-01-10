@@ -12,7 +12,7 @@ package lanchon.dexpatcher.transform.codec.encoder;
 
 public final class CopyStringBuilder {
 
-	private static final boolean CHECK_ARGS = true;     // TODO: Disable after testing.
+	private static final boolean CHECK_ARGS = false;
 
 	private final int initialCapacity;
 	private final String source;
