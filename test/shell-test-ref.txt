@@ -57,8 +57,7 @@ code transform options:
 
 identifier encode options:
     --encode-source                encode identifiers in source
-    --encode-map <file>            identifier encode map file
-                                   (repeatable option)
+    --encode-map <file>            encode map file (repeatable option)
     --invert-encode-map            use inverse of encode map file
     --escape-non-ascii             escape non-ASCII characters
     --escape-non-latin             escape non-ASCII/Latin-1 characters

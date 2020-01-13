@@ -362,7 +362,7 @@ public class Parser {
 
 		options.addOption(Option.builder().longOpt("encode-source").desc("encode identifiers in source").build());
 
-		options.addOption(Option.builder().longOpt("encode-map").hasArgs().argName("file").desc("identifier encode map file\n(repeatable option)").build());
+		options.addOption(Option.builder().longOpt("encode-map").hasArgs().argName("file").desc("encode map file (repeatable option)").build());
 		options.addOption(Option.builder().longOpt("invert-encode-map").desc("use inverse of encode map file").build());
 
 		// StringEscaperConfiguration
