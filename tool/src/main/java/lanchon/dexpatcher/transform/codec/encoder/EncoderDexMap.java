@@ -207,6 +207,7 @@ public class EncoderDexMap implements DexMap {
 		String componentMapping = (encodeMap != null) ? encodeMap.getClassMapping(componentDescriptor) : null;
 		if (componentDescriptor.equals(componentMapping)) componentMapping = null;
 		String componentName = componentDescriptor.substring(componentStart, componentEnd);
+		//noinspection StringEquality
 		boolean encode =
 				(componentMapping != null) ||
 				(encodeAllClasses) ||
@@ -307,6 +308,7 @@ public class EncoderDexMap implements DexMap {
 		if (array != 0) type = type.substring(array);
 		if (!type.startsWith("L")) return sb;
 		String typeHint = typeHintMap.get(type);
+		//noinspection StringEquality
 		if (typeHint == null || typeHint == TypeHintMapper.NON_OBFUSCATED_TYPE_HINT) {
 			if (!typeHintMapper.isIgnoredType(type)) {
 				if (sb == null) sb = new StringBuilder(MEMBER_INITIAL_CAPACITY);
