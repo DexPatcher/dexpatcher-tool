@@ -85,33 +85,40 @@ public class Processor {
 
 	private static class MapPair {
 
-		public DexMap directMap;
-		public DexMap inverseMap;
+		public final DexMap directMap;
+		public final DexMap inverseMap;
 
 		public MapPair(Iterable<String> mapFiles, boolean invertMap, boolean directMapNeeded, boolean inverseMapNeeded,
 				Logger logger) throws IOException {
-			if (directMapNeeded || inverseMapNeeded) {
-				boolean usesInverseMapFile = invertMap ? directMapNeeded : inverseMapNeeded;
-				DexMapping directMapFile = new DexMapping();
-				DexMapping inverseMapFile = usesInverseMapFile ? new DexMapping() : null;
-				readMaps(mapFiles, directMapFile, inverseMapFile, logger);
-				if (directMapNeeded) directMap = invertMap ? inverseMapFile : directMapFile;
-				if (inverseMapNeeded) inverseMap = invertMap ? directMapFile : inverseMapFile;
-			}
+			DexMapping directMap = directMapNeeded ? new DexMapping() : null;
+			DexMapping inverseMap = inverseMapNeeded ? new DexMapping() : null;
+			readMapPair(mapFiles, invertMap, directMap, inverseMap, logger);
+			this.directMap = directMap;
+			this.inverseMap = inverseMap;
 		}
 
-		private boolean readMaps(Iterable<String> mapFiles, DexMapping directMapFile, DexMapping inverseMapFile,
+		private boolean readMapPair(Iterable<String> mapFiles, boolean invertMap, DexMapping directMap,
+				DexMapping inverseMap, Logger logger) throws IOException {
+			return readMapPair(mapFiles, invertMap ? inverseMap : directMap, invertMap ? directMap : inverseMap,
+					logger);
+		}
+
+		private boolean readMapPair(Iterable<String> mapFiles, DexMapping directMap, MapBuilder inverseMap,
 				Logger logger) throws IOException {
-			// Always read the direct map. (Required to read the inverse map; will be discarded if not needed further.)
-			boolean success = readMaps(mapFiles, directMapFile, logger);
+			// The direct map is needed to read the inverse map. (It will be discarded if not needed further.)
+			if (directMap == null) {
+				if (inverseMap == null) return true;
+				directMap = new DexMapping();
+			}
+			boolean success = readMap(mapFiles, directMap, logger);
 			// Read the inverse map only if needed. (It is more memory efficient to read it again from disk.)
-			if (inverseMapFile != null && (success || !ABORT_ON_EARLY_ERRORS)) {
-				success = readMaps(mapFiles, new InverseMapBuilder(inverseMapFile, directMapFile), logger) && success;
+			if (inverseMap != null && (success || !ABORT_ON_EARLY_ERRORS)) {
+				success = readMap(mapFiles, new InverseMapBuilder(inverseMap, directMap), logger) && success;
 			}
 			return success;
 		}
 
-		private boolean readMaps(Iterable<String> mapFiles, MapBuilder mapBuilder, Logger logger) throws IOException {
+		private boolean readMap(Iterable<String> mapFiles, MapBuilder mapBuilder, Logger logger) throws IOException {
 			int errors = logger.getMessageCount(FATAL) + logger.getMessageCount(ERROR);
 			for (String mapFile : mapFiles) {
 				MapFileReader.read(new File(mapFile), true, mapBuilder, logger);
