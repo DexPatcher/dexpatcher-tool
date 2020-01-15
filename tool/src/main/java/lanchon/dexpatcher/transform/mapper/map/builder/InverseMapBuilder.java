@@ -47,7 +47,8 @@ public class InverseMapBuilder implements MapBuilder {
 						for (int i = 0; i < length; i++) {
 							mappedParameterTypes[i] = DexMaps.mapType(parameterTypes[i], directDexMap);
 						}
-						wrappedMemberMapBuilder.addMethodMapping(mappedParameterTypes, returnType, newName, name);
+						String mappedReturnType = DexMaps.mapType(returnType, directDexMap);
+						wrappedMemberMapBuilder.addMethodMapping(mappedParameterTypes, mappedReturnType, newName, name);
 					} catch (BuilderException e) {
 						throw new BuilderException(EXCEPTION_HEADER + e.getMessage());
 					}
