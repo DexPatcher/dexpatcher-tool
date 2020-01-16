@@ -1,0 +1,5 @@
+test.Main$ObfuscatedDbRecord -> test.Main$DbRecord
+    java.lang.String obfuscatedPut(test.Main$ObfuscatedDbRecord) -> put
+    test.Main$ObfuscatedDbRecord obfuscatedGet(java.lang.String) -> get
+    test.Main$ObfuscatedDbRecord[] obfuscatedGetAllRecords() -> getAllRecords
+    test.Main$ObfuscatedDbRecord obfuscatedParentRecord -> parentRecord

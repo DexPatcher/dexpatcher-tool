@@ -114,6 +114,8 @@ task portableTest(type:JavaExec) {
     templateMapFile.set layout.buildDirectory.file('portable-test/template-mapping.txt')
     ext.mapFile = objects.fileProperty()
     mapFile.set layout.projectDirectory.file('mapping.txt')
+    ext.composeMapFile = objects.fileProperty()
+    composeMapFile.set layout.projectDirectory.file('compose-mapping.txt')
 
     inputs.file sourceFile
     inputs.file patchFile
@@ -121,7 +123,7 @@ task portableTest(type:JavaExec) {
 
     classpath dexpatcherJar
     args '--verbose',
-            '--map-source', '--unmap-output', '--map', mapFile.get(),
+            '--map-source', '--unmap-output', '--map', mapFile.get(), '--compose-map', composeMapFile.get(),
             '--deanon-source', '--reanon-output', '--main-plan', 'Anon[_Level]', '--deanon-patches-alt',
                     '--no-reanon-errors',
             '--decode-patches', '--no-decode-errors',

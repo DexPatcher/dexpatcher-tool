@@ -91,10 +91,10 @@ identifier encode options:
     --encode-compilable            allow recompile of obfuscated code
 
 
-$ dexpatcher build/source.dex.zip build/patch.dex.zip --output build/patched.dex --create-map build/template-mapping.txt --map-source --unmap-output --map mapping.txt --encode-source --encode-map encode-mapping.txt --escape-non-ascii --encode-reserved-chars --encode-obfuscated-classes --obfuscated-classes .\*OBF --encode-class-hints --encode-obfuscated-members --obfuscated-members .\*OBF --encode-member-hints --deanon-source --reanon-output --main-plan Anon\[_Level\] --deanon-patches-alt --no-reanon-errors --decode-patches --no-decode-errors --debug
+$ dexpatcher build/source.dex.zip build/patch.dex.zip --output build/patched.dex --create-map build/template-mapping.txt --map-source --unmap-output --map mapping.txt --compose-map compose-mapping.txt --encode-source --encode-map encode-mapping.txt --escape-non-ascii --encode-reserved-chars --encode-obfuscated-classes --obfuscated-classes .\*OBF --encode-class-hints --encode-obfuscated-members --obfuscated-members .\*OBF --encode-member-hints --deanon-source --reanon-output --main-plan Anon\[_Level\] --deanon-patches-alt --no-reanon-errors --decode-patches --no-decode-errors --debug
 DexPatcher version 1.8.0-alpha4 by Lanchon (https://dexpatcher.github.io/)
 info: read 'build/source.dex.zip'
-debug: read 'build/source.dex.zip': file 'classes.dex': 47 types
+debug: read 'build/source.dex.zip': file 'classes.dex': 48 types
 debug: read 'build/source.dex.zip': dex version '035'
 debug: deanonymize source: type 'test.Main$AnonymousClasses$1$1$Inner': deanonymized to 'test.Main$AnonymousClasses$Anon1$Anon1_Level2$Inner'
 debug: deanonymize source: type 'test.Main$AnonymousClasses$1$1': deanonymized to 'test.Main$AnonymousClasses$Anon1$Anon1_Level2'
@@ -103,9 +103,10 @@ debug: deanonymize source: type 'test.Main$AnonymousClasses$Anon1$1': deanonymiz
 debug: deanonymize source: type 'test.Main$AnonymousClasses$Anon1$Anon1_Level2': deanonymized to 'test.Main$AnonymousClasses$Anon1_Level2$Anon1_Level4'
 debug: deanonymize source: type 'test.Main$AnonymousClasses$Anon1': deanonymized to 'test.Main$AnonymousClasses$Anon1_Level2'
 debug: map source: type 'test.Main$ObfuscatedClassForTargeting': mapped to 'test.Main$TargetedClass'
+debug: map source: type 'test.Main$ObfuscatedDbRecord': mapped to 'test.Main$User'
 debug: map source: type 'test.Main$ObfuscatedThing': mapped to 'test.Main$Thing'
 info: read 'build/patch.dex.zip'
-debug: read 'build/patch.dex.zip': file 'classes.dex': 35 types
+debug: read 'build/patch.dex.zip': file 'classes.dex': 36 types
 debug: read 'build/patch.dex.zip': dex version '035'
 debug: encode source: type 'test.Main$Double_$$_Encoding': escaped to 'test.Main$Double__$$_$U__$$_Encoding'
 debug: encode source: type 'test.Main$HintOnInterfaceOBF': encoded to 'test.Main$__C1_H_Iterable_$$_HintOnInterfaceOBF__'
@@ -301,6 +302,17 @@ debug: type 'test.Main$Thing': method 'makeFriendsWithOtherThings(test.Main$Thin
 debug: type 'test.Main$Thing': method 'print():void': (Main.java:864): prepend
 debug: type 'test.Main$Thing': method 'someMethod():void': (Main.java:840): replace
 debug: type 'test.Main$Thing': method 'targetedMethod():void': (Main.java:859): add
+debug: type 'test.Main$User': (Main.java:0): edit
+debug: map source: type 'test.Main$ObfuscatedDbRecord': field 'obfuscatedParentRecord:test.Main$ObfuscatedDbRecord': mapped to 'parentUser'
+debug: type 'test.Main$User': field 'parentUser:test.Main$User': (Main.java:0): remove
+debug: map source: type 'test.Main$ObfuscatedDbRecord': method 'obfuscatedGet(java.lang.String):test.Main$ObfuscatedDbRecord': mapped to 'get'
+debug: map source: type 'test.Main$ObfuscatedDbRecord': method 'obfuscatedGetAllRecords():test.Main$ObfuscatedDbRecord[]': mapped to 'getAllUsers'
+debug: map source: type 'test.Main$ObfuscatedDbRecord': method 'obfuscatedPut(test.Main$ObfuscatedDbRecord):java.lang.String': mapped to 'put'
+info: type 'test.Main$User': method '<init>():void': (Main.java:904): implicit ignore of trivial default constructor
+debug: type 'test.Main$User': method '<init>():void': (Main.java:904): ignore
+debug: type 'test.Main$User': method 'get(java.lang.String):test.Main$User': (Main.java:908): replace
+debug: type 'test.Main$User': method 'getAllUsers():test.Main$User[]': (Main.java:910): replace
+debug: type 'test.Main$User': method 'put(test.Main$User):java.lang.String': (Main.java:906): replace
 debug: decode patch: type 'test.Main$__My_label_for_this_class_$$_IllegalName__': decoded to 'test.Main$IllegalName'
 debug: decode patch: annotation element value '__My_label_for_this_class_$$_IllegalName__': decoded to 'IllegalName'
 debug: type 'test.Main$IllegalName': (Main.java:0): edit
@@ -369,6 +381,10 @@ debug: unmap output: type 'test.Main$TargetedClass': unmapped to 'test.Main$Obfu
 debug: unmap output: type 'test.Main$TargetedClass': method 'method():void': unmapped to 'obfuscatedMethod'
 debug: unmap output: type 'test.Main$TargetedClass': method 'targetedMethod():void': unmapped to 'obfuscatedMethodForTargeting'
 debug: unmap output: type 'test.Main$TargetedClass': method 'methodWithArg(test.Main$TargetedClass):void': unmapped to 'obfuscatedMethodWithArg'
+debug: unmap output: type 'test.Main$User': unmapped to 'test.Main$ObfuscatedDbRecord'
+debug: unmap output: type 'test.Main$User': method 'get(java.lang.String):test.Main$User': unmapped to 'obfuscatedGet'
+debug: unmap output: type 'test.Main$User': method 'getAllUsers():test.Main$User[]': unmapped to 'obfuscatedGetAllRecords'
+debug: unmap output: type 'test.Main$User': method 'put(test.Main$User):java.lang.String': unmapped to 'obfuscatedPut'
 debug: unmap output: type 'test.Main$Thing': unmapped to 'test.Main$ObfuscatedThing'
 debug: unmap output: type 'test.Main$Thing': field 'field:int': unmapped to 'obfuscatedField'
 debug: unmap output: type 'test.Main$Thing': method 'someMethod():void': unmapped to 'obfuscatedMethod'
@@ -377,16 +393,16 @@ debug: unmap output: type 'test.Main$Thing': method 'makeFriendsWithOtherThings(
 debug: unmap output: type 'test.Main$Thing': method 'targetedMethod():void': unmapped to 'obfuscatedMethodForTargeting'
 info: write 'build/patched.dex'
 debug: write 'build/patched.dex': dex version '035'
-debug: write 'build/patched.dex': 49 types
+debug: write 'build/patched.dex': 50 types
 0 error(s), 17 warning(s)
 
 $ sha1sum build/patched.dex
-22d86af0b6cd770ef83267bb23c5b1f1b40b9d28  build/patched.dex
+2a2a82b4cffec4dfe7adfcce50b3994268463af4  build/patched.dex
 
 $ sha1sum build/template-mapping.txt
-470e71045e4ce02f5200de42789617cff05df8a1  build/template-mapping.txt
+db26f46a332c23c7867ef8b39547a031c46e4443  build/template-mapping.txt
 
-$ dexpatcher build/source.dex.zip build/patch.dex.zip --output build/patched-release.dex --unmap-patches --map mapping.txt --encode-source --encode-map encode-mapping.txt --escape-non-ascii --encode-reserved-chars --encode-obfuscated-classes --obfuscated-classes .\*OBF --encode-class-hints --encode-obfuscated-members --obfuscated-members .\*OBF --encode-member-hints --reanon-patches --main-plan Anon\[_Level\] --deanon-patches-alt --no-reanon-errors --decode-patches --no-decode-errors --quiet
+$ dexpatcher build/source.dex.zip build/patch.dex.zip --output build/patched-release.dex --unmap-patches --map mapping.txt --compose-map compose-mapping.txt --encode-source --encode-map encode-mapping.txt --escape-non-ascii --encode-reserved-chars --encode-obfuscated-classes --obfuscated-classes .\*OBF --encode-class-hints --encode-obfuscated-members --obfuscated-members .\*OBF --encode-member-hints --reanon-patches --main-plan Anon\[_Level\] --deanon-patches-alt --no-reanon-errors --decode-patches --no-decode-errors --quiet
 DexPatcher version 1.8.0-alpha4 by Lanchon (https://dexpatcher.github.io/)
 0 error(s), 17 warning(s)
 
@@ -488,6 +504,10 @@ original ObfuscatedThing::obfuscatedMethodForTargeting
 original ObfuscatedClassForTargeting::obfuscatedMethod
 original ObfuscatedClassForTargeting::obfuscatedMethodWithArg
 original ObfuscatedClassForTargeting::obfuscatedMethodForTargeting
+
+original ObfuscatedDbRecord::obfuscatedPut
+original ObfuscatedDbRecord::obfuscatedGet
+original ObfuscatedDbRecord::obfuscatedGetAllRecords
 
 original ObfuscatedClassForEncodingWithMap::obfuscatedMethod
 original ObfuscatedClassForEncodingWithMap::obfuscatedMethodWithArg
@@ -632,6 +652,10 @@ replaced ObfuscatedClassForTargeting::obfuscatedMethodWithArg
 entering replaced ObfuscatedClassForTargeting::obfuscatedMethodForTargeting
 original ObfuscatedClassForTargeting::source_targetedMethod
 exiting replaced ObfuscatedClassForTargeting::obfuscatedMethodForTargeting
+
+replaced ObfuscatedDbRecord::obfuscatedPut
+replaced ObfuscatedDbRecord::obfuscatedGet
+replaced ObfuscatedDbRecord::obfuscatedGetAllRecords
 
 original __C1_EncodedClass_$$_ObfuscatedClassForEncodingWithMap__::__m_method_$$_obfuscatedMethod__
 original __C1_EncodedClass_$$_ObfuscatedClassForEncodingWithMap__::__m_methodWithArg_$$_obfuscatedMethodWithArg__

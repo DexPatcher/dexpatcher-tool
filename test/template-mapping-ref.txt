@@ -207,6 +207,12 @@
 #    void obfuscatedMethodWithArg(test.Main$ObfuscatedClassForTargeting) -> obfuscatedMethodWithArg
 #    void print() -> print
 
+#test.Main$ObfuscatedDbRecord -> test.Main$ObfuscatedDbRecord:
+#    test.Main$ObfuscatedDbRecord obfuscatedGet(java.lang.String) -> obfuscatedGet
+#    test.Main$ObfuscatedDbRecord[] obfuscatedGetAllRecords() -> obfuscatedGetAllRecords
+#    java.lang.String obfuscatedPut(test.Main$ObfuscatedDbRecord) -> obfuscatedPut
+#    void print() -> print
+
 #test.Main$ObfuscatedThing -> test.Main$ObfuscatedThing:
 #    int obfuscatedField -> obfuscatedField
 #    void source_targetedMethod() -> source_targetedMethod

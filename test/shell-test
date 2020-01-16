@@ -46,7 +46,7 @@ dex-jar patch
 run dexpatcher --help
 run dexpatcher build/source.dex.zip build/patch.dex.zip --output build/patched.dex\
  --create-map build/template-mapping.txt\
- --map-source --unmap-output --map mapping.txt\
+ --map-source --unmap-output --map mapping.txt --compose-map compose-mapping.txt\
  --encode-source --encode-map encode-mapping.txt --escape-non-ascii --encode-reserved-chars\
    --encode-obfuscated-classes --obfuscated-classes '.*OBF' --encode-class-hints\
    --encode-obfuscated-members --obfuscated-members '.*OBF' --encode-member-hints\
@@ -62,7 +62,7 @@ run sha1sum build/template-mapping.txt
 if "$RUN_RELEASE_PATCH_TEST"; then
 
 run dexpatcher build/source.dex.zip build/patch.dex.zip --output build/patched-release.dex\
- --unmap-patches --map mapping.txt\
+ --unmap-patches --map mapping.txt --compose-map compose-mapping.txt\
  --encode-source --encode-map encode-mapping.txt --escape-non-ascii --encode-reserved-chars\
    --encode-obfuscated-classes --obfuscated-classes '.*OBF' --encode-class-hints\
    --encode-obfuscated-members --obfuscated-members '.*OBF' --encode-member-hints\

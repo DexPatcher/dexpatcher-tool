@@ -85,6 +85,8 @@ public class Main {
 		p();
 		new ObfuscatedClassForTargeting().print();
 		p();
+		ObfuscatedDbRecord.print();
+		p();
 		new ObfuscatedClassForEncodingWithMap().print();
 		p();
 		new Double_$$_Encoding().print();
@@ -357,6 +359,21 @@ public class Main {
 			obfuscatedMethodWithArg(null);
 			obfuscatedMethodForTargeting();
 		}
+	}
+
+	// Supposedly obfuscated class to be deobfuscated with composite map files:
+	// Note: The source dex must be mapped with '--map <map-file> --map-source
+	// --compose-map <compose-map-file>'
+	public static class ObfuscatedDbRecord {
+		public static String obfuscatedPut(ObfuscatedDbRecord r) { pMethod("original %s"); return null; }
+		public static ObfuscatedDbRecord obfuscatedGet(String id) { pMethod("original %s"); return null; }
+		public static ObfuscatedDbRecord[] obfuscatedGetAllRecords() { pMethod("original %s"); return null; }
+		public static void print() {
+			obfuscatedPut(null);
+			obfuscatedGet(null);
+			obfuscatedGetAllRecords();
+		}
+		public ObfuscatedDbRecord obfuscatedParentRecord;
 	}
 
 	// Supposedly obfuscated class to be encoded with a map file:

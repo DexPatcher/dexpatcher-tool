@@ -897,6 +897,21 @@ public class Main {
 		}
 	}
 
+	// Modify members of a class deobfuscated with composite map files:
+	// Note: The source dex must be mapped with '--map <map-file> --map-source
+	// --compose-map <compose-map-file>'
+	@DexEdit
+	public static class User {
+		@DexReplace
+		public static String put(User u) { pMethod("replaced %s"); return null; }
+		@DexReplace
+		public static User get(String id) { pMethod("replaced %s"); return null; }
+		@DexReplace
+		public static User[] getAllUsers() { pMethod("replaced %s"); return null; }
+		@DexRemove
+		public User parentUser;
+	}
+
 	// Mini FAQ
 
 	// Q) My IDE outputs classes that clash with classes in my source app

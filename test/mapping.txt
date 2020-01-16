@@ -13,3 +13,9 @@ test.Main$ObfuscatedClassForTargeting -> test.Main$TargetedClass
     void obfuscatedMethodWithArg(test.Main$ObfuscatedClassForTargeting) -> methodWithArg
     int obfuscatedFieldForTargeting -> targetedField
     void obfuscatedMethodForTargeting() -> targetedMethod
+
+/test.Main$DbRecord -> test.Main$User
+    java.lang.String /put(/test.Main$DbRecord) -> put
+    /test.Main$DbRecord /get(java.lang.String) -> get
+    /test.Main$DbRecord[] /getAllRecords() -> getAllUsers
+    /test.Main$DbRecord /parentRecord -> parentUser
