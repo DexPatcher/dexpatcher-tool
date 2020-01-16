@@ -66,6 +66,8 @@ public class Configuration {
 
 	public Iterable<String> mapFiles;
 	public boolean invertMap;
+	public Iterable<String> composeMapFiles;
+	public boolean invertComposeMap;
 
 	public String mainAnonymizationPlan = TypeAnonymizer.DEFAULT_MAIN_ANONYMIZATION_PLAN;
 	public String alternateAnonymizationPlan = TypeAnonymizer.DEFAULT_ALTERNATE_ANONYMIZATION_PLAN;

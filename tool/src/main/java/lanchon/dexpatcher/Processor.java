@@ -185,9 +185,14 @@ public class Processor {
 	private void configureMaps() throws IOException {
 		directMap = (config.mapSource) ? new DexMapping() : null;
 		inverseMap = (config.unmapSource || config.unmapPatches || config.unmapOutput) ? new DexMapping() : null;
-		MapReader.readMapPair(config.mapFiles, config.invertMap, directMap, inverseMap, logger);
+		if (directMap != null || inverseMap != null) {
+			DexMapping inverseComposeMap = (config.composeMapFiles != null) ? new DexMapping() : null;
+			MapReader.readMapPair(config.composeMapFiles, null, config.invertComposeMap, null, inverseComposeMap,
+					logger);
+			MapReader.readMapPair(config.mapFiles, inverseComposeMap, config.invertMap, directMap, inverseMap, logger);
+		}
 		encodeMap = (config.encodeSource && config.encodeMapFiles != null) ? new DexMapping() : null;
-		MapReader.readMapPair(config.encodeMapFiles, config.invertEncodeMap, encodeMap, null, logger);
+		MapReader.readMapPair(config.encodeMapFiles, null, config.invertEncodeMap, encodeMap, null, logger);
 	}
 
 	private DexFile mapDex(DexFile dex, boolean enabled, DexMap dexMap, boolean isInverseMap, TransformLogger logger,

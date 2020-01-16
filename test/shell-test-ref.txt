@@ -37,6 +37,8 @@ code transform options:
     --unmap-output            apply map inverse to identifiers in output
     --map <file>              identifier map file (repeatable option)
     --invert-map              use inverse of identifier map file
+    --compose-map <file>      compose map file (repeatable option)
+    --invert-compose-map      use inverse of compose map file
     --deanon-source           deanonymize anonymous classes in source
     --deanon-source-alt       deanonymize source with alternate plan
     --deanon-patches          deanonymize anonymous classes in patches

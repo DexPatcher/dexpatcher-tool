@@ -126,6 +126,10 @@ public class Parser {
 		}
 		config.invertMap = cl.hasOption("invert-map");
 
+		String[] composeMapFiles = cl.getOptionValues("compose-map");
+		if (composeMapFiles != null) config.composeMapFiles = Arrays.asList(composeMapFiles);
+		config.invertComposeMap = cl.hasOption("invert-compose-map");
+
 		config.deanonSource = cl.hasOption("deanon-source");
 		config.deanonSourceAlternate = cl.hasOption("deanon-source-alt");
 		if (config.deanonSource && config.deanonSourceAlternate) {
@@ -326,6 +330,9 @@ public class Parser {
 
 		options.addOption(Option.builder().longOpt("map").hasArgs().argName("file").desc("identifier map file (repeatable option)").build());
 		options.addOption(Option.builder().longOpt("invert-map").desc("use inverse of identifier map file").build());
+
+		options.addOption(Option.builder().longOpt("compose-map").hasArgs().argName("file").desc("compose map file (repeatable option)").build());
+		options.addOption(Option.builder().longOpt("invert-compose-map").desc("use inverse of compose map file").build());
 
 		options.addOption(Option.builder().longOpt("deanon-source").desc("deanonymize anonymous classes in source").build());
 		options.addOption(Option.builder().longOpt("deanon-source-alt").desc("deanonymize source with alternate plan").build());
