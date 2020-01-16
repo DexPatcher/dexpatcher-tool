@@ -152,7 +152,7 @@ public final class MapFileReader {
 				logBuilderException(e);
 			}
 		} else {
-			log(ERROR, "unexpected field mapping");
+			log(ERROR, "invalid context for field mapping");
 		}
 	}
 
@@ -164,7 +164,7 @@ public final class MapFileReader {
 				logBuilderException(e);
 			}
 		} else {
-			log(ERROR, "unexpected method mapping");
+			log(ERROR, "invalid context for method mapping");
 		}
 	}
 
