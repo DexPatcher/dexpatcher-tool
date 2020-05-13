@@ -3,7 +3,7 @@ $ d8 --no-desugaring --output build/source.dex.zip source/build/libs/source.jar
 $ d8 --no-desugaring --output build/patch.dex.zip patch/build/libs/patch.jar
 
 $ dexpatcher --help
-DexPatcher version 1.8.0-alpha4 by Lanchon (https://dexpatcher.github.io/)
+DexPatcher version 1.8.0-beta1 by Lanchon (https://dexpatcher.github.io/)
 
 usage: dexpatcher [<option> ...] [--output <patched-dex-or-dir>]
                   <source-dex-apk-or-dir> [<patch-dex-apk-or-dir> ...]
@@ -92,7 +92,7 @@ identifier encode options:
 
 
 $ dexpatcher build/source.dex.zip build/patch.dex.zip --output build/patched.dex --create-map build/template-mapping.txt --map-source --unmap-output --map mapping.txt --compose-map compose-mapping.txt --encode-source --encode-map encode-mapping.txt --escape-non-ascii --encode-reserved-chars --encode-obfuscated-classes --obfuscated-classes .\*OBF --encode-class-hints --encode-obfuscated-members --obfuscated-members .\*OBF --encode-member-hints --deanon-source --reanon-output --main-plan Anon\[_Level\] --deanon-patches-alt --no-reanon-errors --decode-patches --no-decode-errors --debug
-DexPatcher version 1.8.0-alpha4 by Lanchon (https://dexpatcher.github.io/)
+DexPatcher version 1.8.0-beta1 by Lanchon (https://dexpatcher.github.io/)
 info: read 'build/source.dex.zip'
 debug: read 'build/source.dex.zip': file 'classes.dex': 48 types
 debug: read 'build/source.dex.zip': dex version '035'
@@ -403,7 +403,7 @@ $ sha1sum build/template-mapping.txt
 db26f46a332c23c7867ef8b39547a031c46e4443  build/template-mapping.txt
 
 $ dexpatcher build/source.dex.zip build/patch.dex.zip --output build/patched-release.dex --unmap-patches --map mapping.txt --compose-map compose-mapping.txt --encode-source --encode-map encode-mapping.txt --escape-non-ascii --encode-reserved-chars --encode-obfuscated-classes --obfuscated-classes .\*OBF --encode-class-hints --encode-obfuscated-members --obfuscated-members .\*OBF --encode-member-hints --reanon-patches --main-plan Anon\[_Level\] --deanon-patches-alt --no-reanon-errors --decode-patches --no-decode-errors --quiet
-DexPatcher version 1.8.0-alpha4 by Lanchon (https://dexpatcher.github.io/)
+DexPatcher version 1.8.0-beta1 by Lanchon (https://dexpatcher.github.io/)
 0 error(s), 17 warning(s)
 
 $ cmp --quiet build/patched.dex build/patched-release.dex
